@@ -1,0 +1,9 @@
+internal: packages/**/*
+licences: apps/licences/**/*
+payments: apps/payments/**/*
+practices: apps/practices/**/*
+vehicles: apps/vehicles/**/*
+docs: docs/**/*
+ci: .github/workflows/**/*
+infra: infra/**/*
+changeset: .changeset/**/*
