@@ -7,7 +7,7 @@ interface LoaderProps {
 export const Loader = ({ label }: LoaderProps) => (
   <Stack alignItems="center" rowGap={2}>
     <CircularProgress />
-    <Typography fontSize={22} fontWeight={700}>
+    <Typography fontSize={22} fontWeight={700} textAlign="center">
       {label}
     </Typography>
   </Stack>

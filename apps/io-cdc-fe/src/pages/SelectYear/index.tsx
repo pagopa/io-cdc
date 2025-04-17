@@ -70,7 +70,7 @@ const SelectYear = () => {
             await delay(2500)
             navigate(APP_ROUTES.FEEDBACK, {
                 state: {
-                    status: "success"
+                    status: 200
                 }
             })
         }
