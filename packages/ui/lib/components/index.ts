@@ -8,6 +8,7 @@ export * from "./empty-state";
 export * from "./floating-button";
 export * from "./icon";
 export * from "./list-item-action";
+export * from "./loader";
 export * from "./logo";
 export * from "./operation-result";
 export * from "./page-header";
