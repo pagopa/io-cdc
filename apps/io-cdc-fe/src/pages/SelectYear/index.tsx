@@ -32,28 +32,10 @@ const YEAR_OPTIONS = [
     {
         label: "2025",
         value: "2025"
-    },
-    {
-        label: "2026",
-        value: "2026"
-    },
-    {
-        label: "2027",
-        value: "2027"
-    },
-    {
-        label: "2028",
-        value: "2028"
-    },
-    {
-        label: "2029",
-        value: "2029"
-    },
-    {
-        label: "2030",
-        value: "2030"
     }
 ]
+
+const TEST_STATUS_CODE = [200, 500, 503]
 
 const SelectYear = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -68,17 +50,21 @@ const SelectYear = () => {
         try {
             setIsLoading(true)
             await delay(2500)
+            const statusCode = TEST_STATUS_CODE[Math.floor(Math.random() * 3)]
+            if (statusCode !== 200) {
+                throw new Error(statusCode.toString())
+            }
             navigate(APP_ROUTES.FEEDBACK, {
                 state: {
                     status: "success"
                 }
             })
         }
-        catch (e) {
-            console.log(e)
+        catch (e: unknown) {
+            console.log(e, 'ERROR')
             navigate(APP_ROUTES.FEEDBACK, {
                 state: {
-                    status: "error"
+                    status: `error-${(e as Error).message}`
                 }
             })
         }
