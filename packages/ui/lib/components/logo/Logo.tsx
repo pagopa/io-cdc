@@ -1,7 +1,9 @@
-import { LogoIPatente } from "./svg/LogoIPatente";
+import { LogoRequestCompleted } from "./svg/LogoRequestCompleted";
+import { LogoRequestError } from "./svg/LogoRequestError";
 
 export const Logos = {
-  ipatente: LogoIPatente,
+  requestCompleted: LogoRequestCompleted,
+  requestError: LogoRequestError,
 } as const;
 
 export type LogoType = keyof typeof Logos;
