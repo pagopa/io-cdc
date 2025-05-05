@@ -1,5 +1,5 @@
 import { CheckboxList, Loader, SectionTitle } from "@io-cdc/ui"
-import { Button, Stack } from "@mui/material"
+import { Button, Chip, Stack, Typography } from "@mui/material"
 import { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { APP_ROUTES } from "../../utils/appRoutes";
@@ -10,12 +10,9 @@ const delay = (ms: number) => new Promise(
 
 const YEAR_OPTIONS = [
     {
-        label: "2020",
-        value: "2020"
-    },
-    {
         label: "2021",
-        value: "2021"
+        value: "2021",
+        disabled: true
     },
     {
         label: "2022",
@@ -23,23 +20,28 @@ const YEAR_OPTIONS = [
     },
     {
         label: "2023",
-        value: "2023"
+        value: "2023",
+        disabled: true
     },
     {
         label: "2024",
-        value: "2024"
+        value: "2024",
+        disabled: true
     },
     {
         label: "2025",
         value: "2025"
+    },
+    {
+        label: "2026",
+        value: "2026"
     }
-]
-
-const TEST_STATUS_CODE = [200, 500, 503]
+].map((option) => ({ ...option, rightComponent: option.disabled ? <Chip label="Già richiesta" color="primary" size="small" /> : undefined }))
 
 const SelectYear = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const [selectedItems, setSelectedItems] = useState<string[]>([])
+    const alredaySelected = YEAR_OPTIONS.filter(({ disabled }) => disabled).map(({ value }) => value)
+    const [selectedItems, setSelectedItems] = useState<string[]>(alredaySelected)
     const navigate = useNavigate()
 
     const onSelectYear = useCallback((value: string[]) => {
@@ -50,29 +52,28 @@ const SelectYear = () => {
         try {
             setIsLoading(true)
             await delay(2500)
-            const statusCode = TEST_STATUS_CODE[Math.floor(Math.random() * 3)]
-            if (statusCode !== 200) {
-                throw new Error(statusCode.toString())
-            }
             navigate(APP_ROUTES.FEEDBACK, {
                 state: {
-                    status: "success"
+                    status: 200
                 }
             })
         }
-        catch (e: unknown) {
-            console.log(e, 'ERROR')
+        catch (e) {
+            console.log(e)
             navigate(APP_ROUTES.FEEDBACK, {
                 state: {
-                    status: `error-${(e as Error).message}`
+                    status: "error"
                 }
             })
         }
     }, [navigate])
 
     return isLoading ?
-        <Stack flex={1} justifyContent="center" alignItems="center">
-            <Loader label="Stiamo inviando la tua richiesta" />
+        <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+            <Loader />
+            <Typography fontSize={22} fontWeight={700} textAlign="center">
+                Stiamo inviando la tua richiesta
+            </Typography>
         </Stack>
 
         : <Stack padding={2} flex={1} justifyContent="space-between" rowGap={2} overflow="hidden">
@@ -88,11 +89,12 @@ const SelectYear = () => {
                     buttonLabel="Seleziona tutti"
                     onChange={onSelectYear}
                     options={YEAR_OPTIONS}
+                    disableSelectAll={selectedItems.length >= YEAR_OPTIONS.length - 1}
                 />
             </Stack>
             <Button
                 onClick={onConfirm}
-                disabled={!selectedItems.length}
+                disabled={selectedItems.length <= alredaySelected.length}
                 size="small"
                 variant="contained"
             >
