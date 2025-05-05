@@ -5,10 +5,12 @@ import {
   FormControlLabel,
   Typography,
 } from "@mui/material";
-import { useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 
 interface CheckboxOption<T> {
+  disabled?: boolean;
   label: string;
+  rightComponent?: ReactNode;
   value: T;
 }
 
@@ -19,6 +21,7 @@ interface CheckboxListBase<T> {
 
 interface CheckboxListMultiple<T> extends CheckboxListBase<T> {
   buttonLabel: string;
+  disableSelectAll?: boolean;
   multiple: true;
   onChange: (newValue: T[]) => void;
   value: T[];
@@ -26,6 +29,7 @@ interface CheckboxListMultiple<T> extends CheckboxListBase<T> {
 
 interface CheckboxListSingle<T> extends CheckboxListBase<T> {
   buttonLabel?: undefined;
+  disableSelectAll?: true;
   multiple?: false;
   onChange: (newValue?: T) => void;
   value?: T;
@@ -37,6 +41,7 @@ export type CheckboxListProps<T> =
 
 export function CheckboxList<T>({
   buttonLabel,
+  disableSelectAll,
   multiple,
   onChange,
   options,
@@ -74,7 +79,7 @@ export function CheckboxList<T>({
         <Typography fontSize={14} fontWeight="bold">
           {title}
         </Typography>
-        {multiple && (
+        {multiple && !disableSelectAll && (
           <Button
             disabled={options.length === (value as T[]).length}
             onClick={onSelectAll}
@@ -84,18 +89,31 @@ export function CheckboxList<T>({
           </Button>
         )}
       </Box>
-      {options.map(({ label, value: optionValue }) => (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkIsItemSelected(optionValue)}
-              onChange={(_, checked) => handleOnChange(optionValue, checked)}
+      {options.map(
+        ({ disabled, label, rightComponent, value: optionValue }) => (
+          <Box
+            alignItems="center"
+            columnGap="8px"
+            display="flex"
+            key={label}
+            py={0.5}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checkIsItemSelected(optionValue)}
+                  disabled={disabled}
+                  onChange={(_, checked) =>
+                    handleOnChange(optionValue, checked)
+                  }
+                />
+              }
+              label={label}
             />
-          }
-          key={label}
-          label={label}
-        />
-      ))}
+            {rightComponent}
+          </Box>
+        ),
+      )}
     </Box>
   );
 }
