@@ -9,7 +9,7 @@ function App() {
         {
           APP_ROUTES_CONFIG.map(({ path, Element }) => <Route key={path} path={path} element={<Element />} />)
         }
-        <Route path="*" element={<Navigate to={APP_ROUTES.SELECT_YEAR} />} />
+        <Route path="*" element={<Navigate to={APP_ROUTES.HOME} />} />
       </Route>
     </Routes>
   )

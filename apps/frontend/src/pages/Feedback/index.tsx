@@ -39,7 +39,7 @@ const Feedback = () => {
     const { title, description, icon, subTitle } = configByStatus[(state as FeedbackState).status]
 
     const onClose = useCallback(() => {
-        navigate(APP_ROUTES.SELECT_YEAR)
+        navigate(APP_ROUTES.HOME)
     }, [navigate])
 
 

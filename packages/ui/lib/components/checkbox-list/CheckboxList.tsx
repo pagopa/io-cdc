@@ -5,11 +5,12 @@ import {
   FormControlLabel,
   Typography,
 } from "@mui/material";
-import { useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 
 interface CheckboxOption<T> {
   disabled?: boolean;
   label: string;
+  rightComponent?: ReactNode;
   value: T;
 }
 
@@ -88,19 +89,31 @@ export function CheckboxList<T>({
           </Button>
         )}
       </Box>
-      {options.map(({ disabled, label, value: optionValue }) => (
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkIsItemSelected(optionValue)}
-              disabled={disabled}
-              onChange={(_, checked) => handleOnChange(optionValue, checked)}
+      {options.map(
+        ({ disabled, label, rightComponent, value: optionValue }) => (
+          <Box
+            alignItems="center"
+            columnGap="8px"
+            display="flex"
+            key={label}
+            py={0.5}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checkIsItemSelected(optionValue)}
+                  disabled={disabled}
+                  onChange={(_, checked) =>
+                    handleOnChange(optionValue, checked)
+                  }
+                />
+              }
+              label={label}
             />
-          }
-          key={label}
-          label={label}
-        />
-      ))}
+            {rightComponent}
+          </Box>
+        ),
+      )}
     </Box>
   );
 }

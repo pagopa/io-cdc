@@ -1,5 +1,5 @@
 import { CheckboxList, Loader, SectionTitle } from "@io-cdc/ui"
-import { Button, Stack, Typography } from "@mui/material"
+import { Button, Chip, Stack, Typography } from "@mui/material"
 import { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { APP_ROUTES } from "../../utils/appRoutes";
@@ -9,10 +9,6 @@ const delay = (ms: number) => new Promise(
 
 
 const YEAR_OPTIONS = [
-    {
-        label: "2020",
-        value: "2020"
-    },
     {
         label: "2021",
         value: "2021",
@@ -39,28 +35,12 @@ const YEAR_OPTIONS = [
     {
         label: "2026",
         value: "2026"
-    },
-    {
-        label: "2027",
-        value: "2027"
-    },
-    {
-        label: "2028",
-        value: "2028"
-    },
-    {
-        label: "2029",
-        value: "2029"
-    },
-    {
-        label: "2030",
-        value: "2030"
     }
-]
+].map((option) => ({ ...option, rightComponent: option.disabled ? <Chip label="Già richiesta" color="primary" size="small" /> : undefined }))
 
 const SelectYear = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const alredaySelected = YEAR_OPTIONS.filter(({disabled}) => disabled).map(({value}) => value)
+    const alredaySelected = YEAR_OPTIONS.filter(({ disabled }) => disabled).map(({ value }) => value)
     const [selectedItems, setSelectedItems] = useState<string[]>(alredaySelected)
     const navigate = useNavigate()
 
@@ -114,7 +94,7 @@ const SelectYear = () => {
             </Stack>
             <Button
                 onClick={onConfirm}
-                disabled={selectedItems.length <= alredaySelected.length }
+                disabled={selectedItems.length <= alredaySelected.length}
                 size="small"
                 variant="contained"
             >

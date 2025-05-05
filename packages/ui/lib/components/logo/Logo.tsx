@@ -1,6 +1,8 @@
 import { LogoIPatente } from "./svg/LogoIPatente";
+import { LogoInitiativeExpired } from "./svg/LogoInitiativeExpired";
 
 export const Logos = {
+  initiativeExpired: LogoInitiativeExpired,
   ipatente: LogoIPatente,
 } as const;
 
