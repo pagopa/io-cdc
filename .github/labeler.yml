@@ -1,3 +1,5 @@
+backend: apps/backend-func/**/*
+frontend: apps/frontend/**/*
 internal: packages/**/*
 docs: docs/**/*
 ci: .github/workflows/**/*
