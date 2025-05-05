@@ -16,7 +16,6 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@changesets/cli": "^2.27.1",
-    "@pagopa/typescript-config-node": "*",
     "openapi-zod-client": "^1.18.2",
     "openapi3-ts": "3.1.0",
     "prettier": "3.1.1",

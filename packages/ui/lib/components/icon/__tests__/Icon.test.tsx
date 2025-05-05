@@ -5,7 +5,7 @@ import { Icon } from "../Icon";
 
 describe("Test Icon Components", () => {
   it("Should match the snapshot", () => {
-    const comp = render(<Icon name="airplane" />);
+    const comp = render(<Icon name="party" />);
     expect(comp).toMatchSnapshot();
   });
 });

@@ -1,5 +1,5 @@
 import { CheckboxList, Loader, SectionTitle } from "@io-cdc/ui"
-import { Button, Stack } from "@mui/material"
+import { Button, Stack, Typography } from "@mui/material"
 import { useCallback, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { APP_ROUTES } from "../../utils/appRoutes";
@@ -15,7 +15,8 @@ const YEAR_OPTIONS = [
     },
     {
         label: "2021",
-        value: "2021"
+        value: "2021",
+        disabled: true
     },
     {
         label: "2022",
@@ -23,11 +24,13 @@ const YEAR_OPTIONS = [
     },
     {
         label: "2023",
-        value: "2023"
+        value: "2023",
+        disabled: true
     },
     {
         label: "2024",
-        value: "2024"
+        value: "2024",
+        disabled: true
     },
     {
         label: "2025",
@@ -57,7 +60,8 @@ const YEAR_OPTIONS = [
 
 const SelectYear = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const [selectedItems, setSelectedItems] = useState<string[]>([])
+    const alredaySelected = YEAR_OPTIONS.filter(({disabled}) => disabled).map(({value}) => value)
+    const [selectedItems, setSelectedItems] = useState<string[]>(alredaySelected)
     const navigate = useNavigate()
 
     const onSelectYear = useCallback((value: string[]) => {
@@ -85,8 +89,11 @@ const SelectYear = () => {
     }, [navigate])
 
     return isLoading ?
-        <Stack flex={1} justifyContent="center" alignItems="center">
-            <Loader label="Stiamo inviando la tua richiesta" />
+        <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+            <Loader />
+            <Typography fontSize={22} fontWeight={700} textAlign="center">
+                Stiamo inviando la tua richiesta
+            </Typography>
         </Stack>
 
         : <Stack padding={2} flex={1} justifyContent="space-between" rowGap={2} overflow="hidden">
@@ -102,11 +109,12 @@ const SelectYear = () => {
                     buttonLabel="Seleziona tutti"
                     onChange={onSelectYear}
                     options={YEAR_OPTIONS}
+                    disableSelectAll={selectedItems.length >= YEAR_OPTIONS.length - 1}
                 />
             </Stack>
             <Button
                 onClick={onConfirm}
-                disabled={!selectedItems.length}
+                disabled={selectedItems.length <= alredaySelected.length }
                 size="small"
                 variant="contained"
             >

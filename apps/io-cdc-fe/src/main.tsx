@@ -1,7 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import CssBaseline from "@mui/material/CssBaseline";
+import { CssBaseline } from "@mui/material";
 import { theme } from "@io-cdc/ui";
+
 import {
   BrowserRouter
 } from "react-router-dom";

@@ -6,7 +6,7 @@ import { CardCarousel } from "../CardCarousel";
 describe("Test CardCarousel Components", () => {
   it("Should match the snapshot", () => {
     const comp = render(
-      <CardCarousel icon="car1" title="Autoveicolo">
+      <CardCarousel icon="party" title="Autoveicolo">
         {Array.from({ length: 3 }).map((_, index) => (
           <CardCarousel.Item key={`slide-${index}`}>
             <div>Content {index}</div>

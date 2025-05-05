@@ -10,7 +10,7 @@ const defaultProps: DialogProps = {
   body: (
     <Stack spacing={3}>
       <Stack alignItems="center">
-        <Icon fontSize="large" name="success" />
+        <Icon fontSize="large" name="closeCircle" />
       </Stack>
       <Typography textAlign="center" variant="body1">
         {

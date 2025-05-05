@@ -73,16 +73,6 @@ export const theme = createTheme(
           },
         },
       },
-      MuiSvgIcon: {
-        variants: [
-          {
-            props: { fontSize: "medium-small" },
-            style: {
-              fontSize: pxToRem(32),
-            },
-          },
-        ],
-      },
     },
     palette: {
       action: {
@@ -115,7 +105,7 @@ export const theme = createTheme(
       secondary: {
         containedHoverBackground: colorSecondaryContainedHover,
         light: "#CCFBF1",
-        main: "#2DD4BF",
+        main: "#42c5cd",
       },
       success: {
         containedHoverBackground: colorSuccessContainedHover,
@@ -195,4 +185,4 @@ export const theme = createTheme(
   }),
 );
 
-export type IOIPatenteTheme = typeof theme;
+export type IOCdcTheme = typeof theme;
