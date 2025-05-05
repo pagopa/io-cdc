@@ -6,7 +6,7 @@ module "cdn_fe" {
   location        = local.location
   project         = local.project
   domain          = local.domain
-  app_name        = "fecdn"
+  app_name        = "fe"
   instance_number = "01"
 
   resource_group_name = data.azurerm_resource_group.itn_cdc.name
