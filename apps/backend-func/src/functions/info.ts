@@ -1,11 +1,11 @@
-import { pipe } from "fp-ts/lib/function";
-import * as Task from "fp-ts/lib/Task";
-import * as RA from "fp-ts/lib/ReadonlyArray";
 import * as H from "@pagopa/handler-kit";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import * as TE from "fp-ts/lib/TaskEither";
-
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
+import * as RTE from "fp-ts/lib/ReaderTaskEither";
+import * as RA from "fp-ts/lib/ReadonlyArray";
+import * as Task from "fp-ts/lib/Task";
+import * as TE from "fp-ts/lib/TaskEither";
+import { pipe } from "fp-ts/lib/function";
+
 import { ApplicationInfo } from "../generated/definitions/internal/ApplicationInfo";
 
 const applicativeValidation = RTE.getApplicativeReaderTaskValidation(
@@ -13,14 +13,14 @@ const applicativeValidation = RTE.getApplicativeReaderTaskValidation(
   RA.getSemigroup<string>(),
 );
 
-const dummyHealthCheck = (): TE.TaskEither<ReadonlyArray<string>, true> =>
+const dummyHealthCheck = (): TE.TaskEither<readonly string[], true> =>
   TE.of(true);
 
 export const makeInfoHandler: H.Handler<
   H.HttpRequest,
   H.HttpResponse<ApplicationInfo, 200>,
   undefined
-> = H.of((_: H.HttpRequest) =>
+> = H.of(() =>
   pipe(
     // TODO: Add all the function health checks
     [dummyHealthCheck],
