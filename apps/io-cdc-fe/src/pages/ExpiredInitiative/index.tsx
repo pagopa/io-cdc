@@ -1,16 +1,18 @@
 import { Logo } from "@io-cdc/ui";
 import { Button, Stack, Typography } from "@mui/material";
 import { EXPIRED_INITIATIVE_CONFIG_MAP } from "./constants";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { APP_ROUTES } from "../../utils/appRoutes";
 
-// type FeedbackProps = { type: keyof typeof FEEDBACK_CONFIG_MAP };
-
-const STATUSES = ['expired', 'alreadyRequested']
+const STATUSES = {
+  500: 'expired',
+  501: 'alreadyRequested'
+}
 
 const ExpiredInitiative = () => {
   const navigate = useNavigate()
-    const status = STATUSES[Math.floor(Math.random() * 2)]
+  const { state } = useLocation()
+  const status = STATUSES[state.status as keyof typeof STATUSES ?? 500]
   const { image, description, title } = EXPIRED_INITIATIVE_CONFIG_MAP[status];
 
   return (
@@ -22,7 +24,7 @@ const ExpiredInitiative = () => {
         </Typography>
         {description && <Typography textAlign="center">{description}</Typography>}
       </Stack>
-      <Button onClick={() => navigate(APP_ROUTES.SELECT_YEAR)} size="small" variant="contained">
+      <Button onClick={() => navigate(APP_ROUTES.HOME)} size="small" variant="contained">
         Chiudi
       </Button>
     </Stack>
