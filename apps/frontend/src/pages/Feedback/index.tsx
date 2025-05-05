@@ -21,12 +21,12 @@ const configByStatus: Record<number, {
         description: "Per non perderti i messaggi in app, attiva le notifiche push da Impostazioni > Preferenze"
     },
     503: {
-        icon: "error",
+        icon: "umbrella",
         title: "Non riusciamo ad inviare la tua richiesta al momento",
         subTitle: "Riprova più tardi.",
     },
     500: {
-        icon: "error",
+        icon: "umbrella",
         title: "Qualcosa non ha funzionato",
         subTitle: "Riprova più tardi.",
     },

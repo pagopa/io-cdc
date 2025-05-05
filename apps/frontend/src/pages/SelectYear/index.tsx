@@ -62,7 +62,7 @@ const SelectYear = () => {
             console.log(e)
             navigate(APP_ROUTES.FEEDBACK, {
                 state: {
-                    status: "error"
+                    status: 500
                 }
             })
         }

@@ -6,6 +6,7 @@ import IconCloseCircle from "./svg/IconCloseCircle";
 import IconError from "./svg/IconError";
 import IconExpandUp from "./svg/IconExpandUp";
 import IconParty from "./svg/IconParty";
+import IconUmbrella from "./svg/IconUmbrella";
 
 export const Icons = {
   arrowCircleLeftBold: IconArrowCircleLeftBold,
@@ -14,6 +15,7 @@ export const Icons = {
   error: IconError,
   expandUp: IconExpandUp,
   party: IconParty,
+  umbrella: IconUmbrella,
 } as const;
 
 export type IconType = keyof typeof Icons;
