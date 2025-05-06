@@ -1,8 +1,5 @@
 name: Deploy Function App (backend-func)
 
-permissions:
-  contents: read
-  
 on:
   workflow_dispatch: {}
   push:
