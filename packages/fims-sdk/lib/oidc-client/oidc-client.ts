@@ -17,11 +17,31 @@ export class FimsClient {
 
   constructor(oidcConfig: OidcConfig) {
     this.oidcConfig = oidcConfig;
-    this.initialize();
   }
 
-  buildAuthorizationUrl(): string {
-    if (!this.clientConfig) throw new Error("Fims client not configured");
+  initializeClientConfiguration() {
+    if (!this.clientConfig) {
+      client
+        .discovery(
+          new URL(this.oidcConfig.OIDC_ISSUER_URL),
+          this.oidcConfig.OIDC_CLIENT_ID,
+          this.oidcConfig.OIDC_CLIENT_SECRET,
+        )
+        .catch((error) => {
+          throw new Error(
+            `Cannot initialize fims client | discovery failed | ${JSON.stringify(
+              error,
+            )}`,
+          );
+        })
+        .then((clientConfig) => {
+          this.clientConfig = clientConfig;
+        });
+    }
+  }
+
+  redirectToAuthorizationUrl(): string {
+    if (!this.clientConfig) throw new Error("Fims client not initialized");
 
     const parameters: Record<string, string> = {
       redirect_uri: this.oidcConfig.OIDC_CLIENT_REDIRECT_URI,
@@ -37,13 +57,13 @@ export class FimsClient {
     return redirectTo.toString();
   }
 
-  async getTokens(
+  async retrieveIdToken(
     cbUrl: string,
     authCode: string,
     state: string,
     nonce: string,
   ) {
-    if (!this.clientConfig) throw new Error("Fims client not configured");
+    if (!this.clientConfig) throw new Error("Fims client not initialized");
 
     const callbackUrl = new URL(cbUrl);
     const tokens: client.TokenEndpointResponse =
@@ -52,23 +72,7 @@ export class FimsClient {
         expectedState: state,
         pkceCodeVerifier: authCode,
       });
-    return tokens.id_token;
-  }
 
-  initialize() {
-    client
-      .discovery(
-        new URL(this.oidcConfig.OIDC_ISSUER_URL),
-        this.oidcConfig.OIDC_CLIENT_ID,
-        this.oidcConfig.OIDC_CLIENT_SECRET,
-      )
-      .catch((error) => {
-        throw new Error(
-          `Cannot configure fims client | ${JSON.stringify(error)}`,
-        );
-      })
-      .then((clientConfig) => {
-        this.clientConfig = clientConfig;
-      });
+    return tokens.id_token;
   }
 }
