@@ -11,58 +11,64 @@ const oidcConfigSchema = z.object({
 
 type OidcConfig = z.TypeOf<typeof oidcConfigSchema>;
 
-export interface OidcClient {
-  getAuthorizationUrl: () => string;
-  getTokens: (
-    cbUrl: string,
-    authCode: string,
-    state: string,
-    nonce: string,
-  ) => Promise<string | undefined>;
-}
+export class FimsClient {
+  clientConfig: client.Configuration | undefined;
+  oidcConfig: OidcConfig;
 
-export const FimsClient: (
-  oidcConfig: OidcConfig,
-) => Promise<OidcClient> = async (oidcConfig: OidcConfig) => {
-  const clientConfig: client.Configuration = await client.discovery(
-    new URL(oidcConfig.OIDC_ISSUER_URL),
-    oidcConfig.OIDC_CLIENT_ID,
-    oidcConfig.OIDC_CLIENT_SECRET,
-  );
+  constructor(oidcConfig: OidcConfig) {
+    this.oidcConfig = oidcConfig;
+    this.initialize();
+  }
 
-  const getAuthorizationUrl = () => {
+  buildAuthorizationUrl(): string {
+    if (!this.clientConfig) throw new Error("Fims client not configured");
+
     const parameters: Record<string, string> = {
-      redirect_uri: oidcConfig.OIDC_CLIENT_REDIRECT_URI,
-      scope: oidcConfig.OIDC_SCOPE,
+      redirect_uri: this.oidcConfig.OIDC_CLIENT_REDIRECT_URI,
+      scope: this.oidcConfig.OIDC_SCOPE,
       state: client.randomState(),
     };
 
     const redirectTo: URL = client.buildAuthorizationUrl(
-      clientConfig,
+      this.clientConfig,
       parameters,
     );
 
     return redirectTo.toString();
-  };
+  }
 
-  const getTokens = async (
+  async getTokens(
     cbUrl: string,
     authCode: string,
     state: string,
     nonce: string,
-  ) => {
+  ) {
+    if (!this.clientConfig) throw new Error("Fims client not configured");
+
     const callbackUrl = new URL(cbUrl);
     const tokens: client.TokenEndpointResponse =
-      await client.authorizationCodeGrant(clientConfig, callbackUrl, {
+      await client.authorizationCodeGrant(this.clientConfig, callbackUrl, {
         expectedNonce: nonce,
         expectedState: state,
         pkceCodeVerifier: authCode,
       });
     return tokens.id_token;
-  };
+  }
 
-  return {
-    getAuthorizationUrl,
-    getTokens,
-  };
-};
+  initialize() {
+    client
+      .discovery(
+        new URL(this.oidcConfig.OIDC_ISSUER_URL),
+        this.oidcConfig.OIDC_CLIENT_ID,
+        this.oidcConfig.OIDC_CLIENT_SECRET,
+      )
+      .catch((error) => {
+        throw new Error(
+          `Cannot configure fims client | ${JSON.stringify(error)}`,
+        );
+      })
+      .then((clientConfig) => {
+        this.clientConfig = clientConfig;
+      });
+  }
+}
