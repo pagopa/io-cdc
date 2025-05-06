@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { CssBaseline } from "@mui/material";
 import { theme } from "@io-cdc/ui";
@@ -13,7 +12,7 @@ import { Provider } from 'react-redux';
 import { store } from './features/store.ts';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+
     <Provider store={store}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -22,5 +21,4 @@ createRoot(document.getElementById('root')!).render(
       </BrowserRouter>
     </ThemeProvider>
     </Provider>
-  </StrictMode>,
 )

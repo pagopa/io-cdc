@@ -1,37 +1,33 @@
 import { Loader } from "@io-cdc/ui"
 import { Stack, Typography } from "@mui/material"
-import { useCallback, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { useGetYearsListQuery } from "../../features/app/services";
+import { useEffect } from "react";
 import { APP_ROUTES } from "../../utils/appRoutes";
-import { useLazyGetYearsListQuery } from "../../features/app/services";
 import { ApiError } from "../../features/app/model";
 
 const Home = () => {
-    const navigate = useNavigate()
-    const [getYearsList] = useLazyGetYearsListQuery()
     
-    const loadConfig = useCallback(async () => {
-        try {
-            const { data, isError, isSuccess, error } = await getYearsList()
-            if(isSuccess && data?.length > 0){
-                return navigate(APP_ROUTES.SELECT_YEAR)
-            }
-            if(isError){
-                throw new Error((error as ApiError)?.status.toString())
-            }
-        }
-        catch (e) {
-            navigate(APP_ROUTES.EXPIRED, {
-                state: {
-                    status: (e as {message: string}).message
-                }
-            })
-        }
-    }, [getYearsList, navigate])
+    const { isError, isSuccess, error,} = useGetYearsListQuery()
+    const navigate = useNavigate()
+    const hasCompleted = isSuccess || isError
+
 
     useEffect(() => {
-        loadConfig()
-    }, [loadConfig])
+        if (hasCompleted) {
+            if (isSuccess) {
+                navigate(APP_ROUTES.SELECT_YEAR)
+            }
+            if (isError && error) {
+                navigate(APP_ROUTES.EXPIRED, {
+                    state: {
+                        status: (error as ApiError).status
+                    }
+                })
+            }
+        }
+    }, [error, hasCompleted, isError, isSuccess, navigate])
+
 
     return <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
         <Loader />

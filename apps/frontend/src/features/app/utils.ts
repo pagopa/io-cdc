@@ -6,3 +6,7 @@ export const getRandomError = () => {
     const index = Math.floor(Math.random() * codes.length);
     return codes[index];
 }
+
+
+export const delay = (ms: number) => new Promise(
+    resolve => setTimeout(resolve, ms));

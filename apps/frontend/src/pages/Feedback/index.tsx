@@ -1,8 +1,6 @@
 import { Icon, IconType, OperationResult } from "@io-cdc/ui"
-import { useCallback } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import { Box, Button, Stack } from "@mui/material"
-import { APP_ROUTES } from "../../utils/appRoutes"
 
 type FeedbackState = {
     status: keyof typeof configByStatus
@@ -35,20 +33,14 @@ const configByStatus: Record<number, {
 
 const Feedback = () => {
     const { state } = useLocation()
-    const navigate = useNavigate()
     const { title, description, icon, subTitle } = configByStatus[(state as FeedbackState).status]
-
-    const onClose = useCallback(() => {
-        navigate(APP_ROUTES.HOME)
-    }, [navigate])
-
 
     return <Stack flex={1} justifyContent="center" alignItems="center">
         {icon && <Icon name={icon} sx={{width: 60, height: 60}}/>}
         <OperationResult title={title} subTitle={subTitle} description={description} />
         <Box>
             <Button
-                onClick={onClose}
+                onClick={() => window.location.replace("/")}
                 variant="contained"
             >
                 Chiudi

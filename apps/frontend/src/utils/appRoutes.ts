@@ -1,7 +1,8 @@
-import ExpiredInitiative from "../pages/ExpiredInitiative"
-import Feedback from "../pages/Feedback"
-import Home from "../pages/Home"
-import SelectYear from "../pages/SelectYear"
+import React from "react";
+
+const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'));
+const Feedback = React.lazy(() => import('../pages/Feedback'));
+const SelectYear = React.lazy(() => import('../pages/SelectYear'));
 
 export enum APP_ROUTES {
     HOME = "/",
@@ -11,10 +12,6 @@ export enum APP_ROUTES {
 }
 
 export const APP_ROUTES_CONFIG = [
-    {
-        path: APP_ROUTES.HOME,
-        Element: Home
-    },
     {
         path: APP_ROUTES.SELECT_YEAR,
         Element: SelectYear

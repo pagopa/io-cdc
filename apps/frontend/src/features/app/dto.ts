@@ -1,0 +1,1 @@
+export type RequestBonusDto = string[]

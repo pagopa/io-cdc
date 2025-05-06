@@ -9,8 +9,7 @@ const fade = keyframes`
 
 export const Dot = styled(Box, {
   shouldForwardProp: (prop) => prop !== "index",
-})<{ index: number }>(({ index, theme }) => {
-  console.log("🚀 ~ theme:", theme);
+})<{ index: number }>(({ index }) => {
   const angle = (index * 360) / 8;
   const radius = 24;
 
