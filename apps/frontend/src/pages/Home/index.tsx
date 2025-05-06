@@ -3,43 +3,31 @@ import { Stack, Typography } from "@mui/material"
 import { useCallback, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { APP_ROUTES } from "../../utils/appRoutes";
-
-const delay = (ms: number) => new Promise(
-    resolve => setTimeout(resolve, ms));
-
-const getRandomResponse = () => {
-    return Math.random() < 0.2;
-}
-const getRandomError = () => {
-    const codes = [500, 501];
-    const index = Math.floor(Math.random() * codes.length);
-    return codes[index];
-}
+import { useLazyGetYearsListQuery } from "../../features/app/services";
+import { ApiError } from "../../features/app/model";
 
 const Home = () => {
     const navigate = useNavigate()
-
-
+    const [getYearsList] = useLazyGetYearsListQuery()
+    
     const loadConfig = useCallback(async () => {
         try {
-            await delay(2500)
-            //NOTE -> DEMO ONLY
-            const hasError = getRandomResponse()
-            if(hasError){
-                throw new Error("Something went wrong")
+            const { data, isError, isSuccess, error } = await getYearsList()
+            if(isSuccess && data?.length > 0){
+                return navigate(APP_ROUTES.SELECT_YEAR)
             }
-            navigate(APP_ROUTES.SELECT_YEAR)
+            if(isError){
+                throw new Error((error as ApiError)?.status.toString())
+            }
         }
         catch (e) {
-            console.log(e)
-            const errorCode = getRandomError()
             navigate(APP_ROUTES.EXPIRED, {
                 state: {
-                    status: errorCode
+                    status: (e as {message: string}).message
                 }
             })
         }
-    }, [navigate])
+    }, [getYearsList, navigate])
 
     useEffect(() => {
         loadConfig()
