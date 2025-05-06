@@ -12,7 +12,7 @@ module "cdc_backend_func" {
   }
 
   resource_group_name = var.resource_group_name
-  health_check_path   = "/api/v1/cdc/info"
+  health_check_path   = "/info"
   node_version        = 20
 
   subnet_id                            = var.subnet_id
