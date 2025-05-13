@@ -1,0 +1,23 @@
+name: Deploy Function App (backend-func)
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - master
+    paths:
+      - "apps/backend-func/CHANGELOG.md"
+      - ".github/workflows/deploy-backend-func.yaml"
+
+jobs:
+  deploy:
+    name: Deploy Backend Func
+    uses: pagopa/dx/.github/workflows/function_app_deploy.yaml@dbc5a5a25c47432b9faca8b183f26d7df707a29b
+    secrets: inherit
+    with:
+      workspace_name: backend-func
+      environment: app-prod
+      resource_group_name: io-p-itn-cdc-rg-01
+      function_app_name: io-p-itn-cdc-backend-func-01
+      use_staging_slot: true
+      use_labels: false
