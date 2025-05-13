@@ -12,4 +12,6 @@ export const Spinner = styled(Box)(() => ({
   height: "60px",
   position: "relative",
   width: "60px",
-}));
+})).withComponent((props: React.ComponentProps<typeof Box>) => (
+  <Box {...props} data-testid="spinner" />
+));

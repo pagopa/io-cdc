@@ -29,4 +29,6 @@ export const Dot = styled(Box, {
     top: "50%",
     width: 12,
   };
-});
+}).withComponent((props: React.ComponentProps<typeof Box>) => (
+  <Box {...props} data-testid="dot" />
+));
