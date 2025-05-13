@@ -1,4 +1,4 @@
-import { Logo } from '@io-cdc/ui';
+import { Icon } from '@io-cdc/ui';
 import { Button, Stack, Typography } from '@mui/material';
 import { EXPIRED_INITIATIVE_CONFIG_MAP } from './constants';
 import { useLocation } from 'react-router-dom';
@@ -14,7 +14,7 @@ const ExpiredInitiative = () => {
   const { image, description, title } = EXPIRED_INITIATIVE_CONFIG_MAP[status];
   return (
     <Stack justifyContent="center" alignItems="center" height="100%" gap={4}>
-      <Logo name={image} size={60} />
+      <Icon name={image} />
       <Stack gap={4} justifyContent="center" alignItems="center">
         <Typography variant="h4" textAlign="center">
           {title}

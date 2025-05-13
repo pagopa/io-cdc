@@ -5,6 +5,7 @@ import IconArrowCircleRightBold from "./svg/IconArrowCircleRightBold";
 import IconCloseCircle from "./svg/IconCloseCircle";
 import IconError from "./svg/IconError";
 import IconExpandUp from "./svg/IconExpandUp";
+import IconInitiativeExpired from "./svg/IconInitiativeExpired";
 import IconParty from "./svg/IconParty";
 import IconUmbrella from "./svg/IconUmbrella";
 
@@ -14,6 +15,7 @@ export const Icons = {
   closeCircle: IconCloseCircle,
   error: IconError,
   expandUp: IconExpandUp,
+  initiativeExpired: IconInitiativeExpired,
   party: IconParty,
   umbrella: IconUmbrella,
 } as const;

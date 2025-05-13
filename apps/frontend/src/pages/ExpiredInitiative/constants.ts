@@ -1,9 +1,9 @@
-import { LogoType } from '@io-cdc/ui';
+import { IconType } from '@io-cdc/ui';
 
 type ExpiredInitiativeConfig = Record<
   string,
   {
-    image: LogoType;
+    image: IconType;
     title: string;
     description: string | null;
   }
