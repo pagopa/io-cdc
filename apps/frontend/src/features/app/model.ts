@@ -1,18 +1,18 @@
 export type AppState = {
-    years: YearsList
-}
+  years: YearsList;
+};
 
-export type YearsList = Year[]
+export type YearsList = Year[];
 
 export type Year = {
-    label: string
-    value: string
-    alreadyRequested: boolean
-}
+  label: string;
+  value: string;
+  alreadyRequested: boolean;
+};
 
 export type ApiError = {
-    status: number,
-    data: {
-        message: string
-    }
-}
+  status: number;
+  data: {
+    message: string;
+  };
+};

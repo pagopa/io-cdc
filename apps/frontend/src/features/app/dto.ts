@@ -1,1 +1,1 @@
-export type RequestBonusDto = string[]
+export type RequestBonusDto = string[];
