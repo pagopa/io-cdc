@@ -11,7 +11,7 @@ export const appApi = createApi({
     getYearsList: builder.query<YearsList, void>({
       queryFn: async () => {
         const shouldFail = getRandomResponse();
-        await delay(4000);
+        await delay(2000);
         if (shouldFail) {
           return {
             error: {
@@ -26,6 +26,7 @@ export const appApi = createApi({
     requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({
       queryFn: async () => {
         const shouldFail = getRandomResponse();
+        await delay(2000);
         if (shouldFail) {
           return {
             error: {
