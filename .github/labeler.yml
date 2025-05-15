@@ -1,8 +1,6 @@
+backend: apps/backend-func/**/*
+frontend: apps/frontend/**/*
 internal: packages/**/*
-licences: apps/licences/**/*
-payments: apps/payments/**/*
-practices: apps/practices/**/*
-vehicles: apps/vehicles/**/*
 docs: docs/**/*
 ci: .github/workflows/**/*
 infra: infra/**/*
