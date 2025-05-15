@@ -6,7 +6,7 @@ import { ListItemAction, ListItemActionProps } from "../ListItemAction";
 const mockHandleClick = vi.fn();
 
 const defaultProps: ListItemActionProps = {
-  icon: "car1",
+  icon: "arrowCircleLeftBold",
   label: "Autoveicolo",
   onClick: mockHandleClick,
   value: "FT 561 YC",
@@ -25,7 +25,7 @@ describe("Test ListItemAction Components", () => {
         badges={[
           {
             color: "success",
-            icon: "tickCircleBold",
+            icon: "arrowCircleLeftBold",
             label: "custom-label-test",
             size: "small",
           },

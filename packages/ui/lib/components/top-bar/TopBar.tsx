@@ -14,22 +14,6 @@ export interface TopBarProps {
 export const TopBar = ({ assistance }: TopBarProps) => (
   <AppBar position="static" sx={{ bgcolor: "background.paper" }}>
     <Toolbar>
-      {/* <Box
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          flexGrow: 1,
-        }}
-      >
-        <Box
-          component="img"
-          src={Logo}
-          sx={{
-            height: 38,
-          }}
-        />
-      </Box> */}
-
       {assistance && (
         <Stack alignItems="center" direction="row" spacing={2}>
           <ButtonNaked

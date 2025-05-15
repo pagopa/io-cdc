@@ -7,7 +7,7 @@ describe("Test EmptyState Component", () => {
   it("Should match the snapshot", () => {
     const comp = render(
       <EmptyState
-        icon="car1Bold"
+        icon="closeCircle"
         title="Non sono presenti veicoli registrati"
       />,
     );

@@ -1,14 +1,10 @@
-import { CircularProgress, Stack, Typography } from "@mui/material";
+import { Dot } from "./Dot";
+import { Spinner } from "./Spinner";
 
-interface LoaderProps {
-  label?: string;
-}
-
-export const Loader = ({ label }: LoaderProps) => (
-  <Stack alignItems="center" rowGap={2}>
-    <CircularProgress />
-    <Typography fontSize={22} fontWeight={700}>
-      {label}
-    </Typography>
-  </Stack>
+export const Loader = () => (
+  <Spinner>
+    {[...Array(8)].map((_, i) => (
+      <Dot index={i} key={i} />
+    ))}
+  </Spinner>
 );

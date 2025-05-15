@@ -8,6 +8,8 @@ export interface OperationResultProps {
   description?: string;
   /** Used to display an image above the title */
   illustration?: ReactNode;
+  /** Operation result subtitle */
+  subTitle?: string;
   /** Operation result main title */
   title: string;
 }
@@ -21,6 +23,7 @@ export const OperationResult = ({
   action,
   description,
   illustration,
+  subTitle,
   title,
 }: OperationResultProps) => (
   <Stack
@@ -35,6 +38,7 @@ export const OperationResult = ({
       <Typography fontWeight={700} variant="h5">
         {title}
       </Typography>
+      {subTitle && <Typography variant="body2">{subTitle}</Typography>}
       {description && <Typography variant="body2">{description}</Typography>}
     </Stack>
     {action && (
