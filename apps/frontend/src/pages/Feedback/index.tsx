@@ -1,42 +1,11 @@
-import { Icon, IconType, OperationResult } from '@io-cdc/ui';
+import { Icon, OperationResult } from '@io-cdc/ui';
 import { useLocation } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
-
-type FeedbackState = {
-  status: keyof typeof configByStatus;
-};
-
-const configByStatus: Record<
-  number,
-  {
-    title: string;
-    subTitle: string;
-    icon: IconType;
-    description?: string;
-  }
-> = {
-  200: {
-    title: 'Fatto!',
-    icon: 'party',
-    subTitle: "Riceverai un messaggio su IO con l'esito della tua richiesta.",
-    description:
-      'Per non perderti i messaggi in app, attiva le notifiche push da Impostazioni > Preferenze',
-  },
-  503: {
-    icon: 'umbrella',
-    title: 'Non riusciamo ad inviare la tua richiesta al momento',
-    subTitle: 'Riprova più tardi.',
-  },
-  500: {
-    icon: 'umbrella',
-    title: 'Qualcosa non ha funzionato',
-    subTitle: 'Riprova più tardi.',
-  },
-};
+import { CONFIG_BY_STATUS, FeedbackState } from './constants';
 
 const Feedback = () => {
   const { state } = useLocation();
-  const { title, description, icon, subTitle } = configByStatus[(state as FeedbackState).status];
+  const { title, description, icon, subTitle } = CONFIG_BY_STATUS[(state as FeedbackState).status];
 
   return (
     <Stack flex={1} justifyContent="center" alignItems="center">
