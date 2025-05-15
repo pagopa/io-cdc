@@ -8,6 +8,7 @@ const STATUSES = {
   501: 'alreadyRequested',
 };
 
+//TODO -> define what should be done on close
 const ExpiredInitiative = () => {
   const { state } = useLocation();
   const status = STATUSES[(state.status as keyof typeof STATUSES) ?? 500];
@@ -21,7 +22,7 @@ const ExpiredInitiative = () => {
         </Typography>
         {description && <Typography textAlign="center">{description}</Typography>}
       </Stack>
-      <Button onClick={() => window.location.replace('/')} size="small" variant="contained">
+      <Button onClick={() => window.location.reload()} size="small" variant="contained">
         Chiudi
       </Button>
     </Stack>
