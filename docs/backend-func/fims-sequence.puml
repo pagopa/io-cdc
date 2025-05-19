@@ -1,0 +1,40 @@
+@startuml Sequence FIMS auth
+participant "Citizen" as cit
+participant "App IO" as io
+participant "in-app Browser" as iab
+participant "CdC Backend Functions" as be
+participant "Fims Provider" as fims
+participant "Redis" as redis
+
+cit -> io: Click su CTA Accedi a CDC
+activate io
+
+group /fauth
+  io -> be: /fauth
+  activate be
+  be -> be: Genera url redirect FIMS
+  be -> io: Redirect to FIMS provider
+  deactivate be
+  io -> fims: /auth con parametri client e state
+  activate fims
+end
+  
+group /fcb
+  fims -> be: /fcb callback con auth code e state
+  deactivate fims
+  activate be
+  be -> fims: /token con auth code e state per avere id token
+  activate fims
+  fims -> be: id token
+  deactivate fims
+  be -> be: genera session token e session id
+  be -> redis: crea session con dati di id token
+  be -> redis: associa session id a session token
+  be -> io: Redirect to /api/v1/authorize con session id come query param
+  deactivate be
+end
+
+io -> iab: /authorize con session id
+deactivate io
+activate iab
+@enduml
