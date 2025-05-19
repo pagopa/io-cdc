@@ -1,0 +1,25 @@
+name: Deploy CDN (frontend)
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - master
+    paths:
+      - "apps/frontend/CHANGELOG.md"
+      - ".github/workflows/deploy-frontend.yaml"
+
+jobs:
+  deploy:
+    name: Deploy Frontend
+    uses: ./.github/workflows/cdn_deploy.yaml
+    secrets: inherit
+    with:
+      workspace_name: frontend
+      environment: app-prod
+      resource_group_name: io-p-itn-cdc-rg-01
+      storage_account_name: iopitncdcfest01
+      blob_container_name: $web
+      frontdoor_name: io-p-itn-cdc-fe-afd-01
+      use_private_agent: true
+      use_labels: true
