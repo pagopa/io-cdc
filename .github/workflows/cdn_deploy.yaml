@@ -1,0 +1,143 @@
+on:
+  workflow_call:
+    inputs:
+      workspace_name:
+        description: The folder of the app.
+        type: string
+        required: true
+      environment:
+        description: Environment where the artifact will be deployed.
+        type: string
+        required: true
+      resource_group_name:
+        description: Resource group name.
+        type: string
+        required: true
+      storage_account_name:
+        description: Storage account name.
+        type: string
+        required: true
+      blob_container_name:
+        description: Blob container name.
+        type: string
+        required: true
+      frontdoor_name:
+        description: CDN profile name.
+        type: string
+        required: true
+      use_private_agent:
+        description: Use a private agent to deploy the built artifact.
+        type: boolean
+        required: false
+        default: true
+      use_labels:
+        description: Use labels to start the right environment's GitHub runner. If use_labels is true, also use_private_agent must be set to true
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-cd
+  cancel-in-progress: true
+
+env:
+  BUNDLE_NAME: bundle
+
+jobs:
+  build:
+    name: Build Artifact
+    runs-on: ${{ inputs.use_labels && inputs.use_private_agent && inputs.environment || inputs.use_private_agent && 'self-hosted' || 'ubuntu-latest' }}    
+    env:
+      WORKSPACE: ${{ inputs.workspace_name }}
+
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        name: Checkout
+
+      - name: Prune
+        run: npx turbo@2 prune --scope ${{ env.WORKSPACE }}
+
+      - name: Node Setup
+        uses: pagopa/dx/.github/actions/node-setup@main
+        with:
+          working_dir: .
+
+      - name: Install dependencies
+        run: yarn install --immutable
+        working-directory: .
+
+      - name: Build
+        run: yarn build
+        working-directory: .
+
+      - name: Build the artifact
+        id: make-artifact
+        env:
+          # we fall back to node-moules, even in case pnp is configured, in order to avoid bundling dependendencies
+          YARN_NODE_LINKER: node-modules
+          YARN_NM_HOISTING_LIMITS: workspaces
+        run: |
+          set -e
+
+          # generate node_modules folder excluding devDependencies
+          yarn workspaces focus --production
+
+          mkdir ${{ github.run_id }}
+          
+          # create the artifact (zip)
+          zip -r $BUNDLE_NAME.zip ./apps/${{ inputs.workspace_name }}/dist/*
+
+          echo "artifact-path=$(realpath $BUNDLE_NAME.zip)" >> "$GITHUB_OUTPUT"
+        working-directory: .
+
+      - name: Upload Artifact
+        uses: pagopa/dx/.github/actions/upload-artifact@main
+        with:
+          bundle_name: ${{ env.BUNDLE_NAME }}
+          file_path: ${{ steps.make-artifact.outputs.artifact-path }}
+
+  deploy:
+    name: Deploy
+    if: ${{ !github.event.act }}
+    needs: [build]
+    runs-on: ${{ inputs.use_labels && inputs.use_private_agent && inputs.environment || inputs.use_private_agent && 'self-hosted' || 'ubuntu-latest' }}
+    environment: ${{ inputs.environment }}-cd
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 # v4.1.1
+        with:
+          name: ${{ env.BUNDLE_NAME }}
+
+      - name: Azure Login
+        uses: azure/login@a65d910e8af852a8061c627c456678983e180302 # v2
+        env:
+          ARM_USE_OIDC: true
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          tenant-id: ${{ secrets.ARM_TENANT_ID }}
+          subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+
+      - name: Deploy
+        id: deploy-artifact
+        run: |
+          echo Downloading AZ Copy...
+          curl -L  https://aka.ms/downloadazcopy-v10-linux > azcopy.tar.gz
+          echo Extracting AZ Copy...
+          tar -xzf azcopy.tar.gz
+          echo Moving AZ Copy...
+          mkdir -p /home/runner/.azure/bin/ && cp $(find . -type d -name "azcopy*")/azcopy /home/runner/.azure/bin/azcopy
+          echo Unzipping bundle into dist folder...
+          unzip ${{ env.BUNDLE_NAME }}.zip
+          echo Copying dist folder to storage...
+          az storage blob sync --auth-mode login --container '${{ inputs.blob_container_name }}' --account-name '${{ inputs.storage_account_name}}' --source 'dist'
+        working-directory: .
+
+      - name: Purge CDN
+        id: purge-cdn
+        run: |
+          az network front-door purge-endpoint --resource-group '${{ inputs.resource_group_name }}' --name '${{ inputs.frontdoor_name }}' --content-paths '/*'
+        working-directory: .
