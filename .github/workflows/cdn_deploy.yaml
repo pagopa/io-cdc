@@ -41,9 +41,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  WORKSPACE: ${{ inputs.workspace_name }}
   BUNDLE_NAME: bundle
-  TURBO_CACHE_DIR: .turbo-cache
 
 jobs:
   build:
@@ -51,6 +49,7 @@ jobs:
     runs-on: ${{ inputs.use_labels && inputs.use_private_agent && inputs.environment || inputs.use_private_agent && 'self-hosted' || 'ubuntu-latest' }}    
     env:
       WORKSPACE: ${{ inputs.workspace_name }}
+      TURBO_CACHE_DIR: .turbo-cache
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
