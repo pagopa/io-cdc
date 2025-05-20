@@ -105,6 +105,7 @@ module "repo" {
     topics             = local.repository.topics
     reviewers_teams    = local.repository.reviewers_teams
     app_cd_policy_tags = local.repository.app_cd_policy_tags
+    app_cd_policy_branches = ["*"]
   }
 
   github_private_runner = {
