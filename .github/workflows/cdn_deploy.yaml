@@ -70,15 +70,15 @@ jobs:
         if: steps.turbo-version.outputs.version != '1'
         run: npx turbo prune --scope ${{ env.WORKSPACE }}
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Setup Node.js
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b #v4.0.3
         with:
           node-version-file: ".node-version"
           cache: "yarn"
           cache-dependency-path: "./out/yarn.lock"
+
+      - name: Enable Corepack
+        run: corepack enable
 
       # we fall back to node-modules, even in case pnp is configured, in order to avoid bundling dependendencies
       - name: Install dependencies
