@@ -46,29 +46,47 @@ env:
 jobs:
   build:
     name: Build Artifact
-    runs-on: ${{ inputs.use_labels && inputs.use_private_agent && inputs.environment || inputs.use_private_agent && 'self-hosted' || 'ubuntu-latest' }}    
+    runs-on: ubuntu-latest    
     env:
       WORKSPACE: ${{ inputs.workspace_name }}
+      TURBO_CACHE_DIR: .turbo-cache
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         name: Checkout
 
       - name: Prune
-        run: npx turbo@2 prune --scope ${{ env.WORKSPACE }}
+        run: npx turbo prune --scope ${{ env.WORKSPACE }}
 
-      - name: Node Setup
-        uses: pagopa/dx/.github/actions/node-setup@main
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b #v4.0.3
         with:
-          working_dir: .
+          node-version-file: ".node-version"
+          cache: "yarn"
+          cache-dependency-path: "./out/yarn.lock"
 
+      # we fall back to node-modules, even in case pnp is configured, in order to avoid bundling dependendencies
       - name: Install dependencies
-        run: yarn install --immutable
-        working-directory: .
+        run: |
+          yarn config set nodeLinker node-modules
+          yarn config set nmHoistingLimits workspaces
+          yarn install --immutable
+        working-directory: ./out
+
+      - name: Restore turbo cache
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 #v4.2.0
+        with:
+          path: ./out/${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo
 
       - name: Build
         run: yarn build
-        working-directory: .
+        working-directory: ./out
 
       - name: Build the artifact
         id: make-artifact
@@ -85,10 +103,11 @@ jobs:
           mkdir ${{ github.run_id }}
           
           # create the artifact (zip)
-          zip -r $BUNDLE_NAME.zip ./apps/${{ inputs.workspace_name }}/dist/*
+          zip -r $BUNDLE_NAME.zip dist/*
 
           echo "artifact-path=$(realpath $BUNDLE_NAME.zip)" >> "$GITHUB_OUTPUT"
-        working-directory: .
+        working-directory: ./out/apps/${{ env.WORKSPACE }}
+
 
       - name: Upload Artifact
         uses: pagopa/dx/.github/actions/upload-artifact@main

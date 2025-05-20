@@ -21,5 +21,4 @@ jobs:
       storage_account_name: iopitncdcfest01
       blob_container_name: $web
       frontdoor_name: io-p-itn-cdc-fe-afd-01
-      use_private_agent: true
       use_labels: false
