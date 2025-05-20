@@ -41,7 +41,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  WORKSPACE: ${{ inputs.workspace_name }}
   BUNDLE_NAME: bundle
+  TURBO_CACHE_DIR: .turbo-cache
 
 jobs:
   build:
