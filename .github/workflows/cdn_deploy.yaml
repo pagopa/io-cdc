@@ -103,7 +103,7 @@ jobs:
           mkdir ${{ github.run_id }}
           
           # create the artifact (zip)
-          zip -r $BUNDLE_NAME.zip ./apps/${{ inputs.workspace_name }}/dist/*
+          zip -r $BUNDLE_NAME.zip /dist/*
 
           echo "artifact-path=$(realpath $BUNDLE_NAME.zip)" >> "$GITHUB_OUTPUT"
         working-directory: ./out/apps/${{ env.WORKSPACE }}
