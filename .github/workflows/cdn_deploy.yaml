@@ -25,6 +25,10 @@ on:
         description: CDN profile name.
         type: string
         required: true
+      frontdoor_endpoint_name:
+        description: CDN profile endpoint name.
+        type: string
+        required: true
       use_private_agent:
         description: Use a private agent to deploy the built artifact.
         type: boolean
@@ -158,5 +162,5 @@ jobs:
       - name: Purge CDN
         id: purge-cdn
         run: |
-          az network front-door purge-endpoint --resource-group '${{ inputs.resource_group_name }}' --name '${{ inputs.frontdoor_name }}' --content-paths '/*'
+          az cdn endpoint purge --resource-group '${{ inputs.resource_group_name }}' --profile-name '${{ inputs.frontdoor_name }}' --endpoint-name '${{ inputs.frontdoor_endpoint_name }}' --content-paths '/*'
         working-directory: .

@@ -16,9 +16,10 @@ jobs:
     secrets: inherit
     with:
       workspace_name: frontend
-      environment: infra-prod
+      environment: app-prod
       resource_group_name: io-p-itn-cdc-rg-01
       storage_account_name: iopitncdcfest01
       blob_container_name: $web
       frontdoor_name: io-p-itn-cdc-fe-afd-01
+      frontdoor_endpoint_name: io-p-itn-cdc-fe-fde-01
       use_labels: false
