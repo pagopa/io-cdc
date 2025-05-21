@@ -16,7 +16,7 @@ jobs:
     secrets: inherit
     with:
       workspace_name: frontend
-      environment: app-prod
+      environment: infra-prod
       resource_group_name: io-p-itn-cdc-rg-01
       storage_account_name: iopitncdcfest01
       blob_container_name: $web
