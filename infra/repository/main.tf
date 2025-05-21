@@ -74,9 +74,24 @@ data "azuread_group" "developers" {
   display_name = local.adgroups.devs_name
 }
 
+moved {
+  from = module.repo.github_repository.this
+  to   = module.repo.module.github_repository["repo"].github_repository.this
+}
+
+moved {
+  from = module.repo.github_branch_default.main
+  to = module.repo.module.github_repository["repo"].github_branch_default.main
+}
+
+moved {
+  from = module.repo.github_branch_protection.main
+  to   = module.repo.module.github_repository["repo"].github_branch_protection.main
+}
+
 module "repo" {
   source  = "pagopa-dx/azure-github-environment-bootstrap/azurerm"
-  version = "~> 1.0"
+  version = "~> 2.2"
 
   environment = {
     prefix          = local.prefix
