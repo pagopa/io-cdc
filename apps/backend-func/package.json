@@ -39,6 +39,7 @@
     "@pagopa/openapi-codegen-ts": "^13.2.0",
     "@pagopa/ts-commons": "^12.6.0",
     "fp-ts": "^2.16.5",
-    "io-ts": "^2.2.21"
+    "io-ts": "^2.2.21",
+    "jose": "^6.0.11"
   }
 }

@@ -48,15 +48,9 @@ data "azurerm_application_insights" "common" {
   resource_group_name = data.azurerm_resource_group.weu_common.name
 }
 
-/*
-
-data "azurerm_application_gateway" "io_app_gateway" {
-  name                = "io-p-appgateway"
-  resource_group_name = "io-p-rg-external"
-}
-
-data "azurerm_key_vault_secret" "cosmosdb_cdc_uri" {
-  name         = "COSMOSDB-CDC-URI"
+// SECRETS
+data "azurerm_key_vault_secret" "cosmosdb_cdc_database_name" {
+  name         = "COSMOSDB-CDC-DATABASE-NAME"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
@@ -65,9 +59,37 @@ data "azurerm_key_vault_secret" "cosmosdb_cdc_key" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "storage_cdc_connection_string" {
-  name         = "STORAGE-CDC-CONNECTION-STRING"
+data "azurerm_key_vault_secret" "services_api_url" {
+  name         = "SERVICES-API-URL"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-*/
+data "azurerm_key_vault_secret" "services_api_key" {
+  name         = "SERVICES-API-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_base_url" {
+  name         = "FIMS-BASE-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_client_id" {
+  name         = "FIMS-CLIENT-ID"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_client_secret" {
+  name         = "FIMS-CLIENT-SECRET"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_public_key" {
+  name         = "JWT-PUBLIC-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_private_key" {
+  name         = "JWT-PRIVATE-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}

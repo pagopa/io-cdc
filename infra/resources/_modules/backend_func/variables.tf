@@ -124,3 +124,27 @@ variable "redis_password" {
   description = "Redis password"
 }
 
+variable "fims_base_url" {
+  type        = string
+  description = "FIMS base url"
+}
+
+variable "fims_client_id" {
+  type        = string
+  description = "FIMS client id"
+}
+
+variable "fims_client_secret" {
+  type        = string
+  description = "FIMS client secret"
+}
+
+variable "jwt_public_key" {
+  type        = string
+  description = "JWT public key"
+}
+
+variable "jwt_private_key" {
+  type        = string
+  description = "JWT private key"
+}

@@ -13,6 +13,15 @@ locals {
       SERVICES_API_URL = var.services_api_url
       SERVICES_API_KEY = var.services_api_key
 
+      // FIMS
+      FIMS_BASE_URL  = var.fims_base_url
+      FIMS_CLIENT_ID = var.fims_client_id
+      FIMS_CLIENT_SECRET = var.fims_client_secret
+
+      // JWT
+      JWT_PUBLIC_KEY  = var.jwt_public_key
+      JWT_PRIVATE_KEY = var.jwt_private_key
+
       // REDIS
       REDIS_URL             = var.redis_url
       REDIS_PORT            = var.redis_port
