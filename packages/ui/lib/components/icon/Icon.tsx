@@ -7,9 +7,11 @@ import IconError from "./svg/IconError";
 import IconExpandUp from "./svg/IconExpandUp";
 import IconInitiativeExpired from "./svg/IconInitiativeExpired";
 import IconParty from "./svg/IconParty";
+import IconRequestedAllYears from "./svg/IconRequestedAllYears";
 import IconUmbrella from "./svg/IconUmbrella";
 
 export const Icons = {
+  allYearsRequested: IconRequestedAllYears,
   arrowCircleLeftBold: IconArrowCircleLeftBold,
   arrowCircleRightBold: IconArrowCircleRightBold,
   closeCircle: IconCloseCircle,

@@ -16,7 +16,7 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
     description: null,
   },
   alreadyRequested: {
-    image: 'initiativeExpired',
+    image: 'allYearsRequested',
     title: 'Hai già richiesto la Carta per tutti gli anni disponibili',
     description: "Riceverai un messaggio su IO con l'esito della tua richiesta.",
   },
