@@ -32,15 +32,15 @@ export const makeInfoHandler: H.Handler<
       return pipe(
         encryptJwtTE(config, {
           first_name: "A",
-          last_name: "B",
           fiscal_code: "CF",
+          last_name: "B",
         }),
-        TE.mapLeft((_) => ["errore dummy"]),
+        TE.mapLeft(() => ["errore dummy"]),
         RTE.fromTaskEither,
       );
     }),
     RTE.map((jwtOrError) =>
-      H.successJson({ name: "it works!", version: "0.0.1", jwt: jwtOrError }),
+      H.successJson({ jwt: jwtOrError, name: "it works!", version: "0.0.1" }),
     ),
     RTE.mapLeft((problems) => new H.HttpError(problems.join("\n\n"))),
   ),

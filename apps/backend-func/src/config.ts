@@ -18,9 +18,9 @@ export type Config = t.TypeOf<typeof Config>;
 export const Config = t.type({
   APPINSIGHTS_INSTRUMENTATIONKEY: NonEmptyString,
 
-  COSMOSDB_CDC_URI: NonEmptyString,
-  COSMOSDB_CDC_KEY: NonEmptyString,
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
+  COSMOSDB_CDC_KEY: NonEmptyString,
+  COSMOSDB_CDC_URI: NonEmptyString,
 
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
 
@@ -28,17 +28,17 @@ export const Config = t.type({
   FIMS_CLIENT_ID: NonEmptyString,
   FIMS_CLIENT_SECRET: NonEmptyString,
 
-  JWT_PUBLIC_KEY: NonEmptyString,
   JWT_PRIVATE_KEY: NonEmptyString,
+  JWT_PUBLIC_KEY: NonEmptyString,
 
-  REDIS_URL: NonEmptyString,
-  REDIS_PORT: NonEmptyString,
-  REDIS_PASSWORD: NonEmptyString,
   REDIS_CLUSTER_ENABLED: t.boolean,
+  REDIS_PASSWORD: NonEmptyString,
+  REDIS_PORT: NonEmptyString,
   REDIS_TLS_ENABLED: t.boolean,
+  REDIS_URL: NonEmptyString,
 
-  SERVICES_API_URL: NonEmptyString,
   SERVICES_API_KEY: NonEmptyString,
+  SERVICES_API_URL: NonEmptyString,
 
   isProduction: t.boolean,
 });
