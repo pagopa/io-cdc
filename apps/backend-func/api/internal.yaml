@@ -23,6 +23,82 @@ paths:
                 $ref: '#/components/schemas/ApplicationInfo'
         '500':
           description: Internal Server error
+  /fauth:
+    get:
+      operationId: fimsAuth
+      parameters:
+        - in: query
+          name: device
+          required: false
+          schema:
+            type: string
+      responses:
+        '301':
+          description: Redirect to openid  provider
+        '500':
+          description: Internal Server error
+  /fcb:
+    get:
+      operationId: fimsCallback
+      parameters:
+        - in: query
+          name: state
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '301':
+          description: Redirect to RP Authorize
+        '500':
+          description: Internal Server error
+  /api/v1/authorize:
+    get:
+      operationId: authorize
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session Token successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionToken'
+        '500':
+          description: Internal Server error
+  /api/v1/requests:
+    get:
+      operationId: getRequest
+      parameters:
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        #INSERT 200
+        '500':
+          description: Internal Server error
+    post:
+      operationId: insertRequest
+      parameters:
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        #INSERT 200
+        '500':
+          description: Internal Server error
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -88,6 +164,13 @@ components:
       required:
         - name
         - version
+    SessionToken:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
     ProblemJson:
       type: object
       properties:
