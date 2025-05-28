@@ -2347,6 +2347,7 @@ __metadata:
     eslint: "npm:^8.57.0"
     fp-ts: "npm:^2.16.5"
     io-ts: "npm:^2.2.21"
+    jose: "npm:5.9.6"
     prettier: "npm:^3.2.5"
     shx: "npm:^0.3.2"
     swagger-cli: "npm:^4.0.4"
@@ -4244,6 +4245,13 @@ __metadata:
   version: 1.4.0
   resolution: "jju@npm:1.4.0"
   checksum: 10c0/f3f444557e4364cfc06b1abf8331bf3778b26c0c8552ca54429bc0092652172fdea26cbffe33e1017b303d5aa506f7ede8571857400efe459cb7439180e2acad
+  languageName: node
+  linkType: hard
+
+"jose@npm:5.9.6":
+  version: 5.9.6
+  resolution: "jose@npm:5.9.6"
+  checksum: 10c0/d6bcd8c7d655b5cda8e182952a76f0c093347f5476d74795405bb91563f7ab676f61540310dd4b1531c60d685335ceb600571a409551d2cbd2ab3e9f9fbf1e4d
   languageName: node
   linkType: hard
 

@@ -6,7 +6,9 @@ import * as Task from "fp-ts/lib/Task";
 import * as TE from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";
 
+import { getConfigOrThrow } from "../config";
 import { ApplicationInfo } from "../generated/definitions/internal/ApplicationInfo";
+import { encryptJwtTE } from "../utils/jwt.js";
 
 const applicativeValidation = RTE.getApplicativeReaderTaskValidation(
   Task.ApplicativePar,
@@ -25,7 +27,21 @@ export const makeInfoHandler: H.Handler<
     // TODO: Add all the function health checks
     [dummyHealthCheck],
     RA.sequence(applicativeValidation),
-    RTE.map(() => H.successJson({ name: "it works!", version: "0.0.1" })),
+    RTE.chainW(() => {
+      const config = getConfigOrThrow();
+      return pipe(
+        encryptJwtTE(config, {
+          first_name: "A",
+          last_name: "B",
+          fiscal_code: "CF",
+        }),
+        TE.mapLeft((_) => ["errore dummy"]),
+        RTE.fromTaskEither,
+      );
+    }),
+    RTE.map((jwtOrError) =>
+      H.successJson({ name: "it works!", version: "0.0.1", jwt: jwtOrError }),
+    ),
     RTE.mapLeft((problems) => new H.HttpError(problems.join("\n\n"))),
   ),
 );
