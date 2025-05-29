@@ -1,0 +1,6 @@
+{
+  "backend_func.cdc_backend_func": "83c22598e95c022813d067c8d6dd0fdc6fb038c76186e470d74bbc2a5f33f1cb",
+  "cdn_fe.cdc_fe_cdn": "2feb3d39179b485fe80ead6baed1db6a08f1676741e7ea92dabcc785ab9f2835",
+  "cosmos_db.cdc_cosmos_account": "e7a29cad7f9357d02572ec1aeb81dad7cb6823437b7ab1199cdb2beb0499dd3e",
+  "storage_fe.cdc_storage_fe": "9cc67e55541c07d3676b08076bd831da45875fb7fa5abaf2eacbfa105cb7484e"
+}
