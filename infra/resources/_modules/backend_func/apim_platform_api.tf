@@ -43,15 +43,15 @@ resource "azurerm_api_management_api" "apim_platform_cdc_api_v1" {
 
 resource "azurerm_api_management_api_policy" "apim_platform_cdc_api_v1_policy" {
   api_name            = azurerm_api_management_api.apim_platform_cdc_api_v1.name
-  api_management_name = azurerm_api_management_api.apim_platform_cdc_api_v.api_management_name
-  resource_group_name = azurerm_api_management_api.apim_platform_cdc_api_v.resource_group_name
+  api_management_name = azurerm_api_management_api.apim_platform_cdc_api_v1.api_management_name
+  resource_group_name = azurerm_api_management_api.apim_platform_cdc_api_v1.resource_group_name
 
   xml_content = file("${path.module}/api/_base_policy.xml")
 }
 
 resource "azurerm_api_management_product_api" "apim_platform_cdc_api_v1_product" {
   api_name            = azurerm_api_management_api.apim_platform_cdc_api_v1.name
-  api_management_name = azurerm_api_management_api.apim_platform_cdc_api_v.api_management_name
-  resource_group_name = azurerm_api_management_api.apim_platform_cdc_api_v.resource_group_name
+  api_management_name = azurerm_api_management_api.apim_platform_cdc_api_v1.api_management_name
+  resource_group_name = azurerm_api_management_api.apim_platform_cdc_api_v1.resource_group_name
   product_id          = azurerm_api_management_product.apim_platform_cdc_product.product_id
 }
