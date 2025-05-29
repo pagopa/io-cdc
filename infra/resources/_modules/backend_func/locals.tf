@@ -14,8 +14,8 @@ locals {
       SERVICES_API_KEY = var.services_api_key
 
       // FIMS
-      FIMS_BASE_URL  = var.fims_base_url
-      FIMS_CLIENT_ID = var.fims_client_id
+      FIMS_BASE_URL      = var.fims_base_url
+      FIMS_CLIENT_ID     = var.fims_client_id
       FIMS_CLIENT_SECRET = var.fims_client_secret
 
       // JWT
