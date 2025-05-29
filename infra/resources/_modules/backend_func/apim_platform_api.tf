@@ -19,6 +19,14 @@ resource "azurerm_api_management_product_policy" "apim_platform_cdc_product_poli
   xml_content = file("${path.module}/api_product/_base_policy.xml")
 }
 
+resource "azurerm_api_management_api_version_set" "apim_platform_cdc_api_version_set" {
+  name                = "apim_platform_cdc_api_v1"
+  api_management_name = azurerm_api_management_product.apim_platform_cdc_product.api_management_name
+  resource_group_name = azurerm_api_management_product.apim_platform_cdc_product.resource_group_name
+  display_name        = "V1 APIs"
+  versioning_scheme   = "Segment"
+}
+
 resource "azurerm_api_management_api" "apim_platform_cdc_api_v1" {
   name = format("%s-%s-cdc-public-api", var.prefix, var.env_short)
 
@@ -28,7 +36,9 @@ resource "azurerm_api_management_api" "apim_platform_cdc_api_v1" {
   subscription_required = false
   service_url           = format("https://%s/api/v1", module.cdc_backend_func.function_app.function_app.default_hostname)
 
-  revision = "1"
+  version_set_id = azurerm_api_management_api_version_set.apim_platform_cdc_api_version_set.id
+  version        = "v1"
+  revision       = "1"
 
   description  = "IO CDC PUBLIC API"
   display_name = "IO CDC PUBLIC API"
