@@ -11,8 +11,8 @@ module "cdc_storage_fe" {
     instance_number = var.instance_number
   }
 
-  resource_group_name = var.resource_group_name
-  subnet_pep_id = var.subnet_pep_id
+  resource_group_name                 = var.resource_group_name
+  subnet_pep_id                       = var.subnet_pep_id
   force_public_network_access_enabled = true
 
   static_website = {
