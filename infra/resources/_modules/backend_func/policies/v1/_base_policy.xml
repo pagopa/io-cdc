@@ -1,7 +1,7 @@
 <policies>
     <inbound>
         <base />
-        <set-backend-service base-url="{{io-cdc-backend-func-kurl}}/api/v1" />
+        <set-backend-service base-url="{{io-cdc-backend-func-kurl}}" />
         <set-header name="x-functions-key" exists-action="override">
             <value>{{io-cdc-backend-func-key}}</value>
         </set-header>
