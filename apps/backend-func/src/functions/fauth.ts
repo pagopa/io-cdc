@@ -6,13 +6,9 @@ import * as Task from "fp-ts/lib/Task";
 import * as TE from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";
 
-import { Config, getConfigOrThrow } from "../config";
+import { getConfigOrThrow } from "../config";
 import { ApplicationInfo } from "../generated/definitions/internal/ApplicationInfo";
 import { encryptJwtTE } from "../utils/jwt.js";
-
-type Dependencies = {
-  config: Config;
-};
 
 const applicativeValidation = RTE.getApplicativeReaderTaskValidation(
   Task.ApplicativePar,
@@ -22,17 +18,17 @@ const applicativeValidation = RTE.getApplicativeReaderTaskValidation(
 const dummyHealthCheck = (): TE.TaskEither<readonly string[], true> =>
   TE.of(true);
 
-export const makeInfoHandler: H.Handler<
+export const makeFimsAuthHandler: H.Handler<
   H.HttpRequest,
   H.HttpResponse<ApplicationInfo, 200>,
-  Dependencies
+  undefined
 > = H.of(() =>
   pipe(
     // TODO: Add all the function health checks
     [dummyHealthCheck],
     RA.sequence(applicativeValidation),
-    RTE.chainW(RTE.ask<Dependencies>),
-    RTE.chainW(({ config }) => {
+    RTE.chainW(() => {
+      const config = getConfigOrThrow();
       return pipe(
         encryptJwtTE(config, {
           first_name: "A",
@@ -50,4 +46,4 @@ export const makeInfoHandler: H.Handler<
   ),
 );
 
-export const InfoFn = httpAzureFunction(makeInfoHandler);
+export const FimsAuthFn = httpAzureFunction(makeFimsAuthHandler);
