@@ -93,3 +93,8 @@ data "azurerm_key_vault_secret" "jwt_private_key" {
   name         = "JWT-PRIVATE-KEY"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
+
+data "azurerm_key_vault_secret" "cdc_backend_func_key" {
+  name         = "CDC-BACKEND-FUNC-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
