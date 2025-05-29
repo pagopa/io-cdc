@@ -23,7 +23,7 @@ paths:
                 $ref: '#/components/schemas/ApplicationInfo'
         '500':
           description: Internal Server error
-  /fauth:
+  /api/v1/fauth:
     get:
       operationId: fimsAuth
       parameters:
@@ -37,7 +37,7 @@ paths:
           description: Redirect to openid  provider
         '500':
           description: Internal Server error
-  /fcb:
+  /api/v1/fcb:
     get:
       operationId: fimsCallback
       parameters:
