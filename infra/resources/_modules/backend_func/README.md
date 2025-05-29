@@ -25,6 +25,7 @@ No requirements.
 | [azurerm_api_management_api_policy.cdc_v1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_api_policy) | resource |
 | [azurerm_api_management_api_version_set.cdc](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_api_version_set) | resource |
 | [azurerm_api_management_named_value.cdc_backend_func_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_named_value) | resource |
+| [azurerm_api_management_named_value.cdc_backend_func_url](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_named_value) | resource |
 | [azurerm_api_management_product.cdc](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product) | resource |
 | [azurerm_api_management_product_api.cdc_v1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_api) | resource |
 | [azurerm_api_management_product_policy.cdc](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_policy) | resource |
@@ -39,6 +40,7 @@ No requirements.
 | <a name="input_ai_instrumentation_key"></a> [ai\_instrumentation\_key](#input\_ai\_instrumentation\_key) | The key to connect to application insights | `string` | n/a | yes |
 | <a name="input_ai_sampling_percentage"></a> [ai\_sampling\_percentage](#input\_ai\_sampling\_percentage) | The sampling percentage for application insights | `string` | n/a | yes |
 | <a name="input_cdc_backend_func_key"></a> [cdc\_backend\_func\_key](#input\_cdc\_backend\_func\_key) | The key for apim to call functions APIs | `string` | n/a | yes |
+| <a name="input_cdc_backend_func_url"></a> [cdc\_backend\_func\_url](#input\_cdc\_backend\_func\_url) | The url for apim to call functions APIs | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_database_name"></a> [cosmosdb\_cdc\_database\_name](#input\_cosmosdb\_cdc\_database\_name) | Database name for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_key"></a> [cosmosdb\_cdc\_key](#input\_cosmosdb\_cdc\_key) | Connection key for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_uri"></a> [cosmosdb\_cdc\_uri](#input\_cosmosdb\_cdc\_uri) | Connection uri for CdC cosmosdb | `string` | n/a | yes |

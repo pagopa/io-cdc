@@ -162,6 +162,12 @@ variable "jwt_private_key" {
   sensitive   = true
 }
 
+variable "cdc_backend_func_url" {
+  type        = string
+  description = "The url for apim to call functions APIs"
+  sensitive   = true
+}
+
 variable "cdc_backend_func_key" {
   type        = string
   description = "The key for apim to call functions APIs"

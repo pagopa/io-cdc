@@ -34,7 +34,6 @@ resource "azurerm_api_management_api" "cdc_v1" {
   resource_group_name = data.azurerm_api_management.apim_platform.resource_group_name
 
   subscription_required = false
-  service_url           = format("https://%s/api/v1", module.cdc_backend_func.function_app.function_app.default_hostname)
 
   version_set_id = azurerm_api_management_api_version_set.cdc.id
   version        = "v1"
@@ -64,6 +63,15 @@ resource "azurerm_api_management_product_api" "cdc_v1" {
   api_management_name = azurerm_api_management_api.cdc_v1.api_management_name
   resource_group_name = azurerm_api_management_api.cdc_v1.resource_group_name
   product_id          = azurerm_api_management_product.cdc.product_id
+}
+
+resource "azurerm_api_management_named_value" "cdc_backend_func_url" {
+  name                = "io-cdc-backend-func-url"
+  api_management_name = azurerm_api_management_api.cdc_v1.api_management_name
+  resource_group_name = azurerm_api_management_api.cdc_v1.resource_group_name
+  display_name        = "io-cdc-backend-func-url"
+  value               = var.cdc_backend_func_url
+  secret              = "true"
 }
 
 resource "azurerm_api_management_named_value" "cdc_backend_func_key" {
