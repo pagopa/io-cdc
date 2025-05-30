@@ -4,6 +4,7 @@ import { getConfigOrThrow } from "./config";
 import { InfoFn } from "./functions/info";
 import { getRedisClientFactory } from "./utils/redis";
 import { FimsAuthFn } from "./functions/fauth";
+import { FimsCallbackFn } from "./functions/fcb";
 
 const config = getConfigOrThrow();
 
@@ -23,4 +24,12 @@ app.http("FimsAuth", {
   handler: FimsAuth,
   methods: ["GET"],
   route: "api/v1/fauth",
+});
+
+const FimsCallback = FimsCallbackFn({});
+app.http("FimsCallback", {
+  authLevel: "function",
+  handler: FimsCallback,
+  methods: ["GET"],
+  route: "api/v1/fcb",
 });
