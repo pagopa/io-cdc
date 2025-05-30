@@ -1,20 +1,21 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
+import * as E from "fp-ts/Either";
 import * as RTE from "fp-ts/lib/ReaderTaskEither";
 import * as RA from "fp-ts/lib/ReadonlyArray";
 import * as Task from "fp-ts/lib/Task";
 import * as TE from "fp-ts/lib/TaskEither";
 import { pipe } from "fp-ts/lib/function";
-import * as E from "fp-ts/Either";
+
 import { Config } from "../config";
 import { ApplicationInfo } from "../generated/definitions/internal/ApplicationInfo";
 import { getCosmosDbClientInstance } from "../utils/cosmosdb";
 import { RedisClientFactory } from "../utils/redis";
 
-type Dependencies = {
+interface Dependencies {
   config: Config;
   redisClientFactory: RedisClientFactory;
-};
+}
 
 const applicativeValidation = RTE.getApplicativeReaderTaskValidation(
   Task.ApplicativePar,

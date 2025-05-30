@@ -14,4 +14,6 @@ export const makePostCardRequestsHandler: H.Handler<
   ),
 );
 
-export const PostCardRequestsFn = httpAzureFunction(makePostCardRequestsHandler);
+export const PostCardRequestsFn = httpAzureFunction(
+  makePostCardRequestsHandler,
+);

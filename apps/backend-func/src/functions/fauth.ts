@@ -10,9 +10,7 @@ export const makeFimsAuthHandler: H.Handler<
 > = H.of(() =>
   pipe(
     RTE.of(true),
-    RTE.map(() =>
-      H.successJson("success"),
-    )
+    RTE.map(() => H.successJson("success")),
   ),
 );
 

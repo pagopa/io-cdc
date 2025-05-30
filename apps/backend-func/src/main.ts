@@ -1,7 +1,7 @@
 import { app } from "@azure/functions";
 
-import { InfoFn } from "./functions/info";
 import { getConfigOrThrow } from "./config";
+import { InfoFn } from "./functions/info";
 import { getRedisClientFactory } from "./utils/redis";
 
 const config = getConfigOrThrow();
