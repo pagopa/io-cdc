@@ -3,6 +3,7 @@ import { app } from "@azure/functions";
 import { getConfigOrThrow } from "./config";
 import { InfoFn } from "./functions/info";
 import { getRedisClientFactory } from "./utils/redis";
+import { FimsAuthFn } from "./functions/fauth";
 
 const config = getConfigOrThrow();
 
@@ -14,4 +15,12 @@ app.http("Info", {
   handler: Info,
   methods: ["GET"],
   route: "info",
+});
+
+const FimsAuth = FimsAuthFn({});
+app.http("FimsAuth", {
+  authLevel: "function",
+  handler: FimsAuth,
+  methods: ["GET"],
+  route: "api/v1/fauth",
 });
