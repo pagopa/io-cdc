@@ -5,6 +5,7 @@ import { InfoFn } from "./functions/info";
 import { getRedisClientFactory } from "./utils/redis";
 import { FimsAuthFn } from "./functions/fauth";
 import { FimsCallbackFn } from "./functions/fcb";
+import { AuthorizeFn } from "./functions/authorize";
 
 const config = getConfigOrThrow();
 
@@ -32,4 +33,12 @@ app.http("FimsCallback", {
   handler: FimsCallback,
   methods: ["GET"],
   route: "api/v1/fcb",
+});
+
+const Authorize = AuthorizeFn({});
+app.http("Authorize", {
+  authLevel: "function",
+  handler: Authorize,
+  methods: ["GET"],
+  route: "api/v1/authorize",
 });
