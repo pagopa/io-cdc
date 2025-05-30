@@ -150,6 +150,18 @@ variable "fims_client_secret" {
   sensitive   = true
 }
 
+variable "fims_issuer_url" {
+  type        = string
+  description = "FIMS issuer url"
+  sensitive   = true
+}
+
+variable "fims_scope" {
+  type        = string
+  description = "FIMS scope"
+  sensitive   = true
+}
+
 variable "jwt_public_key" {
   type        = string
   description = "JWT public key"
@@ -159,6 +171,60 @@ variable "jwt_public_key" {
 variable "jwt_private_key" {
   type        = string
   description = "JWT private key"
+  sensitive   = true
+}
+
+variable "jwt_issuer" {
+  type        = string
+  description = "JWT issuer"
+  sensitive   = true
+}
+
+variable "jwt_audience" {
+  type        = string
+  description = "JWT audience"
+  sensitive   = true
+}
+
+variable "jwt_expiration" {
+  type        = string
+  description = "JWT expiration"
+  sensitive   = true
+}
+
+variable "encryption_public_key" {
+  type        = string
+  description = "Encryption public key"
+  sensitive   = true
+}
+
+variable "encryption_private_key" {
+  type        = string
+  description = "Encryption private key"
+  sensitive   = true
+}
+
+variable "algorithm_keys" {
+  type        = string
+  description = "Keys' algorithm"
+  sensitive   = true
+}
+
+variable "algorithm_signature" {
+  type        = string
+  description = "Signature's algorithm"
+  sensitive   = true
+}
+
+variable "algorithm_encryption" {
+  type        = string
+  description = "Encryption's algorithm"
+  sensitive   = true
+}
+
+variable "encoding_encryption" {
+  type        = string
+  description = "Encryption's encoding"
   sensitive   = true
 }
 

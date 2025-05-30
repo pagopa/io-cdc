@@ -32,9 +32,23 @@ module "backend_func" {
   fims_base_url      = data.azurerm_key_vault_secret.fims_base_url.value
   fims_client_id     = data.azurerm_key_vault_secret.fims_client_id.value
   fims_client_secret = data.azurerm_key_vault_secret.fims_client_secret.value
+  fims_issuer_url    = data.azurerm_key_vault_secret.fims_issuer_url.value
+  fims_scope         = data.azurerm_key_vault_secret.fims_scope.value
 
   jwt_public_key  = data.azurerm_key_vault_secret.jwt_public_key.value
   jwt_private_key = data.azurerm_key_vault_secret.jwt_private_key.value
+
+  encryption_public_key  = data.azurerm_key_vault_secret.encryption_public_key.value
+  encryption_private_key = data.azurerm_key_vault_secret.encryption_private_key.value
+
+  jwt_issuer     = data.azurerm_key_vault_secret.jwt_issuer.value
+  jwt_audience   = data.azurerm_key_vault_secret.jwt_audience.value
+  jwt_expiration = data.azurerm_key_vault_secret.jwt_expiration.value
+
+  algorithm_keys       = data.azurerm_key_vault_secret.algorithm_keys.value
+  algorithm_signature  = data.azurerm_key_vault_secret.algorithm_signature.value
+  algorithm_encryption = data.azurerm_key_vault_secret.algorithm_encryption.value
+  encoding_encryption  = data.azurerm_key_vault_secret.encoding_encryption.value
 
   nat_gateway_id = data.azurerm_nat_gateway.itn_ng.id
 

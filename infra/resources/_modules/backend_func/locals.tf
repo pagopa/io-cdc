@@ -17,10 +17,25 @@ locals {
       FIMS_BASE_URL      = var.fims_base_url
       FIMS_CLIENT_ID     = var.fims_client_id
       FIMS_CLIENT_SECRET = var.fims_client_secret
+      FIMS_ISSUER_URL    = var.fims_issuer_url
+      FIMS_SCOPE         = var.fims_scope
 
       // JWT
       JWT_PUBLIC_KEY  = var.jwt_public_key
       JWT_PRIVATE_KEY = var.jwt_private_key
+
+      // ENCRYPTION
+      ENCRYPTION_PUBLIC_KEY  = var.encryption_public_key
+      ENCRYPTION_PRIVATE_KEY = var.encryption_private_key
+
+      // JWT AND ENCRYPTION CONFIG
+      JWT_ISSUER           = var.jwt_issuer
+      JWT_AUDIENCE         = var.jwt_audience
+      JWT_EXPIRATION       = var.jwt_expiration
+      ALGORITHM_KEYS       = var.algorithm_keys
+      ALGORITHM_SIGNATURE  = var.algorithm_signature
+      ALGORITHM_ENCRYPTION = var.algorithm_encryption
+      ENCODING_ENCRYPTION  = var.encoding_encryption
 
       // REDIS
       REDIS_URL             = var.redis_url

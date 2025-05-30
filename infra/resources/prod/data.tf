@@ -84,6 +84,16 @@ data "azurerm_key_vault_secret" "fims_client_secret" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
+data "azurerm_key_vault_secret" "fims_issuer_url" {
+  name         = "FIMS-ISSUER-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_scope" {
+  name         = "FIMS-SCOPE"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
 data "azurerm_key_vault_secret" "jwt_public_key" {
   name         = "JWT-PUBLIC-KEY"
   key_vault_id = module.key_vaults.key_vault_cdc.id
@@ -91,6 +101,51 @@ data "azurerm_key_vault_secret" "jwt_public_key" {
 
 data "azurerm_key_vault_secret" "jwt_private_key" {
   name         = "JWT-PRIVATE-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "encryption_public_key" {
+  name         = "ENCRYPTION-PUBLIC-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "encryption_private_key" {
+  name         = "ENCRYPTION-PRIVATE-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_issuer" {
+  name         = "JWT-ISSUER"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_audience" {
+  name         = "JWT-AUDIENCE"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_expiration" {
+  name         = "JWT-EXPIRATION"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "algorithm_keys" {
+  name         = "ALGORITHM-KEYS"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "algorithm_signature" {
+  name         = "ALGORITHM-SIGNATURE"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "algorithm_encryption" {
+  name         = "ALGORITHM-ENCRYPTION"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "encoding_encryption" {
+  name         = "ENCODING-ENCRYPTION"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
