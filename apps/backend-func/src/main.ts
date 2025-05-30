@@ -14,7 +14,7 @@ app.http("Info", {
   authLevel: "anonymous",
   handler: Info,
   methods: ["GET"],
-  route: "info",
+  route: "api/v1/info",
 });
 
 const FimsAuth = FimsAuthFn({});
