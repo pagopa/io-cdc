@@ -5,9 +5,9 @@ info:
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
   description: |
-    These API serve the microfrontend related to Carta della Cultura
+    These APIs serve the microfrontend related to Carta della Cultura
 servers:
-  - url: https://{function-instance-name}.azurewebsites.net
+  - url: /api/v1
 security:
   - ApiKeyAuth: []
 paths:
@@ -23,7 +23,7 @@ paths:
                 $ref: '#/components/schemas/ApplicationInfo'
         '500':
           description: Internal Server error
-  /api/v1/fauth:
+  /fauth:
     get:
       operationId: fimsAuth
       parameters:
@@ -37,7 +37,7 @@ paths:
           description: Redirect to openid  provider
         '500':
           description: Internal Server error
-  /api/v1/fcb:
+  /fcb:
     get:
       operationId: fimsCallback
       parameters:
@@ -56,7 +56,7 @@ paths:
           description: Redirect to RP Authorize
         '500':
           description: Internal Server error
-  /api/v1/authorize:
+  /authorize:
     get:
       operationId: authorize
       parameters:
@@ -74,9 +74,9 @@ paths:
                 $ref: '#/components/schemas/SessionToken'
         '500':
           description: Internal Server error
-  /api/v1/requests:
+  /card-requests:
     get:
-      operationId: getRequest
+      operationId: getCardRequests
       parameters:
         - in: header
           name: token
@@ -88,7 +88,7 @@ paths:
         '500':
           description: Internal Server error
     post:
-      operationId: insertRequest
+      operationId: insertCardRequest
       parameters:
         - in: header
           name: token

@@ -23,7 +23,7 @@ resource "azurerm_api_management_api_version_set" "cdc" {
   name                = "cdc_v1"
   api_management_name = azurerm_api_management_product.cdc.api_management_name
   resource_group_name = azurerm_api_management_product.cdc.resource_group_name
-  display_name        = "V1 APIs"
+  display_name        = "CdC V1 APIs"
   versioning_scheme   = "Segment"
 }
 
