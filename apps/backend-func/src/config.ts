@@ -16,7 +16,7 @@ import * as t from "io-ts";
 
 export type Config = t.TypeOf<typeof Config>;
 export const Config = t.type({
-  APPINSIGHTS_INSTRUMENTATIONKEY: NonEmptyString,
+  APPLICATIONINSIGHTS_CONNECTION_STRING: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
   COSMOSDB_CDC_KEY: NonEmptyString,
