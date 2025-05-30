@@ -6,6 +6,8 @@ import { getRedisClientFactory } from "./utils/redis";
 import { FimsAuthFn } from "./functions/fauth";
 import { FimsCallbackFn } from "./functions/fcb";
 import { AuthorizeFn } from "./functions/authorize";
+import { GetCardRequestsFn } from "./functions/get-requests";
+import { PostCardRequestsFn } from "./functions/post-requests";
 
 const config = getConfigOrThrow();
 
@@ -41,4 +43,20 @@ app.http("Authorize", {
   handler: Authorize,
   methods: ["GET"],
   route: "api/v1/authorize",
+});
+
+const GetCardRequests = GetCardRequestsFn({});
+app.http("GetCardRequests", {
+  authLevel: "function",
+  handler: GetCardRequests,
+  methods: ["GET"],
+  route: "api/v1/card-requests",
+});
+
+const PostCardRequests = PostCardRequestsFn({})
+app.http("PostCardRequests", {
+  authLevel: "function",
+  handler: PostCardRequests,
+  methods: ["POST"],
+  route: "api/v1/card-requests",
 });
