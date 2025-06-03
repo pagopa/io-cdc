@@ -8,9 +8,17 @@ import { FimsCallbackFn } from "./functions/fcb";
 import { AuthorizeFn } from "./functions/authorize";
 import { GetCardRequestsFn } from "./functions/get-requests";
 import { PostCardRequestsFn } from "./functions/post-requests";
+import { getCosmosDbClientInstance } from "./utils/cosmosdb";
 
 const config = getConfigOrThrow();
 
+// CosmosDB singleton
+const cosmosDbClient = getCosmosDbClientInstance(
+  config.COSMOSDB_CDC_URI,
+  config.COSMOSDB_CDC_KEY,
+);
+
+// Redis client factory
 const redisClientFactory = getRedisClientFactory(config);
 
 const Info = InfoFn({ config, redisClientFactory });
@@ -53,7 +61,7 @@ app.http("GetCardRequests", {
   route: "api/v1/card-requests",
 });
 
-const PostCardRequests = PostCardRequestsFn({})
+const PostCardRequests = PostCardRequestsFn({});
 app.http("PostCardRequests", {
   authLevel: "function",
   handler: PostCardRequests,

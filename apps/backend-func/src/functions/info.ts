@@ -11,6 +11,7 @@ import { Config } from "../config";
 import { ApplicationInfo } from "../generated/definitions/internal/ApplicationInfo";
 import { getCosmosDbClientInstance } from "../utils/cosmosdb";
 import { RedisClientFactory } from "../utils/redis";
+import { singleStringReplyAsync } from "../utils/redis_storage";
 
 interface Dependencies {
   config: Config;
@@ -54,11 +55,13 @@ const checkRedisHealth = (
   deps: Dependencies,
 ): TE.TaskEither<readonly string[], true> =>
   pipe(
-    TE.tryCatch(
-      () => deps.redisClientFactory.getInstance(),
-      toHealthProblems("Redis"),
+    TE.tryCatch(() => deps.redisClientFactory.getInstance(), E.toError),
+    TE.chain((client) => TE.tryCatch(() => client.PING("OK"), E.toError)),
+    singleStringReplyAsync,
+    TE.chain((res) =>
+      res ? TE.of(true as const) : TE.left(new Error("Wrong reply")),
     ),
-    TE.map(() => true),
+    TE.mapLeft(toHealthProblems("Redis")),
   );
 
 export const makeInfoHandler: H.Handler<
