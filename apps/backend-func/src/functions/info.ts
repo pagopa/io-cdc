@@ -64,7 +64,7 @@ const checkRedisHealth = (
     TE.mapLeft(toHealthProblems("Redis")),
   );
 
-export const makeInfoHandler: H.Handler<
+const makeInfoHandler: H.Handler<
   H.HttpRequest,
   H.HttpResponse<ApplicationInfo, 200>,
   Dependencies

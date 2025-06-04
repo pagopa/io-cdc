@@ -9,6 +9,7 @@ import { AuthorizeFn } from "./functions/authorize";
 import { GetCardRequestsFn } from "./functions/get-requests";
 import { PostCardRequestsFn } from "./functions/post-requests";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb";
+import { GetYearsFn } from "./functions/get-years";
 
 const config = getConfigOrThrow();
 
@@ -29,7 +30,7 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
-const FimsAuth = FimsAuthFn({});
+const FimsAuth = FimsAuthFn({ redisClientFactory });
 app.http("FimsAuth", {
   authLevel: "function",
   handler: FimsAuth,
@@ -37,7 +38,7 @@ app.http("FimsAuth", {
   route: "api/v1/fauth",
 });
 
-const FimsCallback = FimsCallbackFn({});
+const FimsCallback = FimsCallbackFn({ redisClientFactory, config });
 app.http("FimsCallback", {
   authLevel: "function",
   handler: FimsCallback,
@@ -45,12 +46,20 @@ app.http("FimsCallback", {
   route: "api/v1/fcb",
 });
 
-const Authorize = AuthorizeFn({});
+const Authorize = AuthorizeFn({ redisClientFactory });
 app.http("Authorize", {
   authLevel: "function",
   handler: Authorize,
   methods: ["GET"],
   route: "api/v1/authorize",
+});
+
+const GetYears = GetYearsFn({});
+app.http("GetYears", {
+  authLevel: "function",
+  handler: GetYears,
+  methods: ["GET"],
+  route: "api/v1/years",
 });
 
 const GetCardRequests = GetCardRequestsFn({});

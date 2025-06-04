@@ -61,27 +61,64 @@ export const falsyResponseToErrorAsync =
       TE.chain((res) => (res ? TE.right(res) : TE.left(error))),
     );
 
-export const popFromList = (
+export const setTask = (
+  redisClientFactory: RedisClientFactory,
+  key: string,
+  value: string,
+  errorMsg?: string,
+): TE.TaskEither<Error, true> =>
+  pipe(
+    TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
+    TE.chain((redisClient) =>
+      TE.tryCatch(() => redisClient.SET(key, value), E.toError),
+    ),
+    singleStringReplyAsync,
+    falsyResponseToErrorAsync(
+      new Error(errorMsg ? errorMsg : "Error setting key value pair on redis"),
+    ),
+  );
+
+export const setWithExpirationTask = (
+  redisClientFactory: RedisClientFactory,
+  key: string,
+  value: string,
+  expirationInSeconds: number,
+  errorMsg?: string,
+): TE.TaskEither<Error, true> =>
+  pipe(
+    TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
+    TE.chain((redisClient) =>
+      TE.tryCatch(
+        () => redisClient.SETEX(key, expirationInSeconds, value),
+        E.toError,
+      ),
+    ),
+    singleStringReplyAsync,
+    falsyResponseToErrorAsync(
+      new Error(errorMsg ? errorMsg : "Error setting key value pair on redis"),
+    ),
+  );
+
+export const getTask = (
   redisClientFactory: RedisClientFactory,
   key: string,
 ): TE.TaskEither<Error, O.Option<string>> =>
   pipe(
     TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
     TE.chain((redisClient) =>
-      TE.tryCatch(() => redisClient.LPOP(key), E.toError),
+      TE.tryCatch(() => redisClient.GET(key), E.toError),
     ),
     singleValueReplyAsync,
   );
 
-export const pushInList = (
+export const existsKeyTask = (
   redisClientFactory: RedisClientFactory,
   key: string,
-  codes: readonly string[],
 ): TE.TaskEither<Error, boolean> =>
   pipe(
     TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
     TE.chain((redisClient) =>
-      TE.tryCatch(() => redisClient.LPUSH(key, [...codes]), E.toError),
+      TE.tryCatch(() => redisClient.EXISTS(key), E.toError),
     ),
-    integerReplAsync(),
+    integerReplAsync(1),
   );
