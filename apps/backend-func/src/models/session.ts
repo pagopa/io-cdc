@@ -4,8 +4,8 @@ import * as t from "io-ts";
 export const Session = t.intersection([
   t.type({
     firstName: NonEmptyString,
-    lastName: NonEmptyString,
     fiscalCode: FiscalCode,
+    lastName: NonEmptyString,
   }),
   t.partial({ deviceId: NonEmptyString }),
 ]);

@@ -1,5 +1,4 @@
 import * as TE from "fp-ts/TaskEither";
-import * as A from "fp-ts/Array";
 import { toError } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as jose from "jose";
@@ -27,11 +26,7 @@ export const generateKeyPairTE = () =>
         ),
       ),
     ),
-    TE.map(({ publicKey, privateKey }) => {
-      console.log(publicKey);
-      console.log(privateKey);
-      return { publicKey, privateKey };
-    }),
+    TE.map(({ privateKey, publicKey }) => ({ privateKey, publicKey })),
   );
 
 export const signJwtTE = (privateKey: string, claims: Record<string, string>) =>
@@ -58,12 +53,10 @@ export const decodeAndVerifyJwtTE = (publicKey: string, jwt: string) =>
     TE.chain((publicKey) =>
       pipe(
         TE.tryCatch(
-          () => jose.jwtVerify(jwt, publicKey, { issuer, audience }),
+          () => jose.jwtVerify(jwt, publicKey, { audience, issuer }),
           toError,
         ),
-        TE.map(({ payload }) => {
-          return payload as Record<string, string>;
-        }),
+        TE.map(({ payload }) => payload as Record<string, string>),
       ),
     ),
   );

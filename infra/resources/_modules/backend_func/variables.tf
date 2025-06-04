@@ -84,6 +84,11 @@ variable "nat_gateway_id" {
   description = "The ID of the NAT Gateway"
 }
 
+variable "cdc_base_url" {
+  type = string
+  description = "The base url for CDC redirects"
+}
+
 variable "cosmosdb_cdc_uri" {
   type        = string
   description = "Connection uri for CdC cosmosdb"

@@ -4,6 +4,9 @@ locals {
       FUNCTIONS_WORKER_PROCESS_COUNT = 4
       NODE_ENV                       = "production"
 
+      // CDC
+      CDC_BASE_URL = var.cdc_base_url
+
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri
       COSMOSDB_CDC_KEY           = var.cosmosdb_cdc_key

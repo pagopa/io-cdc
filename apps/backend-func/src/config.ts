@@ -16,35 +16,35 @@ import * as t from "io-ts";
 
 export type Config = t.TypeOf<typeof Config>;
 export const Config = t.type({
-  APPLICATIONINSIGHTS_CONNECTION_STRING: NonEmptyString,
+  ALGORITHM_ENCRYPTION: NonEmptyString,
 
+  ALGORITHM_KEYS: NonEmptyString,
+
+  ALGORITHM_SIGNATURE: NonEmptyString,
+  APPLICATIONINSIGHTS_CONNECTION_STRING: NonEmptyString,
   CDC_BASE_URL: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
+
   COSMOSDB_CDC_KEY: NonEmptyString,
   COSMOSDB_CDC_URI: NonEmptyString,
+  ENCODING_ENCRYPTION: NonEmptyString,
+  ENCRYPTION_PRIVATE_KEY: NonEmptyString,
+  ENCRYPTION_PUBLIC_KEY: NonEmptyString,
 
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
-
   FIMS_BASE_URL: NonEmptyString,
+
   FIMS_CLIENT_ID: NonEmptyString,
   FIMS_CLIENT_SECRET: NonEmptyString,
+
   FIMS_ISSUER_URL: NonEmptyString,
   FIMS_SCOPE: NonEmptyString,
-
-  JWT_PRIVATE_KEY: NonEmptyString,
-  JWT_PUBLIC_KEY: NonEmptyString,
-
-  ENCRYPTION_PUBLIC_KEY: NonEmptyString,
-  ENCRYPTION_PRIVATE_KEY: NonEmptyString,
-
-  JWT_ISSUER: NonEmptyString,
   JWT_AUDIENCE: NonEmptyString,
   JWT_EXPIRATION: NonEmptyString,
-  ALGORITHM_KEYS: NonEmptyString,
-  ALGORITHM_SIGNATURE: NonEmptyString,
-  ALGORITHM_ENCRYPTION: NonEmptyString,
-  ENCODING_ENCRYPTION: NonEmptyString,
+  JWT_ISSUER: NonEmptyString,
+  JWT_PRIVATE_KEY: NonEmptyString,
+  JWT_PUBLIC_KEY: NonEmptyString,
 
   REDIS_CLUSTER_ENABLED: t.boolean,
   REDIS_PASSWORD: NonEmptyString,

@@ -1,10 +1,9 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import * as TE from "fp-ts/TaskEither";
 import { pipe } from "fp-ts/lib/function";
-import { RedisClientFactory } from "../utils/redis";
 
+import { RedisClientFactory } from "../utils/redis";
 
 interface Dependencies {
   redisClientFactory: RedisClientFactory;

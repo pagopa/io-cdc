@@ -1,4 +1,8 @@
+import * as E from "fp-ts/Either";
+import * as TE from "fp-ts/TaskEither";
+import { pipe } from "fp-ts/lib/function";
 import { describe, expect, it } from "vitest";
+
 import {
   decodeAndVerifyJwtTE,
   decryptAndVerifyjwtTE,
@@ -8,14 +12,11 @@ import {
   signJwtTE,
   signThenEncryptJwtTE,
 } from "../jwt";
-import * as TE from "fp-ts/TaskEither";
-import * as E from "fp-ts/Either";
-import { pipe } from "fp-ts/lib/function";
 
 const jwtPayload = {
   first_name: "First",
-  last_name: "Last",
   fiscal_code: "Fiscalcode",
+  last_name: "Last",
 };
 
 describe("JWT Util", () => {

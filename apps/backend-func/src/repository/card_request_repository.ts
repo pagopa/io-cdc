@@ -1,16 +1,16 @@
 import { Container, Database } from "@azure/cosmos";
 import * as E from "fp-ts/Either";
-import * as O from "fp-ts/Option";
 import * as TE from "fp-ts/TaskEither";
 import { flow, pipe } from "fp-ts/function";
 import * as t from "io-ts";
+
 import { CardRequest } from "../models/card_request";
 
 interface CardRequestRepository {
   getAllByFiscalCode: (
     fiscalCode: CardRequest["fiscalCode"],
   ) => TE.TaskEither<Error, CardRequest[]>;
-  
+
   insert: (cardRequest: CardRequest) => TE.TaskEither<Error, void>;
 }
 

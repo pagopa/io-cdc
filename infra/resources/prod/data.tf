@@ -49,6 +49,11 @@ data "azurerm_application_insights" "common" {
 }
 
 // SECRETS
+data "azurerm_key_vault_secret" "cdc_base_url" {
+  name         = "CDC-BASE-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
 data "azurerm_key_vault_secret" "cosmosdb_cdc_database_name" {
   name         = "COSMOSDB-CDC-DATABASE-NAME"
   key_vault_id = module.key_vaults.key_vault_cdc.id
