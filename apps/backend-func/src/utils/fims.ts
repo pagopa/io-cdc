@@ -1,8 +1,9 @@
-import * as TE from "fp-ts/TaskEither";
-import { Config } from "../config";
 import { OidcClient } from "@pagopa/fims-sdk";
-import { pipe } from "fp-ts/lib/function";
+import * as TE from "fp-ts/TaskEither";
 import { toError } from "fp-ts/lib/Either";
+import { pipe } from "fp-ts/lib/function";
+
+import { Config } from "../config";
 
 export const getFimsClient = (config: Config) =>
   new OidcClient({
