@@ -74,6 +74,18 @@ paths:
                 $ref: '#/components/schemas/SessionToken'
         '500':
           description: Internal Server error
+  /years:
+    get:
+      operationId: getYears
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Years'
+        '500':
+          description: Internal Server error
   /card-requests:
     get:
       operationId: getCardRequests
@@ -171,6 +183,12 @@ components:
           type: string
       required:
         - token
+    Years:
+      type: array
+      items:
+        type: string
+      required:
+        - items
     ProblemJson:
       type: object
       properties:

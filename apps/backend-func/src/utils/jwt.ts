@@ -3,28 +3,103 @@ import { toError } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as jose from "jose";
 
-import { Config } from "../config.js";
+const algKeys = "RS256";
+const algSignature = "RS256";
+const algEncription = "RSA-OAEP-256";
+const encEncryption = "A256CBC-HS512";
 
-const alg = "RSA-OAEP-256";
-const enc = "A256CBC-HS512";
 const issuer = "PagoPA";
 const audience = "Sogei";
 const expiration = "1m";
 
-export const encryptJwtTE = (config: Config, claims: Record<string, string>) =>
+export const generateKeyPairTE = () =>
   pipe(
-    TE.tryCatch(() => jose.importSPKI(config.JWT_PUBLIC_KEY, alg), toError),
+    TE.tryCatch(() => jose.generateKeyPair(algKeys), toError),
+    TE.chain(({ privateKey, publicKey }) =>
+      pipe(
+        TE.Do,
+        TE.bind("publicKey", () =>
+          TE.tryCatch(() => jose.exportSPKI(publicKey), toError),
+        ),
+        TE.bind("privateKey", () =>
+          TE.tryCatch(() => jose.exportPKCS8(privateKey), toError),
+        ),
+      ),
+    ),
+    TE.map(({ privateKey, publicKey }) => ({ privateKey, publicKey })),
+  );
+
+export const signJwtTE = (privateKey: string, claims: Record<string, string>) =>
+  pipe(
+    TE.tryCatch(() => jose.importPKCS8(privateKey, algKeys), toError),
     TE.chain((privateKey) =>
       TE.tryCatch(
         () =>
-          new jose.EncryptJWT(claims)
-            .setProtectedHeader({ alg, enc })
+          new jose.SignJWT(claims)
+            .setProtectedHeader({ alg: algSignature })
             .setIssuedAt()
             .setIssuer(issuer)
             .setAudience(audience)
             .setExpirationTime(expiration)
-            .encrypt(privateKey),
+            .sign(privateKey),
         toError,
       ),
     ),
+  );
+
+export const decodeAndVerifyJwtTE = (publicKey: string, jwt: string) =>
+  pipe(
+    TE.tryCatch(() => jose.importSPKI(publicKey, algKeys), toError),
+    TE.chain((publicKey) =>
+      pipe(
+        TE.tryCatch(
+          () => jose.jwtVerify(jwt, publicKey, { audience, issuer }),
+          toError,
+        ),
+        TE.map(({ payload }) => payload as Record<string, string>),
+      ),
+    ),
+  );
+
+export const encrypTokenTE = (publicKey: string, token: string) =>
+  pipe(
+    TE.tryCatch(() => jose.importSPKI(publicKey, algKeys), toError),
+    TE.chain((publicKey) =>
+      TE.tryCatch(
+        () =>
+          new jose.CompactEncrypt(new TextEncoder().encode(token))
+            .setProtectedHeader({ alg: algEncription, enc: encEncryption })
+            .encrypt(publicKey),
+        toError,
+      ),
+    ),
+  );
+
+export const decryptTokenTE = (privateKey: string, token: string) =>
+  pipe(
+    TE.tryCatch(() => jose.importPKCS8(privateKey, algKeys), toError),
+    TE.chain((privateKey) =>
+      TE.tryCatch(() => jose.compactDecrypt(token, privateKey), toError),
+    ),
+    TE.map(({ plaintext }) => new TextDecoder().decode(plaintext)),
+  );
+
+export const signThenEncryptJwtTE = (
+  publicKey: string,
+  privateKey: string,
+  claims: Record<string, string>,
+) =>
+  pipe(
+    signJwtTE(privateKey, claims),
+    TE.chain((jwt) => encrypTokenTE(publicKey, jwt)),
+  );
+
+export const decryptAndVerifyjwtTE = (
+  publicKey: string,
+  privateKey: string,
+  token: string,
+) =>
+  pipe(
+    decryptTokenTE(privateKey, token),
+    TE.chain((jwt) => decodeAndVerifyJwtTE(publicKey, jwt)),
   );
