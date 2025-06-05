@@ -15,7 +15,7 @@ const ExpiredInitiative = () => {
   const { image, description, title } = EXPIRED_INITIATIVE_CONFIG_MAP[status];
   return (
     <Stack justifyContent="center" alignItems="center" height="100%" gap={4}>
-      <Icon name={image} />
+      <Icon name={image} sx={{ width: 60, height: 60 }} />
       <Stack gap={4} justifyContent="center" alignItems="center">
         <Typography variant="h4" textAlign="center">
           {title}
