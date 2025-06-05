@@ -59,3 +59,5 @@ yarn-error.log*
 
 # Auto generated client
 generated
+
+local.settings.json

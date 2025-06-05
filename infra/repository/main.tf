@@ -91,7 +91,7 @@ moved {
 
 module "repo" {
   source  = "pagopa-dx/azure-github-environment-bootstrap/azurerm"
-  version = "~> 2.2"
+  version = "~> 2.0"
 
   environment = {
     prefix          = local.prefix
@@ -115,12 +115,12 @@ module "repo" {
   }
 
   repository = {
-    name               = local.repository.name
-    description        = local.repository.description
-    topics             = local.repository.topics
-    reviewers_teams    = local.repository.reviewers_teams
-    app_cd_policy_tags = local.repository.app_cd_policy_tags
-    app_cd_policy_branches = ["*"]
+    name                   = local.repository.name
+    description            = local.repository.description
+    topics                 = local.repository.topics
+    reviewers_teams        = local.repository.reviewers_teams
+    app_cd_policy_tags     = local.repository.app_cd_policy_tags
+    app_cd_policy_branches = local.repository.app_cd_policy_branches
   }
 
   github_private_runner = {

@@ -5,9 +5,9 @@ info:
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
   description: |
-    These API serve the microfrontend related to Carta della Cultura
+    These APIs serve the microfrontend related to Carta della Cultura
 servers:
-  - url: https://{function-instance-name}.azurewebsites.net
+  - url: /api/v1
 security:
   - ApiKeyAuth: []
 paths:
@@ -21,6 +21,94 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApplicationInfo'
+        '500':
+          description: Internal Server error
+  /fauth:
+    get:
+      operationId: fimsAuth
+      parameters:
+        - in: query
+          name: device
+          required: false
+          schema:
+            type: string
+      responses:
+        '301':
+          description: Redirect to openid  provider
+        '500':
+          description: Internal Server error
+  /fcb:
+    get:
+      operationId: fimsCallback
+      parameters:
+        - in: query
+          name: state
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '301':
+          description: Redirect to RP Authorize
+        '500':
+          description: Internal Server error
+  /authorize:
+    get:
+      operationId: authorize
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Session Token successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionToken'
+        '500':
+          description: Internal Server error
+  /years:
+    get:
+      operationId: getYears
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Years'
+        '500':
+          description: Internal Server error
+  /card-requests:
+    get:
+      operationId: getCardRequests
+      parameters:
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        #INSERT 200
+        '500':
+          description: Internal Server error
+    post:
+      operationId: insertCardRequest
+      parameters:
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        #INSERT 200
         '500':
           description: Internal Server error
 components:
@@ -88,6 +176,19 @@ components:
       required:
         - name
         - version
+    SessionToken:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
+    Years:
+      type: array
+      items:
+        type: string
+      required:
+        - items
     ProblemJson:
       type: object
       properties:

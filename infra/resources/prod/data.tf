@@ -48,15 +48,14 @@ data "azurerm_application_insights" "common" {
   resource_group_name = data.azurerm_resource_group.weu_common.name
 }
 
-/*
-
-data "azurerm_application_gateway" "io_app_gateway" {
-  name                = "io-p-appgateway"
-  resource_group_name = "io-p-rg-external"
+// SECRETS
+data "azurerm_key_vault_secret" "cdc_base_url" {
+  name         = "CDC-BASE-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "cosmosdb_cdc_uri" {
-  name         = "COSMOSDB-CDC-URI"
+data "azurerm_key_vault_secret" "cosmosdb_cdc_database_name" {
+  name         = "COSMOSDB-CDC-DATABASE-NAME"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
@@ -65,9 +64,102 @@ data "azurerm_key_vault_secret" "cosmosdb_cdc_key" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "storage_cdc_connection_string" {
-  name         = "STORAGE-CDC-CONNECTION-STRING"
+data "azurerm_key_vault_secret" "services_api_url" {
+  name         = "SERVICES-API-URL"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-*/
+data "azurerm_key_vault_secret" "services_api_key" {
+  name         = "SERVICES-API-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_base_url" {
+  name         = "FIMS-BASE-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_client_id" {
+  name         = "FIMS-CLIENT-ID"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_client_secret" {
+  name         = "FIMS-CLIENT-SECRET"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_issuer_url" {
+  name         = "FIMS-ISSUER-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "fims_scope" {
+  name         = "FIMS-SCOPE"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_public_key" {
+  name         = "JWT-PUBLIC-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_private_key" {
+  name         = "JWT-PRIVATE-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "encryption_public_key" {
+  name         = "ENCRYPTION-PUBLIC-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "encryption_private_key" {
+  name         = "ENCRYPTION-PRIVATE-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_issuer" {
+  name         = "JWT-ISSUER"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_audience" {
+  name         = "JWT-AUDIENCE"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "jwt_expiration" {
+  name         = "JWT-EXPIRATION"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "algorithm_keys" {
+  name         = "ALGORITHM-KEYS"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "algorithm_signature" {
+  name         = "ALGORITHM-SIGNATURE"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "algorithm_encryption" {
+  name         = "ALGORITHM-ENCRYPTION"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "encoding_encryption" {
+  name         = "ENCODING-ENCRYPTION"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "cdc_backend_func_url" {
+  name         = "CDC-BACKEND-FUNC-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "cdc_backend_func_key" {
+  name         = "CDC-BACKEND-FUNC-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
