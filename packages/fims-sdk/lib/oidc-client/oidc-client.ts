@@ -9,9 +9,9 @@ const oidcConfigSchema = z.object({
   OIDC_SCOPE: z.string().min(1),
 });
 
-type OidcConfig = z.TypeOf<typeof oidcConfigSchema>;
+export type OidcConfig = z.TypeOf<typeof oidcConfigSchema>;
 
-export class FimsClient {
+export class OidcClient {
   clientConfig: client.Configuration | undefined;
   oidcConfig: OidcConfig;
 
@@ -19,34 +19,24 @@ export class FimsClient {
     this.oidcConfig = oidcConfig;
   }
 
-  initializeClientConfiguration() {
+  async initializeClientConfiguration() {
     if (!this.clientConfig) {
-      client
-        .discovery(
-          new URL(this.oidcConfig.OIDC_ISSUER_URL),
-          this.oidcConfig.OIDC_CLIENT_ID,
-          this.oidcConfig.OIDC_CLIENT_SECRET,
-        )
-        .catch((error) => {
-          throw new Error(
-            `Cannot initialize fims client | discovery failed | ${JSON.stringify(
-              error,
-            )}`,
-          );
-        })
-        .then((clientConfig) => {
-          this.clientConfig = clientConfig;
-        });
+      this.clientConfig = await client.discovery(
+        new URL(this.oidcConfig.OIDC_ISSUER_URL),
+        this.oidcConfig.OIDC_CLIENT_ID,
+        this.oidcConfig.OIDC_CLIENT_SECRET,
+      );
     }
   }
 
-  redirectToAuthorizationUrl(): string {
+  redirectToAuthorizationUrl(state?: string, nonce?: string): string {
     if (!this.clientConfig) throw new Error("Fims client not initialized");
 
     const parameters: Record<string, string> = {
       redirect_uri: this.oidcConfig.OIDC_CLIENT_REDIRECT_URI,
       scope: this.oidcConfig.OIDC_SCOPE,
-      state: client.randomState(),
+      state: state ? state : client.randomState(),
+      nonce: nonce ? nonce : client.randomNonce(),
     };
 
     const redirectTo: URL = client.buildAuthorizationUrl(
