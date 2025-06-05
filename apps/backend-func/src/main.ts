@@ -10,8 +10,13 @@ import { InfoFn } from "./functions/info";
 import { PostCardRequestsFn } from "./functions/post-requests";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb";
 import { getRedisClientFactory } from "./utils/redis";
+import { getFimsClient } from "./utils/fims";
 
+// Config
 const config = getConfigOrThrow();
+
+// Fims
+const fimsClient = getFimsClient(config);
 
 // CosmosDB singleton
 const cosmosDbClient = getCosmosDbClientInstance(
@@ -30,7 +35,7 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
-const FimsAuth = FimsAuthFn({ redisClientFactory });
+const FimsAuth = FimsAuthFn({ fimsClient, redisClientFactory });
 app.http("FimsAuth", {
   authLevel: "function",
   handler: FimsAuth,
