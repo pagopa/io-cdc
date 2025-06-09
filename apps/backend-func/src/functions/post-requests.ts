@@ -9,11 +9,11 @@ import { pipe } from "fp-ts/lib/function";
 import { ulid } from "ulid";
 
 import { Config } from "../config";
+import { CardRequests } from "../generated/definitions/internal/CardRequests";
 import { Year } from "../models/card_request";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository";
 import { RedisClientFactory } from "../utils/redis";
 import { getSessionTE } from "../utils/session";
-import { CardRequests } from "../generated/definitions/internal/CardRequests";
 
 interface Dependencies {
   config: Config;

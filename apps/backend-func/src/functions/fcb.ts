@@ -46,11 +46,7 @@ export const createSessionAndRedirect =
       TE.chain(({ sessionId, sessionToken }) =>
         pipe(
           // set mocked session
-          storeSessionTe(
-            deps.redisClientFactory,
-            sessionToken,
-            user,
-          ), // TODO: remove mocked session data when testing fims
+          storeSessionTe(deps.redisClientFactory, sessionToken, user), // TODO: remove mocked session data when testing fims
           TE.chain(() =>
             // bind one time session id to session token
             setWithExpirationTask(
@@ -69,7 +65,7 @@ export const makeFimsCallbackHandler: H.Handler<
   H.HttpRequest,
   H.HttpResponse<null, 302>,
   Dependencies
-> = H.of((req) =>
+> = H.of(() =>
   pipe(
     //getFimsData(req.query.code, req.query.state),
     createSessionAndRedirect(mockedSessionData as OidcUser), // remove this mock and RTE.map the result of commented code
