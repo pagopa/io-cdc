@@ -1,9 +1,9 @@
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
 import { toError } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as t from "io-ts";
-import * as E from "fp-ts/Either";
 import { BaseClient, Issuer, generators } from "openid-client";
 
 import { Config } from "../config";

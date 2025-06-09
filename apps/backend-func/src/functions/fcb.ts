@@ -8,9 +8,9 @@ import { pipe } from "fp-ts/lib/function";
 
 import { Config } from "../config";
 import { Session } from "../models/session";
+import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims";
 import { RedisClientFactory } from "../utils/redis";
 import { setWithExpirationTask } from "../utils/redis_storage";
-import { getFimsUserTE, OidcClient, OidcUser } from "../utils/fims";
 import { storeSessionTe } from "../utils/session";
 
 interface Dependencies {

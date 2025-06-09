@@ -1,10 +1,11 @@
+import { readableReport } from "@pagopa/ts-commons/lib/reporters";
 import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
+import { flow, pipe } from "fp-ts/lib/function";
+
+import { Session } from "../models/session";
 import { RedisClientFactory } from "./redis";
 import { getTask, setWithExpirationTask } from "./redis_storage";
-import { flow, pipe } from "fp-ts/lib/function";
-import { Session } from "../models/session";
-import { readableReport } from "@pagopa/ts-commons/lib/reporters";
 
 export const storeSessionTe = (
   redisClientFactory: RedisClientFactory,
