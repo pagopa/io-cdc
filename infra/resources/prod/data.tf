@@ -74,8 +74,8 @@ data "azurerm_key_vault_secret" "services_api_key" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "fims_base_url" {
-  name         = "FIMS-BASE-URL"
+data "azurerm_key_vault_secret" "fims_redirect_url" {
+  name         = "FIMS-REDIRECT-URL"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
