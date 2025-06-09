@@ -4110,6 +4110,7 @@ __metadata:
     shx: "npm:^0.3.2"
     swagger-cli: "npm:^4.0.4"
     typescript: "npm:^5.4.3"
+    ulid: "npm:^3.0.1"
     vitest: "npm:^2.1.3"
   languageName: unknown
   linkType: soft
@@ -10519,6 +10520,15 @@ __metadata:
   bin:
     ulid: bin/cli.js
   checksum: 10c0/96f7597a2f09dadd380707a0755753d85717059deae54a9e28b6cbc34c02ef211dd1d1dcbfa8bd557d12309f174b87f3ba5f45d6b67573d1a2da202b5a0c9319
+  languageName: node
+  linkType: hard
+
+"ulid@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "ulid@npm:3.0.1"
+  bin:
+    ulid: dist/cli.js
+  checksum: 10c0/3b3eba4bea0d22fee7a7465d1d239f0bb20f604325a72fdb273085f18a2eeecf4391a967e8446f6d4eaa39f32fabe320a6d87846bd6313aacd2cd294d6d2b858
   languageName: node
   linkType: hard
 
