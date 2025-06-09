@@ -45,8 +45,7 @@ export const createSessionAndRedirect =
       ),
       TE.chain(({ sessionId, sessionToken }) =>
         pipe(
-          // set mocked session
-          storeSessionTe(deps.redisClientFactory, sessionToken, user), // TODO: remove mocked session data when testing fims
+          storeSessionTe(deps.redisClientFactory, sessionToken, user),
           TE.chain(() =>
             // bind one time session id to session token
             setWithExpirationTask(
