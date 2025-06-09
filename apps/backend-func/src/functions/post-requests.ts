@@ -24,8 +24,25 @@ interface Dependencies {
 const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(getSessionTE(deps.redisClientFactory, sessionToken));
 
-const postCardRequests =
-  (fiscalCode: FiscalCode, years: string[]) => (deps: Dependencies) =>
+const getExistingCardRequests = (fiscalCode: FiscalCode, deps: Dependencies) =>
+  pipe(
+    TE.of(
+      new CosmosDbCardRequestRepository(
+        deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+      ),
+    ),
+    TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
+    TE.map(A.map((cardRequest) => cardRequest.year)),
+  );
+
+const filterAlreadyRequestedYears =
+  (requestedYears: Year[]) => (alreadyRequestedYears: Year[]) =>
+    requestedYears.filter(
+      (year) => alreadyRequestedYears.lastIndexOf(year) < 0,
+    );
+
+const saveNewCardRequests =
+  (fiscalCode: FiscalCode, deps: Dependencies) => (years: Year[]) =>
     pipe(
       TE.of(
         new CosmosDbCardRequestRepository(
@@ -39,7 +56,7 @@ const postCardRequests =
             createdAt: new Date(),
             fiscalCode: fiscalCode,
             id: ulid() as NonEmptyString,
-            year: year as Year,
+            year: year,
           })),
           A.map((cardRequest) => repository.insert(cardRequest)),
           A.sequence(TE.ApplicativePar),
@@ -53,6 +70,15 @@ const postCardRequests =
       ),
     );
 
+const postCardRequests =
+  (fiscalCode: FiscalCode, years: Year[]) => (deps: Dependencies) =>
+    pipe(
+      getExistingCardRequests(fiscalCode, deps),
+      TE.map(filterAlreadyRequestedYears(years)),
+      // TODO: Send requests to external party
+      TE.chain(saveNewCardRequests(fiscalCode, deps)),
+    );
+
 export const makePostCardRequestsHandler: H.Handler<
   H.HttpRequest,
   H.HttpResponse<CardRequests, 201>,
@@ -60,9 +86,7 @@ export const makePostCardRequestsHandler: H.Handler<
 > = H.of((req) =>
   pipe(
     getSession(req.headers.token),
-    RTE.chain((user) =>
-      postCardRequests(user.fiscal_code, req.body as string[]),
-    ),
+    RTE.chain((user) => postCardRequests(user.fiscal_code, req.body as Year[])),
     RTE.map((years) => pipe(H.successJson(years), H.withStatusCode(201))),
   ),
 );
