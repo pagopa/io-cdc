@@ -13,6 +13,7 @@ import { Year } from "../models/card_request";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository";
 import { RedisClientFactory } from "../utils/redis";
 import { getSessionTE } from "../utils/session";
+import { CardRequests } from "../generated/definitions/internal/CardRequests";
 
 interface Dependencies {
   config: Config;
@@ -54,15 +55,15 @@ const postCardRequests =
 
 export const makePostCardRequestsHandler: H.Handler<
   H.HttpRequest,
-  H.HttpResponse<string, 200>,
-  undefined
+  H.HttpResponse<CardRequests, 201>,
+  Dependencies
 > = H.of((req) =>
   pipe(
     getSession(req.headers.token),
     RTE.chain((user) =>
       postCardRequests(user.fiscal_code, req.body as string[]),
     ),
-    RTE.map(() => H.successJson("success")),
+    RTE.map((years) => pipe(H.successJson(years), H.withStatusCode(201))),
   ),
 );
 
