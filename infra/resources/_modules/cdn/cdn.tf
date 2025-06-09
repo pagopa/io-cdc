@@ -47,7 +47,9 @@ resource "azurerm_cdn_frontdoor_rule" "rewrite_index" {
 
   conditions {
     request_uri_condition {
-      operator = "Any"
+      operator = "Contains"
+      match_values = ["/assets/"]
+      negate_condition = true
     }
   }
 }

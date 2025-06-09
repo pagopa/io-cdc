@@ -49,7 +49,7 @@ export const createSessionAndRedirect =
           storeSessionTe(
             deps.redisClientFactory,
             sessionToken,
-            mockedSessionData || user,
+            user,
           ), // TODO: remove mocked session data when testing fims
           TE.chain(() =>
             // bind one time session id to session token
@@ -71,8 +71,8 @@ export const makeFimsCallbackHandler: H.Handler<
   Dependencies
 > = H.of((req) =>
   pipe(
-    getFimsData(req.query.code, req.query.state),
-    RTE.chain(createSessionAndRedirect),
+    //getFimsData(req.query.code, req.query.state),
+    createSessionAndRedirect(mockedSessionData as OidcUser), // remove this mock and RTE.map the result of commented code
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,

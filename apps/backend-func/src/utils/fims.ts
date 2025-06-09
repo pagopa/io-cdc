@@ -1,4 +1,4 @@
-import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
 import { toError } from "fp-ts/lib/Either";
@@ -26,7 +26,7 @@ export type OidcTokens = t.TypeOf<typeof OidcTokens>;
 
 export const OidcUser = t.type({
   family_name: NonEmptyString,
-  fiscal_code: NonEmptyString,
+  fiscal_code: FiscalCode,
   given_name: NonEmptyString,
 });
 
