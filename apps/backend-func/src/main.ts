@@ -79,7 +79,11 @@ app.http("GetCardRequests", {
   route: "api/v1/card-requests",
 });
 
-const PostCardRequests = PostCardRequestsFn({});
+const PostCardRequests = PostCardRequestsFn({
+  config,
+  cosmosDbClient,
+  redisClientFactory,
+});
 app.http("PostCardRequests", {
   authLevel: "function",
   handler: PostCardRequests,
