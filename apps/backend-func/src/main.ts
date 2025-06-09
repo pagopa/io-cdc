@@ -9,9 +9,14 @@ import { GetYearsFn } from "./functions/get-years";
 import { InfoFn } from "./functions/info";
 import { PostCardRequestsFn } from "./functions/post-requests";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb";
+import { getFimsClient } from "./utils/fims";
 import { getRedisClientFactory } from "./utils/redis";
 
+// Config
 const config = getConfigOrThrow();
+
+// Fims
+const fimsClient = getFimsClient(config);
 
 // CosmosDB singleton
 const cosmosDbClient = getCosmosDbClientInstance(
@@ -30,7 +35,7 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
-const FimsAuth = FimsAuthFn({ redisClientFactory });
+const FimsAuth = FimsAuthFn({ fimsClient });
 app.http("FimsAuth", {
   authLevel: "function",
   handler: FimsAuth,
@@ -38,7 +43,7 @@ app.http("FimsAuth", {
   route: "api/v1/fauth",
 });
 
-const FimsCallback = FimsCallbackFn({ config, redisClientFactory });
+const FimsCallback = FimsCallbackFn({ config, fimsClient, redisClientFactory });
 app.http("FimsCallback", {
   authLevel: "function",
   handler: FimsCallback,
@@ -62,7 +67,11 @@ app.http("GetYears", {
   route: "api/v1/years",
 });
 
-const GetCardRequests = GetCardRequestsFn({ cosmosDbClient });
+const GetCardRequests = GetCardRequestsFn({
+  config,
+  cosmosDbClient,
+  redisClientFactory,
+});
 app.http("GetCardRequests", {
   authLevel: "function",
   handler: GetCardRequests,
