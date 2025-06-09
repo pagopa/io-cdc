@@ -9,6 +9,7 @@
     "clean:generated": "shx rm -rf ./src/generated",
     "build": "yarn clean && yarn generate && tsc",
     "build:watch": "yarn build -w",
+    "postbuild": "dependency-check package.json --no-dev --missing ./dist/**/*.js",
     "typecheck": "yarn build --noemit",
     "extensions:install": "func extensions install",
     "start": "func start --javascript",
@@ -39,7 +40,6 @@
   "dependencies": {
     "@azure/cosmos": "4.2.0",
     "@azure/functions": "4.2.0",
-    "@pagopa/fims-sdk": "workspace:*",
     "@pagopa/handler-kit": "^1.1.0",
     "@pagopa/handler-kit-azure-func": "^2.0.1",
     "@pagopa/openapi-codegen-ts": "^13.2.0",
@@ -47,6 +47,8 @@
     "fp-ts": "^2.16.5",
     "io-ts": "^2.2.21",
     "jose": "5.9.6",
-    "redis": "^4.6.15"
+    "openid-client": "^5.7.0",
+    "redis": "^4.6.15",
+    "ulid": "^3.0.1"
   }
 }

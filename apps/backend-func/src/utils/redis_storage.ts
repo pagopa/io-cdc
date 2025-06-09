@@ -122,3 +122,15 @@ export const existsKeyTask = (
     ),
     integerReplAsync(1),
   );
+
+export const deleteTask = (
+  redisClientFactory: RedisClientFactory,
+  key: string,
+): TE.TaskEither<Error, boolean> =>
+  pipe(
+    TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
+    TE.chain((redisClient) =>
+      TE.tryCatch(() => redisClient.DEL(key), E.toError),
+    ),
+    integerReplAsync(1),
+  );

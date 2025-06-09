@@ -33,13 +33,13 @@ export const Config = t.type({
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
 
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
-  FIMS_BASE_URL: NonEmptyString,
 
   FIMS_CLIENT_ID: NonEmptyString,
   FIMS_CLIENT_SECRET: NonEmptyString,
-
   FIMS_ISSUER_URL: NonEmptyString,
+  FIMS_REDIRECT_URL: NonEmptyString,
   FIMS_SCOPE: NonEmptyString,
+
   JWT_AUDIENCE: NonEmptyString,
   JWT_EXPIRATION: NonEmptyString,
   JWT_ISSUER: NonEmptyString,
