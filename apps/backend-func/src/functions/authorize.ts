@@ -6,7 +6,7 @@ import { pipe } from "fp-ts/lib/function";
 
 import { SessionToken } from "../generated/definitions/internal/SessionToken";
 import { RedisClientFactory } from "../utils/redis";
-import { getTask } from "../utils/redis_storage";
+import { deleteTask, getTask } from "../utils/redis_storage";
 
 interface Dependencies {
   redisClientFactory: RedisClientFactory;
@@ -24,6 +24,7 @@ export const getSessionToken =
           TE.map((sessionToken) => ({ token: sessionToken })),
         ),
       ),
+      TE.chainFirst(() => deleteTask(deps.redisClientFactory, id)),
     );
 
 export const makeAuthorizeHandler: H.Handler<

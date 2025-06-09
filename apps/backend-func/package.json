@@ -9,6 +9,7 @@
     "clean:generated": "shx rm -rf ./src/generated",
     "build": "yarn clean && yarn generate && tsc",
     "build:watch": "yarn build -w",
+    "postbuild": "dependency-check package.json --no-dev --missing ./dist/**/*.js",
     "typecheck": "yarn build --noemit",
     "extensions:install": "func extensions install",
     "start": "func start --javascript",

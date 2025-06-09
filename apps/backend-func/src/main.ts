@@ -35,7 +35,7 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
-const FimsAuth = FimsAuthFn({ fimsClient, redisClientFactory });
+const FimsAuth = FimsAuthFn({ fimsClient });
 app.http("FimsAuth", {
   authLevel: "function",
   handler: FimsAuth,
@@ -43,7 +43,7 @@ app.http("FimsAuth", {
   route: "api/v1/fauth",
 });
 
-const FimsCallback = FimsCallbackFn({ config, redisClientFactory });
+const FimsCallback = FimsCallbackFn({ config, fimsClient, redisClientFactory });
 app.http("FimsCallback", {
   authLevel: "function",
   handler: FimsCallback,
@@ -67,7 +67,11 @@ app.http("GetYears", {
   route: "api/v1/years",
 });
 
-const GetCardRequests = GetCardRequestsFn({ cosmosDbClient });
+const GetCardRequests = GetCardRequestsFn({
+  config,
+  cosmosDbClient,
+  redisClientFactory,
+});
 app.http("GetCardRequests", {
   authLevel: "function",
   handler: GetCardRequests,

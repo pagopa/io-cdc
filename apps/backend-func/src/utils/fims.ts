@@ -3,6 +3,7 @@ import * as TE from "fp-ts/TaskEither";
 import { toError } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as t from "io-ts";
+import * as E from "fp-ts/Either";
 import { BaseClient, Issuer, generators } from "openid-client";
 
 import { Config } from "../config";
@@ -16,6 +17,20 @@ export const OidcConfig = t.type({
 });
 
 export type OidcConfig = t.TypeOf<typeof OidcConfig>;
+
+export const OidcTokens = t.type({
+  access_token: NonEmptyString,
+});
+
+export type OidcTokens = t.TypeOf<typeof OidcTokens>;
+
+export const OidcUser = t.type({
+  family_name: NonEmptyString,
+  fiscal_code: NonEmptyString,
+  given_name: NonEmptyString,
+});
+
+export type OidcUser = t.TypeOf<typeof OidcUser>;
 
 export class OidcClient {
   client: BaseClient | undefined;
@@ -50,23 +65,29 @@ export class OidcClient {
     return this.client.authorizationUrl(parameters);
   }
 
-  async retrieveIdToken(
-    cbUrl: string,
-    authCode: string,
-    state: string,
-    nonce: string,
-  ) {
+  async retrieveUser(cbUrl: string, code: string, state: string) {
     if (!this.client) throw new Error("Fims client not initialized");
 
-    const tokens = await this.client.callback(
-      cbUrl,
-      { code: authCode, state },
-      {
-        nonce,
-      },
+    const tokens = await this.client.callback(cbUrl, { code, state });
+
+    const access_token = pipe(
+      OidcTokens.decode(tokens),
+      E.map((tokens) => tokens.access_token),
+      E.getOrElseW(() => {
+        throw new Error("Invalid fims tokens");
+      }),
     );
 
-    return tokens.id_token;
+    const fimsUser = await this.client.userinfo(access_token);
+
+    const user = pipe(
+      OidcUser.decode(fimsUser),
+      E.getOrElseW(() => {
+        throw new Error("Invalid fims user data");
+      }),
+    );
+
+    return user;
   }
 }
 
@@ -89,14 +110,15 @@ export const getFimsRedirectTE = (
     TE.map(() => client.redirectToAuthorizationUrl(state, nonce)),
   );
 
-export const getFimsIdentityTE = (
+export const getFimsUserTE = (
   client: OidcClient,
   cbUrl: string,
-  authCode: string,
+  code: string,
   state: string,
-  nonce: string,
 ) =>
   pipe(
     TE.tryCatch(() => client.initializeClient(), toError),
-    TE.map(() => client.retrieveIdToken(cbUrl, authCode, state, nonce)),
+    TE.chain(() =>
+      TE.tryCatch(() => client.retrieveUser(cbUrl, code, state), toError),
+    ),
   );

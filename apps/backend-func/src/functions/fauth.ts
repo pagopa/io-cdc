@@ -5,11 +5,9 @@ import * as RTE from "fp-ts/lib/ReaderTaskEither";
 import { pipe } from "fp-ts/lib/function";
 
 import { OidcClient, getFimsRedirectTE } from "../utils/fims";
-import { RedisClientFactory } from "../utils/redis";
 
 interface Dependencies {
   fimsClient: OidcClient;
-  redisClientFactory: RedisClientFactory;
 }
 
 export const getFimsRedirect = (

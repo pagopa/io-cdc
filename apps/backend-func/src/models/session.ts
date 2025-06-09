@@ -3,10 +3,10 @@ import * as t from "io-ts";
 
 export const Session = t.intersection([
   t.type({
-    firstName: NonEmptyString,
-    fiscalCode: FiscalCode,
-    lastName: NonEmptyString,
+    given_name: NonEmptyString,
+    fiscal_code: FiscalCode,
+    family_name: NonEmptyString,
   }),
-  t.partial({ deviceId: NonEmptyString }),
+  t.partial({ device_id: NonEmptyString }),
 ]);
 export type Session = t.TypeOf<typeof Session>;
