@@ -3,7 +3,8 @@ import * as TE from "fp-ts/TaskEither";
 import { toError } from "fp-ts/lib/Either";
 import { pipe } from "fp-ts/lib/function";
 import * as t from "io-ts";
-import { BaseClient, generators, Issuer } from "openid-client";
+import { BaseClient, Issuer, generators } from "openid-client";
+
 import { Config } from "../config";
 
 export const OidcConfig = t.type({
@@ -40,10 +41,10 @@ export class OidcClient {
     if (!this.client) throw new Error("Fims client not initialized");
 
     const parameters: Record<string, string> = {
+      nonce: nonce ? nonce : generators.nonce(),
       redirect_uri: this.oidcConfig.OIDC_CLIENT_REDIRECT_URI,
       scope: this.oidcConfig.OIDC_SCOPE,
       state: state ? state : generators.state(),
-      nonce: nonce ? nonce : generators.nonce(),
     };
 
     return this.client.authorizationUrl(parameters);
