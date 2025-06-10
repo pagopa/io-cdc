@@ -3,6 +3,7 @@ locals {
     app_settings = {
       FUNCTIONS_WORKER_PROCESS_COUNT = 4
       NODE_ENV                       = "production"
+      NODE_OPTIONS                   = "--import @pagopa/azure-tracing"
 
       // CDC
       CDC_BASE_URL = var.cdc_base_url
