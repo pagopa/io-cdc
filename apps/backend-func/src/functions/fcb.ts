@@ -47,7 +47,9 @@ export const getFimsData =
         code,
         state,
       ),
-      TE.mapLeft(() => responseError(401, "Cannot retrieve user data", "SSO")),
+      TE.mapLeft(() =>
+        responseError(401, "Cannot retrieve user data", "Unauthorized"),
+      ),
     );
 
 // we create a fake session until FIMS is not integrated
@@ -74,7 +76,9 @@ export const createSessionAndRedirect =
           TE.map(() => `${deps.config.CDC_BASE_URL}/authorize?id=${sessionId}`),
         ),
       ),
-      TE.mapLeft(() => responseError(401, "Cannot create session", "SSO")),
+      TE.mapLeft(() =>
+        responseError(401, "Cannot create session", "Unauthorized"),
+      ),
     );
 
 export const makeFimsCallbackHandler: H.Handler<

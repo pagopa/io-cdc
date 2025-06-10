@@ -35,7 +35,7 @@ type Headers = t.TypeOf<typeof Headers>;
 const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(
     getSessionTE(deps.redisClientFactory, sessionToken),
-    TE.mapLeft(() => responseError(401, "Session not found", "Session")),
+    TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
 const getCardRequests = (fiscalCode: FiscalCode) => (deps: Dependencies) =>

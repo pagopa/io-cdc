@@ -40,7 +40,7 @@ type Body = t.TypeOf<typeof Body>;
 const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(
     getSessionTE(deps.redisClientFactory, sessionToken),
-    TE.mapLeft(() => responseError(401, "Session not found", "Session")),
+    TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
 const getExistingCardRequests = (fiscalCode: FiscalCode, deps: Dependencies) =>

@@ -37,7 +37,7 @@ export const getSessionToken =
         pipe(
           reply,
           TE.fromOption(() =>
-            responseError(401, "Session not found", "Session"),
+            responseError(401, "Session not found", "Unauthorized"),
           ),
           TE.map((sessionToken) => ({ token: sessionToken })),
         ),
