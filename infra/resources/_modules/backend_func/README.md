@@ -44,6 +44,7 @@ No requirements.
 | <a name="input_algorithm_signature"></a> [algorithm\_signature](#input\_algorithm\_signature) | Signature's algorithm | `string` | n/a | yes |
 | <a name="input_cdc_backend_func_key"></a> [cdc\_backend\_func\_key](#input\_cdc\_backend\_func\_key) | The key for apim to call functions APIs | `string` | n/a | yes |
 | <a name="input_cdc_backend_func_url"></a> [cdc\_backend\_func\_url](#input\_cdc\_backend\_func\_url) | The url for apim to call functions APIs | `string` | n/a | yes |
+| <a name="input_cdc_base_url"></a> [cdc\_base\_url](#input\_cdc\_base\_url) | The base url for CDC redirects | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_database_name"></a> [cosmosdb\_cdc\_database\_name](#input\_cosmosdb\_cdc\_database\_name) | Database name for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_key"></a> [cosmosdb\_cdc\_key](#input\_cosmosdb\_cdc\_key) | Connection key for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_uri"></a> [cosmosdb\_cdc\_uri](#input\_cosmosdb\_cdc\_uri) | Connection uri for CdC cosmosdb | `string` | n/a | yes |
@@ -52,10 +53,10 @@ No requirements.
 | <a name="input_encryption_private_key"></a> [encryption\_private\_key](#input\_encryption\_private\_key) | Encryption private key | `string` | n/a | yes |
 | <a name="input_encryption_public_key"></a> [encryption\_public\_key](#input\_encryption\_public\_key) | Encryption public key | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | Short environment | `string` | n/a | yes |
-| <a name="input_fims_base_url"></a> [fims\_base\_url](#input\_fims\_base\_url) | FIMS base url | `string` | n/a | yes |
 | <a name="input_fims_client_id"></a> [fims\_client\_id](#input\_fims\_client\_id) | FIMS client id | `string` | n/a | yes |
 | <a name="input_fims_client_secret"></a> [fims\_client\_secret](#input\_fims\_client\_secret) | FIMS client secret | `string` | n/a | yes |
 | <a name="input_fims_issuer_url"></a> [fims\_issuer\_url](#input\_fims\_issuer\_url) | FIMS issuer url | `string` | n/a | yes |
+| <a name="input_fims_redirect_url"></a> [fims\_redirect\_url](#input\_fims\_redirect\_url) | FIMS redirect url | `string` | n/a | yes |
 | <a name="input_fims_scope"></a> [fims\_scope](#input\_fims\_scope) | FIMS scope | `string` | n/a | yes |
 | <a name="input_instance_number"></a> [instance\_number](#input\_instance\_number) | The istance number to create | `string` | n/a | yes |
 | <a name="input_jwt_audience"></a> [jwt\_audience](#input\_jwt\_audience) | JWT audience | `string` | n/a | yes |

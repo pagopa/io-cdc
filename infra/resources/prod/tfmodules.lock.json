@@ -1,6 +1,26 @@
 {
-  "backend_func.cdc_backend_func": "83c22598e95c022813d067c8d6dd0fdc6fb038c76186e470d74bbc2a5f33f1cb",
-  "cdn_fe.cdc_fe_cdn": "2feb3d39179b485fe80ead6baed1db6a08f1676741e7ea92dabcc785ab9f2835",
-  "cosmos_db.cdc_cosmos_account": "e7a29cad7f9357d02572ec1aeb81dad7cb6823437b7ab1199cdb2beb0499dd3e",
-  "storage_fe.cdc_storage_fe": "9cc67e55541c07d3676b08076bd831da45875fb7fa5abaf2eacbfa105cb7484e"
+  "backend_func.cdc_backend_func": {
+    "hash": "9e8ff9c8a5e80e7ba79922eccfd983b3321e25dd4b22a1e7602fa581a389a6f1",
+    "version": "0.2.9",
+    "name": "azure_function_app",
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-function-app/azurerm/0.2.9"
+  },
+  "cdn_fe.cdc_fe_cdn": {
+    "hash": "9c3d12439f8f6da55c91daf38080b25e8af660aea7a8e818da142bf34804e0bd",
+    "version": "0.2.0",
+    "name": "azure_cdn",
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-cdn/azurerm/0.2.0"
+  },
+  "cosmos_db.cdc_cosmos_account": {
+    "hash": "398ffd2c1fb90f2228a5d42e7f90e6601162c2e90e23daeee726e1f1f02aa322",
+    "version": "0.1.0",
+    "name": "azure_cosmos_account",
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-cosmos-account/azurerm/0.1.0"
+  },
+  "storage_fe.cdc_storage_fe": {
+    "hash": "614654ccd1c9a2d91ff766f3a9e5e2dee08c15e871f8de36ea4b05dcec82855d",
+    "version": "0.1.0",
+    "name": "azure_storage_account",
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/0.1.0"
+  }
 }
