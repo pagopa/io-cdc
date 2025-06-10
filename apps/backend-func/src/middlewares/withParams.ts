@@ -1,7 +1,7 @@
 import { readableReport } from "@pagopa/ts-commons/lib/reporters.js";
-import * as E from "fp-ts/Either";
-import * as TE from "fp-ts/TaskEither";
+import * as E from "fp-ts/lib/Either.js";
 import { pipe } from "fp-ts/lib/function.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import * as t from "io-ts";
 
 export const withParams =

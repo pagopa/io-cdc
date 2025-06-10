@@ -1,5 +1,5 @@
-import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import * as H from "@pagopa/handler-kit";
+import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 

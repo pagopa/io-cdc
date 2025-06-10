@@ -1,7 +1,7 @@
 import { Container, Database } from "@azure/cosmos";
-import * as E from "fp-ts/Either";
-import * as TE from "fp-ts/TaskEither";
-import { flow, pipe } from "fp-ts/function";
+import * as E from "fp-ts/lib/Either.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
+import { flow, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { CardRequest } from "../models/card_request.js";

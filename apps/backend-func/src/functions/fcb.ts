@@ -1,10 +1,10 @@
-import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import * as H from "@pagopa/handler-kit";
+import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
-import * as TE from "fp-ts/TaskEither";
-import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 
 import { Config } from "../config.js";
 import { Session } from "../models/session.js";

@@ -8,10 +8,11 @@
   "scripts": {
     "clean": "shx rm -rf dist",
     "clean:generated": "shx rm -rf ./src/generated",
-    "build": "yarn clean && yarn generate && tsc",
+    "build": "yarn clean && yarn generate && yarn esm:generated && tsc",
     "build:watch": "yarn build -w",
     "postbuild": "dependency-check package.json --no-dev --missing ./dist/**/*.js",
     "typecheck": "yarn build --noemit",
+    "esm:generated": "ts2esm tsconfig.json",
     "extensions:install": "func extensions install",
     "start": "func start --javascript",
     "start:watch": "yarn start watch",
@@ -36,6 +37,7 @@
     "prettier": "^3.2.5",
     "shx": "^0.3.2",
     "swagger-cli": "^4.0.4",
+    "ts2esm": "^2.2.7",
     "typescript": "^5.4.3",
     "vitest": "^2.1.3"
   },

@@ -1,11 +1,11 @@
 import { CosmosClient } from "@azure/cosmos";
-import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import * as H from "@pagopa/handler-kit";
+import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
-import * as A from "fp-ts/Array";
-import * as TE from "fp-ts/TaskEither";
-import * as RTE from "fp-ts/ReaderTaskEither";
-import { pipe } from "fp-ts/function";
+import * as A from "fp-ts/lib/Array.js";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
 import { ulid } from "ulid";
 
 import { Config } from "../config.js";
