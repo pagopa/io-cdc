@@ -7,17 +7,21 @@ No requirements.
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cdc_fe_cdn"></a> [cdc\_fe\_cdn](#module\_cdc\_fe\_cdn) | pagopa-dx/azure-cdn/azurerm | 0.0.6 |
+| <a name="module_cdc_fe_cdn"></a> [cdc\_fe\_cdn](#module\_cdc\_fe\_cdn) | pagopa-dx/azure-cdn/azurerm | 0.2.0 |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [azurerm_cdn_frontdoor_rule.rewrite_index](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_rule) | resource |
 
 ## Inputs
 
