@@ -5,20 +5,20 @@ import * as crypto from "crypto";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
+import * as t from "io-ts";
 
 import { Config } from "../config.js";
+import { withParams } from "../middlewares/withParams.js";
 import { Session } from "../models/session.js";
-import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
-import { RedisClientFactory } from "../utils/redis.js";
-import { setWithExpirationTask } from "../utils/redis_storage.js";
-import { storeSessionTe } from "../utils/session.js";
 import {
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
-import * as t from "io-ts";
-import { withParams } from "../middlewares/withParams.js";
+import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
+import { RedisClientFactory } from "../utils/redis.js";
+import { setWithExpirationTask } from "../utils/redis_storage.js";
+import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
   config: Config;
@@ -79,8 +79,8 @@ export const createSessionAndRedirect =
 
 export const makeFimsCallbackHandler: H.Handler<
   H.HttpRequest,
-  | H.HttpResponse<null, 302>
-  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>
+  | H.HttpResponse<null, 302>,
   Dependencies
 > = H.of((req) =>
   pipe(

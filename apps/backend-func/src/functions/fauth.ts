@@ -4,12 +4,12 @@ import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 
-import { OidcClient, getFimsRedirectTE } from "../utils/fims.js";
 import {
-  errorToInternalError,
   ResponseError,
+  errorToInternalError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
+import { OidcClient, getFimsRedirectTE } from "../utils/fims.js";
 
 interface Dependencies {
   fimsClient: OidcClient;
@@ -22,8 +22,8 @@ export const getFimsRedirect = (
 
 export const makeFimsAuthHandler: H.Handler<
   H.HttpRequest,
-  | H.HttpResponse<null, 302>
-  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>
+  | H.HttpResponse<null, 302>,
   Dependencies
 > = H.of(() =>
   pipe(
