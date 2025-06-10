@@ -1,6 +1,6 @@
 import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
-import { pipe } from "fp-ts/lib/function";
+import { pipe } from "fp-ts/function";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -11,7 +11,7 @@ import {
   generateKeyPairTE,
   signJwtTE,
   signThenEncryptJwtTE,
-} from "../jwt";
+} from "../jwt.js";
 
 const jwtPayload = {
   first_name: "First",

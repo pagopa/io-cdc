@@ -1,17 +1,17 @@
 import { CosmosClient } from "@azure/cosmos";
-import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode } from "@pagopa/ts-commons/lib/strings";
+import * as H from "@pagopa/handler-kit";
+import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
 import * as A from "fp-ts/Array";
 import * as TE from "fp-ts/TaskEither";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import { pipe } from "fp-ts/lib/function";
+import * as RTE from "fp-ts/ReaderTaskEither";
+import { pipe } from "fp-ts/function";
 
-import { Config } from "../config";
-import { CardRequests } from "../generated/definitions/internal/CardRequests";
-import { CosmosDbCardRequestRepository } from "../repository/card_request_repository";
-import { RedisClientFactory } from "../utils/redis";
-import { getSessionTE } from "../utils/session";
+import { Config } from "../config.js";
+import { CardRequests } from "../generated/definitions/internal/CardRequests.js";
+import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
+import { RedisClientFactory } from "../utils/redis.js";
+import { getSessionTE } from "../utils/session.js";
 
 interface Dependencies {
   config: Config;

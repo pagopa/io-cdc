@@ -1,12 +1,12 @@
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as E from "fp-ts/Either";
 import * as TE from "fp-ts/TaskEither";
-import { toError } from "fp-ts/lib/Either";
-import { pipe } from "fp-ts/lib/function";
+import { toError } from "fp-ts/lib/Either.js";
+import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 import { BaseClient, Issuer, generators } from "openid-client";
 
-import { Config } from "../config";
+import { Config } from "../config.js";
 
 export const OidcConfig = t.type({
   OIDC_CLIENT_ID: NonEmptyString,

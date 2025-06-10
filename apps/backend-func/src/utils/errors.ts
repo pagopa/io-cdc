@@ -1,5 +1,5 @@
 import * as H from "@pagopa/handler-kit";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as t from "io-ts";
 
 export const ResponseError = t.type({
@@ -42,6 +42,10 @@ export const errorToInternalError = (e: Error): ResponseError => ({
 
 export const responseErrorToHttpError = RTE.orElseW((e: ResponseError) =>
   RTE.right(
-    H.problemJson({ title: e.title, status: e.code as H.HttpErrorStatusCode, message: e.message }),
+    H.problemJson({
+      title: e.title,
+      status: e.code as H.HttpErrorStatusCode,
+      message: e.message,
+    }),
   ),
 );

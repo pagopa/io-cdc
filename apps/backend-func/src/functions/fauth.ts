@@ -1,10 +1,10 @@
-import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
+import * as H from "@pagopa/handler-kit";
 import * as TE from "fp-ts/TaskEither";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import { pipe } from "fp-ts/lib/function";
+import * as RTE from "fp-ts/ReaderTaskEither";
+import { pipe } from "fp-ts/function";
 
-import { OidcClient, getFimsRedirectTE } from "../utils/fims";
+import { OidcClient, getFimsRedirectTE } from "../utils/fims.js";
 
 interface Dependencies {
   fimsClient: OidcClient;

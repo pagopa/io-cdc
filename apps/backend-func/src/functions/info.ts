@@ -1,17 +1,17 @@
-import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
+import * as H from "@pagopa/handler-kit";
 import * as E from "fp-ts/Either";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import * as RA from "fp-ts/lib/ReadonlyArray";
-import * as Task from "fp-ts/lib/Task";
-import * as TE from "fp-ts/lib/TaskEither";
-import { pipe } from "fp-ts/lib/function";
+import * as RTE from "fp-ts/ReaderTaskEither";
+import * as RA from "fp-ts/ReadonlyArray";
+import * as Task from "fp-ts/Task";
+import * as TE from "fp-ts/TaskEither";
+import { pipe } from "fp-ts/function";
 
-import { Config } from "../config";
-import { ApplicationInfo } from "../generated/definitions/internal/ApplicationInfo";
-import { getCosmosDbClientInstance } from "../utils/cosmosdb";
-import { RedisClientFactory } from "../utils/redis";
-import { singleStringReplyAsync } from "../utils/redis_storage";
+import { Config } from "../config.js";
+import { ApplicationInfo } from "../generated/definitions/internal/ApplicationInfo.js";
+import { getCosmosDbClientInstance } from "../utils/cosmosdb.js";
+import { RedisClientFactory } from "../utils/redis.js";
+import { singleStringReplyAsync } from "../utils/redis_storage.js";
 
 interface Dependencies {
   config: Config;

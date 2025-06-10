@@ -1,17 +1,17 @@
-import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import * as H from "@pagopa/handler-kit";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as TE from "fp-ts/TaskEither";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import { pipe } from "fp-ts/lib/function";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
 
-import { Config } from "../config";
-import { Session } from "../models/session";
-import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims";
-import { RedisClientFactory } from "../utils/redis";
-import { setWithExpirationTask } from "../utils/redis_storage";
-import { storeSessionTe } from "../utils/session";
+import { Config } from "../config.js";
+import { Session } from "../models/session.js";
+import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
+import { RedisClientFactory } from "../utils/redis.js";
+import { setWithExpirationTask } from "../utils/redis_storage.js";
+import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
   config: Config;

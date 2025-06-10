@@ -1,10 +1,10 @@
-import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import { pipe } from "fp-ts/lib/function";
+import * as H from "@pagopa/handler-kit";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
 
-import { Years } from "../generated/definitions/internal/Years";
-import { years } from "../models/card_request";
+import { Years } from "../generated/definitions/internal/Years.js";
+import { years } from "../models/card_request.js";
 
 export const makeGetYearsHandler: H.Handler<
   H.HttpRequest,

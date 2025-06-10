@@ -1,6 +1,6 @@
 import * as TE from "fp-ts/TaskEither";
-import { toError } from "fp-ts/lib/Either";
-import { pipe } from "fp-ts/lib/function";
+import { toError } from "fp-ts/lib/Either.js";
+import { pipe } from "fp-ts/lib/function.js";
 import * as jose from "jose";
 
 const algKeys = "RS256";

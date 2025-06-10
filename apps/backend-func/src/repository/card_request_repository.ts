@@ -4,7 +4,7 @@ import * as TE from "fp-ts/TaskEither";
 import { flow, pipe } from "fp-ts/function";
 import * as t from "io-ts";
 
-import { CardRequest } from "../models/card_request";
+import { CardRequest } from "../models/card_request.js";
 
 interface CardRequestRepository {
   getAllByFiscalCode: (
