@@ -10,7 +10,7 @@ import { ulid } from "ulid";
 
 import { Config } from "../config";
 import { CardRequests } from "../generated/definitions/internal/CardRequests";
-import { Year } from "../models/card_request";
+import { Year, years } from "../models/card_request";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository";
 import { RedisClientFactory } from "../utils/redis";
 import { getSessionTE } from "../utils/session";
@@ -34,6 +34,12 @@ const getExistingCardRequests = (fiscalCode: FiscalCode, deps: Dependencies) =>
     TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
     TE.map(A.map((cardRequest) => cardRequest.year)),
   );
+
+const filterNotEligibleYears =
+  (requestedYears: Year[]) =>
+    requestedYears.filter(
+      (year) => years.lastIndexOf(year) < 0,
+    );
 
 const filterAlreadyRequestedYears =
   (requestedYears: Year[]) => (alreadyRequestedYears: Year[]) =>
@@ -74,6 +80,7 @@ const postCardRequests =
   (fiscalCode: FiscalCode, years: Year[]) => (deps: Dependencies) =>
     pipe(
       getExistingCardRequests(fiscalCode, deps),
+      TE.map(filterNotEligibleYears),
       TE.map(filterAlreadyRequestedYears(years)),
       // TODO: Send requests to external party
       TE.chain(saveNewCardRequests(fiscalCode, deps)),

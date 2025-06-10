@@ -2,26 +2,27 @@ import * as H from "@pagopa/handler-kit";
 import * as RTE from "fp-ts/lib/ReaderTaskEither";
 import * as t from "io-ts";
 
-export const AppError = t.type({
-  code: H.HttpErrorStatusCode,
+export const ResponseError = t.type({
+  code: t.number,
   message: t.string,
   title: t.string,
 });
-export type AppError = t.TypeOf<typeof AppError>;
 
-export const appError = (
-  code: H.HttpErrorStatusCode,
+export type ResponseError = t.TypeOf<typeof ResponseError>;
+
+export const responseError = (
+  code: number,
   message: string,
   title: string,
-): AppError => ({
+): ResponseError => ({
   code,
-  message: message,
+  message,
   title,
 });
 
-export const toAppError =
+export const toResponseError =
   (e: unknown) =>
-  (code: H.HttpErrorStatusCode, title: string): AppError => ({
+  (code: number, title: string): ResponseError => ({
     code,
     message: JSON.stringify(e),
     title,
@@ -33,14 +34,14 @@ export const errorToValidationError = (e: Error) => ({
   title: "Bad Request",
 });
 
-export const errorToInternalError = (e: Error): AppError => ({
+export const errorToInternalError = (e: Error): ResponseError => ({
   code: 500 as const,
   message: e.message,
   title: "Internal Server Error",
 });
 
-export const appErrorToHttpError = RTE.orElseW((e: AppError) =>
+export const responseErrorToHttpError = RTE.orElseW((e: ResponseError) =>
   RTE.right(
-    H.problemJson({ title: e.title, status: e.code, message: e.message }),
+    H.problemJson({ title: e.title, status: e.code as H.HttpErrorStatusCode, message: e.message }),
   ),
 );

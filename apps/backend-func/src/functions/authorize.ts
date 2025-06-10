@@ -10,11 +10,11 @@ import { deleteTask, getTask } from "../utils/redis_storage";
 import { withParams } from "../middlewares/withParams";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import {
-  AppError,
-  appError,
-  appErrorToHttpError,
   errorToInternalError,
   errorToValidationError,
+  responseError,
+  ResponseError,
+  responseErrorToHttpError,
 } from "../utils/errors";
 
 interface Dependencies {
@@ -28,7 +28,7 @@ type QueryParams = t.TypeOf<typeof QueryParams>;
 
 export const getSessionToken =
   (params: QueryParams) =>
-  (deps: Dependencies): TE.TaskEither<AppError, SessionToken> =>
+  (deps: Dependencies): TE.TaskEither<ResponseError, SessionToken> =>
     pipe(
       getTask(deps.redisClientFactory, params.id),
       TE.mapLeft(errorToInternalError),
@@ -36,7 +36,7 @@ export const getSessionToken =
         pipe(
           reply,
           TE.fromOption(() =>
-            appError(401, "Session not found", "Session not found"),
+            responseError(401, "Session not found", "Session not found"),
           ),
           TE.map((sessionToken) => ({ token: sessionToken })),
         ),
@@ -59,7 +59,7 @@ export const makeAuthorizeHandler: H.Handler<
     withParams(QueryParams, req.query),
     RTE.mapLeft(errorToValidationError),
     RTE.chain(flow(getSessionToken, RTE.map(H.successJson))),
-    appErrorToHttpError,
+    responseErrorToHttpError,
   ),
 );
 
