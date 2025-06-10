@@ -1,8 +1,8 @@
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as E from "fp-ts/lib/Either.js";
 import { toError } from "fp-ts/lib/Either.js";
-import { pipe } from "fp-ts/lib/function.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 import { BaseClient, Issuer, generators } from "openid-client";
 

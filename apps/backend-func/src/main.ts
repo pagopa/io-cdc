@@ -1,5 +1,6 @@
 import { app } from "@azure/functions";
 import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
+
 import { getConfigOrThrow } from "./config.js";
 import { AuthorizeFn } from "./functions/authorize.js";
 import { FimsAuthFn } from "./functions/fauth.js";

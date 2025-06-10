@@ -43,9 +43,9 @@ export const errorToInternalError = (e: Error): ResponseError => ({
 export const responseErrorToHttpError = RTE.orElseW((e: ResponseError) =>
   RTE.right(
     H.problemJson({
-      title: e.title,
-      status: e.code as H.HttpErrorStatusCode,
       message: e.message,
+      status: e.code as H.HttpErrorStatusCode,
+      title: e.title,
     }),
   ),
 );

@@ -2,6 +2,7 @@ import { readableReport } from "@pagopa/ts-commons/lib/reporters.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
+
 import { Session } from "../models/session.js";
 import { RedisClientFactory } from "./redis.js";
 import { getTask, setWithExpirationTask } from "./redis_storage.js";
