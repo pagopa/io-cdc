@@ -12,7 +12,7 @@ module "backend_func" {
 
   ai_instrumentation_key = data.azurerm_application_insights.common.instrumentation_key
   ai_connection_string   = data.azurerm_application_insights.common.connection_string
-  ai_sampling_percentage = 5
+  ai_sampling_percentage = 100
 
   subnet_id                            = resource.azurerm_subnet.cdc_subnet_01.id
   private_endpoint_subnet_id           = data.azurerm_subnet.pep.id
