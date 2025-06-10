@@ -85,7 +85,7 @@ variable "nat_gateway_id" {
 }
 
 variable "cdc_base_url" {
-  type = string
+  type        = string
   description = "The base url for CDC redirects"
 }
 

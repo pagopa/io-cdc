@@ -74,6 +74,11 @@ data "azuread_group" "developers" {
   display_name = local.adgroups.devs_name
 }
 
+data "azurerm_dns_zone" "io_pagopa_it" {
+  name                = "io.pagopa.it"
+  resource_group_name = data.azurerm_resource_group.external.name
+}
+
 moved {
   from = module.repo.github_repository.this
   to   = module.repo.module.github_repository["repo"].github_repository.this
@@ -81,7 +86,7 @@ moved {
 
 moved {
   from = module.repo.github_branch_default.main
-  to = module.repo.module.github_repository["repo"].github_branch_default.main
+  to   = module.repo.module.github_repository["repo"].github_branch_default.main
 }
 
 moved {
@@ -138,4 +143,10 @@ module "repo" {
   opex_resource_group_id             = data.azurerm_resource_group.dashboards.id
 
   tags = local.tags
+}
+
+resource "azurerm_role_assignment" "dns_zone_contributor" {
+  scope                = data.azurerm_dns_zone.io_pagopa_it.id
+  role_definition_name = "DNS Zone Contributor"
+  principal_id         = module.repo.identities.infra.cd.id
 }
