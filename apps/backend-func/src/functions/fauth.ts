@@ -5,6 +5,11 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 
 import { OidcClient, getFimsRedirectTE } from "../utils/fims.js";
+import {
+  errorToInternalError,
+  ResponseError,
+  responseErrorToHttpError,
+} from "../utils/errors.js";
 
 interface Dependencies {
   fimsClient: OidcClient;
@@ -12,11 +17,13 @@ interface Dependencies {
 
 export const getFimsRedirect = (
   deps: Dependencies,
-): TE.TaskEither<Error, string> => getFimsRedirectTE(deps.fimsClient);
+): TE.TaskEither<ResponseError, string> =>
+  pipe(getFimsRedirectTE(deps.fimsClient), TE.mapLeft(errorToInternalError));
 
 export const makeFimsAuthHandler: H.Handler<
   H.HttpRequest,
-  H.HttpResponse<null, 302>,
+  | H.HttpResponse<null, 302>
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
   Dependencies
 > = H.of(() =>
   pipe(
@@ -24,6 +31,7 @@ export const makeFimsAuthHandler: H.Handler<
     RTE.map((redirect) =>
       pipe(H.empty, H.withStatusCode(302), H.withHeader("Location", redirect)),
     ),
+    responseErrorToHttpError,
   ),
 );
 

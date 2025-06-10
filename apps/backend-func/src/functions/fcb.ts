@@ -12,12 +12,25 @@ import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { setWithExpirationTask } from "../utils/redis_storage.js";
 import { storeSessionTe } from "../utils/session.js";
+import {
+  errorToValidationError,
+  responseError,
+  responseErrorToHttpError,
+} from "../utils/errors.js";
+import * as t from "io-ts";
+import { withParams } from "../middlewares/withParams.js";
 
 interface Dependencies {
   config: Config;
   fimsClient: OidcClient;
   redisClientFactory: RedisClientFactory;
 }
+
+const QueryParams = t.type({
+  code: NonEmptyString,
+  state: NonEmptyString,
+});
+type QueryParams = t.TypeOf<typeof QueryParams>;
 
 const mockedSessionData: Session = {
   family_name: "Surname" as NonEmptyString,
@@ -27,11 +40,14 @@ const mockedSessionData: Session = {
 
 export const getFimsData =
   (code: string, state: string) => (deps: Dependencies) =>
-    getFimsUserTE(
-      deps.fimsClient,
-      `${deps.config.CDC_BASE_URL}/fcb`,
-      code,
-      state,
+    pipe(
+      getFimsUserTE(
+        deps.fimsClient,
+        `${deps.config.CDC_BASE_URL}/fcb`,
+        code,
+        state,
+      ),
+      TE.mapLeft(() => responseError(401, "Cannot retrieve user data", "SSO")),
     );
 
 // we create a fake session until FIMS is not integrated
@@ -58,16 +74,20 @@ export const createSessionAndRedirect =
           TE.map(() => `${deps.config.CDC_BASE_URL}/authorize?id=${sessionId}`),
         ),
       ),
+      TE.mapLeft(() => responseError(401, "Cannot create session", "SSO")),
     );
 
 export const makeFimsCallbackHandler: H.Handler<
   H.HttpRequest,
-  H.HttpResponse<null, 302>,
+  | H.HttpResponse<null, 302>
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
   Dependencies
-> = H.of(() =>
+> = H.of((req) =>
   pipe(
-    //getFimsData(req.query.code, req.query.state),
-    createSessionAndRedirect(mockedSessionData as OidcUser), // remove this mock and RTE.map the result of commented code
+    withParams(QueryParams, req.query),
+    RTE.mapLeft(errorToValidationError),
+    //RTE.chain(({ code, state }) => getFimsData(code, state)),
+    RTE.chain(() => createSessionAndRedirect(mockedSessionData as OidcUser)), // remove this mock and pass the user obtained from previous RTE
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,
@@ -75,6 +95,7 @@ export const makeFimsCallbackHandler: H.Handler<
         H.withHeader("Location", redirectUrl),
       ),
     ),
+    responseErrorToHttpError,
   ),
 );
 
