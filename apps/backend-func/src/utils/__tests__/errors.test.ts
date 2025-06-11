@@ -8,7 +8,7 @@ import {
   responseError,
   responseErrorToHttpError,
   toResponseError,
-} from "../errors";
+} from "../errors.js";
 
 describe("Errors", () => {
   it("should build a ResponseError from unknown error", async () => {

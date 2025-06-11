@@ -2,7 +2,7 @@ import * as E from "fp-ts/lib/Either.js";
 import { BaseClient, Issuer } from "openid-client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { anOidcConfig } from "../../__mocks__/types.mock";
+import { anOidcConfig } from "../../__mocks__/types.mock.js";
 
 // MOCK openid-client
 const authorizationUrlMock = vi.fn().mockReturnValue("http://fims.it/auth");
@@ -39,7 +39,7 @@ vi.mock("openid-client", () => ({
 
 // dynamically import test class
 const { OidcClient, getFimsRedirectTE, getFimsUserTE } = await import(
-  "../fims"
+  "../fims.js"
 );
 
 describe("OidcClient", () => {

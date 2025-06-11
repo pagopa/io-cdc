@@ -3,7 +3,7 @@ import * as E from "fp-ts/lib/Either.js";
 import * as t from "io-ts";
 import { describe, expect, it } from "vitest";
 
-import { withParams } from "../withParams";
+import { withParams } from "../withParams.js";
 
 const AnyParamsCodec = t.intersection([
   t.type({
