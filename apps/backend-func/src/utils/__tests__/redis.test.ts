@@ -1,15 +1,16 @@
-import { Config } from "../../config";
-import { RedisClient, RedisClientFactory } from "../redis";
 import { describe, expect, it } from "vitest";
 
-const baseConfigMockForRedisFactory = ({
-  isProduction: false,
+import { Config } from "../../config.js";
+import { RedisClient, RedisClientFactory } from "../redis.js";
+
+const baseConfigMockForRedisFactory = {
   REDIS_CLUSTER_ENABLED: false,
-  REDIS_URL: "url",
   REDIS_PASSWORD: "password",
   REDIS_PORT: 6379,
-  REDIS_TLS_ENABLED: false
-} as unknown) as Config;
+  REDIS_TLS_ENABLED: false,
+  REDIS_URL: "url",
+  isProduction: false,
+} as unknown as Config;
 
 describe("RedisClientFactory", () => {
   it.each`
@@ -19,43 +20,43 @@ describe("RedisClientFactory", () => {
     ${"simple"}  | ${false}     | ${true}
   `(
     "should resolve to a $instanceType client when isProduction = $isProduction and REDIS_CLUSTER_ENABLED = $isClusterEnabled",
-    async ({ isProduction, isClusterEnabled }) => {
+    async ({ isClusterEnabled, isProduction }) => {
       const redisClientFactory = new RedisClientFactory({
         ...baseConfigMockForRedisFactory,
+        REDIS_CLUSTER_ENABLED: isClusterEnabled,
         isProduction,
-        REDIS_CLUSTER_ENABLED: isClusterEnabled
       });
 
       // override the connection methods to return test clients
       // with properties injected for testing purposes
       let instanceNumber = 0;
       Object.assign(redisClientFactory, {
-        createSimpleRedisClient: async () =>
-          (({
-            isCluster: false,
-            instanceNumber: instanceNumber++
-          } as unknown) as RedisClient),
         createClusterRedisClient: async () =>
-          (({
+          ({
+            instanceNumber: instanceNumber++,
             isCluster: true,
-            instanceNumber: instanceNumber++
-          } as unknown) as RedisClient)
+          }) as unknown as RedisClient,
+        createSimpleRedisClient: async () =>
+          ({
+            instanceNumber: instanceNumber++,
+            isCluster: false,
+          }) as unknown as RedisClient,
       });
 
       expect(instanceNumber).toBe(0);
       const redisClient = await redisClientFactory.getInstance();
-      //@ts-ignore to check a property injected for testing purposes
+      //@ts-expect-error to check a property injected for testing purposes
       expect(redisClient.isCluster).toBe(isProduction && isClusterEnabled);
-      //@ts-ignore to check a property injected for testing purposes
+      //@ts-expect-error to check a property injected for testing purposes
       expect(redisClient.instanceNumber).toBe(0);
 
       // factory MUST return the same client when getInstance gets called again
       expect(instanceNumber).toBe(1);
       const redisClient2 = await redisClientFactory.getInstance();
-      //@ts-ignore to check a property injected for testing purposes
+      //@ts-expect-error to check a property injected for testing purposes
       expect(redisClient2.instanceType).toBe(redisClient.instanceType);
-      //@ts-ignore to check a property injected for testing purposes
+      //@ts-expect-error to check a property injected for testing purposes
       expect(redisClient2.instanceNumber).toBe(redisClient.instanceNumber);
-    }
+    },
   );
 });

@@ -61,3 +61,4 @@ yarn-error.log*
 generated
 
 local.settings.json
+local_scripts

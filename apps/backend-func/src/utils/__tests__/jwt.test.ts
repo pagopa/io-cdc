@@ -1,29 +1,44 @@
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 import { describe, expect, it } from "vitest";
 
-import {
-  decodeAndVerifyJwtTE,
-  decryptAndVerifyjwtTE,
-  decryptTokenTE,
-  encrypTokenTE,
-  generateKeyPairTE,
-  signJwtTE,
-  signThenEncryptJwtTE,
-} from "../jwt.js";
+import { JwtConfig, JwtGenerator } from "../jwt.js";
+
+const algKeys = "RS256" as NonEmptyString;
+const algSignature = "RS256" as NonEmptyString;
+const algEncription = "RSA-OAEP-256" as NonEmptyString;
+const encEncryption = "A256CBC-HS512" as NonEmptyString;
+const issuer = "PagoPA" as NonEmptyString;
+const audience = "Sogei" as NonEmptyString;
+const expiration = "1m" as NonEmptyString;
+
+const jwtConfig: JwtConfig = {
+  algEncription,
+  algKeys,
+  algSignature,
+  audience,
+  encEncryption,
+  expiration,
+  issuer,
+};
 
 const jwtPayload = {
   first_name: "First",
-  fiscal_code: "Fiscalcode",
+  fiscal_code: "AAABBB00C00D000E",
   last_name: "Last",
 };
+
+const jwtGenerator = new JwtGenerator(jwtConfig);
 
 describe("JWT Util", () => {
   it("should encode and sign a jwt", async () => {
     const jwt = await pipe(
-      generateKeyPairTE(),
-      TE.chain(({ privateKey }) => signJwtTE(privateKey, jwtPayload)),
+      jwtGenerator.generateKeyPairTE(),
+      TE.chain(({ privateKey }) =>
+        jwtGenerator.signJwtTE(privateKey, jwtPayload),
+      ),
     )();
 
     expect(E.isRight(jwt)).toBe(true);
@@ -31,11 +46,11 @@ describe("JWT Util", () => {
 
   it("should verify an encoded jwt", async () => {
     const verifiedJwt = await pipe(
-      generateKeyPairTE(),
+      jwtGenerator.generateKeyPairTE(),
       TE.chain(({ privateKey, publicKey }) =>
         pipe(
-          signJwtTE(privateKey, jwtPayload),
-          TE.chain((jwt) => decodeAndVerifyJwtTE(publicKey, jwt)),
+          jwtGenerator.signJwtTE(privateKey, jwtPayload),
+          TE.chain((jwt) => jwtGenerator.decodeAndVerifyJwtTE(publicKey, jwt)),
         ),
       ),
     )();
@@ -48,11 +63,11 @@ describe("JWT Util", () => {
 
   it("should encode, sign a jwt and encrypt it", async () => {
     const encryptedJwt = await pipe(
-      generateKeyPairTE(),
+      jwtGenerator.generateKeyPairTE(),
       TE.chain(({ privateKey, publicKey }) =>
         pipe(
-          signJwtTE(privateKey, jwtPayload),
-          TE.chain((jwt) => encrypTokenTE(publicKey, jwt)),
+          jwtGenerator.signJwtTE(privateKey, jwtPayload),
+          TE.chain((jwt) => jwtGenerator.encrypTokenTE(publicKey, jwt)),
         ),
       ),
     )();
@@ -62,12 +77,12 @@ describe("JWT Util", () => {
 
   it("should encode, sign a jwt, encrypt it and decrypt it", async () => {
     const jwt = await pipe(
-      generateKeyPairTE(),
+      jwtGenerator.generateKeyPairTE(),
       TE.chain(({ privateKey, publicKey }) =>
         pipe(
-          signJwtTE(privateKey, jwtPayload),
-          TE.chain((jwt) => encrypTokenTE(publicKey, jwt)),
-          TE.chain((token) => decryptTokenTE(privateKey, token)),
+          jwtGenerator.signJwtTE(privateKey, jwtPayload),
+          TE.chain((jwt) => jwtGenerator.encrypTokenTE(publicKey, jwt)),
+          TE.chain((token) => jwtGenerator.decryptTokenTE(privateKey, token)),
         ),
       ),
     )();
@@ -77,13 +92,13 @@ describe("JWT Util", () => {
 
   it("should encode, sign a jwt, encrypt it, decrypt it and verify it", async () => {
     const verifiedJwt = await pipe(
-      generateKeyPairTE(),
+      jwtGenerator.generateKeyPairTE(),
       TE.chain(({ privateKey, publicKey }) =>
         pipe(
-          signJwtTE(privateKey, jwtPayload),
-          TE.chain((jwt) => encrypTokenTE(publicKey, jwt)),
-          TE.chain((token) => decryptTokenTE(privateKey, token)),
-          TE.chain((jwt) => decodeAndVerifyJwtTE(publicKey, jwt)),
+          jwtGenerator.signJwtTE(privateKey, jwtPayload),
+          TE.chain((jwt) => jwtGenerator.encrypTokenTE(publicKey, jwt)),
+          TE.chain((token) => jwtGenerator.decryptTokenTE(privateKey, token)),
+          TE.chain((jwt) => jwtGenerator.decodeAndVerifyJwtTE(publicKey, jwt)),
         ),
       ),
     )();
@@ -96,9 +111,9 @@ describe("JWT Util", () => {
 
   it("should signThenEncryptJwtTE", async () => {
     const encryptedJwt = await pipe(
-      generateKeyPairTE(),
+      jwtGenerator.generateKeyPairTE(),
       TE.chain(({ privateKey, publicKey }) =>
-        signThenEncryptJwtTE(publicKey, privateKey, jwtPayload),
+        jwtGenerator.signThenEncryptJwtTE(publicKey, privateKey, jwtPayload),
       ),
     )();
 
@@ -106,12 +121,16 @@ describe("JWT Util", () => {
   });
   it("should decryptAndVerifyjwtTE", async () => {
     const verifiedJwt = await pipe(
-      generateKeyPairTE(),
+      jwtGenerator.generateKeyPairTE(),
       TE.chain(({ privateKey, publicKey }) =>
         pipe(
-          signThenEncryptJwtTE(publicKey, privateKey, jwtPayload),
+          jwtGenerator.signThenEncryptJwtTE(publicKey, privateKey, jwtPayload),
           TE.chain((encryptedJwt) =>
-            decryptAndVerifyjwtTE(publicKey, privateKey, encryptedJwt),
+            jwtGenerator.decryptAndVerifyjwtTE(
+              publicKey,
+              privateKey,
+              encryptedJwt,
+            ),
           ),
         ),
       ),

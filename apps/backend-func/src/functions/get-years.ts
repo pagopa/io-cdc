@@ -9,8 +9,8 @@ import { responseErrorToHttpError } from "../utils/errors.js";
 
 export const makeGetYearsHandler: H.Handler<
   H.HttpRequest,
-  | H.HttpResponse<Years, 200>
-  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>
+  | H.HttpResponse<Years, 200>,
   undefined
 > = H.of(() => pipe(RTE.of(H.successJson(years)), responseErrorToHttpError));
 
