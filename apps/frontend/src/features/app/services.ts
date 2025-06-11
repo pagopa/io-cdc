@@ -1,26 +1,21 @@
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { YearsList } from './model';
-import { mockYears } from './mock';
-import { delay, getRandomError, getRandomResponse } from './utils';
+import { delay, getRandomResponse } from './utils';
 import { RequestBonusDto } from './dto';
 
 export const appApi = createApi({
   reducerPath: 'app',
-  baseQuery: fakeBaseQuery(),
+  baseQuery: fetchBaseQuery({
+    //TODO -> move this to envs
+    baseUrl: 'https://api-app.io.pagopa.it/api/cdc/v1/',
+  }),
   endpoints: (builder) => ({
     getYearsList: builder.query<YearsList, void>({
+      query: () => 'years',
+    }),
+    getNotAvailableYearsList: builder.query<YearsList, void>({
       queryFn: async () => {
-        const shouldFail = getRandomResponse();
-        await delay(2000);
-        if (shouldFail) {
-          return {
-            error: {
-              status: getRandomError(),
-              data: { message: 'Non puoi richiedere la carta della cultura' },
-            },
-          };
-        }
-        return { data: mockYears };
+        return { data: ['2020'] };
       },
     }),
     requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({
@@ -48,4 +43,6 @@ export const {
   useLazyGetYearsListQuery,
   endpoints,
   useRequestBonusMutation,
+  useGetNotAvailableYearsListQuery,
+  useLazyGetNotAvailableYearsListQuery,
 } = appApi;

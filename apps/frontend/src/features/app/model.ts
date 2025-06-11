@@ -2,7 +2,7 @@ export type AppState = {
   years: YearsList;
 };
 
-export type YearsList = Year[];
+export type YearsList = string[];
 
 export type Year = {
   label: string;

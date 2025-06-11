@@ -3,7 +3,14 @@ import { endpoints } from './services';
 
 export const selectYearsResult = endpoints.getYearsList.select();
 
+export const selectNotAvailableYearsResult = endpoints.getNotAvailableYearsList.select();
+
 export const selectYearsList = createSelector(
   selectYearsResult,
   (yearsResult) => yearsResult?.data ?? [],
+);
+
+export const selectNotAvailableYears = createSelector(
+  selectNotAvailableYearsResult,
+  (notAvailableYears) => notAvailableYears?.data ?? [],
 );
