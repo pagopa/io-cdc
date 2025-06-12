@@ -7,17 +7,17 @@ import {
   cosmosFetchAllMock,
   getCosmosDbClientInstanceMock,
   setMockedItems,
-} from "../../__mocks__/cosmosdb.mock";
+} from "../../__mocks__/cosmosdb.mock.js";
 import {
   getRedisClientFactoryMock,
   redisGetMock,
-} from "../../__mocks__/redis_client_factory.mock";
+} from "../../__mocks__/redis_client_factory.mock.js";
 import {
   aCardRequest,
   aValidFiscalCode,
   aValidSession,
-} from "../../__mocks__/types.mock";
-import { Config } from "../../config";
+} from "../../__mocks__/types.mock.js";
+import { Config } from "../../config.js";
 import {
   filterAlreadyRequestedYears,
   filterNotEligibleYears,
@@ -25,7 +25,7 @@ import {
   getSession,
   postCardRequests,
   saveNewCardRequests,
-} from "../post-requests";
+} from "../post-requests.js";
 
 const redisClientFactoryMock = getRedisClientFactoryMock();
 const config = {
