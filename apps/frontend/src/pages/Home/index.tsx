@@ -16,10 +16,17 @@ const Home = () => {
       if (isSuccess) {
         navigate(APP_ROUTES.SELECT_YEAR);
       }
-      if (isError && error) {
+      if ((error as ApiError)?.status === 401) {
+        navigate(APP_ROUTES.UNAUTHORIZED, {
+          state: {
+            status: (error as ApiError)?.status,
+          },
+        });
+      }
+      if (isError && error && (error as ApiError)?.status !== 401) {
         navigate(APP_ROUTES.EXPIRED, {
           state: {
-            status: (error as ApiError).status,
+            status: (error as ApiError)?.status,
           },
         });
       }

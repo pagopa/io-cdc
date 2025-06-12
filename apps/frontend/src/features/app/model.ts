@@ -4,6 +4,8 @@ export type AppState = {
 
 export type YearsList = string[];
 
+export type RequestedYearsList = Array<{ year: string }>;
+
 export type Year = {
   label: string;
   value: string;
@@ -15,4 +17,12 @@ export type ApiError = {
   data: {
     message: string;
   };
+};
+
+export type SessionParams = {
+  id: string;
+};
+
+export type SessionResponseDTO = {
+  token: string;
 };

@@ -3,31 +3,28 @@ import { Button, Chip, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/appRoutes';
-import { selectNotAvailableYears, selectYearsList } from '../../features/app/selectors';
+import { selectAnnualitiesWithStatus, selectNotAvailableYears } from '../../features/app/selectors';
 import { useSelector } from 'react-redux';
 import { useRequestBonusMutation } from '../../features/app/services';
 
 const SelectYear = () => {
-  const availableYears = useSelector(selectYearsList);
+  const annualities = useSelector(selectAnnualitiesWithStatus);
   const notAvailableYears = useSelector(selectNotAvailableYears);
   const [requestBonus, { isLoading }] = useRequestBonusMutation();
 
   const mappedYearsList = useMemo(
     () =>
-      [
-        ...availableYears.map((year) => ({
-          label: year,
-          value: year,
-          disabled: false,
-        })),
-        ...notAvailableYears.map((year) => ({
-          label: year,
-          value: year,
-          disabled: true,
-          rightComponent: <Chip label="Già richiesta" color="primary" size="small" />,
-        })),
-      ].sort((a, b) => Number(a.value) - Number(b.value)),
-    [availableYears, notAvailableYears],
+      annualities
+        .map(({ label, value, disabled }) => ({
+          label,
+          value,
+          disabled,
+          rightComponent: disabled ? (
+            <Chip label="Già richiesta" color="primary" size="small" />
+          ) : undefined,
+        }))
+        .sort((a, b) => Number(a.value) - Number(b.value)),
+    [annualities],
   );
 
   const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
@@ -40,7 +37,6 @@ const SelectYear = () => {
 
   const onConfirm = useCallback(async () => {
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
-    console.log('🚀 ~ onConfirm ~ newYears:', newYears);
     try {
       const { error, data } = await requestBonus(newYears);
       if (error) {

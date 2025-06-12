@@ -12,5 +12,12 @@ export const selectYearsList = createSelector(
 
 export const selectNotAvailableYears = createSelector(
   selectNotAvailableYearsResult,
-  (notAvailableYears) => notAvailableYears?.data ?? [],
+  (notAvailableYears) => notAvailableYears?.data?.map(({ year }) => year) ?? [],
+);
+
+export const selectAnnualitiesWithStatus = createSelector(
+  selectYearsList,
+  selectNotAvailableYears,
+  (available, notAvailable) =>
+    available.map((year) => ({ label: year, value: year, disabled: notAvailable.includes(year) })),
 );
