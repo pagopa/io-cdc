@@ -1,7 +1,7 @@
 /* eslint-disable no-invalid-this */
 import * as redis from "redis";
 
-import { Config } from "../config";
+import { Config } from "../config.js";
 
 export type RedisClient = redis.RedisClientType;
 

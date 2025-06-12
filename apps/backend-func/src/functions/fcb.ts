@@ -1,23 +1,36 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
-import * as TE from "fp-ts/TaskEither";
-import * as RTE from "fp-ts/lib/ReaderTaskEither";
-import { pipe } from "fp-ts/lib/function";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
+import * as t from "io-ts";
 
-import { Config } from "../config";
-import { Session } from "../models/session";
-import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims";
-import { RedisClientFactory } from "../utils/redis";
-import { setWithExpirationTask } from "../utils/redis_storage";
-import { storeSessionTe } from "../utils/session";
+import { Config } from "../config.js";
+import { withParams } from "../middlewares/withParams.js";
+import { Session } from "../models/session.js";
+import {
+  errorToValidationError,
+  responseError,
+  responseErrorToHttpError,
+} from "../utils/errors.js";
+import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
+import { RedisClientFactory } from "../utils/redis.js";
+import { setWithExpirationTask } from "../utils/redis_storage.js";
+import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
   config: Config;
   fimsClient: OidcClient;
   redisClientFactory: RedisClientFactory;
 }
+
+const QueryParams = t.type({
+  code: NonEmptyString,
+  state: NonEmptyString,
+});
+type QueryParams = t.TypeOf<typeof QueryParams>;
 
 const mockedSessionData: Session = {
   family_name: "Surname" as NonEmptyString,
@@ -27,11 +40,16 @@ const mockedSessionData: Session = {
 
 export const getFimsData =
   (code: string, state: string) => (deps: Dependencies) =>
-    getFimsUserTE(
-      deps.fimsClient,
-      `${deps.config.CDC_BASE_URL}/fcb`,
-      code,
-      state,
+    pipe(
+      getFimsUserTE(
+        deps.fimsClient,
+        `${deps.config.CDC_BASE_URL}/fcb`,
+        code,
+        state,
+      ),
+      TE.mapLeft(() =>
+        responseError(401, "Cannot retrieve user data", "Unauthorized"),
+      ),
     );
 
 // we create a fake session until FIMS is not integrated
@@ -45,12 +63,7 @@ export const createSessionAndRedirect =
       ),
       TE.chain(({ sessionId, sessionToken }) =>
         pipe(
-          // set mocked session
-          storeSessionTe(
-            deps.redisClientFactory,
-            sessionToken,
-            user,
-          ), // TODO: remove mocked session data when testing fims
+          storeSessionTe(deps.redisClientFactory, sessionToken, user),
           TE.chain(() =>
             // bind one time session id to session token
             setWithExpirationTask(
@@ -63,16 +76,23 @@ export const createSessionAndRedirect =
           TE.map(() => `${deps.config.CDC_BASE_URL}/authorize?id=${sessionId}`),
         ),
       ),
+      TE.mapLeft(() =>
+        responseError(401, "Cannot create session", "Unauthorized"),
+      ),
     );
 
 export const makeFimsCallbackHandler: H.Handler<
   H.HttpRequest,
-  H.HttpResponse<null, 302>,
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>
+  | H.HttpResponse<null, 302>,
   Dependencies
 > = H.of((req) =>
   pipe(
-    //getFimsData(req.query.code, req.query.state),
-    createSessionAndRedirect(mockedSessionData as OidcUser), // remove this mock and RTE.map the result of commented code
+    withParams(QueryParams, req.query), // GET ALSO LOLLIPOP HEADERS "signature-input" & "signature"
+    RTE.mapLeft(errorToValidationError),
+    //RTE.chain(({ code, state }) => getFimsData(code, state)),
+    //RTE.chain(({...}) => checkLollipop(...))
+    RTE.chain(() => createSessionAndRedirect(mockedSessionData as OidcUser)), // remove this mock and pass the user obtained from previous RTE
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,
@@ -80,6 +100,7 @@ export const makeFimsCallbackHandler: H.Handler<
         H.withHeader("Location", redirectUrl),
       ),
     ),
+    responseErrorToHttpError,
   ),
 );
 

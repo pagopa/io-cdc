@@ -33,8 +33,8 @@ paths:
           schema:
             type: string
       responses:
-        "301":
-          description: Redirect to openid  provider
+        "302":
+          description: Redirect to openid provider
         "500":
           description: Internal Server error
   /fcb:
@@ -52,8 +52,10 @@ paths:
           schema:
             type: string
       responses:
-        "301":
+        "302":
           description: Redirect to RP Authorize
+        "401":
+          description: Unauthorized
         "500":
           description: Internal Server error
   /authorize:
@@ -72,6 +74,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SessionToken"
+        "401":
+          description: Unauthorized
         "500":
           description: Internal Server error
   /years:
@@ -102,6 +106,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CardRequests"
+        "401":
+          description: Unauthorized
         "500":
           description: Internal Server error
     post:
@@ -126,6 +132,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CardRequests"
+        "401":
+          description: Unauthorized
         "500":
           description: Internal Server error
 components:

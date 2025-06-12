@@ -1,4 +1,4 @@
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as t from "io-ts";
 
 export const Session = t.intersection([
