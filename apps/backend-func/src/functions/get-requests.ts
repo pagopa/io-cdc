@@ -32,23 +32,24 @@ const Headers = t.type({
 });
 type Headers = t.TypeOf<typeof Headers>;
 
-const getSession = (sessionToken: string) => (deps: Dependencies) =>
+export const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(
     getSessionTE(deps.redisClientFactory, sessionToken),
     TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
-const getCardRequests = (fiscalCode: FiscalCode) => (deps: Dependencies) =>
-  pipe(
-    TE.of(
-      new CosmosDbCardRequestRepository(
-        deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+export const getCardRequests =
+  (fiscalCode: FiscalCode) => (deps: Dependencies) =>
+    pipe(
+      TE.of(
+        new CosmosDbCardRequestRepository(
+          deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+        ),
       ),
-    ),
-    TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
-    TE.map(A.map((cardRequest) => ({ year: cardRequest.year }))),
-    TE.mapLeft(errorToInternalError),
-  );
+      TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
+      TE.map(A.map((cardRequest) => ({ year: cardRequest.year }))),
+      TE.mapLeft(errorToInternalError),
+    );
 
 export const makeGetCardRequestsHandler: H.Handler<
   H.HttpRequest,

@@ -4,16 +4,25 @@ import {
   Database,
   ItemDefinition,
 } from "@azure/cosmos";
+import { vi } from "vitest";
 
 let items: unknown[] = [];
 
+export const cosmosCreateMock = vi
+  .fn()
+  .mockImplementation(async <T>(item: T) => {
+    items.push(item);
+  });
+
+export const cosmosFetchAllMock = vi
+  .fn()
+  .mockImplementation(async () => ({ resources: items as ItemDefinition[] }));
+
 const containerMock = {
   items: {
-    create: async <T>(item: T) => {
-      items.push(item);
-    },
+    create: cosmosCreateMock,
     readAll: () => ({
-      fetchAll: async () => ({ resources: items as ItemDefinition[] }),
+      fetchAll: cosmosFetchAllMock,
     }),
   },
 } as unknown as Container;

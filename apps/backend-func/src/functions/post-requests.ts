@@ -37,13 +37,16 @@ type Headers = t.TypeOf<typeof Headers>;
 const Body = t.array(Year);
 type Body = t.TypeOf<typeof Body>;
 
-const getSession = (sessionToken: string) => (deps: Dependencies) =>
+export const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(
     getSessionTE(deps.redisClientFactory, sessionToken),
     TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
-const getExistingCardRequests = (fiscalCode: FiscalCode, deps: Dependencies) =>
+export const getExistingCardRequests = (
+  fiscalCode: FiscalCode,
+  deps: Dependencies,
+) =>
   pipe(
     TE.of(
       new CosmosDbCardRequestRepository(
@@ -55,16 +58,14 @@ const getExistingCardRequests = (fiscalCode: FiscalCode, deps: Dependencies) =>
     TE.mapLeft(errorToInternalError),
   );
 
-const filterNotEligibleYears = (requestedYears: Year[]) =>
-  requestedYears.filter((year) => years.lastIndexOf(year) < 0);
+export const filterNotEligibleYears = (requestedYears: Year[]) =>
+  requestedYears.filter((year) => years.indexOf(year) >= 0);
 
-const filterAlreadyRequestedYears =
+export const filterAlreadyRequestedYears =
   (requestedYears: Year[]) => (alreadyRequestedYears: Year[]) =>
-    requestedYears.filter(
-      (year) => alreadyRequestedYears.lastIndexOf(year) < 0,
-    );
+    requestedYears.filter((year) => alreadyRequestedYears.indexOf(year) < 0);
 
-const saveNewCardRequests =
+export const saveNewCardRequests =
   (fiscalCode: FiscalCode, deps: Dependencies) => (years: Year[]) =>
     pipe(
       TE.of(
@@ -94,7 +95,7 @@ const saveNewCardRequests =
       TE.mapLeft(errorToInternalError),
     );
 
-const postCardRequests =
+export const postCardRequests =
   (fiscalCode: FiscalCode, years: Year[]) => (deps: Dependencies) =>
     pipe(
       getExistingCardRequests(fiscalCode, deps),

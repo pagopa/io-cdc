@@ -122,3 +122,22 @@ export const getFimsUserTE = (
       TE.tryCatch(() => client.retrieveUser(cbUrl, code, state), toError),
     ),
   );
+
+/*  
+  Check lollipop
+  Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
+  Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
+  Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
+  Verificare che la data di emissione della asserzione (NotOnOrAfter) non sia inferiore a 356 giorni
+  assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint del claim public_key usando l’algoritmo indicato (ad esempio sha256)
+  Verificare la firma dell’header Signature usando il contenuto del claim public_key
+  Verificare se il nonce firmato nel campo Signature corrisponde allo state OIDC
+
+
+  A causa di:
+    la dipendenza del protocollo LolliPoP dalle assertion SPID e dalle relative chiavi che possono cambiare nel tempo
+    il particolare meccanismo di login implementato nell’app che prevede sessioni lunghe 30 o 365 giorni a parità di assertion
+    il cambiamento di una chiave in presenza di una sessione attiva provoca un fallimento nelle verifiche LolliPoP.
+    Per gestire questa casistica è fondamentale che tu predisponga un sistema che ti consenta di mantenere uno storico delle chiavi (per validare le assertion precedenti) e di ottenere le nuove, tenendo conto della durata delle sessioni su IO.
+    light bulb In ogni caso, in presenza dell'impossibilità di portare a termine la verifica, il tuo sistema dovrebbe fare fallback su una nuova richiesta di login SPID all’utente, specificando che qualcosa è andato storto nel processo di identificazione automatica.
+  */

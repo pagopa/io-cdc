@@ -12,7 +12,6 @@ import { OidcUser } from "../../utils/fims.js";
 import { createSessionAndRedirect, getFimsData } from "../fcb.js";
 
 const redisClientFactoryMock = getRedisClientFactoryMock();
-
 const config = { CDC_BASE_URL: "https://baseurl.it" } as unknown as Config;
 
 describe("getFimsData", () => {

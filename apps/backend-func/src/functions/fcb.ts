@@ -88,9 +88,10 @@ export const makeFimsCallbackHandler: H.Handler<
   Dependencies
 > = H.of((req) =>
   pipe(
-    withParams(QueryParams, req.query),
+    withParams(QueryParams, req.query), // GET ALSO LOLLIPOP HEADERS "signature-input" & "signature"
     RTE.mapLeft(errorToValidationError),
     //RTE.chain(({ code, state }) => getFimsData(code, state)),
+    //RTE.chain(({...}) => checkLollipop(...))
     RTE.chain(() => createSessionAndRedirect(mockedSessionData as OidcUser)), // remove this mock and pass the user obtained from previous RTE
     RTE.map((redirectUrl) =>
       pipe(

@@ -31,11 +31,6 @@ describe("RedisClientFactory", () => {
       // with properties injected for testing purposes
       let instanceNumber = 0;
       Object.assign(redisClientFactory, {
-        createClusterRedisClient: async () =>
-          ({
-            instanceNumber: instanceNumber++,
-            isCluster: true,
-          }) as unknown as RedisClient,
         createSimpleRedisClient: async () =>
           ({
             instanceNumber: instanceNumber++,
