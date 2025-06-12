@@ -1,5 +1,5 @@
 import { Database } from "@azure/cosmos";
-import * as E from "fp-ts/Either";
+import * as E from "fp-ts/lib/Either.js";
 import { afterEach, assert, describe, expect, it, vi } from "vitest";
 
 import {
