@@ -1,12 +1,14 @@
 import { Icon, OperationResult } from '@io-cdc/ui';
 import { useLocation } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
-import { CONFIG_BY_STATUS, FeedbackState } from './constants';
+import { CONFIG_BY_STATUS } from './constants';
 
 //TODO -> define what should be done on close
 const Feedback = () => {
-  const { state } = useLocation();
-  const { title, description, icon, subTitle } = CONFIG_BY_STATUS[(state as FeedbackState).status];
+  const {
+    state: { status },
+  } = useLocation();
+  const { title, description, icon, subTitle } = CONFIG_BY_STATUS[status];
 
   return (
     <Stack flex={1} justifyContent="center" alignItems="center">

@@ -5,13 +5,15 @@ import {
   useLazyGetYearsListQuery,
 } from '../features/app/services';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectFirstSessionData } from '../features/app/selectors';
 
 export const useLoadYears = () => {
   const { search } = useLocation();
 
-  const sessionToken = useMemo(() => localStorage.getItem('token'), []);
+  const session = useSelector(selectFirstSessionData);
 
-  const token = useMemo(() => search.split('id=')[1], [search]);
+  const redirectToken = useMemo(() => search.split('id=')[1], [search]);
 
   const [getSession] = useLazyGetSessionQuery();
   const [getYearsList] = useLazyGetYearsListQuery();
@@ -26,17 +28,14 @@ export const useLoadYears = () => {
   });
 
   const loadData = useCallback(async () => {
-    if (!sessionToken) {
+    if (!session || !session?.token) {
       const {
         data,
-        isSuccess: sessionSuccess,
         isError: sessionError,
         error: sessionErrorMsg,
-      } = await getSession({ id: token });
+      } = await getSession({ id: redirectToken });
 
-      if (!data) return { ...response, isError: true, error: sessionErrorMsg };
-
-      localStorage.setItem('token', data.token);
+      if (!data) return { ...response, isError: sessionError, error: sessionErrorMsg };
     }
 
     const {
@@ -44,6 +43,7 @@ export const useLoadYears = () => {
       isSuccess: getYearsListIsSuccess,
       error: getYearsListError,
     } = await getYearsList();
+
     const {
       isError: getNotAvailableYearsListIsError,
       isSuccess: getNotAvailableYearsListIsSuccess,
@@ -58,7 +58,7 @@ export const useLoadYears = () => {
       isSuccess,
       error,
     });
-  }, [getNotAvailableYearsList, getSession, getYearsList, response, sessionToken, token]);
+  }, [getNotAvailableYearsList, getSession, getYearsList, response, redirectToken, session]);
 
   useEffect(() => {
     loadData();

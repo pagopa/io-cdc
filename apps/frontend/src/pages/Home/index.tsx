@@ -3,8 +3,8 @@ import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { APP_ROUTES } from '../../utils/appRoutes';
-import { ApiError } from '../../features/app/model';
 import { useLoadYears } from '../../hooks/useLoadYears';
+import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 
 const Home = () => {
   const { isError, isSuccess, error } = useLoadYears();
@@ -16,17 +16,11 @@ const Home = () => {
       if (isSuccess) {
         navigate(APP_ROUTES.SELECT_YEAR);
       }
-      if ((error as ApiError)?.status === 401) {
-        navigate(APP_ROUTES.UNAUTHORIZED, {
+      if (isError && isFetchBaseQueryError(error)) {
+        const ROUTE = error.status === 401 ? APP_ROUTES.UNAUTHORIZED : APP_ROUTES.EXPIRED;
+        navigate(ROUTE, {
           state: {
-            status: (error as ApiError)?.status,
-          },
-        });
-      }
-      if (isError && error && (error as ApiError)?.status !== 401) {
-        navigate(APP_ROUTES.EXPIRED, {
-          state: {
-            status: (error as ApiError)?.status,
+            status: error.status,
           },
         });
       }

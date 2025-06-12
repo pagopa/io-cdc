@@ -1,17 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RequestedYearsList, SessionParams, SessionResponseDTO, YearsList } from './model';
 import { RequestBonusDto } from './dto';
+import { RootState } from '../store';
+import { retrieveSessionQueryCached } from './utils';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const appApi = createApi({
   reducerPath: 'app',
+  tagTypes: ['getSession'],
   baseQuery: fetchBaseQuery({
-    //TODO -> move this to envs
-    baseUrl: 'https://api-app.io.pagopa.it/api/cdc/v1/',
-    prepareHeaders: (headers) => {
-      // TODO think to save in global state, this way we can even refresh an active session safely
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('token', token);
+    baseUrl: BASE_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const state = getState() as RootState;
+      const data = retrieveSessionQueryCached(state);
+
+      if (data && data.token) {
+        headers.set('token', data.token);
       }
       return headers;
     },
@@ -22,6 +27,7 @@ export const appApi = createApi({
         url: '/authorize',
         params: { id },
       }),
+      providesTags: (_, __, { id }, ___) => [{ type: 'getSession' as const, id }],
     }),
     getYearsList: builder.query<YearsList, void>({
       query: () => 'years',
@@ -35,21 +41,6 @@ export const appApi = createApi({
         method: 'POST',
         body: annualities,
       }),
-      // queryFn: async () => {
-      //   const shouldFail = getRandomResponse();
-      //   await delay(2000);
-      //   if (shouldFail) {
-      //     return {
-      //       error: {
-      //         status: 500,
-      //         data: { message: 'Errore nella richiesta' },
-      //       },
-      //     };
-      //   }
-      //   return {
-      //     data: { success: true },
-      //   };
-      // },
     }),
   }),
 });

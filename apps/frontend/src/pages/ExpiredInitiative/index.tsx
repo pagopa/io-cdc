@@ -3,15 +3,12 @@ import { Button, Stack, Typography } from '@mui/material';
 import { EXPIRED_INITIATIVE_CONFIG_MAP } from './constants';
 import { useLocation } from 'react-router-dom';
 
-const STATUSES = {
-  500: 'expired',
-  501: 'alreadyRequested',
-};
-
 //TODO -> define what should be done on close
 const ExpiredInitiative = () => {
-  const { state } = useLocation();
-  const status = STATUSES[(state.status as keyof typeof STATUSES) ?? 500];
+  const {
+    state: { status },
+  } = useLocation();
+
   const { image, description, title } = EXPIRED_INITIATIVE_CONFIG_MAP[status];
   return (
     <Stack justifyContent="center" alignItems="center" height="100%" gap={4}>
