@@ -5,13 +5,13 @@
  * The configuration is evaluate eagerly at the first access to the module. The module exposes convenient methods to access such value.
  */
 
-import { NumberFromString } from "@pagopa/ts-commons/lib/numbers";
-import * as reporters from "@pagopa/ts-commons/lib/reporters";
-import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
-import { withDefault } from "@pagopa/ts-commons/lib/types";
-import * as E from "fp-ts/lib/Either";
-import * as O from "fp-ts/lib/Option";
-import { pipe } from "fp-ts/lib/function";
+import { NumberFromString } from "@pagopa/ts-commons/lib/numbers.js";
+import * as reporters from "@pagopa/ts-commons/lib/reporters.js";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { withDefault } from "@pagopa/ts-commons/lib/types.js";
+import * as E from "fp-ts/lib/Either.js";
+import * as O from "fp-ts/lib/Option.js";
+import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 export type Config = t.TypeOf<typeof Config>;
@@ -33,13 +33,13 @@ export const Config = t.type({
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
 
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
-  FIMS_BASE_URL: NonEmptyString,
 
   FIMS_CLIENT_ID: NonEmptyString,
   FIMS_CLIENT_SECRET: NonEmptyString,
-
   FIMS_ISSUER_URL: NonEmptyString,
+  FIMS_REDIRECT_URL: NonEmptyString,
   FIMS_SCOPE: NonEmptyString,
+
   JWT_AUDIENCE: NonEmptyString,
   JWT_EXPIRATION: NonEmptyString,
   JWT_ISSUER: NonEmptyString,

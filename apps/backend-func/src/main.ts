@@ -1,17 +1,25 @@
 import { app } from "@azure/functions";
+import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
 
-import { getConfigOrThrow } from "./config";
-import { AuthorizeFn } from "./functions/authorize";
-import { FimsAuthFn } from "./functions/fauth";
-import { FimsCallbackFn } from "./functions/fcb";
-import { GetCardRequestsFn } from "./functions/get-requests";
-import { GetYearsFn } from "./functions/get-years";
-import { InfoFn } from "./functions/info";
-import { PostCardRequestsFn } from "./functions/post-requests";
-import { getCosmosDbClientInstance } from "./utils/cosmosdb";
-import { getRedisClientFactory } from "./utils/redis";
+import { getConfigOrThrow } from "./config.js";
+import { AuthorizeFn } from "./functions/authorize.js";
+import { FimsAuthFn } from "./functions/fauth.js";
+import { FimsCallbackFn } from "./functions/fcb.js";
+import { GetCardRequestsFn } from "./functions/get-requests.js";
+import { GetYearsFn } from "./functions/get-years.js";
+import { InfoFn } from "./functions/info.js";
+import { PostCardRequestsFn } from "./functions/post-requests.js";
+import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
+import { getFimsClient } from "./utils/fims.js";
+import { getRedisClientFactory } from "./utils/redis.js";
 
+registerAzureFunctionHooks(app);
+
+// Config
 const config = getConfigOrThrow();
+
+// Fims
+const fimsClient = getFimsClient(config);
 
 // CosmosDB singleton
 const cosmosDbClient = getCosmosDbClientInstance(
@@ -30,7 +38,7 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
-const FimsAuth = FimsAuthFn({ redisClientFactory });
+const FimsAuth = FimsAuthFn({ fimsClient });
 app.http("FimsAuth", {
   authLevel: "function",
   handler: FimsAuth,
@@ -38,7 +46,7 @@ app.http("FimsAuth", {
   route: "api/v1/fauth",
 });
 
-const FimsCallback = FimsCallbackFn({ config, redisClientFactory });
+const FimsCallback = FimsCallbackFn({ config, fimsClient, redisClientFactory });
 app.http("FimsCallback", {
   authLevel: "function",
   handler: FimsCallback,
@@ -62,7 +70,11 @@ app.http("GetYears", {
   route: "api/v1/years",
 });
 
-const GetCardRequests = GetCardRequestsFn({ cosmosDbClient });
+const GetCardRequests = GetCardRequestsFn({
+  config,
+  cosmosDbClient,
+  redisClientFactory,
+});
 app.http("GetCardRequests", {
   authLevel: "function",
   handler: GetCardRequests,
@@ -70,7 +82,11 @@ app.http("GetCardRequests", {
   route: "api/v1/card-requests",
 });
 
-const PostCardRequests = PostCardRequestsFn({});
+const PostCardRequests = PostCardRequestsFn({
+  config,
+  cosmosDbClient,
+  redisClientFactory,
+});
 app.http("PostCardRequests", {
   authLevel: "function",
   handler: PostCardRequests,

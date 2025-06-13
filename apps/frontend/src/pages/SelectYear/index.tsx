@@ -84,7 +84,10 @@ const SelectYear = () => {
           buttonLabel={allSelected ? 'Deseleziona tutti' : 'Seleziona tutti'}
           onChange={onSelectYear}
           options={mappedYearsList}
-          disableSelectAll={mappedYearsList.length - selectedItems.length === 1}
+          disableSelectAll={
+            mappedYearsList.length - selectedItems.length === 1 ||
+            mappedYearsList.every(({ disabled }) => disabled)
+          }
         />
       </Stack>
       <Button

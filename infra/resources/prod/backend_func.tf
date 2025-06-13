@@ -12,7 +12,7 @@ module "backend_func" {
 
   ai_instrumentation_key = data.azurerm_application_insights.common.instrumentation_key
   ai_connection_string   = data.azurerm_application_insights.common.connection_string
-  ai_sampling_percentage = 5
+  ai_sampling_percentage = 100
 
   subnet_id                            = resource.azurerm_subnet.cdc_subnet_01.id
   private_endpoint_subnet_id           = data.azurerm_subnet.pep.id
@@ -31,7 +31,7 @@ module "backend_func" {
   services_api_url = data.azurerm_key_vault_secret.services_api_url.value
   services_api_key = data.azurerm_key_vault_secret.services_api_key.value
 
-  fims_base_url      = data.azurerm_key_vault_secret.fims_base_url.value
+  fims_redirect_url  = data.azurerm_key_vault_secret.fims_redirect_url.value
   fims_client_id     = data.azurerm_key_vault_secret.fims_client_id.value
   fims_client_secret = data.azurerm_key_vault_secret.fims_client_secret.value
   fims_issuer_url    = data.azurerm_key_vault_secret.fims_issuer_url.value

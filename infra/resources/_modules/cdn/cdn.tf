@@ -1,6 +1,6 @@
 module "cdc_fe_cdn" {
   source  = "pagopa-dx/azure-cdn/azurerm"
-  version = "0.0.6"
+  version = "0.2.0"
 
   environment = {
     prefix          = var.prefix
@@ -29,4 +29,27 @@ module "cdc_fe_cdn" {
   }]
 
   tags = var.tags
+}
+
+resource "azurerm_cdn_frontdoor_rule" "rewrite_index" {
+  name                      = "RewriteIndex"
+  cdn_frontdoor_rule_set_id = module.cdc_fe_cdn.rule_set_id
+  order                     = 1
+  behavior_on_match         = "Continue"
+
+  actions {
+    url_rewrite_action {
+      source_pattern          = "/"
+      destination             = "/index.html"
+      preserve_unmatched_path = false
+    }
+  }
+
+  conditions {
+    request_uri_condition {
+      operator = "Contains"
+      match_values = ["/assets/"]
+      negate_condition = true
+    }
+  }
 }

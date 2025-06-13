@@ -15,13 +15,13 @@ paths:
     get:
       operationId: info
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationInfo'
-        '500':
+                $ref: "#/components/schemas/ApplicationInfo"
+        "500":
           description: Internal Server error
   /fauth:
     get:
@@ -33,9 +33,9 @@ paths:
           schema:
             type: string
       responses:
-        '301':
-          description: Redirect to openid  provider
-        '500':
+        "302":
+          description: Redirect to openid provider
+        "500":
           description: Internal Server error
   /fcb:
     get:
@@ -52,9 +52,11 @@ paths:
           schema:
             type: string
       responses:
-        '301':
+        "302":
           description: Redirect to RP Authorize
-        '500':
+        "401":
+          description: Unauthorized
+        "500":
           description: Internal Server error
   /authorize:
     get:
@@ -66,25 +68,27 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Session Token successfully retrieved
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SessionToken'
-        '500':
+                $ref: "#/components/schemas/SessionToken"
+        "401":
+          description: Unauthorized
+        "500":
           description: Internal Server error
   /years:
     get:
       operationId: getYears
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Years'
-        '500':
+                $ref: "#/components/schemas/Years"
+        "500":
           description: Internal Server error
   /card-requests:
     get:
@@ -96,8 +100,15 @@ paths:
           schema:
             type: string
       responses:
-        #INSERT 200
-        '500':
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CardRequests"
+        "401":
+          description: Unauthorized
+        "500":
           description: Internal Server error
     post:
       operationId: insertCardRequest
@@ -107,9 +118,23 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: Years to request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/YearsToRequest"
       responses:
-        #INSERT 200
-        '500':
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CardRequests"
+        "401":
+          description: Unauthorized
+        "500":
           description: Internal Server error
 components:
   securitySchemes:
@@ -118,10 +143,16 @@ components:
       in: header
       name: X-Functions-Key
   schemas:
+    YearsToRequest:
+      type: array
+      items:
+        type: string
+      required:
+        - items
     InternalServerError:
       description: InternalServerError
       allOf:
-        - $ref: '#/components/schemas/ProblemJson'
+        - $ref: "#/components/schemas/ProblemJson"
         - type: object
           properties:
             status:
@@ -137,7 +168,7 @@ components:
     BadRequest:
       description: Bad Request
       allOf:
-        - $ref: '#/components/schemas/ProblemJson'
+        - $ref: "#/components/schemas/ProblemJson"
         - type: object
           properties:
             status:
@@ -153,7 +184,7 @@ components:
     Unauthorized:
       description: Unauthorized
       allOf:
-        - $ref: '#/components/schemas/ProblemJson'
+        - $ref: "#/components/schemas/ProblemJson"
         - type: object
           properties:
             status:
@@ -189,6 +220,19 @@ components:
         type: string
       required:
         - items
+    CardRequests:
+      type: array
+      items:
+        $ref: "#/components/schemas/CardRequest"
+      required:
+        - items
+    CardRequest:
+      type: object
+      properties:
+        year:
+          type: string
+      required:
+        - year
     ProblemJson:
       type: object
       properties:

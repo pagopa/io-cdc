@@ -1,9 +1,9 @@
-import * as E from "fp-ts/lib/Either";
-import * as O from "fp-ts/lib/Option";
-import * as TE from "fp-ts/lib/TaskEither";
-import { pipe } from "fp-ts/lib/function";
+import * as E from "fp-ts/lib/Either.js";
+import * as O from "fp-ts/lib/Option.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
 
-import { RedisClientFactory } from "./redis";
+import { RedisClientFactory } from "./redis.js";
 
 /**
  * Parse a Redis single string reply.
@@ -119,6 +119,18 @@ export const existsKeyTask = (
     TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
     TE.chain((redisClient) =>
       TE.tryCatch(() => redisClient.EXISTS(key), E.toError),
+    ),
+    integerReplAsync(1),
+  );
+
+export const deleteTask = (
+  redisClientFactory: RedisClientFactory,
+  key: string,
+): TE.TaskEither<Error, boolean> =>
+  pipe(
+    TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
+    TE.chain((redisClient) =>
+      TE.tryCatch(() => redisClient.DEL(key), E.toError),
     ),
     integerReplAsync(1),
   );

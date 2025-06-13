@@ -53,7 +53,7 @@ export const useLoadYears = () => {
     } = await getNotAvailableYearsList();
 
     const allRequestsDone = availableYears?.every((y) =>
-      Boolean([]?.find(({ year }) => year === y)),
+      Boolean(notAvailableYears?.find(({ year }) => year === y)),
     );
 
     const isError = allRequestsDone || getYearsListIsError || getNotAvailableYearsListIsError;
@@ -61,6 +61,8 @@ export const useLoadYears = () => {
     const error = allRequestsDone
       ? { status: 501, data: null }
       : getYearsListError || getNotAvailableYearsListError;
+
+    console.log({ error, allRequestsDone }, 'askhdakhsdi');
 
     setResponse({
       isError,

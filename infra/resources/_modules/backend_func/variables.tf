@@ -85,7 +85,7 @@ variable "nat_gateway_id" {
 }
 
 variable "cdc_base_url" {
-  type = string
+  type        = string
   description = "The base url for CDC redirects"
 }
 
@@ -137,9 +137,9 @@ variable "redis_password" {
   sensitive   = true
 }
 
-variable "fims_base_url" {
+variable "fims_redirect_url" {
   type        = string
-  description = "FIMS base url"
+  description = "FIMS redirect url"
   sensitive   = true
 }
 
