@@ -10,10 +10,10 @@ function App() {
       <Route element={<Layout />}>
         <Route path={APP_ROUTES.HOME} element={<HomeIndex />}>
           <Route index element={<Home />} />
-          {APP_ROUTES_CONFIG.map(({ path, Element }) => (
-            <Route key={path} path={path} element={<Element />} />
-          ))}
         </Route>
+        {APP_ROUTES_CONFIG.map(({ path, Element }) => (
+          <Route key={path} path={path} element={<Element />} />
+        ))}
         <Route path="*" element={<Navigate to={APP_ROUTES.HOME} />} />
       </Route>
     </Routes>

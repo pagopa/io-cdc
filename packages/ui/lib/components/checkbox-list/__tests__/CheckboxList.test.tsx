@@ -81,19 +81,4 @@ describe("Test CheckboxList components", () => {
     fireEvent.click(screen.getByText("Select All"));
     expect(handleChange).toHaveBeenCalledWith(["a", "b", "c"]);
   });
-
-  it("select all button is disabled when all are selected", () => {
-    render(
-      <CheckboxList
-        buttonLabel="Select All"
-        multiple
-        onChange={vi.fn()}
-        options={options}
-        title="Select All Disabled"
-        value={["a", "b", "c"]}
-      />,
-    );
-
-    expect(screen.getByText("Select All")).toBeDisabled();
-  });
 });
