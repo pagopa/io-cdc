@@ -58,6 +58,11 @@ const SelectYear = () => {
     }
   }, [selectedItems, notAvailableYears, requestBonus, navigate]);
 
+  const allSelected = useMemo(
+    () => mappedYearsList.every(({ value, disabled }) => disabled || selectedItems.includes(value)),
+    [mappedYearsList, selectedItems],
+  );
+
   return isLoading ? (
     <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
       <Loader />
@@ -76,10 +81,10 @@ const SelectYear = () => {
           title="ANNO"
           value={selectedItems}
           multiple
-          buttonLabel="Seleziona tutti"
+          buttonLabel={allSelected ? 'Deseleziona tutti' : 'Seleziona tutti'}
           onChange={onSelectYear}
           options={mappedYearsList}
-          disableSelectAll={selectedItems.length >= mappedYearsList.length - 1}
+          disableSelectAll={mappedYearsList.length - selectedItems.length === 1}
         />
       </Stack>
       <Button

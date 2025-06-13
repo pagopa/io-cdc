@@ -39,20 +39,29 @@ export const useLoadYears = () => {
     }
 
     const {
+      data: availableYears,
       isError: getYearsListIsError,
       isSuccess: getYearsListIsSuccess,
       error: getYearsListError,
     } = await getYearsList();
 
     const {
+      data: notAvailableYears,
       isError: getNotAvailableYearsListIsError,
       isSuccess: getNotAvailableYearsListIsSuccess,
       error: getNotAvailableYearsListError,
     } = await getNotAvailableYearsList();
 
-    const isError = getYearsListIsError || getNotAvailableYearsListIsError;
+    const allRequestsDone = availableYears?.every((y) =>
+      Boolean([]?.find(({ year }) => year === y)),
+    );
+
+    const isError = allRequestsDone || getYearsListIsError || getNotAvailableYearsListIsError;
     const isSuccess = getYearsListIsSuccess && getNotAvailableYearsListIsSuccess;
-    const error = getYearsListError || getNotAvailableYearsListError;
+    const error = allRequestsDone
+      ? { status: 501, data: null }
+      : getYearsListError || getNotAvailableYearsListError;
+
     setResponse({
       isError,
       isSuccess,
