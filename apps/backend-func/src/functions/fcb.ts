@@ -32,6 +32,12 @@ const QueryParams = t.type({
 });
 type QueryParams = t.TypeOf<typeof QueryParams>;
 
+const Headers = t.type({
+  "signature-input": NonEmptyString,
+  signature: NonEmptyString,
+});
+type Headers = t.TypeOf<typeof Headers>;
+
 const mockedSessionData: Session = {
   family_name: "Surname" as NonEmptyString,
   fiscal_code: "SRNNMU90T12C444Z" as FiscalCode,
@@ -90,9 +96,9 @@ export const makeFimsCallbackHandler: H.Handler<
   pipe(
     withParams(QueryParams, req.query), // GET ALSO LOLLIPOP HEADERS "signature-input" & "signature"
     RTE.mapLeft(errorToValidationError),
-    //RTE.chain(({ code, state }) => getFimsData(code, state)),
+    RTE.chain(({ code, state }) => getFimsData(code, state)),
     //RTE.chain(({...}) => checkLollipop(...))
-    RTE.chain(() => createSessionAndRedirect(mockedSessionData as OidcUser)), // remove this mock and pass the user obtained from previous RTE
+    RTE.chain((user) => createSessionAndRedirect(user as OidcUser)), // remove this mock and pass the user obtained from previous RTE
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,
