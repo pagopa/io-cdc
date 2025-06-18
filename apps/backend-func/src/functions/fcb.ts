@@ -29,6 +29,7 @@ interface Dependencies {
 const QueryParams = t.type({
   code: NonEmptyString,
   state: NonEmptyString,
+  iss: NonEmptyString,
 });
 type QueryParams = t.TypeOf<typeof QueryParams>;
 
@@ -57,6 +58,10 @@ export const getFimsData =
         responseError(401, "Cannot retrieve user data", "Unauthorized"),
       ),
     );
+
+export const checkLollipop =
+  (user: OidcUser, headers: Headers) => (deps: Dependencies) =>
+    pipe(TE.of(user));
 
 // we create a fake session until FIMS is not integrated
 export const createSessionAndRedirect =
@@ -94,11 +99,18 @@ export const makeFimsCallbackHandler: H.Handler<
   Dependencies
 > = H.of((req) =>
   pipe(
-    withParams(QueryParams, req.query), // GET ALSO LOLLIPOP HEADERS "signature-input" & "signature"
+    withParams(QueryParams, req.query),
     RTE.mapLeft(errorToValidationError),
     RTE.chain(({ code, state }) => getFimsData(code, state)),
-    //RTE.chain(({...}) => checkLollipop(...))
-    RTE.chain((user) => createSessionAndRedirect(user as OidcUser)), // remove this mock and pass the user obtained from previous RTE
+    RTE.chainW((user) =>
+      pipe(
+        withParams(Headers, req.headers),
+        RTE.mapLeft(errorToValidationError),
+        RTE.map((headers) => ({ user, headers })),
+      ),
+    ),
+    RTE.chainW(({ user, headers }) => checkLollipop(user, headers)),
+    RTE.chainW((user) => createSessionAndRedirect(user as OidcUser)),
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,
