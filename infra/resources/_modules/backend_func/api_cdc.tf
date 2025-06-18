@@ -46,7 +46,7 @@ resource "azurerm_api_management_api" "cdc_v1" {
 
   import {
     content_format = "openapi-link"
-    content_value  = "https://raw.githubusercontent.com/pagopa/io-cdc/fc35a98ff6ee405bc0863811d5e3865de9f61dcc/apps/backend-func/api/internal.yaml"
+    content_value  = "https://raw.githubusercontent.com/pagopa/io-cdc/b37b5160f2edca280c2e56a502afa710c327aaec/apps/backend-func/api/internal.yaml"
   }
 }
 
