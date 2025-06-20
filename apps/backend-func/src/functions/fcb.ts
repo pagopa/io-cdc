@@ -68,9 +68,23 @@ export const getFimsData =
       ),
     );
 
+export const checkIssuer = (issuer: string) => (deps: Dependencies) =>
+  pipe(
+    TE.fromPredicate<Error, string>(
+      (issuer) => issuer === deps.config.FIMS_ISSUER_URL,
+      () => new Error("Invalid Issuer"),
+    )(issuer),
+    TE.mapLeft((e) =>
+      responseError(401, `Checks | ${e.message}`, "Unauthorized"),
+    ),
+  );
+
 export const checkLollipop =
   (user: OidcUser, headers: Headers) => (deps: Dependencies) =>
-    pipe(TE.of(user));
+    pipe(
+      TE.of(user),
+      TE.mapLeft(() => responseError(401, `Lollipop`, "Unauthorized")),
+    );
 
 // we create a fake session until FIMS is not integrated
 export const createSessionAndRedirect =
@@ -108,18 +122,19 @@ export const makeFimsCallbackHandler: H.Handler<
   Dependencies
 > = H.of((req) =>
   pipe(
-    withParams(QueryParams, req.query),
-    RTE.mapLeft(errorToValidationError),
-    RTE.chain(({ code, state, iss }) => getFimsData(code, state, iss)),
-    RTE.chainW((user) =>
+    TE.Do,
+    TE.bind("query", withParams(QueryParams, req.query)),
+    TE.bind("headers", withParams(Headers, req.headers)),
+    TE.mapLeft(errorToValidationError),
+    RTE.fromTaskEither,
+    RTE.chain(({ query, headers }) =>
       pipe(
-        withParams(Headers, req.headers),
-        RTE.mapLeft(errorToValidationError),
-        RTE.map((headers) => ({ user, headers })),
+        checkIssuer(query.iss),
+        RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
+        RTE.chain((user) => checkLollipop(user, headers)),
+        RTE.chain((user) => createSessionAndRedirect(user as OidcUser)),
       ),
     ),
-    RTE.chainW(({ user, headers }) => checkLollipop(user, headers)),
-    RTE.chainW((user) => createSessionAndRedirect(user as OidcUser)),
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,

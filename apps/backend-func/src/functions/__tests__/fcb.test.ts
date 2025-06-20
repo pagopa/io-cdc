@@ -1,7 +1,7 @@
 import * as E from "fp-ts/lib/Either.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { getFimsClient, userinfoMock } from "../../__mocks__/fims.mock.js";
+import { fimsUserMock, getFimsClient, userinfoMock } from "../../__mocks__/fims.mock.js";
 import {
   getRedisClientFactoryMock,
   redisGetMock,
@@ -37,11 +37,7 @@ describe("getFimsData", () => {
 
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res))
-      expect(res.right).toEqual({
-        family_name: "Surname",
-        fiscal_code: "AAABBB00C00D000E",
-        given_name: "Name",
-      });
+      expect(res.right).toEqual(fimsUserMock);
   });
 
   it("should return error if Redis client fails", async () => {

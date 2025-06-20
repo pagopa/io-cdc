@@ -28,6 +28,13 @@ export const OidcUser = t.type({
   family_name: NonEmptyString,
   fiscal_code: FiscalCode,
   given_name: NonEmptyString,
+  public_key: NonEmptyString,
+  assertion: NonEmptyString,
+  assertion_ref: NonEmptyString,
+  iss: NonEmptyString,
+  sid: NonEmptyString,
+  auth_time: NonEmptyString,
+  sub: NonEmptyString,
 });
 
 export type OidcUser = t.TypeOf<typeof OidcUser>;
