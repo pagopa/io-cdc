@@ -68,7 +68,11 @@ export class OidcClient {
   async retrieveUser(cbUrl: string, code: string, state: string) {
     if (!this.client) throw new Error("Fims client not initialized");
 
-    const tokens = await this.client.callback(cbUrl, { code, state });
+    const tokens = await this.client.callback(
+      cbUrl,
+      { code, state },
+      { state },
+    );
 
     const access_token = pipe(
       OidcTokens.decode(tokens),
