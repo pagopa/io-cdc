@@ -50,7 +50,7 @@ export const getFimsData =
     pipe(
       getFimsUserTE(
         deps.fimsClient,
-        `${deps.config.CDC_BASE_URL}/fcb`,
+        deps.config.FIMS_REDIRECT_URL,
         code,
         state,
       ),
