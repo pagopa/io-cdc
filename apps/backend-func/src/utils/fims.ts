@@ -24,18 +24,22 @@ export const OidcTokens = t.type({
 
 export type OidcTokens = t.TypeOf<typeof OidcTokens>;
 
-export const OidcUser = t.type({
-  family_name: NonEmptyString,
-  fiscal_code: FiscalCode,
-  given_name: NonEmptyString,
-  public_key: NonEmptyString,
-  assertion: NonEmptyString,
-  assertion_ref: NonEmptyString,
-  iss: NonEmptyString,
-  sid: NonEmptyString,
-  auth_time: NonEmptyString,
-  sub: NonEmptyString,
-});
+export const OidcUser = t.intersection([
+  t.type({
+    family_name: NonEmptyString,
+    fiscal_code: FiscalCode,
+    given_name: NonEmptyString,
+  }),
+  t.partial({
+    public_key: NonEmptyString,
+    assertion: NonEmptyString,
+    assertion_ref: NonEmptyString,
+    iss: NonEmptyString,
+    sid: NonEmptyString,
+    auth_time: NonEmptyString,
+    sub: NonEmptyString,
+  }),
+]);
 
 export type OidcUser = t.TypeOf<typeof OidcUser>;
 
