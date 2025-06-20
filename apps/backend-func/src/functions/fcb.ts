@@ -1,6 +1,6 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
@@ -9,7 +9,6 @@ import * as t from "io-ts";
 
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
-import { Session } from "../models/session.js";
 import {
   errorToValidationError,
   responseError,
@@ -17,7 +16,7 @@ import {
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
 import { RedisClientFactory } from "../utils/redis.js";
-import { setWithExpirationTask } from "../utils/redis_storage.js";
+import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
@@ -39,26 +38,31 @@ const Headers = t.type({
 });
 type Headers = t.TypeOf<typeof Headers>;
 
-const mockedSessionData: Session = {
-  family_name: "Surname" as NonEmptyString,
-  fiscal_code: "SRNNMU90T12C444Z" as FiscalCode,
-  given_name: "Name" as NonEmptyString,
-};
-
 export const getFimsData =
   (code: string, state: string, iss: string) => (deps: Dependencies) =>
     pipe(
-      getFimsUserTE(
-        deps.fimsClient,
-        deps.config.FIMS_REDIRECT_URL,
-        code,
-        state,
-        iss
+      TE.Do,
+      TE.bind("maybeNonce", () => getTask(deps.redisClientFactory, state)),
+      TE.chain(({ maybeNonce }) =>
+        pipe(
+          maybeNonce,
+          TE.fromOption(() => new Error("Nonce not found")),
+          TE.chain((nonce) =>
+            getFimsUserTE(
+              deps.fimsClient,
+              deps.config.FIMS_REDIRECT_URL,
+              code,
+              state,
+              nonce,
+              iss,
+            ),
+          ),
+        ),
       ),
       TE.mapLeft((e) =>
         responseError(
           401,
-          `Cannot retrieve user data|${e.message}`,
+          `Cannot retrieve user data | ${e.message}`,
           "Unauthorized",
         ),
       ),
