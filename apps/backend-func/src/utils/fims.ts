@@ -91,14 +91,19 @@ export class OidcClient {
   }
 }
 
-export const getFimsClient = (config: Config) =>
-  new OidcClient({
-    OIDC_CLIENT_ID: config.FIMS_CLIENT_ID,
-    OIDC_CLIENT_REDIRECT_URI: config.FIMS_REDIRECT_URL,
-    OIDC_CLIENT_SECRET: config.FIMS_CLIENT_SECRET,
-    OIDC_ISSUER_URL: config.FIMS_ISSUER_URL,
-    OIDC_SCOPE: config.FIMS_SCOPE,
-  });
+let oidcClient: OidcClient;
+export const getFimsClient = (config: Config) => {
+  if (!oidcClient) {
+    oidcClient = new OidcClient({
+      OIDC_CLIENT_ID: config.FIMS_CLIENT_ID,
+      OIDC_CLIENT_REDIRECT_URI: config.FIMS_REDIRECT_URL,
+      OIDC_CLIENT_SECRET: config.FIMS_CLIENT_SECRET,
+      OIDC_ISSUER_URL: config.FIMS_ISSUER_URL,
+      OIDC_SCOPE: config.FIMS_SCOPE,
+    });
+  }
+  return oidcClient;
+};
 
 export const getFimsRedirectTE = (
   client: OidcClient,
