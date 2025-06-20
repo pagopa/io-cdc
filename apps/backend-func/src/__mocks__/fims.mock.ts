@@ -1,6 +1,19 @@
 import { BaseClient, Issuer } from "openid-client";
 import { vi } from "vitest";
 
+export const fimsUserMock = {
+  family_name: "Surname",
+  fiscal_code: "AAABBB00C00D000E",
+  given_name: "Name",
+  public_key: "publickey",
+  assertion: "assertion",
+  assertion_ref: "assertion_ref",
+  iss: "iss",
+  sid: "sid",
+  auth_time: "auth_time",
+  sub: "sub",
+};
+
 // MOCK openid-client
 export const authorizationUrlMock = vi
   .fn()
@@ -8,11 +21,7 @@ export const authorizationUrlMock = vi
 export const callbackMock = vi
   .fn()
   .mockResolvedValue({ access_token: "accesstoken" });
-export const userinfoMock = vi.fn().mockResolvedValue({
-  family_name: "Surname",
-  fiscal_code: "AAABBB00C00D000E",
-  given_name: "Name",
-});
+export const userinfoMock = vi.fn().mockResolvedValue(fimsUserMock);
 
 export const discoverMock = vi.fn().mockResolvedValue({
   Client: vi.fn(

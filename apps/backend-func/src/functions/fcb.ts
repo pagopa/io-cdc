@@ -1,6 +1,6 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
@@ -9,7 +9,6 @@ import * as t from "io-ts";
 
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
-import { Session } from "../models/session.js";
 import {
   errorToValidationError,
   responseError,
@@ -17,7 +16,7 @@ import {
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
 import { RedisClientFactory } from "../utils/redis.js";
-import { setWithExpirationTask } from "../utils/redis_storage.js";
+import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
@@ -29,27 +28,62 @@ interface Dependencies {
 const QueryParams = t.type({
   code: NonEmptyString,
   state: NonEmptyString,
+  iss: NonEmptyString,
 });
 type QueryParams = t.TypeOf<typeof QueryParams>;
 
-const mockedSessionData: Session = {
-  family_name: "Surname" as NonEmptyString,
-  fiscal_code: "SRNNMU90T12C444Z" as FiscalCode,
-  given_name: "Name" as NonEmptyString,
-};
+const Headers = t.type({
+  "signature-input": NonEmptyString,
+  signature: NonEmptyString,
+});
+type Headers = t.TypeOf<typeof Headers>;
 
 export const getFimsData =
-  (code: string, state: string) => (deps: Dependencies) =>
+  (code: string, state: string, iss: string) => (deps: Dependencies) =>
     pipe(
-      getFimsUserTE(
-        deps.fimsClient,
-        `${deps.config.CDC_BASE_URL}/fcb`,
-        code,
-        state,
+      TE.Do,
+      TE.bind("maybeNonce", () => getTask(deps.redisClientFactory, state)),
+      TE.chain(({ maybeNonce }) =>
+        pipe(
+          maybeNonce,
+          TE.fromOption(() => new Error("Nonce not found")),
+          TE.chain((nonce) =>
+            getFimsUserTE(
+              deps.fimsClient,
+              deps.config.FIMS_REDIRECT_URL,
+              code,
+              state,
+              nonce,
+              iss,
+            ),
+          ),
+        ),
       ),
-      TE.mapLeft(() =>
-        responseError(401, "Cannot retrieve user data", "Unauthorized"),
+      TE.mapLeft((e) =>
+        responseError(
+          401,
+          `Cannot retrieve user data | ${e.message}`,
+          "Unauthorized",
+        ),
       ),
+    );
+
+export const checkIssuer = (issuer: string) => (deps: Dependencies) =>
+  pipe(
+    TE.fromPredicate<Error, string>(
+      (issuer) => issuer === deps.config.FIMS_ISSUER_URL,
+      () => new Error("Invalid Issuer"),
+    )(issuer),
+    TE.mapLeft((e) =>
+      responseError(401, `Checks | ${e.message}`, "Unauthorized"),
+    ),
+  );
+
+export const checkLollipop =
+  (user: OidcUser, headers: Headers) => (deps: Dependencies) =>
+    pipe(
+      TE.of(user),
+      TE.mapLeft(() => responseError(401, `Lollipop`, "Unauthorized")),
     );
 
 // we create a fake session until FIMS is not integrated
@@ -88,11 +122,19 @@ export const makeFimsCallbackHandler: H.Handler<
   Dependencies
 > = H.of((req) =>
   pipe(
-    withParams(QueryParams, req.query), // GET ALSO LOLLIPOP HEADERS "signature-input" & "signature"
-    RTE.mapLeft(errorToValidationError),
-    //RTE.chain(({ code, state }) => getFimsData(code, state)),
-    //RTE.chain(({...}) => checkLollipop(...))
-    RTE.chain(() => createSessionAndRedirect(mockedSessionData as OidcUser)), // remove this mock and pass the user obtained from previous RTE
+    TE.Do,
+    TE.bind("query", withParams(QueryParams, req.query)),
+    TE.bind("headers", withParams(Headers, req.headers)),
+    TE.mapLeft(errorToValidationError),
+    RTE.fromTaskEither,
+    RTE.chain(({ query, headers }) =>
+      pipe(
+        checkIssuer(query.iss),
+        RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
+        RTE.chain((user) => checkLollipop(user, headers)),
+        RTE.chain((user) => createSessionAndRedirect(user as OidcUser)),
+      ),
+    ),
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,
