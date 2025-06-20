@@ -27,6 +27,7 @@ describe("getFimsData", () => {
     const res = await getFimsData(
       "code",
       "state",
+      "iss"
     )({
       config,
       fimsClient: fimsClientMock,
@@ -51,6 +52,7 @@ describe("getFimsData", () => {
     const res = await getFimsData(
       "code",
       "state",
+      "iss"
     )({
       config,
       fimsClient: fimsClientMock,
