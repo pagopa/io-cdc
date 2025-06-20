@@ -46,13 +46,14 @@ const mockedSessionData: Session = {
 };
 
 export const getFimsData =
-  (code: string, state: string) => (deps: Dependencies) =>
+  (code: string, state: string, iss: string) => (deps: Dependencies) =>
     pipe(
       getFimsUserTE(
         deps.fimsClient,
         deps.config.FIMS_REDIRECT_URL,
         code,
         state,
+        iss
       ),
       TE.mapLeft((e) =>
         responseError(
@@ -105,7 +106,7 @@ export const makeFimsCallbackHandler: H.Handler<
   pipe(
     withParams(QueryParams, req.query),
     RTE.mapLeft(errorToValidationError),
-    RTE.chain(({ code, state }) => getFimsData(code, state)),
+    RTE.chain(({ code, state, iss }) => getFimsData(code, state, iss)),
     RTE.chainW((user) =>
       pipe(
         withParams(Headers, req.headers),

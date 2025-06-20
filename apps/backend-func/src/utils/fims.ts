@@ -65,14 +65,10 @@ export class OidcClient {
     return this.client.authorizationUrl(parameters);
   }
 
-  async retrieveUser(cbUrl: string, code: string, state: string) {
+  async retrieveUser(cbUrl: string, code: string, state: string, iss: string) {
     if (!this.client) throw new Error("Fims client not initialized");
 
-    const tokens = await this.client.callback(
-      cbUrl,
-      { code, state },
-      { state },
-    );
+    const tokens = await this.client.callback(cbUrl, { code, state, iss }, { state });
 
     const access_token = pipe(
       OidcTokens.decode(tokens),
@@ -124,11 +120,12 @@ export const getFimsUserTE = (
   cbUrl: string,
   code: string,
   state: string,
+  iss: string,
 ) =>
   pipe(
     TE.tryCatch(() => client.initializeClient(), toError),
     TE.chain(() =>
-      TE.tryCatch(() => client.retrieveUser(cbUrl, code, state), toError),
+      TE.tryCatch(() => client.retrieveUser(cbUrl, code, state, iss), toError),
     ),
   );
 
