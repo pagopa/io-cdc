@@ -35,7 +35,10 @@ export const useLoadYears = () => {
         error: sessionErrorMsg,
       } = await getSession({ id: redirectToken });
 
-      if (!data) return { ...response, isError: sessionError, error: sessionErrorMsg };
+      if (!data) {
+        setResponse({ ...response, isError: sessionError, error: sessionErrorMsg });
+        return;
+      }
     }
 
     const {
