@@ -54,8 +54,12 @@ export const getFimsData =
         code,
         state,
       ),
-      TE.mapLeft(() =>
-        responseError(401, "Cannot retrieve user data", "Unauthorized"),
+      TE.mapLeft((e) =>
+        responseError(
+          401,
+          `Cannot retrieve user data|${e.message}`,
+          "Unauthorized",
+        ),
       ),
     );
 
