@@ -6,7 +6,7 @@ info:
 servers:
 - url: https://ssotest.cartadellacultura.it
 security:
-  - ApiKeyAuth: []
+  - BearerAuth: []
 paths:
   /CDCUtenteWS/rest/secured/beneficiario/stato:
     get:
@@ -45,10 +45,10 @@ paths:
             text/plain: {}
 components:
   securitySchemes:
-    ApiKeyAuth:
+    BearerAuth:
       type: apiKey
       in: header
-      name: authorization
+      name: Authorization
   schemas:
     EsercenteBuonoBean:
       type: object
