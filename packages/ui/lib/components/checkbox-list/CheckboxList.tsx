@@ -70,8 +70,11 @@ export function CheckboxList<T>({
   );
 
   const onSelectAll = useCallback(() => {
-    if (multiple) onChange(options.map(({ value }) => value));
-  }, [onChange, multiple, options]);
+    if (multiple) {
+      const selectedAll = options.length === (value as T[]).length;
+      onChange(selectedAll ? [] : options.map(({ value }) => value));
+    }
+  }, [onChange, multiple, options, value]);
 
   return (
     <Box display="flex" flex={1} flexDirection="column">
@@ -80,11 +83,7 @@ export function CheckboxList<T>({
           {title}
         </Typography>
         {multiple && !disableSelectAll && (
-          <Button
-            disabled={options.length === (value as T[]).length}
-            onClick={onSelectAll}
-            variant="text"
-          >
+          <Button onClick={onSelectAll} variant="text">
             {buttonLabel}
           </Button>
         )}
