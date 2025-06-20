@@ -62,8 +62,6 @@ export const useLoadYears = () => {
       ? { status: 501, data: null }
       : getYearsListError || getNotAvailableYearsListError;
 
-    console.log({ error, allRequestsDone }, 'askhdakhsdi');
-
     setResponse({
       isError,
       isSuccess,
