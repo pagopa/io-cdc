@@ -17,6 +17,7 @@ import {
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
 import {
+  getAssertionIssueInstantVerifier,
   getAssertionRefVsInRensponseToVerifier,
   getAssertionUserIdVsCfVerifier,
   parseAssertion,
@@ -129,6 +130,7 @@ export const checkLollipop =
           TE.chain(() =>
             getAssertionUserIdVsCfVerifier(user.fiscal_code)(assertion),
           ),
+          TE.chain(() => getAssertionIssueInstantVerifier()(assertion)),
         ),
       ),
       TE.chain(() => TE.of(user)),
