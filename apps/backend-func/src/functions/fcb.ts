@@ -93,7 +93,7 @@ export const checkIssuer = (issuer: string) => (deps: Dependencies) =>
   [ ] Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
   [X] Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
   [X] Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
-  [ ] Verificare che la data di emissione della asserzione (NotOnOrAfter) non sia superiore a 365 giorni
+  [X] Verificare che la data di emissione della asserzione (NotOnOrAfter) non sia superiore a 365 giorni
   [X] Assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint 
     del claim public_key usando l’algoritmo indicato (ad esempio sha256)
   [ ] Verificare la firma dell’header Signature usando il contenuto del claim public_key

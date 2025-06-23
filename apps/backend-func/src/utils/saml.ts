@@ -21,7 +21,7 @@ export const getAttributeFromSamlResponse =
     );
 
 export const getIssueIstantInSecondsFromSamlResponse = flow(
-  getAttributeFromSamlResponse("Assertion", "IssueInstant"),
+  getAttributeFromSamlResponse("Response", "IssueInstant"),
   IsoDateFromString.decode,
   O.fromEither,
   O.map((date) => Math.floor(date.getTime() / 1000)),

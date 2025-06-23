@@ -102,7 +102,7 @@ export const getAssertionIssueInstantVerifier =
       TE.fromOption(() => new Error("Issue instant not found in assertion")),
       TE.chain(
         TE.fromPredicate(
-          (issueInstant) => issueInstant > 1000,
+          (issueInstant) => issueInstant > 60 * 60 * 24 * 365, // should not exceed 365 days
           () => new Error("Issue instant is over 1 years ago"),
         ),
       ),
