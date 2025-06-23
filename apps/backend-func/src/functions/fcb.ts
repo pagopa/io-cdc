@@ -18,6 +18,7 @@ import {
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
 import {
   getAssertionRefVsInRensponseToVerifier,
+  getAssertionUserIdVsCfVerifier,
   parseAssertion,
 } from "../utils/lollipop.js";
 import { RedisClientFactory } from "../utils/redis.js";
@@ -88,14 +89,14 @@ export const checkIssuer = (issuer: string) => (deps: Dependencies) =>
 
 /*  
   Check lollipop
-  * Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
-  * Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
-  * Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
-  * Verificare che la data di emissione della asserzione (NotOnOrAfter) non sia inferiore a 356 giorni
-  * Assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint 
+  [ ] Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
+  [X] Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
+  [X] Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
+  [ ] Verificare che la data di emissione della asserzione (NotOnOrAfter) non sia inferiore a 356 giorni
+  [ ] Assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint 
     del claim public_key usando l’algoritmo indicato (ad esempio sha256)
-  * Verificare la firma dell’header Signature usando il contenuto del claim public_key
-  * Verificare se il nonce firmato nel campo Signature corrisponde allo state OIDC
+  [ ] Verificare la firma dell’header Signature usando il contenuto del claim public_key
+  [ ] Verificare se il nonce firmato nel campo Signature corrisponde allo state OIDC
 
   A causa di:
   * la dipendenza del protocollo LolliPoP dalle assertion SPID e dalle relative chiavi che possono cambiare nel tempo
@@ -120,10 +121,15 @@ export const checkLollipop =
       ),
       TE.bind("assertion", () => parseAssertion(user.assertion)),
       TE.chain(({ assertion, publicKey }) =>
-        getAssertionRefVsInRensponseToVerifier(
-          publicKey,
-          user.assertion_ref,
-        )(assertion),
+        pipe(
+          getAssertionRefVsInRensponseToVerifier(
+            publicKey,
+            user.assertion_ref,
+          )(assertion),
+          TE.chain(() =>
+            getAssertionUserIdVsCfVerifier(user.fiscal_code)(assertion),
+          ),
+        ),
       ),
       TE.chain(() => TE.of(user)),
       TE.mapLeft((e) =>
