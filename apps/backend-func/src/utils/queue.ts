@@ -43,6 +43,6 @@ export class QueueStorage {
 
   constructor(config: Config) {
     this.config = config;
-    this.queueService = new QueueService(this.config.STORAGE_CONNECTION_STRING);
+    this.queueService = new QueueService(this.config.STORAGE_ACCOUNT_CONNECTION_STRING);
   }
 }
