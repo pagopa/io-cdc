@@ -30,6 +30,13 @@ export const getRequestIDFromSamlResponse = getAttributeFromSamlResponse(
   "InResponseTo",
 );
 
+export const getIssueIstantInSecondsFromSamlResponse = flow(
+  getAttributeFromSamlResponse("Assertion", "IssueInstant"),
+  IsoDateFromString.decode,
+  O.fromEither,
+  O.map((date) => Math.floor(date.getTime() / 1000)),
+);
+
 export const getFiscalNumberFromSamlResponse = (
   doc: Document,
 ): O.Option<FiscalCode> =>
