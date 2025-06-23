@@ -1,9 +1,9 @@
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { DOMParser } from "@xmldom/xmldom";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
-import { DOMParser } from "@xmldom/xmldom";
 import { AssertionRef } from "../types/lollipop.js";
 import {
   calculateAssertionRef,
@@ -11,9 +11,10 @@ import {
 } from "../utils/lollipopKeys.js";
 import {
   getFiscalNumberFromSamlResponse,
-  getNotOnOrAfterFromSamlResponse,
+  getIssueIstantFromSamlResponse,
   getRequestIDFromSamlResponse,
 } from "../utils/saml.js";
+import { addYears, isAfter } from "date-fns";
 
 type Verifier = (assertion: Document) => TE.TaskEither<Error, true>;
 
@@ -93,17 +94,18 @@ export const getAssertionUserIdVsCfVerifier =
       TE.map(() => true as const),
     );
 
-export const getAssertionNotOnOrAfterVerifier =
+export const getAssertionIssueInstantVerifier =
   (): Verifier =>
   (assertion): ReturnType<Verifier> =>
     pipe(
       assertion,
-      getNotOnOrAfterFromSamlResponse,
-      TE.fromOption(() => new Error("NotOnOrAfter not found in assertion")),
+      getIssueIstantFromSamlResponse,
+      TE.fromOption(() => new Error("IssueInstant not found in assertion")),
       TE.chain(
         TE.fromPredicate(
-          (notOnOrAfter) => new Date().toISOString() < notOnOrAfter,
-          (notOnOrAfter) => new Error(`NotOnOrAfter ${notOnOrAfter} is passed`),
+          (issueInstant) => isAfter(addYears(issueInstant, 1), new Date()),
+          (issueInstant) =>
+            new Error(`IssueInstant ${issueInstant} is more than 1 years ago`),
         ),
       ),
       TE.map(() => true as const),
