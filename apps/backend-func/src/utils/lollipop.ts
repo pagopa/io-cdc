@@ -3,7 +3,7 @@ import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
-
+import { DOMParser } from "@xmldom/xmldom";
 import { AssertionRef } from "../types/lollipop.js";
 import {
   calculateAssertionRef,
