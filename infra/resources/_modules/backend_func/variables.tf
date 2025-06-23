@@ -107,6 +107,18 @@ variable "cosmosdb_cdc_database_name" {
   sensitive   = true
 }
 
+variable "storage_account_connection_string" {
+  type        = string
+  description = "Connection string to storage account"
+  sensitive   = true
+}
+
+variable "card_request_queue_name" {
+  type        = string
+  description = "Card request queue name"
+  sensitive   = true
+}
+
 variable "services_api_url" {
   type        = string
   description = "Services API url"

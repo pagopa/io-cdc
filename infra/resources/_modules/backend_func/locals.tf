@@ -13,6 +13,10 @@ locals {
       COSMOSDB_CDC_KEY           = var.cosmosdb_cdc_key
       COSMOSDB_CDC_DATABASE_NAME = var.cosmosdb_cdc_database_name
 
+      // STORAGE
+      STORAGE_ACCOUNT_CONNECTION_STRING = var.storage_account_connection_string
+      CARD_REQUEST_QUEUE_NAME           = var.card_request_queue_name
+
       // SERVICES API
       SERVICES_API_URL = var.services_api_url
       SERVICES_API_KEY = var.services_api_key

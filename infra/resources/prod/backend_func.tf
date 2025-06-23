@@ -28,6 +28,9 @@ module "backend_func" {
   cosmosdb_cdc_key           = data.azurerm_key_vault_secret.cosmosdb_cdc_key.value
   cosmosdb_cdc_database_name = data.azurerm_key_vault_secret.cosmosdb_cdc_database_name.value
 
+  storage_account_connection_string = data.azurerm_key_vault_secret.storage_account_connection_string.value
+  card_request_queue_name           = data.azurerm_key_vault_secret.card_request_queue_name.value
+
   services_api_url = data.azurerm_key_vault_secret.services_api_url.value
   services_api_key = data.azurerm_key_vault_secret.services_api_key.value
 
