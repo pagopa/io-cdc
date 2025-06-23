@@ -11,6 +11,7 @@ import {
 } from "../utils/lollipopKeys.js";
 import {
   getFiscalNumberFromSamlResponse,
+  getIssueIstantInSecondsFromSamlResponse,
   getRequestIDFromSamlResponse,
 } from "../utils/saml.js";
 
@@ -88,6 +89,22 @@ export const getAssertionUserIdVsCfVerifier =
           new Error(
             `The provided user id do not match the fiscalNumber in the assertion: fromSaml=${fiscalCodeFromAssertion},fromHeader=${fiscalCodeFromHeader}`,
           ),
+      ),
+      TE.map(() => true as const),
+    );
+
+export const getAssertionIssueInstantVerifier =
+  (): Verifier =>
+  (assertion): ReturnType<Verifier> =>
+    pipe(
+      assertion,
+      getIssueIstantInSecondsFromSamlResponse,
+      TE.fromOption(() => new Error("Issue instant not found in assertion")),
+      TE.chain(
+        TE.fromPredicate(
+          (issueInstant) => issueInstant > 1000,
+          () => new Error("Issue instant is over 1 years ago"),
+        ),
       ),
       TE.map(() => true as const),
     );
