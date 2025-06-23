@@ -1,14 +1,17 @@
 import * as E from "fp-ts/lib/Either.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { authorizationUrlMock, getFimsClient } from "../../__mocks__/fims.mock.js";
-import { anOidcConfig } from "../../__mocks__/types.mock.js";
-import { Config } from "../../config.js";
-import { getFimsRedirect } from "../fauth.js";
+import {
+  authorizationUrlMock,
+  getFimsClient,
+} from "../../__mocks__/fims.mock.js";
 import {
   getRedisClientFactoryMock,
   redisSetExMock,
 } from "../../__mocks__/redis_client_factory.mock.js";
+import { anOidcConfig } from "../../__mocks__/types.mock.js";
+import { Config } from "../../config.js";
+import { getFimsRedirect } from "../fauth.js";
 
 const redisClientFactoryMock = getRedisClientFactoryMock();
 

@@ -1,9 +1,9 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
+import * as crypto from "crypto";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
-import * as crypto from "crypto";
 
 import {
   ResponseError,
@@ -26,7 +26,7 @@ export const getFimsRedirect = (
     TE.Do,
     TE.bind("state", () => TE.of(crypto.randomBytes(32).toString("hex"))),
     TE.bind("nonce", () => TE.of(crypto.randomBytes(32).toString("hex"))),
-    TE.chain(({ state, nonce }) =>
+    TE.chain(({ nonce, state }) =>
       pipe(
         setWithExpirationTask(deps.redisClientFactory, state, nonce, 60),
         TE.chain(() => getFimsRedirectTE(deps.fimsClient, state, nonce)),

@@ -4,6 +4,7 @@ import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
+import * as E from "fp-ts/lib/Either.js";
 import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
@@ -15,9 +16,15 @@ import {
   responseErrorToHttpError,
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
+import {
+  getAssertionRefVsInRensponseToVerifier,
+  parseAssertion,
+} from "../utils/lollipop.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { storeSessionTe } from "../utils/session.js";
+import { fromBase64 } from "../utils/base64.js";
+import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 
 interface Dependencies {
   config: Config;
@@ -27,14 +34,14 @@ interface Dependencies {
 
 const QueryParams = t.type({
   code: NonEmptyString,
-  state: NonEmptyString,
   iss: NonEmptyString,
+  state: NonEmptyString,
 });
 type QueryParams = t.TypeOf<typeof QueryParams>;
 
 const Headers = t.type({
-  "signature-input": NonEmptyString,
   signature: NonEmptyString,
+  "signature-input": NonEmptyString,
 });
 type Headers = t.TypeOf<typeof Headers>;
 
@@ -79,11 +86,49 @@ export const checkIssuer = (issuer: string) => (deps: Dependencies) =>
     ),
   );
 
+/*  
+  Check lollipop
+  * Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
+  * Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
+  * Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
+  * Verificare che la data di emissione della asserzione (NotOnOrAfter) non sia inferiore a 356 giorni
+  * Assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint 
+    del claim public_key usando l’algoritmo indicato (ad esempio sha256)
+  * Verificare la firma dell’header Signature usando il contenuto del claim public_key
+  * Verificare se il nonce firmato nel campo Signature corrisponde allo state OIDC
+
+  A causa di:
+  * la dipendenza del protocollo LolliPoP dalle assertion SPID e dalle relative chiavi che possono cambiare nel tempo
+  * il particolare meccanismo di login implementato nell’app che prevede sessioni lunghe 30 o 365 giorni a parità di assertion
+  * il cambiamento di una chiave in presenza di una sessione attiva provoca un fallimento nelle verifiche LolliPoP.
+  * Per gestire questa casistica è fondamentale che tu predisponga un sistema che ti consenta di mantenere uno storico delle chiavi 
+    (per validare le assertion precedenti) e di ottenere le nuove, tenendo conto della durata delle sessioni su IO.
+  * In ogni caso, in presenza dell'impossibilità di portare a termine la verifica, il tuo sistema dovrebbe fare fallback su una 
+    nuova richiesta di login SPID all’utente, specificando che qualcosa è andato storto nel processo di identificazione automatica.
+  */
 export const checkLollipop =
   (user: OidcUser, headers: Headers) => (deps: Dependencies) =>
     pipe(
-      TE.of(user),
-      TE.mapLeft(() => responseError(401, `Lollipop`, "Unauthorized")),
+      TE.Do,
+      TE.bind("publicKey", () =>
+        pipe(
+          fromBase64(user.public_key),
+          JwkPublicKey.decode,
+          E.mapLeft((e) => new Error("")),
+          TE.fromEither,
+        ),
+      ),
+      TE.bind("assertion", () => parseAssertion(user.assertion)),
+      TE.chain(({ assertion, publicKey }) =>
+        getAssertionRefVsInRensponseToVerifier(
+          publicKey,
+          user.assertion_ref,
+        )(assertion),
+      ),
+      TE.chain(() => TE.of(user)),
+      TE.mapLeft((e) =>
+        responseError(401, `Lollipop|${e.message}`, "Unauthorized"),
+      ),
     );
 
 // we create a fake session until FIMS is not integrated
@@ -127,7 +172,7 @@ export const makeFimsCallbackHandler: H.Handler<
     TE.bind("headers", withParams(Headers, req.headers)),
     TE.mapLeft(errorToValidationError),
     RTE.fromTaskEither,
-    RTE.chain(({ query, headers }) =>
+    RTE.chain(({ headers, query }) =>
       pipe(
         checkIssuer(query.iss),
         RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
