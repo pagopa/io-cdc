@@ -102,8 +102,8 @@ export const getAssertionNotOnOrAfterVerifier =
       TE.fromOption(() => new Error("NotOnOrAfter not found in assertion")),
       TE.chain(
         TE.fromPredicate(
-          (notOnOrAfter) => (new Date()).toISOString() < notOnOrAfter,
-          () => new Error("NotOnOrAfter violated"),
+          (notOnOrAfter) => new Date().toISOString() < notOnOrAfter,
+          (notOnOrAfter) => new Error(`NotOnOrAfter ${notOnOrAfter} is passed`),
         ),
       ),
       TE.map(() => true as const),
