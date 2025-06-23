@@ -1,5 +1,5 @@
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
-import * as TE from "fp-ts/TaskEither";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow } from "fp-ts/lib/function.js";
 import * as jose from "jose";
 
