@@ -20,11 +20,9 @@ export const getAttributeFromSamlResponse =
       ),
     );
 
-export const getIssueIstantInSecondsFromSamlResponse = flow(
-  getAttributeFromSamlResponse("Response", "IssueInstant"),
-  IsoDateFromString.decode,
-  O.fromEither,
-  O.map((date) => Math.floor(date.getTime() / 1000)),
+export const getNotOnOrAfterFromSamlResponse = getAttributeFromSamlResponse(
+  "SubjectConfirmationData",
+  "NotOnOrAfter",
 );
 
 export const getRequestIDFromSamlResponse = getAttributeFromSamlResponse(
@@ -44,8 +42,9 @@ export const getFiscalNumberFromSamlResponse = (
         (elem) => elem.getAttribute("Name") === "fiscalNumber",
       ),
     ),
-    O.chainNullableK((fiscalCodeElement) =>
-      fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
+    O.chainNullableK(
+      (fiscalCodeElement) =>
+        fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
     ),
     O.chain((fiscalCode) => O.fromEither(FiscalCode.decode(fiscalCode))),
   );

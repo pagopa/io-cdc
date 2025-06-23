@@ -11,7 +11,7 @@ import {
 } from "../utils/lollipopKeys.js";
 import {
   getFiscalNumberFromSamlResponse,
-  getIssueIstantInSecondsFromSamlResponse,
+  getNotOnOrAfterFromSamlResponse,
   getRequestIDFromSamlResponse,
 } from "../utils/saml.js";
 
@@ -93,17 +93,17 @@ export const getAssertionUserIdVsCfVerifier =
       TE.map(() => true as const),
     );
 
-export const getAssertionIssueInstantVerifier =
+export const getAssertionNotOnOrAfterVerifier =
   (): Verifier =>
   (assertion): ReturnType<Verifier> =>
     pipe(
       assertion,
-      getIssueIstantInSecondsFromSamlResponse,
-      TE.fromOption(() => new Error("Issue instant not found in assertion")),
+      getNotOnOrAfterFromSamlResponse,
+      TE.fromOption(() => new Error("NotOnOrAfter not found in assertion")),
       TE.chain(
         TE.fromPredicate(
-          (issueInstant) => issueInstant > 60 * 60 * 24 * 365, // should not exceed 365 days
-          () => new Error("Issue instant is over 1 years ago"),
+          (notOnOrAfter) => (new Date()).toISOString() > notOnOrAfter,
+          () => new Error("NotOnOrAfter violated"),
         ),
       ),
       TE.map(() => true as const),

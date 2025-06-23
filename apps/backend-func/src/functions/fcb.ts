@@ -2,14 +2,16 @@ import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
-import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
-import * as TE from "fp-ts/lib/TaskEither.js";
 import * as E from "fp-ts/lib/Either.js";
 import { pipe } from "fp-ts/lib/function.js";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import * as t from "io-ts";
 
+import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
+import { fromBase64 } from "../utils/base64.js";
 import {
   errorToValidationError,
   responseError,
@@ -17,7 +19,7 @@ import {
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
 import {
-  getAssertionIssueInstantVerifier,
+  getAssertionNotOnOrAfterVerifier,
   getAssertionRefVsInRensponseToVerifier,
   getAssertionUserIdVsCfVerifier,
   parseAssertion,
@@ -25,8 +27,6 @@ import {
 import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { storeSessionTe } from "../utils/session.js";
-import { fromBase64 } from "../utils/base64.js";
-import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 
 interface Dependencies {
   config: Config;
@@ -130,7 +130,7 @@ export const checkLollipop =
           TE.chain(() =>
             getAssertionUserIdVsCfVerifier(user.fiscal_code)(assertion),
           ),
-          TE.chain(() => getAssertionIssueInstantVerifier()(assertion)),
+          TE.chain(() => getAssertionNotOnOrAfterVerifier()(assertion)),
         ),
       ),
       TE.chain(() => TE.of(user)),
