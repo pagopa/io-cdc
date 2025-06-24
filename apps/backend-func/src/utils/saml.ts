@@ -82,8 +82,9 @@ export const getFiscalNumberFromSamlResponse = (
         (elem) => elem.getAttribute("Name") === "fiscalNumber",
       ),
     ),
-    O.chainNullableK((fiscalCodeElement) =>
-      fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
+    O.chainNullableK(
+      (fiscalCodeElement) =>
+        fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
     ),
     O.chain((fiscalCode) => O.fromEither(FiscalCode.decode(fiscalCode))),
   );
@@ -149,21 +150,38 @@ export const checkAssertionSignatures = async (
   const idpKeysTimestampsResponse = await fetch(idpKeyEndpoint);
   const idpKeysTimestamps: string[] = await idpKeysTimestampsResponse.json();
 
-  const validTimestamp = idpKeysTimestamps
+  // get latest keys
+  const latestIdpKeysResponse = await fetch(`${idpKeyEndpoint}/latest`);
+  const latestIdpKeys: string = await latestIdpKeysResponse.text();
+  const parsedLatestIdpKeys: Document = new DOMParser().parseFromString(
+    latestIdpKeys,
+    "text/xml",
+  );
+
+  const latestKeys = getIdpKeysFromMetadata(parsedLatestIdpKeys, issuer);
+
+  // find alternative keys with a suitable timestamp in latest keys do not work
+  // the timestamp is suitable if just before issueinstant
+  const alternativeSuitableTimestamp = idpKeysTimestamps
     .filter((ts) => ts < issueInstantTimestamp)
     .sort()
     .pop();
-  if (!validTimestamp) throw "Cannot find suitable idp key timestamp";
+  if (!alternativeSuitableTimestamp)
+    throw "Cannot find suitable idp key timestamp";
 
-  const idpKeysResponse = await fetch(`${idpKeyEndpoint}/${validTimestamp}`);
+  const idpKeysResponse = await fetch(
+    `${idpKeyEndpoint}/${alternativeSuitableTimestamp}`,
+  );
   const idpKeys: string = await idpKeysResponse.text();
   const parsedIdpKeys: Document = new DOMParser().parseFromString(
     idpKeys,
     "text/xml",
   );
 
-  const keys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
-  checkSignatures(assertionXml, doc, keys);
+  const alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
+
+  // we check signatures against latest keys and the alternative keys
+  checkSignatures(assertionXml, doc, [...latestKeys, ...alternativeKeys]);
 };
 
 export const checkSignatures = (
