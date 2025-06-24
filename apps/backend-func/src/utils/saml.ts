@@ -98,8 +98,6 @@ export const getSignaturesFromSamlResponse = (doc: Document) =>
   );
 
 export const getIdpKeysFromMetadata = (doc: Document, idp: string) => {
-  //const namespace = isCie ? "" : "md:";
-  //const xpathExpression = `//*[name()='${namespace}EntityDescriptor'][contains(@entityID,'${idp}')]/*[name()='${namespace}IDPSSODescriptor']/*[name()='${namespace}KeyDescriptor']//*[name()='ds:X509Certificate']/text()`;
   const xpathExpression = `//*[local-name()='EntityDescriptor'][contains(@entityID,'${idp}')]/*[local-name()='IDPSSODescriptor']/*[local-name()='KeyDescriptor']//*[name()='ds:X509Certificate']/text()`;
   const idpKeysSelection = xpath.select(xpathExpression, doc)?.toString();
 
