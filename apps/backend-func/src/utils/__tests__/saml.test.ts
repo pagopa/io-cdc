@@ -15,6 +15,7 @@ import {
   aPrimaryPublicKeyWithNoHeaders,
 } from "../../__mocks__/keys.mock.js";
 import {
+  addHeaders,
   checkSignatures,
   getIdpKeysFromMetadata,
   getIssueIstantFromSamlResponse,
@@ -60,7 +61,7 @@ describe("SpidIDPsMetadata", () => {
       "text/xml",
     );
     const issuer = "https://posteid.poste.it";
-    const keys = getIdpKeysFromMetadata(parsedIdpMetadata, issuer, false);
+    const keys = getIdpKeysFromMetadata(parsedIdpMetadata, issuer);
     expect(keys?.length).toBe(2);
   });
 });
@@ -73,7 +74,7 @@ describe("CieIDPMetadata", () => {
     );
     const issuer =
       "https://idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO";
-    const keys = getIdpKeysFromMetadata(parsedIdpMetadata, issuer, true);
+    const keys = getIdpKeysFromMetadata(parsedIdpMetadata, issuer);
     expect(keys?.length).toBe(2);
   });
 });
@@ -87,14 +88,16 @@ describe("SPID CheckSignatures", () => {
 
   it("should verify signatures when right key given in compact notation", () => {
     expect(() =>
-      checkSignatures(aSAMLResponse, assertion, [aPrimaryPublicKeyCompact]),
+      checkSignatures(aSAMLResponse, assertion, [
+        addHeaders(aPrimaryPublicKeyCompact),
+      ]),
     ).not.toThrow();
   });
 
   it("should verify signatures when right key given with no headers", () => {
     expect(() =>
       checkSignatures(aSAMLResponse, assertion, [
-        aPrimaryPublicKeyWithNoHeaders,
+        addHeaders(aPrimaryPublicKeyWithNoHeaders),
       ]),
     ).not.toThrow();
   });
