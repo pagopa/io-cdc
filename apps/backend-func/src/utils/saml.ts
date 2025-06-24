@@ -1,6 +1,7 @@
 import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import { DOMParser } from "@xmldom/xmldom";
+import { X509Certificate } from "crypto";
 import * as E from "fp-ts/lib/Either.js";
 import * as O from "fp-ts/lib/Option.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
@@ -184,6 +185,11 @@ export const checkAssertionSignatures = async (
   checkSignatures(assertionXml, doc, [...latestKeys, ...alternativeKeys]);
 };
 
+const prepareCertificate = (key: string) =>
+  key.indexOf("-----BEGIN") >= 0
+    ? key
+    : `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`;
+
 export const checkSignatures = (
   xml: NonEmptyString,
   doc: Document,
@@ -192,7 +198,9 @@ export const checkSignatures = (
   let verified = false;
   let errors: unknown[] = [];
   keys?.forEach((key) => {
-    const sig = new SignedXml({ publicCert: key });
+    const cert = prepareCertificate(key);
+    console.log(cert);
+    const sig = new SignedXml({ publicCert: cert });
     const signatures = getSignaturesFromSamlResponse(doc);
     for (let i = 0; i < signatures.length; i++) {
       const signature = signatures.item(i)?.cloneNode(true);

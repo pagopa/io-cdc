@@ -7,7 +7,12 @@ import { describe, expect, it } from "vitest";
 
 import { aSAMLResponse } from "../../__mocks__/assertion.mock.js";
 import { idpsMetadata } from "../../__mocks__/idps.mock.js";
-import { aDifferentPublicKey, aPrimaryKey } from "../../__mocks__/keys.mock.js";
+import {
+  aDifferentPublicKey,
+  aPrimaryKey,
+  aPrimaryPublicKeyCompact,
+  aPrimaryPublicKeyWithNoHeaders,
+} from "../../__mocks__/keys.mock.js";
 import {
   checkSignatures,
   getIdpKeysFromMetadata,
@@ -63,6 +68,20 @@ describe("CheckSignatures", () => {
   it("should verify signatures when right key given", () => {
     expect(() =>
       checkSignatures(aSAMLResponse, assertion, [aPrimaryKey.publicKey]),
+    ).not.toThrow();
+  });
+
+  it("should verify signatures when right key given in compact notation", () => {
+    expect(() =>
+      checkSignatures(aSAMLResponse, assertion, [aPrimaryPublicKeyCompact]),
+    ).not.toThrow();
+  });
+  
+  it("should verify signatures when right key given in compact notation", () => {
+    expect(() =>
+      checkSignatures(aSAMLResponse, assertion, [
+        aPrimaryPublicKeyWithNoHeaders,
+      ]),
     ).not.toThrow();
   });
 
