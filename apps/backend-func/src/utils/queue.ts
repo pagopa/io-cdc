@@ -4,6 +4,7 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 
 import { Config } from "../config.js";
+import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { toBase64 } from "./base64.js";
 
 export class QueueStorage {
@@ -36,7 +37,7 @@ export class QueueStorage {
       TE.chain(() => this.createMessage(queueName, message)),
     );
 
-  enqueuePendingCGNMessage = (message: string) =>
+  enqueuePendingCardRequestMessage = (message: PendingCardRequestMessage) =>
     this.enqueueMessage(this.config.CARD_REQUEST_QUEUE_NAME, toBase64(message));
 
   queueService: QueueService;

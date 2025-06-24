@@ -11,6 +11,7 @@ import { InfoFn } from "./functions/info.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 import { getFimsClient } from "./utils/fims.js";
+import { QueueStorage } from "./utils/queue.js";
 import { getRedisClientFactory } from "./utils/redis.js";
 
 registerAzureFunctionHooks(app);
@@ -20,6 +21,9 @@ const config = getConfigOrThrow();
 
 // Fims
 const fimsClient = getFimsClient(config);
+
+// Queue Storage
+const queueStorage: QueueStorage = new QueueStorage(config);
 
 // CosmosDB singleton
 const cosmosDbClient = getCosmosDbClientInstance(
@@ -85,6 +89,7 @@ app.http("GetCardRequests", {
 const PostCardRequests = PostCardRequestsFn({
   config,
   cosmosDbClient,
+  queueStorage,
   redisClientFactory,
 });
 app.http("PostCardRequests", {
