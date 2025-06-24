@@ -1,7 +1,10 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
+import { readableReportSimplified } from "@pagopa/ts-commons/lib/reporters.js";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
+import * as E from "fp-ts/lib/Either.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
@@ -9,15 +12,25 @@ import * as t from "io-ts";
 
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
-import { Session } from "../models/session.js";
+import { fromBase64 } from "../utils/base64.js";
 import {
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
+import {
+  verifyHttpSignatures,
+  verifyState,
+} from "../utils/httpSignature.verifiers.js";
+import {
+  getAssertionIssueInstantVerifier,
+  getAssertionRefVsInRensponseToVerifier,
+  getAssertionUserIdVsCfVerifier,
+} from "../utils/lollipop.js";
 import { RedisClientFactory } from "../utils/redis.js";
-import { setWithExpirationTask } from "../utils/redis_storage.js";
+import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
+import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
@@ -28,27 +41,111 @@ interface Dependencies {
 
 const QueryParams = t.type({
   code: NonEmptyString,
+  iss: NonEmptyString,
   state: NonEmptyString,
 });
 type QueryParams = t.TypeOf<typeof QueryParams>;
 
-const mockedSessionData: Session = {
-  family_name: "Surname" as NonEmptyString,
-  fiscal_code: "SRNNMU90T12C444Z" as FiscalCode,
-  given_name: "Name" as NonEmptyString,
-};
+const Headers = t.type({
+  signature: NonEmptyString,
+  "signature-input": NonEmptyString,
+});
+type Headers = t.TypeOf<typeof Headers>;
 
 export const getFimsData =
-  (code: string, state: string) => (deps: Dependencies) =>
+  (code: string, state: string, iss: string) => (deps: Dependencies) =>
     pipe(
-      getFimsUserTE(
-        deps.fimsClient,
-        `${deps.config.CDC_BASE_URL}/fcb`,
-        code,
-        state,
+      TE.Do,
+      TE.bind("maybeNonce", () => getTask(deps.redisClientFactory, state)),
+      TE.chain(({ maybeNonce }) =>
+        pipe(
+          maybeNonce,
+          TE.fromOption(() => new Error("Nonce not found")),
+          TE.chain((nonce) =>
+            getFimsUserTE(
+              deps.fimsClient,
+              deps.config.FIMS_REDIRECT_URL,
+              code,
+              state,
+              nonce,
+              iss,
+            ),
+          ),
+        ),
       ),
-      TE.mapLeft(() =>
-        responseError(401, "Cannot retrieve user data", "Unauthorized"),
+      TE.mapLeft((e) =>
+        responseError(
+          401,
+          `Cannot retrieve user data | ${e.message}`,
+          "Unauthorized",
+        ),
+      ),
+    );
+
+export const checkIssuer = (issuer: string) => (deps: Dependencies) =>
+  pipe(
+    TE.fromPredicate<Error, string>(
+      (issuer) => issuer === deps.config.FIMS_ISSUER_URL,
+      () => new Error("Invalid Issuer"),
+    )(issuer),
+    TE.mapLeft((e) =>
+      responseError(401, `Checks | ${e.message}`, "Unauthorized"),
+    ),
+  );
+
+export const checkAssertion = (user: OidcUser) => (deps: Dependencies) =>
+  pipe(
+    TE.tryCatch(
+      () =>
+        checkAssertionSignatures(
+          user.assertion,
+          deps.config.PAGOPA_IDP_KEYS_BASE_URL,
+        ),
+      E.toError,
+    ),
+    TE.map(() => user),
+    TE.mapLeft((e) =>
+      responseError(401, `Assertion|${e.message}`, "Unauthorized"),
+    ),
+  );
+
+export const checkLollipop =
+  (user: OidcUser, headers: Headers, state: string) => (deps: Dependencies) =>
+    pipe(
+      TE.Do,
+      TE.bind("publicKey", () =>
+        pipe(
+          fromBase64(user.public_key),
+          JwkPublicKey.decode,
+          E.mapLeft((e) => new Error(readableReportSimplified(e))),
+          TE.fromEither,
+        ),
+      ),
+      TE.bind("assertion", () => parseAssertion(user.assertion)),
+      TE.chain(({ assertion, publicKey }) =>
+        pipe(
+          getAssertionRefVsInRensponseToVerifier(
+            publicKey,
+            user.assertion_ref,
+          )(assertion),
+          TE.chain(() =>
+            getAssertionUserIdVsCfVerifier(user.fiscal_code)(assertion),
+          ),
+          TE.chain(() => getAssertionIssueInstantVerifier()(assertion)),
+          TE.chain(() =>
+            verifyHttpSignatures(
+              user.assertion_ref,
+              headers,
+              deps.config.FIMS_REDIRECT_URL,
+              publicKey,
+            ),
+          ),
+          TE.chain(() => verifyState(headers, state)),
+        ),
+      ),
+      TE.map(() => user),
+      TE.mapLeft((e) =>
+        responseError(401, `Lollipop|${e.message}`, "Unauthorized"),
       ),
     );
 
@@ -88,11 +185,20 @@ export const makeFimsCallbackHandler: H.Handler<
   Dependencies
 > = H.of((req) =>
   pipe(
-    withParams(QueryParams, req.query), // GET ALSO LOLLIPOP HEADERS "signature-input" & "signature"
-    RTE.mapLeft(errorToValidationError),
-    //RTE.chain(({ code, state }) => getFimsData(code, state)),
-    //RTE.chain(({...}) => checkLollipop(...))
-    RTE.chain(() => createSessionAndRedirect(mockedSessionData as OidcUser)), // remove this mock and pass the user obtained from previous RTE
+    TE.Do,
+    TE.bind("query", withParams(QueryParams, req.query)),
+    TE.bind("headers", withParams(Headers, req.headers)),
+    TE.mapLeft(errorToValidationError),
+    RTE.fromTaskEither,
+    RTE.chain(({ headers, query }) =>
+      pipe(
+        checkIssuer(query.iss),
+        RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
+        RTE.chain((user) => checkAssertion(user)),
+        RTE.chain((user) => checkLollipop(user, headers, query.state)),
+        RTE.chain((user) => createSessionAndRedirect(user as OidcUser)),
+      ),
+    ),
     RTE.map((redirectUrl) =>
       pipe(
         H.empty,
