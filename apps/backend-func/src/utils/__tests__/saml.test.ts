@@ -6,6 +6,7 @@ import { pipe } from "fp-ts/lib/function.js";
 import { describe, expect, it } from "vitest";
 
 import { aSAMLResponse } from "../../__mocks__/assertion.mock.js";
+import { cieMetadata } from "../../__mocks__/cie.mock.js";
 import { idpsMetadata } from "../../__mocks__/idps.mock.js";
 import {
   aDifferentPublicKey,
@@ -52,19 +53,32 @@ describe("SamlUtils", () => {
   });
 });
 
-describe("IDPMetadata", () => {
-  it("should extract the given idp keys", () => {
+describe("SpidIDPsMetadata", () => {
+  it("should extract the given spid idp keys", () => {
     const parsedIdpMetadata: Document = new DOMParser().parseFromString(
       idpsMetadata,
       "text/xml",
     );
     const issuer = "https://posteid.poste.it";
-    const keys = getIdpKeysFromMetadata(parsedIdpMetadata, issuer);
+    const keys = getIdpKeysFromMetadata(parsedIdpMetadata, issuer, false);
     expect(keys?.length).toBe(2);
   });
 });
 
-describe("CheckSignatures", () => {
+describe("CieIDPMetadata", () => {
+  it("should extract the given cie idp keys", () => {
+    const parsedIdpMetadata: Document = new DOMParser().parseFromString(
+      cieMetadata,
+      "text/xml",
+    );
+    const issuer =
+      "https://idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO";
+    const keys = getIdpKeysFromMetadata(parsedIdpMetadata, issuer, true);
+    expect(keys?.length).toBe(2);
+  });
+});
+
+describe("SPID CheckSignatures", () => {
   it("should verify signatures when right key given", () => {
     expect(() =>
       checkSignatures(aSAMLResponse, assertion, [aPrimaryKey.publicKey]),

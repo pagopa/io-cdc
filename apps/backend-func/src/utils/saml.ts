@@ -97,10 +97,15 @@ export const getSignaturesFromSamlResponse = (doc: Document) =>
     }),
   );
 
-export const getIdpKeysFromMetadata = (doc: Document, idp: string) => {
+export const getIdpKeysFromMetadata = (
+  doc: Document,
+  idp: string,
+  isCie: boolean,
+) => {
+  const namespace = isCie ? "" : "md:";
   const idpKeysSelection = xpath
     .select(
-      `//*[name()='md:EntityDescriptor'][contains(@entityID,'${idp}')]/*[name()='md:IDPSSODescriptor']/*[name()='md:KeyDescriptor']//*[name()='ds:X509Certificate']/text()`,
+      `//*[name()='${namespace}EntityDescriptor'][contains(@entityID,'${idp}')]/*[name()='${namespace}IDPSSODescriptor']/*[name()='${namespace}KeyDescriptor']//*[name()='ds:X509Certificate']/text()`,
       doc,
     )
     ?.toString();
@@ -157,7 +162,7 @@ export const checkAssertionSignatures = async (
     "text/xml",
   );
 
-  const latestKeys = getIdpKeysFromMetadata(parsedLatestIdpKeys, issuer);
+  const latestKeys = getIdpKeysFromMetadata(parsedLatestIdpKeys, issuer, isCie);
 
   // find alternative keys with a suitable timestamp in latest keys do not work
   // the timestamp is suitable if just before issueinstant
@@ -177,7 +182,7 @@ export const checkAssertionSignatures = async (
     "text/xml",
   );
 
-  const alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
+  const alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer, isCie);
 
   // we check signatures against latest keys and the alternative keys
   checkSignatures(assertionXml, doc, [...latestKeys, ...alternativeKeys]);
