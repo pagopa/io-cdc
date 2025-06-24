@@ -1,13 +1,13 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
+import { readableReportSimplified } from "@pagopa/ts-commons/lib/reporters.js";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as E from "fp-ts/lib/Either.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import * as A from "fp-ts/lib/Array.js";
-import { flow, pipe } from "fp-ts/lib/function.js";
+import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
@@ -19,6 +19,7 @@ import {
   responseErrorToHttpError,
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
+import { verifyHttpSignatures } from "../utils/httpSignature.verifiers.js";
 import {
   getAssertionIssueInstantVerifier,
   getAssertionRefVsInRensponseToVerifier,
@@ -28,9 +29,6 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
-import { getAlgoFromAssertionRef } from "../utils/lollipopKeys.js";
-import { Verifier, verifySignatureHeader } from "@mattrglobal/http-signatures";
-import { getCustomVerifyWithEncoding } from "../utils/httpSignature.verifiers.js";
 
 interface Dependencies {
   config: Config;
@@ -115,18 +113,9 @@ export const checkAssertion = (user: OidcUser) => (deps: Dependencies) =>
   [X] Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
   [X] Verificare che la data di emissione della asserzione (IssueInstant) non sia superiore a 365 giorni fa
   [X] Assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint 
-    del claim public_key usando l’algoritmo indicato (ad esempio sha256)
-  [ ] Verificare la firma dell’header Signature usando il contenuto del claim public_key
+      del claim public_key usando l’algoritmo indicato (ad esempio sha256)
+  [X] Verificare la firma dell’header Signature usando il contenuto del claim public_key
   [ ] Verificare se il nonce firmato nel campo Signature corrisponde allo state OIDC
-
-  A causa di:
-  * la dipendenza del protocollo LolliPoP dalle assertion SPID e dalle relative chiavi che possono cambiare nel tempo
-  * il particolare meccanismo di login implementato nell’app che prevede sessioni lunghe 30 o 365 giorni a parità di assertion
-  il cambiamento di una chiave in presenza di una sessione attiva provoca un fallimento nelle verifiche LolliPoP.
-  Per gestire questa casistica è fondamentale che tu predisponga un sistema che ti consenta di mantenere uno storico delle chiavi 
-  (per validare le assertion precedenti) e di ottenere le nuove, tenendo conto della durata delle sessioni su IO.
-  In ogni caso, in presenza dell'impossibilità di portare a termine la verifica, il tuo sistema dovrebbe fare fallback su una 
-  nuova richiesta di login SPID all’utente, specificando che qualcosa è andato storto nel processo di identificazione automatica.
   */
 export const checkLollipop =
   (user: OidcUser, headers: Headers) => (deps: Dependencies) =>
@@ -136,7 +125,7 @@ export const checkLollipop =
         pipe(
           fromBase64(user.public_key),
           JwkPublicKey.decode,
-          E.mapLeft((e) => new Error("")),
+          E.mapLeft((e) => new Error(readableReportSimplified(e))),
           TE.fromEither,
         ),
       ),
@@ -152,57 +141,11 @@ export const checkLollipop =
           ),
           TE.chain(() => getAssertionIssueInstantVerifier()(assertion)),
           TE.chain(() =>
-            pipe(
-              TE.of(getAlgoFromAssertionRef(user.assertion_ref)),
-              TE.map((algo) => `${algo}-`),
-              TE.map((assertionRefPrefix) =>
-                user.assertion_ref.split(assertionRefPrefix),
-              ),
-              TE.chain(
-                flow(
-                  A.tail,
-                  TE.fromOption(() => new Error("Unexpected assertionRef")),
-                  TE.map((_) => _.join("")),
-                ),
-              ),
-              TE.map((thumbprint) => ({
-                httpHeaders: headers,
-                url: deps.config.FIMS_REDIRECT_URL,
-                method: "GET",
-                verifier: {
-                  verify: getCustomVerifyWithEncoding("der")({
-                    [thumbprint]: {
-                      key: publicKey,
-                    },
-                  }),
-                } as Verifier,
-              })),
-              TE.chain((params) =>
-                TE.tryCatch(
-                  async () => verifySignatureHeader(params),
-                  E.toError,
-                ),
-              ),
-              TE.map((res) =>
-                res.map((r) =>
-                  r.verified
-                    ? TE.of(true as const)
-                    : TE.left(
-                        new Error(
-                          `HTTP Request Signature failed ${JSON.stringify(
-                            r.reason,
-                          )}`,
-                        ),
-                      ),
-                ),
-              ),
-              TE.chainW((res) =>
-                res.unwrapOr(
-                  TE.left(
-                    new Error("An error occurred during signature check"),
-                  ),
-                ),
-              ),
+            verifyHttpSignatures(
+              user.assertion_ref,
+              headers,
+              deps.config.FIMS_REDIRECT_URL,
+              publicKey,
             ),
           ),
         ),

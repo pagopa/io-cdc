@@ -76,8 +76,8 @@ describe("CheckSignatures", () => {
       checkSignatures(aSAMLResponse, assertion, [aPrimaryPublicKeyCompact]),
     ).not.toThrow();
   });
-  
-  it("should verify signatures when right key given in compact notation", () => {
+
+  it("should verify signatures when right key given with no headers", () => {
     expect(() =>
       checkSignatures(aSAMLResponse, assertion, [
         aPrimaryPublicKeyWithNoHeaders,

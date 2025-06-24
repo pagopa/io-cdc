@@ -1,6 +1,18 @@
-import { algMap } from "@mattrglobal/http-signatures";
+import {
+  Verifier,
+  algMap,
+  verifySignatureHeader,
+} from "@mattrglobal/http-signatures";
+import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 import * as crypto from "crypto";
 import { JsonWebKey } from "crypto";
+import * as A from "fp-ts/lib/Array.js";
+import * as E from "fp-ts/lib/Either.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
+import { flow, pipe } from "fp-ts/lib/function.js";
+
+import { AssertionRef } from "../types/lollipop.js";
+import { getAlgoFromAssertionRef } from "./lollipopKeys.js";
 
 // ----------------------
 // Custom Verifiers
@@ -84,3 +96,53 @@ export const getCustomVerifyWithEncoding =
       keyMap[signatureParams.keyid].key,
     )(data, signature);
   };
+
+export const verifyHttpSignatures = (
+  assertion_ref: AssertionRef,
+  httpHeaders: Record<string, string>,
+  url: string,
+  publicKey: JwkPublicKey,
+) =>
+  pipe(
+    TE.of(getAlgoFromAssertionRef(assertion_ref)),
+    TE.map((algo) => `${algo}-`),
+    TE.map((assertionRefPrefix) => assertion_ref.split(assertionRefPrefix)),
+    TE.chain(
+      flow(
+        A.tail,
+        TE.fromOption(() => new Error("Unexpected assertionRef")),
+        TE.map((_) => _.join("")),
+      ),
+    ),
+    TE.map((thumbprint) => ({
+      httpHeaders,
+      method: "GET",
+      url,
+      verifier: {
+        verify: getCustomVerifyWithEncoding("der")({
+          [thumbprint]: {
+            key: publicKey,
+          },
+        }),
+      } as Verifier,
+    })),
+    TE.chain((params) =>
+      TE.tryCatch(async () => verifySignatureHeader(params), E.toError),
+    ),
+    TE.map((res) =>
+      res.map((r) =>
+        r.verified
+          ? TE.of(true as const)
+          : TE.left(
+              new Error(
+                `HTTP Request Signature failed ${JSON.stringify(r.reason)}`,
+              ),
+            ),
+      ),
+    ),
+    TE.chainW((res) =>
+      res.unwrapOr(
+        TE.left(new Error("An error occurred during signature check")),
+      ),
+    ),
+  );

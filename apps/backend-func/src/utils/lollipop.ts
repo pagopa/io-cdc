@@ -100,7 +100,3 @@ export const getAssertionIssueInstantVerifier =
       ),
       TE.map(() => true as const),
     );
-
-export const getAssertionSignatureVerifier =
-  (): Verifier => (): ReturnType<Verifier> =>
-    TE.of(true);

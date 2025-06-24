@@ -1,7 +1,6 @@
 import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import { DOMParser } from "@xmldom/xmldom";
-import { X509Certificate } from "crypto";
 import * as E from "fp-ts/lib/Either.js";
 import * as O from "fp-ts/lib/Option.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
@@ -83,9 +82,8 @@ export const getFiscalNumberFromSamlResponse = (
         (elem) => elem.getAttribute("Name") === "fiscalNumber",
       ),
     ),
-    O.chainNullableK(
-      (fiscalCodeElement) =>
-        fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
+    O.chainNullableK((fiscalCodeElement) =>
+      fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
     ),
     O.chain((fiscalCode) => O.fromEither(FiscalCode.decode(fiscalCode))),
   );
@@ -196,10 +194,9 @@ export const checkSignatures = (
   keys: string[],
 ) => {
   let verified = false;
-  let errors: unknown[] = [];
+  const errors: unknown[] = [];
   keys?.forEach((key) => {
     const cert = prepareCertificate(key);
-    console.log(cert);
     const sig = new SignedXml({ publicCert: cert });
     const signatures = getSignaturesFromSamlResponse(doc);
     for (let i = 0; i < signatures.length; i++) {
