@@ -163,7 +163,7 @@ export const checkAssertionSignatures = async (
   // find alternative keys with a suitable timestamp in latest keys do not work
   // the timestamp is suitable if just before issueinstant
   const alternativeSuitableTimestamp = idpKeysTimestamps
-    .filter((ts) => ts < issueInstantTimestamp)
+    .filter((ts) => ts <= issueInstantTimestamp)
     .sort()
     .pop();
   if (!alternativeSuitableTimestamp)
@@ -190,6 +190,7 @@ export const checkSignatures = (
   keys: string[],
 ) => {
   let verified = false;
+  let errors: unknown[] = [];
   keys?.forEach((key) => {
     const sig = new SignedXml({ publicCert: key });
     const signatures = getSignaturesFromSamlResponse(doc);
@@ -202,10 +203,10 @@ export const checkSignatures = (
         res = sig.checkSignature(xml);
         if (res) verified = true;
       } catch (ex) {
+        errors.push(ex);
         continue;
       }
     }
   });
-
-  if (!verified) throw "Cannot verify signature";
+  if (!verified) throw `Cannot verify signature|${JSON.stringify(errors)}`;
 };
