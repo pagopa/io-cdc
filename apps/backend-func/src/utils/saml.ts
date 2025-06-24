@@ -97,20 +97,11 @@ export const getSignaturesFromSamlResponse = (doc: Document) =>
     }),
   );
 
-export const getIdpKeysFromMetadata = (
-  doc: Document,
-  idp: string,
-  isCie: boolean,
-) => {
-  const namespace = isCie ? "" : "md:";
-  const idpKeysSelection = xpath
-    .select(
-      `//*[name()='${namespace}EntityDescriptor'][contains(@entityID,'${idp}')]/*[name()='${namespace}IDPSSODescriptor']/*[name()='${namespace}KeyDescriptor']//*[name()='ds:X509Certificate']/text()`,
-      doc,
-    )
-    ?.toString();
+export const getIdpKeysFromMetadata = (doc: Document, idp: string) => {
+  const xpathExpression = `//*[local-name()='EntityDescriptor'][contains(@entityID,'${idp}')]/*[local-name()='IDPSSODescriptor']/*[local-name()='KeyDescriptor']//*[name()='ds:X509Certificate']/text()`;
+  const idpKeysSelection = xpath.select(xpathExpression, doc)?.toString();
 
-  let keys = idpKeysSelection?.split(",");
+  let keys = idpKeysSelection?.split(",").map((k) => addHeaders(sanitize(k)));
   if (!keys) keys = [];
   return keys;
 };
@@ -162,7 +153,7 @@ export const checkAssertionSignatures = async (
     "text/xml",
   );
 
-  const latestKeys = getIdpKeysFromMetadata(parsedLatestIdpKeys, issuer, isCie);
+  const latestKeys = getIdpKeysFromMetadata(parsedLatestIdpKeys, issuer);
 
   // find alternative keys with a suitable timestamp in latest keys do not work
   // the timestamp is suitable if just before issueinstant
@@ -182,13 +173,18 @@ export const checkAssertionSignatures = async (
     "text/xml",
   );
 
-  const alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer, isCie);
+  const alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
 
-  // we check signatures against latest keys and the alternative keys
-  checkSignatures(assertionXml, doc, [...latestKeys, ...alternativeKeys]);
+  const keys = [...latestKeys, ...alternativeKeys];
+
+  // we check signatures against sanitized and headered latest keys and the alternative keys
+  checkSignatures(assertionXml, doc, keys);
 };
 
-const prepareCertificate = (key: string) =>
+export const sanitize = (key: string) =>
+  key.replaceAll("\n", "").replaceAll(" ", "");
+
+export const addHeaders = (key: string) =>
   key.indexOf("-----BEGIN") >= 0
     ? key
     : `-----BEGIN CERTIFICATE-----\n${key}\n-----END CERTIFICATE-----`;
@@ -201,8 +197,7 @@ export const checkSignatures = (
   let verified = false;
   const errors: unknown[] = [];
   keys?.forEach((key) => {
-    const cert = prepareCertificate(key);
-    const sig = new SignedXml({ publicCert: cert });
+    const sig = new SignedXml({ publicCert: key });
     const signatures = getSignaturesFromSamlResponse(doc);
     for (let i = 0; i < signatures.length; i++) {
       const signature = signatures.item(i)?.cloneNode(true);
