@@ -158,7 +158,7 @@ export const verifyState = (
   state: string,
 ) =>
   pipe(
-    httpHeaders.signature,
+    httpHeaders["signature-input"],
     Signature.decode,
     E.mapLeft((e) => new Error(readableReportSimplified(e))),
     TE.fromEither,
