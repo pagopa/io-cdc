@@ -3,31 +3,31 @@ import { Button, Chip, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/appRoutes';
-import { selectYearsList } from '../../features/app/selectors';
+import { selectAnnualitiesWithStatus, selectNotAvailableYears } from '../../features/app/selectors';
 import { useSelector } from 'react-redux';
 import { useRequestBonusMutation } from '../../features/app/services';
 
 const SelectYear = () => {
-  const yearsList = useSelector(selectYearsList);
+  const annualities = useSelector(selectAnnualitiesWithStatus);
+  const notAvailableYears = useSelector(selectNotAvailableYears);
   const [requestBonus, { isLoading }] = useRequestBonusMutation();
 
   const mappedYearsList = useMemo(
     () =>
-      yearsList.map(({ alreadyRequested, ...option }) => ({
-        ...option,
-        disabled: alreadyRequested,
-        rightComponent: alreadyRequested ? (
-          <Chip label="Già richiesta" color="primary" size="small" />
-        ) : undefined,
-      })),
-    [yearsList],
+      annualities
+        .map(({ label, value, disabled }) => ({
+          label,
+          value,
+          disabled,
+          rightComponent: disabled ? (
+            <Chip label="Già richiesta" color="primary" size="small" />
+          ) : undefined,
+        }))
+        .sort((a, b) => Number(a.value) - Number(b.value)),
+    [annualities],
   );
 
-  const alredaySelected = yearsList
-    .filter(({ alreadyRequested }) => alreadyRequested)
-    .map(({ value }) => value);
-
-  const [selectedItems, setSelectedItems] = useState<string[]>(alredaySelected);
+  const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
 
   const navigate = useNavigate();
 
@@ -36,9 +36,7 @@ const SelectYear = () => {
   }, []);
 
   const onConfirm = useCallback(async () => {
-    const newYears = yearsList
-      .filter(({ value }) => selectedItems.includes(value) && !alredaySelected.includes(value))
-      .map(({ value }) => value);
+    const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
     try {
       const { error, data } = await requestBonus(newYears);
       if (error) {
@@ -51,14 +49,18 @@ const SelectYear = () => {
           },
         });
     } catch (e) {
-      console.log(e);
       navigate(APP_ROUTES.FEEDBACK, {
         state: {
           status: 500,
         },
       });
     }
-  }, [alredaySelected, navigate, requestBonus, selectedItems, yearsList]);
+  }, [selectedItems, notAvailableYears, requestBonus, navigate]);
+
+  const allSelected = useMemo(
+    () => mappedYearsList.every(({ value, disabled }) => disabled || selectedItems.includes(value)),
+    [mappedYearsList, selectedItems],
+  );
 
   return isLoading ? (
     <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
@@ -78,15 +80,18 @@ const SelectYear = () => {
           title="ANNO"
           value={selectedItems}
           multiple
-          buttonLabel="Seleziona tutti"
+          buttonLabel={allSelected ? 'Deseleziona tutti' : 'Seleziona tutti'}
           onChange={onSelectYear}
           options={mappedYearsList}
-          disableSelectAll={selectedItems.length >= mappedYearsList.length - 1}
+          disableSelectAll={
+            mappedYearsList.length - selectedItems.length === 1 ||
+            mappedYearsList.every(({ disabled }) => disabled)
+          }
         />
       </Stack>
       <Button
         onClick={onConfirm}
-        disabled={selectedItems.length <= alredaySelected.length}
+        disabled={selectedItems.length <= notAvailableYears.length}
         size="small"
         variant="contained"
       >

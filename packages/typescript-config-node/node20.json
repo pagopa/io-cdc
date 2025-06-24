@@ -4,7 +4,7 @@
     "_version": "20.17.0",
   
     "compilerOptions": {
-      "lib": ["es2023"],
+      "lib": ["es2023","DOM"],
       "module": "nodenext",
       "target": "es2022",
   
