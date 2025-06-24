@@ -45,6 +45,9 @@ locals {
       ALGORITHM_ENCRYPTION = var.algorithm_encryption
       ENCODING_ENCRYPTION  = var.encoding_encryption
 
+      // IDP KEYS
+      PAGOPA_IDP_KEYS_BASE_URL = var.pagopa_idp_keys_base_url
+
       // REDIS
       REDIS_URL             = var.redis_url
       REDIS_PORT            = var.redis_port

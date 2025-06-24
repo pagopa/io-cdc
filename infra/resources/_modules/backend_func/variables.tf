@@ -256,3 +256,9 @@ variable "cdc_backend_func_key" {
   description = "The key for apim to call functions APIs"
   sensitive   = true
 }
+
+variable "pagopa_idp_keys_base_url" {
+  type        = string
+  description = "The base url to get idp keys"
+  sensitive   = true
+}

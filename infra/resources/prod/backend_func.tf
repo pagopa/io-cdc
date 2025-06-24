@@ -21,6 +21,8 @@ module "backend_func" {
     resource_group_name = data.azurerm_virtual_network.vnet_common_itn.resource_group_name
     name                = data.azurerm_virtual_network.vnet_common_itn.name
   }
+  
+  pagopa_idp_keys_base_url = data.azurerm_key_vault_secret.pagopa_idp_keys_base_url.value
 
   cdc_base_url = data.azurerm_key_vault_secret.cdc_base_url.value
 
