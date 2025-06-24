@@ -4,12 +4,15 @@ import {
   verifySignatureHeader,
 } from "@mattrglobal/http-signatures";
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
+import { readableReportSimplified } from "@pagopa/ts-commons/lib/reporters.js";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import { JsonWebKey } from "crypto";
 import * as A from "fp-ts/lib/Array.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
+import * as t from "io-ts";
 
 import { AssertionRef } from "../types/lollipop.js";
 import { getAlgoFromAssertionRef } from "./lollipopKeys.js";
@@ -145,4 +148,26 @@ export const verifyHttpSignatures = (
         TE.left(new Error("An error occurred during signature check")),
       ),
     ),
+  );
+
+const Signature = t.type({ nonce: NonEmptyString });
+type Signature = t.TypeOf<typeof Signature>;
+
+export const verifyState = (
+  httpHeaders: Record<string, string>,
+  state: string,
+) =>
+  pipe(
+    httpHeaders.signature,
+    Signature.decode,
+    E.mapLeft((e) => new Error(readableReportSimplified(e))),
+    TE.fromEither,
+    TE.chain(
+      TE.fromPredicate(
+        (signature) => signature.nonce === state,
+        (signature) =>
+          new Error(`${signature.nonce} is not equal to state ${state}`),
+      ),
+    ),
+    TE.map(() => true as const),
   );

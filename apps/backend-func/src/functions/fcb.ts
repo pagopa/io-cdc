@@ -19,7 +19,10 @@ import {
   responseErrorToHttpError,
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
-import { verifyHttpSignatures } from "../utils/httpSignature.verifiers.js";
+import {
+  verifyHttpSignatures,
+  verifyState,
+} from "../utils/httpSignature.verifiers.js";
 import {
   getAssertionIssueInstantVerifier,
   getAssertionRefVsInRensponseToVerifier,
@@ -118,7 +121,7 @@ export const checkAssertion = (user: OidcUser) => (deps: Dependencies) =>
   [ ] Verificare se il nonce firmato nel campo Signature corrisponde allo state OIDC
   */
 export const checkLollipop =
-  (user: OidcUser, headers: Headers) => (deps: Dependencies) =>
+  (user: OidcUser, headers: Headers, state: string) => (deps: Dependencies) =>
     pipe(
       TE.Do,
       TE.bind("publicKey", () =>
@@ -148,6 +151,7 @@ export const checkLollipop =
               publicKey,
             ),
           ),
+          TE.chain(() => verifyState(headers, state)),
         ),
       ),
       TE.map(() => user),
@@ -202,7 +206,7 @@ export const makeFimsCallbackHandler: H.Handler<
         checkIssuer(query.iss),
         RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
         RTE.chain((user) => checkAssertion(user)),
-        RTE.chain((user) => checkLollipop(user, headers)),
+        RTE.chain((user) => checkLollipop(user, headers, query.state)),
         RTE.chain((user) => createSessionAndRedirect(user as OidcUser)),
       ),
     ),
