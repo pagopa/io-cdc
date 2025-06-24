@@ -4,15 +4,12 @@ import {
   verifySignatureHeader,
 } from "@mattrglobal/http-signatures";
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
-import { readableReportSimplified } from "@pagopa/ts-commons/lib/reporters.js";
-import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import { JsonWebKey } from "crypto";
 import * as A from "fp-ts/lib/Array.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
-import * as t from "io-ts";
 
 import { AssertionRef } from "../types/lollipop.js";
 import { getAlgoFromAssertionRef } from "./lollipopKeys.js";
@@ -157,14 +154,13 @@ export const verifyState = (
   pipe(
     httpHeaders["signature-input"],
     TE.of,
-    TE.map(
-      (signature_input) =>
-        signature_input
-          .split(";")
-          .filter((t) => t.indexOf("nonce") >= 0)
-          .pop()
-          ?.replaceAll("nonce=", "")
-          .replaceAll('"', ""),
+    TE.map((signature_input) =>
+      signature_input
+        .split(";")
+        .filter((t) => t.indexOf("nonce") >= 0)
+        .pop()
+        ?.replaceAll("nonce=", "")
+        .replaceAll('"', ""),
     ),
     TE.chain(
       TE.fromPredicate(

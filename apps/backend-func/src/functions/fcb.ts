@@ -109,17 +109,6 @@ export const checkAssertion = (user: OidcUser) => (deps: Dependencies) =>
     ),
   );
 
-/*  
-  Check lollipop
-  [X] Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
-  [X] Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
-  [X] Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
-  [X] Verificare che la data di emissione della asserzione (IssueInstant) non sia superiore a 365 giorni fa
-  [X] Assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint 
-      del claim public_key usando l’algoritmo indicato (ad esempio sha256)
-  [X] Verificare la firma dell’header Signature usando il contenuto del claim public_key
-  [ ] Verificare se il nonce firmato nel campo Signature corrisponde allo state OIDC
-  */
 export const checkLollipop =
   (user: OidcUser, headers: Headers, state: string) => (deps: Dependencies) =>
     pipe(
