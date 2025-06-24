@@ -150,23 +150,26 @@ export const verifyHttpSignatures = (
     ),
   );
 
-const Signature = t.type({ nonce: NonEmptyString });
-type Signature = t.TypeOf<typeof Signature>;
-
 export const verifyState = (
   httpHeaders: Record<string, string>,
   state: string,
 ) =>
   pipe(
     httpHeaders["signature-input"],
-    Signature.decode,
-    E.mapLeft((e) => new Error(readableReportSimplified(e))),
-    TE.fromEither,
+    TE.of,
+    TE.map(
+      (signature_input) =>
+        signature_input
+          .split(";")
+          .filter((t) => t.indexOf("nonce") >= 0)
+          .pop()
+          ?.replaceAll("nonce=", "")
+          .replaceAll('"', ""),
+    ),
     TE.chain(
       TE.fromPredicate(
-        (signature) => signature.nonce === state,
-        (signature) =>
-          new Error(`${signature.nonce} is not equal to state ${state}`),
+        (nonce) => nonce === state,
+        (nonce) => new Error(`${nonce} is not equal to state ${state}`),
       ),
     ),
     TE.map(() => true as const),
