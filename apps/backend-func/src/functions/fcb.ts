@@ -6,7 +6,8 @@ import * as crypto from "crypto";
 import * as E from "fp-ts/lib/Either.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { pipe } from "fp-ts/lib/function.js";
+import * as A from "fp-ts/lib/Array.js";
+import { flow, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
@@ -27,6 +28,9 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
+import { getAlgoFromAssertionRef } from "../utils/lollipopKeys.js";
+import { Verifier, verifySignatureHeader } from "@mattrglobal/http-signatures";
+import { getCustomVerifyWithEncoding } from "../utils/httpSignature.verifiers.js";
 
 interface Dependencies {
   config: Config;
@@ -106,7 +110,7 @@ export const checkAssertion = (user: OidcUser) => (deps: Dependencies) =>
 
 /*  
   Check lollipop
-  [ ] Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
+  [X] Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
   [X] Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
   [X] Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
   [X] Verificare che la data di emissione della asserzione (IssueInstant) non sia superiore a 365 giorni fa
@@ -147,6 +151,60 @@ export const checkLollipop =
             getAssertionUserIdVsCfVerifier(user.fiscal_code)(assertion),
           ),
           TE.chain(() => getAssertionIssueInstantVerifier()(assertion)),
+          TE.chain(() =>
+            pipe(
+              TE.of(getAlgoFromAssertionRef(user.assertion_ref)),
+              TE.map((algo) => `${algo}-`),
+              TE.map((assertionRefPrefix) =>
+                user.assertion_ref.split(assertionRefPrefix),
+              ),
+              TE.chain(
+                flow(
+                  A.tail,
+                  TE.fromOption(() => new Error("Unexpected assertionRef")),
+                  TE.map((_) => _.join("")),
+                ),
+              ),
+              TE.map((thumbprint) => ({
+                httpHeaders: headers,
+                url: deps.config.FIMS_REDIRECT_URL,
+                method: "GET",
+                verifier: {
+                  verify: getCustomVerifyWithEncoding("der")({
+                    [thumbprint]: {
+                      key: publicKey,
+                    },
+                  }),
+                } as Verifier,
+              })),
+              TE.chain((params) =>
+                TE.tryCatch(
+                  async () => verifySignatureHeader(params),
+                  E.toError,
+                ),
+              ),
+              TE.map((res) =>
+                res.map((r) =>
+                  r.verified
+                    ? TE.of(true as const)
+                    : TE.left(
+                        new Error(
+                          `HTTP Request Signature failed ${JSON.stringify(
+                            r.reason,
+                          )}`,
+                        ),
+                      ),
+                ),
+              ),
+              TE.chainW((res) =>
+                res.unwrapOr(
+                  TE.left(
+                    new Error("An error occurred during signature check"),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
       TE.map(() => user),
