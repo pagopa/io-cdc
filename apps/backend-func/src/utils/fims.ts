@@ -1,4 +1,3 @@
-import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as E from "fp-ts/lib/Either.js";
 import { toError } from "fp-ts/lib/Either.js";

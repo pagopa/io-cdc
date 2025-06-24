@@ -1,9 +1,9 @@
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
-import { DOMParser } from "@xmldom/xmldom";
-import * as E from "fp-ts/lib/Either.js";
+import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
+import { addYears, isAfter } from "date-fns";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { flow, pipe } from "fp-ts/lib/function.js";
+import { pipe } from "fp-ts/lib/function.js";
+
 import { AssertionRef } from "../types/lollipop.js";
 import {
   calculateAssertionRef,
@@ -14,18 +14,8 @@ import {
   getIssueIstantFromSamlResponse,
   getRequestIDFromSamlResponse,
 } from "../utils/saml.js";
-import { addYears, isAfter } from "date-fns";
 
 type Verifier = (assertion: Document) => TE.TaskEither<Error, true>;
-
-export const parseAssertion = (assertionXml: NonEmptyString) =>
-  TE.tryCatch(
-    async () => new DOMParser().parseFromString(assertionXml, "text/xml"),
-    flow(
-      E.toError,
-      (e) => new Error(`Error parsing retrieved saml response: ${e.message}`),
-    ),
-  );
 
 export const getAssertionRefVsInRensponseToVerifier =
   (pubKey: JwkPublicKey, assertionRefFromHeader: AssertionRef): Verifier =>

@@ -1,11 +1,9 @@
 import { BaseClient, Issuer } from "openid-client";
 import { vi } from "vitest";
-import { AssertionRef } from "../types/lollipop.js";
 
 export const fimsUserMock = {
   assertion: "assertion",
-  assertion_ref:
-    "sha256-5fd924625f6ab16a19cc9807c7c506ae1813490e4ba6",
+  assertion_ref: "sha256-5fd924625f6ab16a19cc9807c7c506ae1813490e4ba6",
   auth_time: "auth_time",
   family_name: "Surname",
   fiscal_code: "AAABBB00C00D000E",

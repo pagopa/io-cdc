@@ -48,6 +48,7 @@ export const Config = t.type({
   JWT_ISSUER: NonEmptyString,
   JWT_PRIVATE_KEY: NonEmptyString,
   JWT_PUBLIC_KEY: NonEmptyString,
+  PAGOPA_IDP_KEYS_BASE_URL: NonEmptyString,
   REDIS_CLUSTER_ENABLED: t.boolean,
 
   REDIS_PASSWORD: NonEmptyString,

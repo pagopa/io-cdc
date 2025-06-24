@@ -1,11 +1,26 @@
 import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { DOMParser } from "@xmldom/xmldom";
+import * as E from "fp-ts/lib/Either.js";
 import * as O from "fp-ts/lib/Option.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
+import { SignedXml } from "xml-crypto";
+import * as xpath from "xpath";
+
+export const parseAssertion = (assertionXml: NonEmptyString) =>
+  TE.tryCatch(
+    async () => new DOMParser().parseFromString(assertionXml, "text/xml"),
+    flow(
+      E.toError,
+      (e) => new Error(`Error parsing retrieved saml response: ${e.message}`),
+    ),
+  );
 
 export const SAML_NAMESPACE = {
   ASSERTION: "urn:oasis:names:tc:SAML:2.0:assertion",
   PROTOCOL: "urn:oasis:names:tc:SAML:2.0:protocol",
+  SIGNATURE: "http://www.w3.org/2000/09/xmldsig#",
 };
 
 export const getAttributeFromSamlResponse =
@@ -67,9 +82,112 @@ export const getFiscalNumberFromSamlResponse = (
         (elem) => elem.getAttribute("Name") === "fiscalNumber",
       ),
     ),
-    O.chainNullableK(
-      (fiscalCodeElement) =>
-        fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
+    O.chainNullableK((fiscalCodeElement) =>
+      fiscalCodeElement.textContent?.trim().replace("TINIT-", ""),
     ),
     O.chain((fiscalCode) => O.fromEither(FiscalCode.decode(fiscalCode))),
   );
+
+export const getSignaturesFromSamlResponse = (doc: Document) =>
+  pipe(
+    doc.getElementsByTagNameNS(SAML_NAMESPACE.SIGNATURE, "Signature"),
+    O.fromNullable,
+    O.getOrElseW(() => {
+      throw new Error("Missing signature");
+    }),
+  );
+
+export const getIdpKeysFromMetadata = (doc: Document, idp: string) => {
+  const idpKeysSelection = xpath
+    .select(
+      `//*[name()='md:EntityDescriptor'][contains(@entityID,'${idp}')]/*[name()='md:IDPSSODescriptor']/*[name()='md:KeyDescriptor']//*[name()='ds:X509Certificate']/text()`,
+      doc,
+    )
+    ?.toString();
+
+  let keys = idpKeysSelection?.split(",");
+  if (!keys) keys = [];
+  return keys;
+};
+
+export const checkAssertionSignatures = async (
+  assertionXml: NonEmptyString,
+  idpKeysBaseUrl: NonEmptyString,
+) => {
+  let doc;
+  try {
+    doc = new DOMParser().parseFromString(assertionXml, "text/xml");
+  } catch (ex) {
+    throw "Invalid assertion";
+  }
+
+  const issuer = doc
+    .getElementsByTagNameNS(SAML_NAMESPACE.ASSERTION, "Issuer")
+    .item(0)?.textContent;
+  if (!issuer) throw "Issuer not found";
+
+  const isCie = issuer.indexOf("cie") > 0;
+
+  const issueInstant = doc
+    .getElementsByTagNameNS(SAML_NAMESPACE.PROTOCOL, "Response")
+    .item(0)
+    ?.getAttribute("IssueInstant");
+  if (!issueInstant) throw "IssueInstant not found";
+  const issueInstantTimestamp = pipe(
+    issueInstant,
+    IsoDateFromString.decode,
+    E.map((date) => Math.floor(date.getTime() / 1000).toString()),
+    E.getOrElseW(() => {
+      throw "Invalid IssueInstant";
+    }),
+  );
+
+  const idpKeyEndpoint = isCie
+    ? `${idpKeysBaseUrl}/cie`
+    : `${idpKeysBaseUrl}/spid`;
+
+  const idpKeysTimestampsResponse = await fetch(idpKeyEndpoint);
+  const idpKeysTimestamps: string[] = await idpKeysTimestampsResponse.json();
+
+  const validTimestamp = idpKeysTimestamps
+    .filter((ts) => ts < issueInstantTimestamp)
+    .sort()
+    .pop();
+  if (!validTimestamp) throw "Cannot find suitable idp key timestamp";
+
+  const idpKeysResponse = await fetch(`${idpKeyEndpoint}/${validTimestamp}`);
+  const idpKeys: string = await idpKeysResponse.text();
+  const parsedIdpKeys: Document = new DOMParser().parseFromString(
+    idpKeys,
+    "text/xml",
+  );
+
+  const keys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
+  checkSignatures(assertionXml, doc, keys);
+};
+
+export const checkSignatures = (
+  xml: NonEmptyString,
+  doc: Document,
+  keys: string[],
+) => {
+  let verified = false;
+  keys?.forEach((key) => {
+    const sig = new SignedXml({ publicCert: key });
+    const signatures = getSignaturesFromSamlResponse(doc);
+    for (let i = 0; i < signatures.length; i++) {
+      const signature = signatures.item(i)?.cloneNode(true);
+      if (!signature) throw "Cannot get signature";
+      sig.loadSignature(signature);
+      let res;
+      try {
+        res = sig.checkSignature(xml);
+        if (res) verified = true;
+      } catch (ex) {
+        continue;
+      }
+    }
+  });
+
+  if (!verified) throw "Cannot verify signature";
+};

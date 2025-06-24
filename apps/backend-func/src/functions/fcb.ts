@@ -1,14 +1,14 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
+import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as E from "fp-ts/lib/Either.js";
-import { pipe } from "fp-ts/lib/function.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
-import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
 import { fromBase64 } from "../utils/base64.js";
@@ -22,10 +22,10 @@ import {
   getAssertionIssueInstantVerifier,
   getAssertionRefVsInRensponseToVerifier,
   getAssertionUserIdVsCfVerifier,
-  parseAssertion,
 } from "../utils/lollipop.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
+import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
@@ -88,12 +88,28 @@ export const checkIssuer = (issuer: string) => (deps: Dependencies) =>
     ),
   );
 
+export const checkAssertion = (user: OidcUser) => (deps: Dependencies) =>
+  pipe(
+    TE.tryCatch(
+      () =>
+        checkAssertionSignatures(
+          user.assertion,
+          deps.config.PAGOPA_IDP_KEYS_BASE_URL,
+        ),
+      E.toError,
+    ),
+    TE.map(() => user),
+    TE.mapLeft((e) =>
+      responseError(401, `Assertion|${e.message}`, "Unauthorized"),
+    ),
+  );
+
 /*  
   Check lollipop
   [ ] Verificare che l’assertion SAML restituita (claim assertion) sia firmata da un IDP (SPID o CIE)
   [X] Verificare che il campo InResponseTo della assertion SAML corrisponda a assertion_ref
   [X] Verificare che il campo FiscalNumber corrisponda ai claim sub o fiscal_code
-  [X] Verificare che la data di emissione della asserzione (NotOnOrAfter) non sia superiore a 365 giorni
+  [X] Verificare che la data di emissione della asserzione (IssueInstant) non sia superiore a 365 giorni fa
   [X] Assertion_ref ha il formato algoritmo-thumbprint(public key), verificare se sia valido generando il thumbprint 
     del claim public_key usando l’algoritmo indicato (ad esempio sha256)
   [ ] Verificare la firma dell’header Signature usando il contenuto del claim public_key
@@ -133,7 +149,7 @@ export const checkLollipop =
           TE.chain(() => getAssertionIssueInstantVerifier()(assertion)),
         ),
       ),
-      TE.chain(() => TE.of(user)),
+      TE.map(() => user),
       TE.mapLeft((e) =>
         responseError(401, `Lollipop|${e.message}`, "Unauthorized"),
       ),
@@ -184,6 +200,7 @@ export const makeFimsCallbackHandler: H.Handler<
       pipe(
         checkIssuer(query.iss),
         RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
+        RTE.chain((user) => checkAssertion(user)),
         RTE.chain((user) => checkLollipop(user, headers)),
         RTE.chain((user) => createSessionAndRedirect(user as OidcUser)),
       ),
