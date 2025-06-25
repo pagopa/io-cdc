@@ -31,10 +31,7 @@ export class QueueStorage {
     );
 
   enqueueMessage = (queueName: string, message: string) =>
-    pipe(
-      this.createQueue(queueName),
-      TE.chain(() => this.createMessage(queueName, message)),
-    );
+    this.createMessage(queueName, message);
 
   enqueuePendingCardRequestMessage = (message: PendingCardRequestMessage) =>
     this.enqueueMessage(this.config.CARD_REQUEST_QUEUE_NAME, toBase64(message));
