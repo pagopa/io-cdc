@@ -9,10 +9,6 @@ import { Config } from "../config.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { toBase64 } from "./base64.js";
 
-interface QueueItem {
-  name: string;
-}
-
 export class QueueStorage {
   config: Config;
 
@@ -26,48 +22,8 @@ export class QueueStorage {
       TE.map(() => true as const),
     );
 
-  createQueue = (queueName: string) =>
-    pipe(
-      TE.tryCatch(
-        async () =>
-          this.queueServiceClient.listQueues().byPage({ maxPageSize: 100 }),
-        E.toError,
-      ),
-      TE.chain((iterator) =>
-        TE.tryCatch(async () => {
-          const page = (await iterator.next()).value;
-          return page.queueItems || [];
-        }, E.toError),
-      ),
-      TE.map((pageItems: QueueItem[]) => pageItems.map((i) => i.name)),
-      TE.chain(
-        flow(
-          O.fromPredicate((queues) => queues.indexOf(queueName) < 0),
-          O.fold(
-            // in we find the queue in queues we are done
-            () => TE.of(true as const),
-            // in we don't find the queue in queues we create it
-            () =>
-              pipe(
-                TE.tryCatch(
-                  () => this.queueServiceClient.createQueue(queueName),
-                  E.toError,
-                ),
-                TE.map(() => true as const),
-              ),
-          ),
-        ),
-      ),
-    );
-
-  enqueueMessage = (queueName: string, message: string) =>
-    pipe(
-      this.createQueue(queueName),
-      TE.chain(() => this.createMessage(queueName, message)),
-    );
-
   enqueuePendingCardRequestMessage = (message: PendingCardRequestMessage) =>
-    this.enqueueMessage(this.config.CARD_REQUEST_QUEUE_NAME, toBase64(message));
+    this.createMessage(this.config.CARD_REQUEST_QUEUE_NAME, toBase64(message));
 
   queueServiceClient: QueueServiceClient;
 

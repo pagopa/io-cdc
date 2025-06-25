@@ -31,3 +31,13 @@ module "storage_be" {
 
   tags = local.tags
 }
+
+resource "azurerm_storage_queue" "card_request" {
+  name                 = "card-request"
+  storage_account_name = module.storage_be.cdc_storage_be.name
+}
+
+resource "azurerm_storage_queue" "message" {
+  name                 = "message"
+  storage_account_name = module.storage_be.cdc_storage_be.name
+}
