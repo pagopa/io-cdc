@@ -82,6 +82,6 @@ export const ProcessPendingRequestHandler: H.Handler<
   ),
 );
 
-export const ProcessPendingRequestFunction = azureFunction(
+export const ProcessPendingRequestFn = azureFunction(
   ProcessPendingRequestHandler,
 );

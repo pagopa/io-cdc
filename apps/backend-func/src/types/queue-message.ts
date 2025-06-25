@@ -1,10 +1,14 @@
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
-
 import { Year } from "../models/card_request.js";
+import * as t from "io-ts";
+import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 
-export interface PendingCardRequestMessage {
-  fiscal_code: FiscalCode;
-  request_date: Date;
-  request_id: NonEmptyString;
-  years: Year[];
-}
+export const PendingCardRequestMessage = t.type({
+  fiscal_code: FiscalCode,
+  request_date: IsoDateFromString,
+  request_id: NonEmptyString,
+  years: t.array(Year),
+});
+export type PendingCardRequestMessage = t.TypeOf<
+  typeof PendingCardRequestMessage
+>;
