@@ -15,6 +15,7 @@ import { getFimsClient } from "./utils/fims.js";
 import { QueueStorage } from "./utils/queue.js";
 import { getRedisClientFactory } from "./utils/redis.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
+import { LoadTestFn } from "./functions/load-test.js";
 
 registerAzureFunctionHooks(app);
 
@@ -111,4 +112,16 @@ app.storageQueue("ProcessPendingRequest", {
   connection: "STORAGE_ACCOUNT",
   handler: ProcessPendingRequest,
   queueName: config.CARD_REQUEST_QUEUE_NAME,
+});
+
+const LoadTest = LoadTestFn({
+  config,
+  cosmosDbClient,
+  queueStorage,
+});
+app.http("LoadTest", {
+  authLevel: "function",
+  handler: LoadTest,
+  methods: ["POST"],
+  route: "api/v1/load-test",
 });

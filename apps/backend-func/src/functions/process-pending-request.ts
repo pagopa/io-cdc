@@ -51,6 +51,7 @@ export const saveCardRequests =
         pipe(
           years,
           A.map((year) =>
+            // call sogei
             repository.insert({
               createdAt: pendingCardRequestMessage.request_date,
               fiscalCode: pendingCardRequestMessage.fiscal_code,
