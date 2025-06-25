@@ -1,7 +1,7 @@
 import { CosmosClient } from "@azure/cosmos";
 import * as H from "@pagopa/handler-kit";
 import { azureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as A from "fp-ts/lib/Array.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
@@ -12,6 +12,7 @@ import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { RedisClientFactory } from "../utils/redis.js";
+import { ulid } from "ulid";
 
 interface Dependencies {
   config: Config;
@@ -53,7 +54,8 @@ export const saveCardRequests =
             repository.insert({
               createdAt: pendingCardRequestMessage.request_date,
               fiscalCode: pendingCardRequestMessage.fiscal_code,
-              id: pendingCardRequestMessage.request_id,
+              requestId: pendingCardRequestMessage.request_id,
+              id: ulid() as NonEmptyString,
               year,
             }),
           ),

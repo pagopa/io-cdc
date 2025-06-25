@@ -8,6 +8,7 @@ export const PendingRequest = t.type({
   fiscalCode: FiscalCode,
   requestDate: IsoDateFromString,
   requestId: NonEmptyString,
+  id: NonEmptyString,
   years: t.array(Year),
 });
 export type PendingRequest = t.TypeOf<typeof PendingRequest>;

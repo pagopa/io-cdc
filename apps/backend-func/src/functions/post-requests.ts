@@ -89,6 +89,7 @@ export const saveNewCardRequests =
                 fiscalCode,
                 requestDate,
                 requestId,
+                id: ulid() as NonEmptyString,
                 years: years,
               }),
               TE.chain(() =>
