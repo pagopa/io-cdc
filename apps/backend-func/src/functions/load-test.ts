@@ -28,14 +28,14 @@ const generateFakeFiscalCodes = () => {
   // generate random fiscal codes
   let fiscalCodes: FiscalCode[] = [];
   for (let i = 0; i < 10000; i++) {
-    const paddedNumber = (i + "000000").substring(0, 7);
+    const paddedNumber = "000000" + i;
     const tokens: string[] = paddedNumber.split("");
     fiscalCodes.push(
-      `SREGPP${tokens[0]}${tokens[1]}A${tokens[2]}${tokens[3]}G${tokens[4]}${tokens[5]}${tokens[6]}R` as FiscalCode,
+      `SREGPP${tokens.pop()}${tokens.pop()}A${tokens.pop()}${tokens.pop()}G${tokens.pop()}${tokens.pop()}${tokens.pop()}R` as FiscalCode,
     );
   }
   return fiscalCodes;
-}
+};
 
 export const saveNewCardRequests = (deps: Dependencies) =>
   pipe(
