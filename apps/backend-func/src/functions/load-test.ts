@@ -75,24 +75,24 @@ export const saveNewCardRequests = (deps: Dependencies) =>
             ),
           ),
         ),
-        A.sequence(TE.ApplicativePar),
+        A.sequence(TE.ApplicativeSeq),
       ),
     ),
     TE.map(() => true as const),
     TE.mapLeft(errorToInternalError),
   );
 
-export const postCardRequests = () => (deps: Dependencies) =>
-  TE.of(saveNewCardRequests(deps));
+export const postCardRequests = (deps: Dependencies) =>
+  saveNewCardRequests(deps);
 
 export const makeLoadTestHandler: H.Handler<
   H.HttpRequest,
   | H.HttpResponse<string, 201>
   | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
   Dependencies
-> = H.of((req) =>
+> = H.of(() =>
   pipe(
-    postCardRequests(),
+    postCardRequests,
     RTE.map(() => pipe(H.successJson("gotit!"), H.withStatusCode(201))),
     responseErrorToHttpError,
   ),
