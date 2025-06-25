@@ -108,7 +108,7 @@ const ProcessPendingRequest = ProcessPendingRequestFn({
   inputDecoder: PendingCardRequestMessage,
 });
 app.storageQueue("ProcessPendingRequest", {
-  connection: "STORAGE_ACCOUNT__queueServiceUri",
+  connection: "STORAGE_ACCOUNT",
   handler: ProcessPendingRequest,
   queueName: config.CARD_REQUEST_QUEUE_NAME,
 });
