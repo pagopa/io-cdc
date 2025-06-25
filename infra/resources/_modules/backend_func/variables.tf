@@ -107,9 +107,9 @@ variable "cosmosdb_cdc_database_name" {
   sensitive   = true
 }
 
-variable "storage_account_connection_string" {
+variable "storage_account_queue_uri" {
   type        = string
-  description = "Connection string to storage account"
+  description = "Storage account queue host"
   sensitive   = true
 }
 

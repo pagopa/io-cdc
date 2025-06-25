@@ -45,7 +45,7 @@ export class QueueStorage {
     this.config = config;
     const credential = new DefaultAzureCredential();
     this.queueServiceClient = new QueueServiceClient(
-      this.config.STORAGE_ACCOUNT_CONNECTION_STRING,
+      this.config.STORAGE_ACCOUNT__queueServiceUri,
       credential,
     );
   }

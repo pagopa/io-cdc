@@ -64,8 +64,8 @@ data "azurerm_key_vault_secret" "cosmosdb_cdc_key" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "storage_account_connection_string" {
-  name         = "STORAGE-ACCOUNT-CONNECTION-STRING"
+data "azurerm_key_vault_secret" "storage_account_queue_uri" {
+  name         = "STORAGE-ACCOUNT-QUEUE-URI"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 

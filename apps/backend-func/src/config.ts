@@ -58,7 +58,7 @@ export const Config = t.type({
   SERVICES_API_KEY: NonEmptyString,
 
   SERVICES_API_URL: NonEmptyString,
-  STORAGE_ACCOUNT_CONNECTION_STRING: NonEmptyString,
+  STORAGE_ACCOUNT__queueServiceUri: NonEmptyString,
 
   isProduction: t.boolean,
 });
