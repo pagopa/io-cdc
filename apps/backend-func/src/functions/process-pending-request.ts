@@ -59,7 +59,7 @@ export const saveCardRequests =
               year,
             }),
           ),
-          A.sequence(TE.ApplicativeSeq),
+          A.sequence(TE.ApplicativePar),
         ),
       ),
     );
