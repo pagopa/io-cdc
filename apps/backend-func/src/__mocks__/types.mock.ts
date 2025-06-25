@@ -9,6 +9,7 @@ export const aValidFiscalCode = "AAABBB00C00D000E" as FiscalCode;
 export const aCardRequest: CardRequest = {
   createdAt: new Date(),
   fiscalCode: aValidFiscalCode,
+  requestId: "anystringedid" as NonEmptyString,
   id: "anystringedid" as NonEmptyString,
   year: "2020",
 };
