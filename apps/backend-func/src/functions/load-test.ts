@@ -27,11 +27,11 @@ interface Dependencies {
 const generateFakeFiscalCodes = () => {
   // generate random fiscal codes
   let fiscalCodes: FiscalCode[] = [];
-  for (let i = 0; i < 10000; i++) {
-    const paddedNumber = "000000" + i;
+  for (let i = 0; i < 10; i++) {
+    const paddedNumber = i + "000000";
     const tokens: string[] = paddedNumber.split("");
     fiscalCodes.push(
-      `SREGPP${tokens.pop()}${tokens.pop()}A${tokens.pop()}${tokens.pop()}G${tokens.pop()}${tokens.pop()}${tokens.pop()}R` as FiscalCode,
+      `SREGPP${tokens.shift()}${tokens.shift()}A${tokens.shift()}${tokens.shift()}G${tokens.shift()}${tokens.shift()}${tokens.shift()}R` as FiscalCode,
     );
   }
   return fiscalCodes;
