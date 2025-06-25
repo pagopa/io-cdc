@@ -27,7 +27,7 @@ interface Dependencies {
 const generateFakeFiscalCodes = () => {
   // generate random fiscal codes
   let fiscalCodes: FiscalCode[] = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     const paddedNumber = i + "000000";
     const tokens: string[] = paddedNumber.split("");
     fiscalCodes.push(

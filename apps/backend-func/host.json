@@ -10,7 +10,7 @@
     "visibilityTimeout": "00:01:00",
     "batchSize": 1,
     "maxDequeueCount": 1,
-    "newBatchThreshold": 1
+    "newBatchThreshold": 0
   },
   "extensions": {
     "http": {
