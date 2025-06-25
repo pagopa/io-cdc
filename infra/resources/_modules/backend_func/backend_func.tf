@@ -35,6 +35,10 @@ module "cdc_backend_func" {
       "AzureWebJobs.ProcessPendingRequest.Disabled" = "1"
   })
 
+  sticky_app_setting_names = [
+    "AzureWebJobs.ProcessPendingRequest.Disabled"
+  ]
+
   tags = var.tags
 }
 
