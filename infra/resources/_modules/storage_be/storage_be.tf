@@ -11,11 +11,12 @@ module "cdc_storage_be" {
     instance_number = var.instance_number
   }
 
-  resource_group_name                 = var.resource_group_name
-  subnet_pep_id                       = var.subnet_pep_id
+  resource_group_name = var.resource_group_name
+  subnet_pep_id       = var.subnet_pep_id
 
-  static_website = {
-    enabled = true
+  subservices_enabled = {
+    blob  = false
+    queue = true
   }
 
   tier = "l"
