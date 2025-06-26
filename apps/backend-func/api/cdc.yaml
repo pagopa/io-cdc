@@ -5,125 +5,160 @@ info:
   version: 1.0.0
 servers:
 - url: https://ssotest.cartadellacultura.it
-security:
-  - BearerAuth: []
+tags:
+- name: unsecured
+  description: metodi di utilità
+- name: /secured/utente
+  description: metodi inerenti all'utente
 paths:
   /CDCUtenteWS/rest/secured/beneficiario/stato:
     get:
-      operationId: getStatoBeneficiario
-      description: Get
+      tags:
+      - /secured/utente
+      summary: controllo anno registrazione per il beneficiario
+      operationId: stato
+      security:
+        - JwtAuth: []  
       responses:
-        200:
-          description: Default response
+        "200":
+          description: Tutto OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListaRegistratoBean'
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemBean'
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
   /CDCUtenteWS/rest/secured/beneficiario/versione:
     get:
-      operationId: getVersioneBeneficiario
-      description: Get
+      tags:
+      - /secured/utente
+      security:
+        - JwtAuth: [] 
       responses:
-        200:
+        default:
           description: Default response
   /CDCUtenteWS/rest/secured/beneficiario/registrazione:
     post:
-      operationId: postRegistrazioneBeneficiario
-      description: Post
+      tags:
+      - /secured/utente
+      summary: 'Prima registrazione del beneficiario sul db '
+      operationId: registrazione
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/InputBeneficiarioBean'
+      security:
+        - JwtAuth: [] 
       responses:
-        200:
-          description: Default response
+        "200":
+          description: Tutto OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListaEsitoRichiestaBean'
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemBean'
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
   /CDCUtenteWS/rest/unsecured/versione:
     get:
-      operationId: getVersione
-      description: Get
+      tags:
+      - unsecured
       responses:
-        200:
+        default:
           description: Default response
           content:
             text/plain: {}
 components:
   securitySchemes:
-    BearerAuth:
+    JwtAuth:
       type: apiKey
       in: header
       name: Authorization
   schemas:
-    EsercenteBuonoBean:
+    RegistratoBean:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        nome:
+        statoBeneficiario:
           type: string
-        tipo:
+        annoRiferimento:
           type: string
-    VoucherGeneratorOutputBean:
-      type: object
-      properties:
-        codErrore:
-          type: string
-        descrErrore:
-          type: string
-        status:
-          type: string
-          enum:
-          - NO_INPUT
-          - ANNI_RIFERIMENTO_NON_FORNITI
-          - LISTA_ANNI_VUOTA
-          - FORMATO_ANNI_ERRATO
-          - INPUT_SUPERIORE_AL_CONSENTITO
-        valore:
-          type: number
-        stato:
-          type: string
-        dataCreazione:
-          type: string
-          format: date-time
-        dataSpesa:
-          type: string
-          format: date-time
-        codice:
-          type: string
-        annoCarta:
-          type: string
-        esercente:
-          $ref: '#/components/schemas/EsercenteBuonoBean'
-        qrCode:
-          $ref: '#/components/schemas/MimeBean'
-        barCode:
-          $ref: '#/components/schemas/MimeBean'
-    MimeBean:
-      type: object
-      properties:
-        mime_type:
-          type: string
-        content:
-          type: string
-    SimpleResponseBean:
-      type: object
-      properties:
-        codErrore:
-          type: string
-        descrErrore:
-          type: string
-        status:
-          type: string
-          enum:
-          - NO_INPUT
-          - ANNI_RIFERIMENTO_NON_FORNITI
-          - LISTA_ANNI_VUOTA
-          - FORMATO_ANNI_ERRATO
-          - INPUT_SUPERIORE_AL_CONSENTITO
     InputBeneficiarioBean:
       type: object
       properties:
+        tsRichiestaEffettuata:
+          type: string
+          format: date-time
         anniRif:
           type: array
           items:
             $ref: '#/components/schemas/AnniBeneficiario'
+    EsitoRichiestaBean:
+      type: object
+      properties:
+        esitoRichiesta:
+          type: string
+          enum:
+          - INIZIATIVA_TERMINATA
+          - ANNO_NON_AMMISSIBILE
+          - CIT_REGISTRATO
+          - OK
+        annoRiferimento:
+          type: string
+    ListaEsitoRichiestaBean:
+      type: object
+      properties:
+        listaEsitoRichiestaPerAnno:
+          type: array
+          items:
+            $ref: '#/components/schemas/EsitoRichiestaBean'
+    ProblemBean:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+          - NO_INPUT
+          - ANNI_RIFERIMENTO_NON_FORNITI
+          - LISTA_ANNI_VUOTA
+          - FORMATO_ANNI_ERRATO
+          - INPUT_SUPERIORE_AL_CONSENTITO
+        detail:
+          type: string
+        instance:
+          type: string
+        errorCode:
+          type: string
+    ListaRegistratoBean:
+      type: object
+      properties:
+        listaStatoPerAnno:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegistratoBean'
     AnniBeneficiario:
       type: object
       properties:
