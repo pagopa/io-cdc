@@ -4,31 +4,29 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
-import { PendingRequest } from "../models/pending_request.js";
+import { RequestAudit } from "../models/request_audit.js";
 
-interface PendingRequestRepository {
+interface RequestAuditRepository {
   getAllByFiscalCode: (
-    fiscalCode: PendingRequest["fiscalCode"],
-  ) => TE.TaskEither<Error, PendingRequest[]>;
+    fiscalCode: RequestAudit["fiscalCode"],
+  ) => TE.TaskEither<Error, RequestAudit[]>;
 
-  insert: (pendingRequest: PendingRequest) => TE.TaskEither<Error, void>;
+  insert: (RequestAudit: RequestAudit) => TE.TaskEither<Error, void>;
 }
 
-export class CosmosDbPendingRequestRepository
-  implements PendingRequestRepository
-{
-  #pendingRequestContainer: Container;
+export class CosmosDbRequestAuditRepository implements RequestAuditRepository {
+  #RequestAuditContainer: Container;
 
   constructor(db: Database) {
-    this.#pendingRequestContainer = db.container("pending-requests");
+    this.#RequestAuditContainer = db.container("requests-audit");
   }
 
   getAllByFiscalCode(
-    fiscalCode: PendingRequest["fiscalCode"],
-  ): TE.TaskEither<Error, PendingRequest[]> {
+    fiscalCode: RequestAudit["fiscalCode"],
+  ): TE.TaskEither<Error, RequestAudit[]> {
     return pipe(
       TE.tryCatch(async () => {
-        const { resources: items } = await this.#pendingRequestContainer.items
+        const { resources: items } = await this.#RequestAuditContainer.items
           .readAll({
             partitionKey: fiscalCode,
           })
@@ -37,7 +35,7 @@ export class CosmosDbPendingRequestRepository
       }, E.toError),
       TE.chainW(
         flow(
-          t.array(PendingRequest).decode,
+          t.array(RequestAudit).decode,
           E.mapLeft(
             () =>
               new Error(
@@ -50,9 +48,9 @@ export class CosmosDbPendingRequestRepository
     );
   }
 
-  insert(pendingRequest: PendingRequest) {
+  insert(RequestAudit: RequestAudit) {
     return TE.tryCatch(async () => {
-      await this.#pendingRequestContainer.items.create(pendingRequest);
+      await this.#RequestAuditContainer.items.create(RequestAudit);
     }, E.toError);
   }
 }

@@ -6,13 +6,13 @@ import * as A from "fp-ts/lib/Array.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
+import { ulid } from "ulid";
 
 import { Config } from "../config.js";
 import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { RedisClientFactory } from "../utils/redis.js";
-import { ulid } from "ulid";
 
 interface Dependencies {
   config: Config;
@@ -55,8 +55,8 @@ export const saveCardRequests =
             repository.insert({
               createdAt: pendingCardRequestMessage.request_date,
               fiscalCode: pendingCardRequestMessage.fiscal_code,
-              requestId: pendingCardRequestMessage.request_id,
               id: ulid() as NonEmptyString,
+              requestId: pendingCardRequestMessage.request_id,
               year,
             }),
           ),

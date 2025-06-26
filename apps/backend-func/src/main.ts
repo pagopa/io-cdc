@@ -8,14 +8,14 @@ import { FimsCallbackFn } from "./functions/fcb.js";
 import { GetCardRequestsFn } from "./functions/get-requests.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
+import { LoadTestFn } from "./functions/load-test.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
+import { PendingCardRequestMessage } from "./types/queue-message.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 import { getFimsClient } from "./utils/fims.js";
 import { QueueStorage } from "./utils/queue.js";
 import { getRedisClientFactory } from "./utils/redis.js";
-import { PendingCardRequestMessage } from "./types/queue-message.js";
-import { LoadTestFn } from "./functions/load-test.js";
 
 registerAzureFunctionHooks(app);
 
@@ -103,10 +103,10 @@ app.http("PostCardRequests", {
 });
 
 const ProcessPendingRequest = ProcessPendingRequestFn({
-  redisClientFactory,
   config,
   cosmosDbClient,
   inputDecoder: PendingCardRequestMessage,
+  redisClientFactory,
 });
 app.storageQueue("ProcessPendingRequest", {
   connection: "STORAGE_ACCOUNT",

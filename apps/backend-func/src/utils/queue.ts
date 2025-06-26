@@ -1,9 +1,8 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import { QueueServiceClient } from "@azure/storage-queue";
 import * as E from "fp-ts/lib/Either.js";
-import * as O from "fp-ts/lib/Option.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { flow, pipe } from "fp-ts/lib/function.js";
+import { pipe } from "fp-ts/lib/function.js";
 
 import { Config } from "../config.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";

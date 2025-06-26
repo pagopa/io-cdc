@@ -49,8 +49,8 @@ resource "azurerm_cosmosdb_sql_container" "card_requests" {
   }
 }
 
-resource "azurerm_cosmosdb_sql_container" "pending_requests" {
-  name                = "pending-requests"
+resource "azurerm_cosmosdb_sql_container" "requests-audit" {
+  name                = "requests-audit"
   resource_group_name = var.resource_group
 
   account_name        = module.cdc_cosmos_account.name

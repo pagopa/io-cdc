@@ -4,11 +4,11 @@ import * as t from "io-ts";
 
 import { Year } from "./card_request.js";
 
-export const PendingRequest = t.type({
+export const RequestAudit = t.type({
   fiscalCode: FiscalCode,
+  id: NonEmptyString,
   requestDate: IsoDateFromString,
   requestId: NonEmptyString,
-  id: NonEmptyString,
   years: t.array(Year),
 });
-export type PendingRequest = t.TypeOf<typeof PendingRequest>;
+export type RequestAudit = t.TypeOf<typeof RequestAudit>;
