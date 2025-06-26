@@ -42,6 +42,7 @@ No requirements.
 | <a name="input_algorithm_encryption"></a> [algorithm\_encryption](#input\_algorithm\_encryption) | Encryption's algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_keys"></a> [algorithm\_keys](#input\_algorithm\_keys) | Keys' algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_signature"></a> [algorithm\_signature](#input\_algorithm\_signature) | Signature's algorithm | `string` | n/a | yes |
+| <a name="input_card_request_queue_name"></a> [card\_request\_queue\_name](#input\_card\_request\_queue\_name) | Card request queue name | `string` | n/a | yes |
 | <a name="input_cdc_backend_func_key"></a> [cdc\_backend\_func\_key](#input\_cdc\_backend\_func\_key) | The key for apim to call functions APIs | `string` | n/a | yes |
 | <a name="input_cdc_backend_func_url"></a> [cdc\_backend\_func\_url](#input\_cdc\_backend\_func\_url) | The url for apim to call functions APIs | `string` | n/a | yes |
 | <a name="input_cdc_base_url"></a> [cdc\_base\_url](#input\_cdc\_base\_url) | The base url for CDC redirects | `string` | n/a | yes |
@@ -66,6 +67,7 @@ No requirements.
 | <a name="input_jwt_public_key"></a> [jwt\_public\_key](#input\_jwt\_public\_key) | JWT public key | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Azure region | `string` | n/a | yes |
 | <a name="input_nat_gateway_id"></a> [nat\_gateway\_id](#input\_nat\_gateway\_id) | The ID of the NAT Gateway | `string` | n/a | yes |
+| <a name="input_pagopa_idp_keys_base_url"></a> [pagopa\_idp\_keys\_base\_url](#input\_pagopa\_idp\_keys\_base\_url) | The base url to get idp keys | `string` | n/a | yes |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | IO Prefix | `string` | n/a | yes |
 | <a name="input_private_dns_zone_resource_group_name"></a> [private\_dns\_zone\_resource\_group\_name](#input\_private\_dns\_zone\_resource\_group\_name) | Resource group name of the private DNS zone to use for private endpoints | `string` | n/a | yes |
 | <a name="input_private_endpoint_subnet_id"></a> [private\_endpoint\_subnet\_id](#input\_private\_endpoint\_subnet\_id) | Private Endpoints subnet Id | `string` | n/a | yes |
@@ -76,6 +78,7 @@ No requirements.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of the resource group where resources will be created | `string` | n/a | yes |
 | <a name="input_services_api_key"></a> [services\_api\_key](#input\_services\_api\_key) | Services API key | `string` | n/a | yes |
 | <a name="input_services_api_url"></a> [services\_api\_url](#input\_services\_api\_url) | Services API url | `string` | n/a | yes |
+| <a name="input_storage_account_queue_uri"></a> [storage\_account\_queue\_uri](#input\_storage\_account\_queue\_uri) | Storage account queue host | `string` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | A predefined subnet id | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Resource tags | `map(any)` | n/a | yes |
 | <a name="input_virtual_network"></a> [virtual\_network](#input\_virtual\_network) | Virtual network to create subnet in | <pre>object({<br/>    name                = string<br/>    resource_group_name = string<br/>  })</pre> | n/a | yes |

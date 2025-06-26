@@ -17,6 +17,7 @@ export const CardRequest = t.type({
   createdAt: IsoDateFromString,
   fiscalCode: FiscalCode,
   id: NonEmptyString,
+  requestId: NonEmptyString,
   year: Year,
 });
 export type CardRequest = t.TypeOf<typeof CardRequest>;

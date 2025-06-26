@@ -1,4 +1,5 @@
 import * as E from "fp-ts/lib/Either.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -8,6 +9,10 @@ import {
   getCosmosDbClientInstanceMock,
   setMockedItems,
 } from "../../__mocks__/cosmosdb.mock.js";
+import {
+  enqueueMessageMock,
+  queueStorageMock,
+} from "../../__mocks__/queue.mock.js";
 import {
   getRedisClientFactoryMock,
   redisGetMock,
@@ -43,6 +48,7 @@ describe("post-requests | getSession", () => {
     const res = await getSession("sessiontoken")({
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })();
     expect(E.isRight(res)).toBe(true);
@@ -55,6 +61,7 @@ describe("post-requests | getSession", () => {
     const res = await getSession("sessiontoken")({
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })();
     expect(E.isLeft(res)).toBe(true);
@@ -77,6 +84,7 @@ describe("post-requests | getExistingCardRequests", () => {
     const res = await getExistingCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })();
     expect(E.isRight(res)).toBe(true);
@@ -89,6 +97,7 @@ describe("post-requests | getExistingCardRequests", () => {
     const res = await getExistingCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })();
     expect(E.isRight(res)).toBe(true);
@@ -101,6 +110,7 @@ describe("post-requests | getExistingCardRequests", () => {
     const res = await getExistingCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })();
     expect(E.isLeft(res)).toBe(true);
@@ -141,12 +151,14 @@ describe("post-requests | saveNewCardRequests", () => {
     const res = await saveNewCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })(["2020", "2021"])();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res))
       expect(res.right).toEqual([{ year: "2020" }, { year: "2021" }]);
-    expect(cosmosCreateMock).toBeCalledTimes(2);
+    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(enqueueMessageMock).toBeCalledTimes(1);
   });
 
   it("should return InternalServerError if cosmos fails", async () => {
@@ -155,6 +167,7 @@ describe("post-requests | saveNewCardRequests", () => {
     const res = await saveNewCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })(["2020", "2021"])();
     expect(E.isLeft(res)).toBe(true);
@@ -164,7 +177,30 @@ describe("post-requests | saveNewCardRequests", () => {
         message: "Error",
         title: "Internal Server Error",
       });
-    expect(cosmosCreateMock).toBeCalledTimes(2);
+    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(enqueueMessageMock).toBeCalledTimes(0);
+  });
+
+  it("should return InternalServerError if queue storage fails", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock();
+    enqueueMessageMock.mockImplementationOnce(() =>
+      TE.left(new Error("Error")),
+    );
+    const res = await saveNewCardRequests(aValidFiscalCode, {
+      config,
+      cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
+      redisClientFactory: redisClientFactoryMock,
+    })(["2020", "2021"])();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 500,
+        message: "Error",
+        title: "Internal Server Error",
+      });
+    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(enqueueMessageMock).toBeCalledTimes(1);
   });
 });
 
@@ -179,10 +215,12 @@ describe("post-requests | postCardRequests", () => {
     const res = await postCardRequests(aValidFiscalCode, ["2020", "2021"])({
       config,
       cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
     })();
     if (E.isRight(res))
       expect(res.right).toEqual([{ year: "2020" }, { year: "2021" }]);
-    expect(cosmosCreateMock).toBeCalledTimes(2);
+    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(enqueueMessageMock).toBeCalledTimes(1);
   });
 });
