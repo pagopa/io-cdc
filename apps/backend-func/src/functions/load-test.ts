@@ -21,10 +21,9 @@ import {
 } from "../utils/errors.js";
 import { generateFakeFiscalCodes } from "../utils/fake-generator.js";
 import { QueueStorage } from "../utils/queue.js";
-import { NumberFromString } from "@pagopa/ts-commons/lib/numbers.js";
 
 const QueryParams = t.type({
-  n: NumberFromString,
+  n: t.string,
 });
 type QueryParams = t.TypeOf<typeof QueryParams>;
 
@@ -44,7 +43,7 @@ export const insertFakeNewCardRequests =
       ),
       TE.chain((repository) =>
         pipe(
-          generateFakeFiscalCodes(params.n),
+          generateFakeFiscalCodes(parseInt(params.n)),
           A.map((fiscalCode) =>
             pipe(
               TE.Do,
