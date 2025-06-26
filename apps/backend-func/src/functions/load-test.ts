@@ -43,7 +43,7 @@ export const insertFakeNewCardRequests =
       ),
       TE.chain((repository) =>
         pipe(
-          generateFakeFiscalCodes(parseInt(params.n)),
+          generateFakeFiscalCodes(parseInt(params.n, 10)),
           A.map((fiscalCode) =>
             pipe(
               TE.Do,
