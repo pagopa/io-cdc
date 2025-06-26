@@ -8,9 +8,13 @@ import { FimsCallbackFn } from "./functions/fcb.js";
 import { GetCardRequestsFn } from "./functions/get-requests.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
+import { LoadTestFn } from "./functions/load-test.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
+import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
+import { PendingCardRequestMessage } from "./types/queue-message.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 import { getFimsClient } from "./utils/fims.js";
+import { QueueStorage } from "./utils/queue.js";
 import { getRedisClientFactory } from "./utils/redis.js";
 
 registerAzureFunctionHooks(app);
@@ -20,6 +24,9 @@ const config = getConfigOrThrow();
 
 // Fims
 const fimsClient = getFimsClient(config);
+
+// Queue Storage
+const queueStorage: QueueStorage = new QueueStorage(config);
 
 // CosmosDB singleton
 const cosmosDbClient = getCosmosDbClientInstance(
@@ -85,6 +92,7 @@ app.http("GetCardRequests", {
 const PostCardRequests = PostCardRequestsFn({
   config,
   cosmosDbClient,
+  queueStorage,
   redisClientFactory,
 });
 app.http("PostCardRequests", {
@@ -92,4 +100,28 @@ app.http("PostCardRequests", {
   handler: PostCardRequests,
   methods: ["POST"],
   route: "api/v1/card-requests",
+});
+
+const ProcessPendingRequest = ProcessPendingRequestFn({
+  config,
+  cosmosDbClient,
+  inputDecoder: PendingCardRequestMessage,
+  redisClientFactory,
+});
+app.storageQueue("ProcessPendingRequest", {
+  connection: "STORAGE_ACCOUNT",
+  handler: ProcessPendingRequest,
+  queueName: config.CARD_REQUEST_QUEUE_NAME,
+});
+
+const LoadTest = LoadTestFn({
+  config,
+  cosmosDbClient,
+  queueStorage,
+});
+app.http("LoadTest", {
+  authLevel: "function",
+  handler: LoadTest,
+  methods: ["POST"],
+  route: "api/v1/load-test",
 });

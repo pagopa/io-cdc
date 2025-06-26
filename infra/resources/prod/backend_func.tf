@@ -21,7 +21,7 @@ module "backend_func" {
     resource_group_name = data.azurerm_virtual_network.vnet_common_itn.resource_group_name
     name                = data.azurerm_virtual_network.vnet_common_itn.name
   }
-  
+
   pagopa_idp_keys_base_url = data.azurerm_key_vault_secret.pagopa_idp_keys_base_url.value
 
   cdc_base_url = data.azurerm_key_vault_secret.cdc_base_url.value
@@ -30,8 +30,8 @@ module "backend_func" {
   cosmosdb_cdc_key           = data.azurerm_key_vault_secret.cosmosdb_cdc_key.value
   cosmosdb_cdc_database_name = data.azurerm_key_vault_secret.cosmosdb_cdc_database_name.value
 
-  storage_account_connection_string = data.azurerm_key_vault_secret.storage_account_connection_string.value
-  card_request_queue_name           = data.azurerm_key_vault_secret.card_request_queue_name.value
+  storage_account_queue_uri = data.azurerm_key_vault_secret.storage_account_queue_uri.value
+  card_request_queue_name   = data.azurerm_key_vault_secret.card_request_queue_name.value
 
   services_api_url = data.azurerm_key_vault_secret.services_api_url.value
   services_api_key = data.azurerm_key_vault_secret.services_api_key.value

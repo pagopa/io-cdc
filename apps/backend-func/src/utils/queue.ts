@@ -1,50 +1,37 @@
-import { QueueService } from "azure-storage";
+import { DefaultAzureCredential } from "@azure/identity";
+import { QueueServiceClient } from "@azure/storage-queue";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 
 import { Config } from "../config.js";
+import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { toBase64 } from "./base64.js";
 
 export class QueueStorage {
   config: Config;
+
   createMessage = (queueName: string, message: string) =>
-    TE.tryCatch(
-      async () =>
-        new Promise<boolean>((resolve, reject) =>
-          this.queueService.createMessage(queueName, message, (error: Error) =>
-            error ? reject(error) : resolve(true),
-          ),
-        ),
-      E.toError,
-    );
-
-  createQueue = (queueName: string) =>
-    TE.tryCatch(
-      () =>
-        new Promise<boolean>((resolve, reject) =>
-          this.queueService.createQueueIfNotExists(queueName, (error: Error) =>
-            error ? reject(error) : resolve(true),
-          ),
-        ),
-      E.toError,
-    );
-
-  enqueueMessage = (queueName: string, message: string) =>
     pipe(
-      this.createQueue(queueName),
-      TE.chain(() => this.createMessage(queueName, message)),
+      this.queueServiceClient.getQueueClient(queueName),
+      TE.of,
+      TE.chain((queueClient) =>
+        TE.tryCatch(() => queueClient.sendMessage(message), E.toError),
+      ),
+      TE.map(() => true as const),
     );
 
-  enqueuePendingCGNMessage = (message: string) =>
-    this.enqueueMessage(this.config.CARD_REQUEST_QUEUE_NAME, toBase64(message));
+  enqueuePendingCardRequestMessage = (message: PendingCardRequestMessage) =>
+    this.createMessage(this.config.CARD_REQUEST_QUEUE_NAME, toBase64(message));
 
-  queueService: QueueService;
+  queueServiceClient: QueueServiceClient;
 
   constructor(config: Config) {
     this.config = config;
-    this.queueService = new QueueService(
-      this.config.STORAGE_ACCOUNT_CONNECTION_STRING,
+    const credential = new DefaultAzureCredential();
+    this.queueServiceClient = new QueueServiceClient(
+      this.config.STORAGE_ACCOUNT__queueServiceUri,
+      credential,
     );
   }
 }

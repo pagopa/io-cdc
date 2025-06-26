@@ -148,5 +148,5 @@ module "repo" {
 resource "azurerm_role_assignment" "dns_zone_contributor" {
   scope                = data.azurerm_dns_zone.io_pagopa_it.id
   role_definition_name = "DNS Zone Contributor"
-  principal_id         = module.repo.identities.infra.cd.id
+  principal_id         = module.repo.identities.infra.ci.principal_id
 }
