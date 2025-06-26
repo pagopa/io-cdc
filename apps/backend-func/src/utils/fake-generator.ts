@@ -91,7 +91,7 @@ const generateRandomDate = (from: Date, to: Date) =>
   new Date(from.getTime() + Math.random() * (to.getTime() - from.getTime()));
 
 const generateRandomCharacter = () => {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const characters = "ABCDEHLMPRST";
   return characters.charAt(Math.floor(Math.random() * characters.length));
 };
 
