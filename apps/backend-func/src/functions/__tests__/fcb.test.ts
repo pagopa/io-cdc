@@ -1,9 +1,14 @@
 import * as E from "fp-ts/lib/Either.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { discoverMock, getFimsClient } from "../../__mocks__/fims.mock.js";
+import {
+  fimsUserMock,
+  getFimsClient,
+  userinfoMock,
+} from "../../__mocks__/fims.mock.js";
 import {
   getRedisClientFactoryMock,
+  redisGetMock,
   redisSetExMock,
 } from "../../__mocks__/redis_client_factory.mock.js";
 import { anOidcConfig } from "../../__mocks__/types.mock.js";
@@ -27,6 +32,7 @@ describe("getFimsData", () => {
     const res = await getFimsData(
       "code",
       "state",
+      "iss",
     )({
       config,
       fimsClient: fimsClientMock,
@@ -34,23 +40,20 @@ describe("getFimsData", () => {
     })();
 
     expect(E.isRight(res)).toBe(true);
-    if (E.isRight(res))
-      expect(res.right).toEqual({
-        family_name: "Surname",
-        fiscal_code: "AAABBB00C00D000E",
-        given_name: "Name",
-      });
+    if (E.isRight(res)) expect(res.right).toEqual(fimsUserMock);
   });
 
-  it("should return error if fims client fails", async () => {
+  it("should return error if Redis client fails", async () => {
+    redisGetMock.mockRejectedValueOnce("Error");
+
     const fimsClientMock = getFimsClient({
       ...anOidcConfig,
     } as unknown as Config);
-    discoverMock.mockRejectedValueOnce("Error");
 
     const res = await getFimsData(
       "code",
       "state",
+      "iss",
     )({
       config,
       fimsClient: fimsClientMock,
@@ -61,7 +64,58 @@ describe("getFimsData", () => {
     if (E.isLeft(res))
       expect(res.left).toEqual({
         code: 401,
-        message: "Cannot retrieve user data",
+        message: "Cannot retrieve user data | Error",
+        title: "Unauthorized",
+      });
+  });
+
+  it("should return error if nonce not found on Redis", async () => {
+    redisGetMock.mockResolvedValueOnce(undefined);
+
+    const fimsClientMock = getFimsClient({
+      ...anOidcConfig,
+    } as unknown as Config);
+
+    const res = await getFimsData(
+      "code",
+      "state",
+      "iss",
+    )({
+      config,
+      fimsClient: fimsClientMock,
+      redisClientFactory: redisClientFactoryMock,
+    })();
+
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 401,
+        message: "Cannot retrieve user data | Nonce not found",
+        title: "Unauthorized",
+      });
+  });
+
+  it("should return error if fims client fails", async () => {
+    const fimsClientMock = getFimsClient({
+      ...anOidcConfig,
+    } as unknown as Config);
+    userinfoMock.mockRejectedValueOnce("Error");
+
+    const res = await getFimsData(
+      "code",
+      "state",
+      "iss",
+    )({
+      config,
+      fimsClient: fimsClientMock,
+      redisClientFactory: redisClientFactoryMock,
+    })();
+
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 401,
+        message: "Cannot retrieve user data | Error",
         title: "Unauthorized",
       });
   });

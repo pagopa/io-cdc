@@ -107,6 +107,18 @@ variable "cosmosdb_cdc_database_name" {
   sensitive   = true
 }
 
+variable "storage_account_connection_string" {
+  type        = string
+  description = "Connection string to storage account"
+  sensitive   = true
+}
+
+variable "card_request_queue_name" {
+  type        = string
+  description = "Card request queue name"
+  sensitive   = true
+}
+
 variable "services_api_url" {
   type        = string
   description = "Services API url"
@@ -242,5 +254,11 @@ variable "cdc_backend_func_url" {
 variable "cdc_backend_func_key" {
   type        = string
   description = "The key for apim to call functions APIs"
+  sensitive   = true
+}
+
+variable "pagopa_idp_keys_base_url" {
+  type        = string
+  description = "The base url to get idp keys"
   sensitive   = true
 }

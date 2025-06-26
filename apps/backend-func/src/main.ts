@@ -38,7 +38,7 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
-const FimsAuth = FimsAuthFn({ fimsClient });
+const FimsAuth = FimsAuthFn({ fimsClient, redisClientFactory });
 app.http("FimsAuth", {
   authLevel: "function",
   handler: FimsAuth,
