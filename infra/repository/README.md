@@ -23,6 +23,7 @@
 |------|--------|---------|
 | <a name="module_repo"></a> [repo](#module\_repo) | pagopa-dx/azure-github-environment-bootstrap/azurerm | ~> 2.0 |
 | <a name="module_roles"></a> [roles](#module\_roles) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
+| <a name="module_roles_cd"></a> [roles\_cd](#module\_roles\_cd) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
 
 ## Resources
 
