@@ -17,6 +17,7 @@ import {
   getRedisClientFactoryMock,
   redisGetMock,
 } from "../../__mocks__/redis_client_factory.mock.js";
+import { servicesClientMock } from "../../__mocks__/services.mock.js";
 import {
   aCardRequest,
   aValidFiscalCode,
@@ -36,6 +37,7 @@ const redisClientFactoryMock = getRedisClientFactoryMock();
 const config = {
   COSMOSDB_CDC_DATABASE_NAME: "database",
 } as unknown as Config;
+const servicesClient = servicesClientMock;
 
 describe("post-requests | getSession", () => {
   afterEach(() => {
@@ -50,6 +52,7 @@ describe("post-requests | getSession", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
+      servicesClient,
     })();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res)) expect(res.right).toEqual(aValidSession);
@@ -63,6 +66,7 @@ describe("post-requests | getSession", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
+      servicesClient,
     })();
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res))
@@ -86,7 +90,8 @@ describe("post-requests | getExistingCardRequests", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
-    })();
+      servicesClient,
+    })()();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res)) expect(res.right).toEqual([]);
   });
@@ -99,7 +104,8 @@ describe("post-requests | getExistingCardRequests", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
-    })();
+      servicesClient,
+    })()();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res)) expect(res.right).toEqual([aCardRequest.year]);
   });
@@ -112,7 +118,8 @@ describe("post-requests | getExistingCardRequests", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
-    })();
+      servicesClient,
+    })()();
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res))
       expect(res.left).toEqual({
@@ -153,6 +160,7 @@ describe("post-requests | saveNewCardRequests", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
+      servicesClient,
     })(["2020", "2021"])();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res))
@@ -169,6 +177,7 @@ describe("post-requests | saveNewCardRequests", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
+      servicesClient,
     })(["2020", "2021"])();
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res))
@@ -191,6 +200,7 @@ describe("post-requests | saveNewCardRequests", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
+      servicesClient,
     })(["2020", "2021"])();
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res))
@@ -217,6 +227,7 @@ describe("post-requests | postCardRequests", () => {
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
       redisClientFactory: redisClientFactoryMock,
+      servicesClient,
     })();
     if (E.isRight(res))
       expect(res.right).toEqual([{ year: "2020" }, { year: "2021" }]);
