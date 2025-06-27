@@ -8,13 +8,6 @@
   "extensions": {
     "http": {
       "routePrefix": ""
-    },
-    "queues": {
-      "maxPollingInterval": 10,
-      "visibilityTimeout": 5,
-      "batchSize": 1,
-      "maxDequeueCount": 10,
-      "newBatchThreshold": 0
     }
   },
   "extensionBundle": {
