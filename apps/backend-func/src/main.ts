@@ -1,6 +1,7 @@
 import { app } from "@azure/functions";
 import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
 
+import { ServicesAPIClient } from "./clients/services.js";
 import { getConfigOrThrow } from "./config.js";
 import { AuthorizeFn } from "./functions/authorize.js";
 import { FimsAuthFn } from "./functions/fauth.js";
@@ -36,6 +37,9 @@ const cosmosDbClient = getCosmosDbClientInstance(
 
 // Redis client factory
 const redisClientFactory = getRedisClientFactory(config);
+
+// Services client
+const servicesClient = ServicesAPIClient(config);
 
 const Info = InfoFn({ config, redisClientFactory });
 app.http("Info", {
@@ -94,6 +98,7 @@ const PostCardRequests = PostCardRequestsFn({
   cosmosDbClient,
   queueStorage,
   redisClientFactory,
+  servicesClient,
 });
 app.http("PostCardRequests", {
   authLevel: "function",
