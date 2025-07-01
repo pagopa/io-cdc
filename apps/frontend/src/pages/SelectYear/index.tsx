@@ -10,7 +10,8 @@ import { useRequestBonusMutation } from '../../features/app/services';
 const SelectYear = () => {
   const annualities = useSelector(selectAnnualitiesWithStatus);
   const notAvailableYears = useSelector(selectNotAvailableYears);
-  const [requestBonus, { isLoading }] = useRequestBonusMutation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [requestBonus] = useRequestBonusMutation();
 
   const mappedYearsList = useMemo(
     () =>
@@ -37,7 +38,9 @@ const SelectYear = () => {
 
   const onConfirm = useCallback(async () => {
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
+
     try {
+      setIsLoading(true);
       const { error, data } = await requestBonus(newYears);
       if (error) {
         throw new Error('Something went wrong');
@@ -54,6 +57,8 @@ const SelectYear = () => {
           status: 500,
         },
       });
+    } finally {
+      setIsLoading(false);
     }
   }, [selectedItems, notAvailableYears, requestBonus, navigate]);
 
