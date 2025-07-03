@@ -5576,6 +5576,55 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cdc-fe-dashboard@workspace:apps/cdc-fe-dashboard":
+  version: 0.0.0-use.local
+  resolution: "cdc-fe-dashboard@workspace:apps/cdc-fe-dashboard"
+  dependencies:
+    "@emotion/react": "npm:^11.11.1"
+    "@emotion/styled": "npm:^11.11.0"
+    "@eslint/js": "npm:^9.22.0"
+    "@io-cdc/ui": "workspace:*"
+    "@mui/icons-material": "npm:^5.14.3"
+    "@mui/lab": "npm:^5.0.0-alpha.140"
+    "@mui/material": "npm:^5.14.5"
+    "@mui/system": "npm:^5.14.5"
+    "@pagopa/eslint-config": "npm:^4.0.1"
+    "@pagopa/mui-italia": "npm:^1.5.0"
+    "@reduxjs/toolkit": "npm:^2.7.0"
+    "@rollup/plugin-typescript": "npm:^12.1.2"
+    "@testing-library/dom": "npm:^10.4.0"
+    "@testing-library/jest-dom": "npm:^6.5.0"
+    "@testing-library/react": "npm:^16.0.1"
+    "@types/node": "npm:^20"
+    "@types/react": "npm:^18"
+    "@types/react-dom": "npm:^18"
+    "@typescript-eslint/eslint-plugin": "npm:^8.32.1"
+    "@typescript-eslint/parser": "npm:^8.32.1"
+    "@vitejs/plugin-react": "npm:^4.3.1"
+    eslint: "npm:^8.57.0"
+    eslint-config-next: "npm:14.2.5"
+    eslint-config-prettier: "npm:^10.1.5"
+    eslint-plugin-prettier: "npm:^5.4.0"
+    eslint-plugin-react: "npm:^7.37.5"
+    eslint-plugin-react-hooks: "npm:^5.2.0"
+    eslint-plugin-react-refresh: "npm:^0.4.20"
+    globals: "npm:^16.0.0"
+    prettier: "npm:^3.5.3"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    react-redux: "npm:^9.2.0"
+    react-router-dom: "npm:^7.5.0"
+    tslib: "npm:^2.8.1"
+    tsx: "npm:^4.19.2"
+    typescript: "npm:^5.8.3"
+    typescript-eslint: "npm:^8.26.1"
+    vite: "npm:^5.4.4"
+    vite-plugin-typescript: "npm:^1.0.4"
+    vite-tsconfig-paths: "npm:^5.0.1"
+    vitest: "npm:^2.0.5"
+  languageName: unknown
+  linkType: soft
+
 "chai@npm:^5.1.2":
   version: 5.2.0
   resolution: "chai@npm:5.2.0"

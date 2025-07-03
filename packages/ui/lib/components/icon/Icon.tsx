@@ -3,10 +3,14 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 import IconArrowCircleLeftBold from "./svg/IconArrowCircleLeftBold";
 import IconArrowCircleRightBold from "./svg/IconArrowCircleRightBold";
 import IconCloseCircle from "./svg/IconCloseCircle";
+import IconEnte from "./svg/IconEnte";
 import IconError from "./svg/IconError";
+import IconEuro from "./svg/IconEuro";
 import IconExpandUp from "./svg/IconExpandUp";
+import IconInfoOutlined from "./svg/IconInfoOutlined";
 import IconInitiativeExpired from "./svg/IconInitiativeExpired";
 import IconParty from "./svg/IconParty";
+import IconQuestionMarker from "./svg/IconQuestionMarker";
 import IconRequestedAllYears from "./svg/IconRequestedAllYears";
 import IconUmbrella from "./svg/IconUmbrella";
 
@@ -15,10 +19,14 @@ export const Icons = {
   arrowCircleLeftBold: IconArrowCircleLeftBold,
   arrowCircleRightBold: IconArrowCircleRightBold,
   closeCircle: IconCloseCircle,
+  ente: IconEnte,
   error: IconError,
+  euro: IconEuro,
   expandUp: IconExpandUp,
+  info: IconInfoOutlined,
   initiativeExpired: IconInitiativeExpired,
   party: IconParty,
+  question: IconQuestionMarker,
   umbrella: IconUmbrella,
 } as const;
 

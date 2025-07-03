@@ -13,20 +13,18 @@ import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { Icon, IconType } from "../icon";
 import { CardCarouselItem } from "./CardCarouselItem";
 import { CardCarouselNavigationButton } from "./CardCarouselNavigationButton";
 
 export interface CardCarouselProps {
   children: React.ReactNode;
-  icon: IconType;
   title: string;
 }
 
-export const CardCarousel = ({ children, icon, title }: CardCarouselProps) => (
+export const CardCarousel = ({ children, title }: CardCarouselProps) => (
   <Card
     sx={{
-      ".io-ipatente-hidden": {
+      ".io-cdc-hidden": {
         display: "none",
       },
     }}
@@ -36,17 +34,16 @@ export const CardCarousel = ({ children, icon, title }: CardCarouselProps) => (
         <>
           <CardCarouselNavigationButton
             aria-label="button-prev-slide"
-            className="io-ipatente-swiper-button-prev"
+            className="io-cdc-swiper-button-prev"
             icon="arrowCircleLeftBold"
           />
           <CardCarouselNavigationButton
             aria-label="button-next-slide"
-            className="io-ipatente-swiper-button-next"
+            className="io-cdc-swiper-button-next"
             icon="arrowCircleRightBold"
           />
         </>
       }
-      avatar={<Icon fontSize="medium" name={icon} />}
       disableTypography
       title={
         <Typography fontSize={20} fontWeight={600}>
@@ -63,21 +60,22 @@ export const CardCarousel = ({ children, icon, title }: CardCarouselProps) => (
           },
           ".swiper-slide": {
             height: "auto",
+            width: "fit-content",
           },
         }}
       >
         <Swiper
-          className="io-ipatente-swiper"
+          className="io-cdc-swiper"
           modules={[Pagination, Navigation]}
           navigation={{
             disabledClass: "Mui-disabled",
-            lockClass: "io-ipatente-hidden",
-            nextEl: ".io-ipatente-swiper-button-next",
-            prevEl: ".io-ipatente-swiper-button-prev",
+            lockClass: "io-cdc-hidden",
+            nextEl: ".io-cdc-swiper-button-next",
+            prevEl: ".io-cdc-swiper-button-prev",
           }}
           pagination={{
             clickable: true,
-            el: ".io-ipatente-swiper-pagination",
+            el: ".io-cdc-swiper-pagination",
           }}
           spaceBetween={30}
         >
@@ -88,16 +86,17 @@ export const CardCarousel = ({ children, icon, title }: CardCarouselProps) => (
         </Swiper>
       </Stack>
       <Box
-        className="io-ipatente-swiper-pagination"
+        className="io-cdc-swiper-pagination"
         component="div"
         display="flex"
         justifyContent="center"
         paddingTop={2}
         sx={{
           "& .swiper-pagination-bullet-active": {
-            backgroundColor: "primary.main",
-            borderRadius: 4,
-            width: 30,
+            backgroundColor: "#0073E6",
+            borderRadius: "15px",
+            height: 4,
+            width: 16,
           },
         }}
       />
