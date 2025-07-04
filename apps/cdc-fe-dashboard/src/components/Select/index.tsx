@@ -5,21 +5,15 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
   InputAdornment,
-  InputLabel,
-  MenuItem,
   Slide,
   Stack,
   Typography,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectCardSelected, selectCardsList } from '../../features/app/selectors';
 import { Icon } from '@io-cdc/ui';
 import { ArrowDropDown } from '@mui/icons-material';
 import { TransitionProps } from '@mui/material/transitions';
 import { ResponseGetCardsDto } from '../../features/app/dto';
-import { setSelectedOption } from '../../features/app/reducer';
 import { CDC } from '../../features/app/model';
 
 const Transition = forwardRef(function Transition(
@@ -36,7 +30,6 @@ type CdcSelectProps = {
 };
 
 export const CdcSelect = ({ data, handleChange, year }: CdcSelectProps) => {
-  console.log('🚀 ~ CdcSelect ~ year:', year);
   const [open, setOpen] = useState(false);
 
   const handleOpenSelect = useCallback(() => {
@@ -58,6 +51,12 @@ export const CdcSelect = ({ data, handleChange, year }: CdcSelectProps) => {
         variant="outlined"
         value={year}
         label={'Seleziona la Carta della Cultura'}
+        InputLabelProps={{ shrink: !!year }}
+        sx={{
+          '& .MuiOutlinedInput-notchedOutline': {
+            border: '2px solid #e3e7eb',
+          },
+        }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

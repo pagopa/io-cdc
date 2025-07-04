@@ -23,16 +23,16 @@ export const appApi = createApi({
   endpoints: (builder) => ({
     getCards: builder.query<ResponseGetCardsDto, void>({
       queryFn: async () => {
-        const shouldFail = getRandomResponse();
-        await delay(2000);
-        if (shouldFail) {
-          return {
-            error: {
-              status: 500,
-              data: { message: 'Errore nella richiesta' },
-            },
-          };
-        }
+        // const shouldFail = getRandomResponse();
+        // await delay(2000);
+        // if (shouldFail) {
+        //   return {
+        //     error: {
+        //       status: 500,
+        //       data: { message: 'Errore nella richiesta' },
+        //     },
+        //   };
+        // }
         return {
           data: mockCards,
         };

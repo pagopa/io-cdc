@@ -5,13 +5,12 @@ import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const { isError, isSuccess, error, data } = useGetCardsQuery();
-  console.log('🚀 ~ Home ~ data:', data);
   const navigate = useNavigate();
 
   if (!data) return <div>no data</div>;
 
   return (
-    <Stack flex={1} justifyContent="center" alignItems="center" paddingInline={2}>
+    <Stack justifyContent="center" alignItems="center" paddingInline={2}>
       <Carousel list={data} />
       <Divider sx={{ height: 16 }} />
       <Typography sx={{ fontSize: 12 }}>Saldo aggiornato al 12 dicembre 2025, 12:34</Typography>

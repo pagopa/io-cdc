@@ -21,6 +21,11 @@ export const CdcInput = ({ icon, onChange, error, ...rest }: CdcInputProps) => {
         onChange={(e) => onChange(Number(e.target.value), 'ticketAmount')}
         error={error}
         helperText={HelperText}
+        sx={{
+          '& .MuiOutlinedInput-notchedOutline': {
+            border: '2px solid #e3e7eb',
+          },
+        }}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

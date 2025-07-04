@@ -44,7 +44,7 @@ const GenerateTicket = () => {
         <Button
           variant="contained"
           onClick={() => navigate('/home')}
-          disabled={!(!!selectedCard && !!ticketAmount)}
+          disabled={!selectedCard && !ticketAmount}
         >
           Continua
         </Button>
