@@ -10,6 +10,7 @@ import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 import { ulid } from "ulid";
 
+import { ServicesAPIClient } from "../clients/services.js";
 import { Config } from "../config.js";
 import { CardRequests } from "../generated/definitions/internal/CardRequests.js";
 import { withParams } from "../middlewares/withParams.js";
@@ -25,6 +26,7 @@ import {
 } from "../utils/errors.js";
 import { QueueStorage } from "../utils/queue.js";
 import { RedisClientFactory } from "../utils/redis.js";
+import { activateSpecialServiceIfNotActive } from "../utils/services.js";
 import { getSessionTE } from "../utils/session.js";
 
 interface Dependencies {
@@ -32,6 +34,7 @@ interface Dependencies {
   cosmosDbClient: CosmosClient;
   queueStorage: QueueStorage;
   redisClientFactory: RedisClientFactory;
+  servicesClient: ServicesAPIClient;
 }
 
 const Headers = t.type({
@@ -48,20 +51,27 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
     TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
-export const getExistingCardRequests = (
+export const activateSpecialService = (
   fiscalCode: FiscalCode,
   deps: Dependencies,
 ) =>
   pipe(
-    TE.of(
-      new CosmosDbCardRequestRepository(
-        deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
-      ),
-    ),
-    TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
-    TE.map(A.map((cardRequest) => cardRequest.year)),
+    activateSpecialServiceIfNotActive(deps.servicesClient, fiscalCode),
     TE.mapLeft(errorToInternalError),
   );
+
+export const getExistingCardRequests =
+  (fiscalCode: FiscalCode, deps: Dependencies) => () =>
+    pipe(
+      TE.of(
+        new CosmosDbCardRequestRepository(
+          deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+        ),
+      ),
+      TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
+      TE.map(A.map((cardRequest) => cardRequest.year)),
+      TE.mapLeft(errorToInternalError),
+    );
 
 export const filterNotEligibleYears = (requestedYears: Year[]) =>
   requestedYears.filter((year) => years.indexOf(year) >= 0);
@@ -116,7 +126,8 @@ export const saveNewCardRequests =
 export const postCardRequests =
   (fiscalCode: FiscalCode, years: Year[]) => (deps: Dependencies) =>
     pipe(
-      getExistingCardRequests(fiscalCode, deps),
+      activateSpecialService(fiscalCode, deps),
+      TE.chain(getExistingCardRequests(fiscalCode, deps)),
       TE.map(filterNotEligibleYears),
       TE.map(filterAlreadyRequestedYears(years)),
       TE.chain(saveNewCardRequests(fiscalCode, deps)),

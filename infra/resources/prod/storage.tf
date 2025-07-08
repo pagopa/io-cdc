@@ -41,3 +41,13 @@ resource "azurerm_storage_queue" "message" {
   name                 = "message"
   storage_account_name = module.storage_be.cdc_storage_be.name
 }
+
+resource "azurerm_storage_queue" "card_request_poison" {
+  name                 = "card-request-poison"
+  storage_account_name = module.storage_be.cdc_storage_be.name
+}
+
+resource "azurerm_storage_queue" "message_poison" {
+  name                 = "message-poison"
+  storage_account_name = module.storage_be.cdc_storage_be.name
+}
