@@ -22,12 +22,6 @@ module "roles" {
       resource_group_name  = data.azurerm_storage_account.storage_be.resource_group_name
       role                 = "reader"
       description          = "we need to read queue"
-    },
-    {
-      storage_account_name = data.azurerm_storage_account.storage_be.name
-      resource_group_name  = data.azurerm_storage_account.storage_be.resource_group_name
-      role                 = "owner"
-      description          = "we need to own queue"
     }
   ]
 }
@@ -51,12 +45,6 @@ module "roles_cd" {
       resource_group_name  = data.azurerm_storage_account.storage_be.resource_group_name
       role                 = "reader"
       description          = "we need to read queue"
-    },
-    {
-      storage_account_name = data.azurerm_storage_account.storage_be.name
-      resource_group_name  = data.azurerm_storage_account.storage_be.resource_group_name
-      role                 = "owner"
-      description          = "we need to own queue"
     }
   ]
 }
