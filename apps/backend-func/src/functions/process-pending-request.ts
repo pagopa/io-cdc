@@ -13,6 +13,7 @@ import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { RedisClientFactory } from "../utils/redis.js";
+import { getRandomError } from "../utils/testing.js";
 
 interface Dependencies {
   config: Config;
@@ -47,6 +48,7 @@ export const saveCardRequests =
           deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
         ),
       ),
+      TE.chain(getRandomError),
       TE.chain((repository) =>
         pipe(
           years,

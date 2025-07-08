@@ -18,7 +18,7 @@ export class CosmosDbCardRequestRepository implements CardRequestRepository {
   #cardRequestContainer: Container;
 
   constructor(db: Database) {
-    this.#cardRequestContainer = db.container("card-requests");
+    this.#cardRequestContainer = db.container("card-requests-test");
   }
 
   getAllByFiscalCode(
