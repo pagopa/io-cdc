@@ -1,0 +1,15 @@
+import * as TE from "fp-ts/lib/TaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
+import * as crypto from "crypto";
+
+export const getRandomError = <T>(input: T) =>
+  pipe(
+    TE.of(crypto.randomInt(100)),
+    TE.chain(
+      TE.fromPredicate(
+        (n) => n < 50,
+        () => new Error("Random error generated"),
+      ),
+    ),
+    TE.map(() => input),
+  );
