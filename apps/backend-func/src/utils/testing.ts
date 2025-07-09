@@ -7,7 +7,7 @@ export const getRandomError = <T>(input: T) =>
     TE.of(crypto.randomInt(100)),
     TE.chain(
       TE.fromPredicate(
-        (n) => n < 50,
+        (n) => n < 20,
         () => new Error("Random error generated"),
       ),
     ),
