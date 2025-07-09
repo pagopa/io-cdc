@@ -14,6 +14,7 @@ import { CosmosDbCardRequestRepository } from "../repository/card_request_reposi
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getRandomError } from "../utils/testing.js";
+import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 
 interface Dependencies {
   config: Config;
@@ -48,16 +49,17 @@ export const saveCardRequests =
           deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
         ),
       ),
-      TE.chain(getRandomError),
+      TE.chain(getRandomError), // TODO: Remove this line when load tests are done
       TE.chain((repository) =>
         pipe(
           years,
           A.map((year) =>
-            // call sogei
+            // TODO: Call sogei api
             repository.insert({
-              createdAt: pendingCardRequestMessage.request_date,
+              createdAt: new Date() as IsoDateFromString,
               fiscalCode: pendingCardRequestMessage.fiscal_code,
               id: ulid() as NonEmptyString,
+              requestDate: pendingCardRequestMessage.request_date,
               requestId: pendingCardRequestMessage.request_id,
               year,
             }),
