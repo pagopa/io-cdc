@@ -5561,7 +5561,7 @@ __metadata:
   resolution: "backend-func@workspace:apps/backend-func"
   dependencies:
     "@azure/cosmos": "npm:4.2.0"
-    "@azure/functions": "npm:^4.7.2"
+    "@azure/functions": "npm:^4.0.1"
     "@azure/identity": "npm:^4.10.1"
     "@azure/storage-queue": "npm:^12.26.0"
     "@mattrglobal/http-signatures": "npm:^4.0.1"
