@@ -18,7 +18,7 @@ export class CosmosDbRequestAuditRepository implements RequestAuditRepository {
   #RequestAuditContainer: Container;
 
   constructor(db: Database) {
-    this.#RequestAuditContainer = db.container("requests-audit");
+    this.#RequestAuditContainer = db.container("requests-audit-test");
   }
 
   getAllByFiscalCode(

@@ -1,6 +1,7 @@
 import { CosmosClient } from "@azure/cosmos";
 import * as H from "@pagopa/handler-kit";
 import { azureFunction } from "@pagopa/handler-kit-azure-func";
+import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as A from "fp-ts/lib/Array.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
@@ -13,6 +14,7 @@ import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { RedisClientFactory } from "../utils/redis.js";
+import { getRandomError } from "../utils/testing.js";
 
 interface Dependencies {
   config: Config;
@@ -47,15 +49,17 @@ export const saveCardRequests =
           deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
         ),
       ),
+      TE.chain(getRandomError), // TODO: Remove this line when load tests are done
       TE.chain((repository) =>
         pipe(
           years,
           A.map((year) =>
-            // call sogei
+            // TODO: Call sogei api
             repository.insert({
-              createdAt: pendingCardRequestMessage.request_date,
+              createdAt: new Date() as IsoDateFromString,
               fiscalCode: pendingCardRequestMessage.fiscal_code,
               id: ulid() as NonEmptyString,
+              requestDate: pendingCardRequestMessage.request_date,
               requestId: pendingCardRequestMessage.request_id,
               year,
             }),
