@@ -80,7 +80,7 @@ export const processPendingCardRequests =
 
 export const ProcessPendingRequestHandler: H.Handler<
   PendingCardRequestMessage,
-  undefined,
+  void,
   Dependencies
 > = H.of((pendingCardRequestMessage) =>
   pipe(
