@@ -1,6 +1,7 @@
 import { CosmosClient } from "@azure/cosmos";
 import * as H from "@pagopa/handler-kit";
 import { azureFunction } from "@pagopa/handler-kit-azure-func";
+import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as A from "fp-ts/lib/Array.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
@@ -14,7 +15,6 @@ import { CosmosDbCardRequestRepository } from "../repository/card_request_reposi
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getRandomError } from "../utils/testing.js";
-import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 
 interface Dependencies {
   config: Config;

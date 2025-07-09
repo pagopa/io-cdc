@@ -10,6 +10,7 @@ export const aCardRequest: CardRequest = {
   createdAt: new Date(),
   fiscalCode: aValidFiscalCode,
   id: "anystringedid" as NonEmptyString,
+  requestDate: new Date(),
   requestId: "anystringedid" as NonEmptyString,
   year: "2020",
 };
