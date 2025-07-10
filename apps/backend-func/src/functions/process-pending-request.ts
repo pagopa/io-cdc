@@ -49,11 +49,12 @@ export const saveCardRequests =
           deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
         ),
       ),
-      TE.chain(getRandomError), // TODO: Remove this line when load tests are done
+      //TE.chain(getRandomError), // TODO: Remove this line when load tests are done
       TE.chain((repository) =>
         pipe(
           years,
           A.map((year) =>
+            // TODO: CHECK INSERTED AUDIT REQUEST FOR THE USER AND GET THE REQUEST DATE FOR PREVIOUSLY ALREADY REQUESTED CARDS
             // TODO: Call sogei api
             repository.insert({
               createdAt: new Date() as IsoDateFromString,
