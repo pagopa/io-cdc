@@ -80,7 +80,7 @@ export const filterAlreadyRequestedYears =
   (requestedYears: Year[]) => (alreadyRequestedYears: Year[]) =>
     requestedYears.filter((year) => alreadyRequestedYears.indexOf(year) < 0);
 
-export const saveNewCardRequests =
+export const saveNewRequestAudit =
   (fiscalCode: FiscalCode, deps: Dependencies) => (years: Year[]) =>
     pipe(
       TE.of(
@@ -130,7 +130,7 @@ export const postCardRequests =
       TE.chain(getExistingCardRequests(fiscalCode, deps)),
       TE.map(filterNotEligibleYears),
       TE.map(filterAlreadyRequestedYears(years)),
-      TE.chain(saveNewCardRequests(fiscalCode, deps)),
+      TE.chain(saveNewRequestAudit(fiscalCode, deps)),
     );
 
 export const makePostCardRequestsHandler: H.Handler<

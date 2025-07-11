@@ -17,8 +17,12 @@ interface RequestAuditRepository {
 export class CosmosDbRequestAuditRepository implements RequestAuditRepository {
   #RequestAuditContainer: Container;
 
+  static containerName = "requests-audit-test";
+
   constructor(db: Database) {
-    this.#RequestAuditContainer = db.container("requests-audit-test");
+    this.#RequestAuditContainer = db.container(
+      CosmosDbRequestAuditRepository.containerName,
+    );
   }
 
   getAllByFiscalCode(

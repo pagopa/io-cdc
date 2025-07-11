@@ -14,14 +14,11 @@ import { Config } from "../config.js";
 import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
-import { RedisClientFactory } from "../utils/redis.js";
-import { getRandomError } from "../utils/testing.js";
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 
 interface Dependencies {
   config: Config;
   cosmosDbClient: CosmosClient;
-  redisClientFactory: RedisClientFactory;
 }
 
 export const getExistingCardRequests = (
@@ -72,7 +69,6 @@ export const saveCardRequests =
           ),
         ),
       ),
-      //TE.chain(getRandomError), // TODO: Remove this line when load tests are done
       TE.chain(({ cardRequestsRepository, requestsAudit }) =>
         pipe(
           years,

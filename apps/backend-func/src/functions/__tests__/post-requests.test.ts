@@ -3,10 +3,11 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  clearMockedItems,
-  cosmosCreateMock,
-  cosmosFetchAllMock,
+  clearContainersItems,
+  CosmosOperation,
+  createMocks,
   getCosmosDbClientInstanceMock,
+  setCosmosErrorMock,
   setMockedItems,
 } from "../../__mocks__/cosmosdb.mock.js";
 import {
@@ -24,13 +25,15 @@ import {
   aValidSession,
 } from "../../__mocks__/types.mock.js";
 import { Config } from "../../config.js";
+import { CosmosDbCardRequestRepository } from "../../repository/card_request_repository.js";
+import { CosmosDbRequestAuditRepository } from "../../repository/request_audit_repository.js";
 import {
   filterAlreadyRequestedYears,
   filterNotEligibleYears,
   getExistingCardRequests,
   getSession,
   postCardRequests,
-  saveNewCardRequests,
+  saveNewRequestAudit,
 } from "../post-requests.js";
 
 const redisClientFactoryMock = getRedisClientFactoryMock();
@@ -45,7 +48,10 @@ describe("post-requests | getSession", () => {
   });
 
   it("should return aValidSession if redis GET succeeds", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName
+    ]);
     redisGetMock.mockResolvedValueOnce(JSON.stringify(aValidSession));
     const res = await getSession("sessiontoken")({
       config,
@@ -59,7 +65,10 @@ describe("post-requests | getSession", () => {
   });
 
   it("should return 401 if redis GET succeeds but no session found", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
     redisGetMock.mockResolvedValueOnce(undefined);
     const res = await getSession("sessiontoken")({
       config,
@@ -83,8 +92,11 @@ describe("post-requests | getExistingCardRequests", () => {
     vi.clearAllMocks();
   });
 
-  it("should return empty array of CardRequests if cosmos succeeds with no items", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
+  it("1. should return empty array of CardRequests if cosmos succeeds with no items", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
     const res = await getExistingCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
@@ -96,9 +108,12 @@ describe("post-requests | getExistingCardRequests", () => {
     if (E.isRight(res)) expect(res.right).toEqual([]);
   });
 
-  it("should return an array of CardRequests' years if cosmos succeeds with items", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
-    setMockedItems([aCardRequest]);
+  it("1. should return an array of CardRequests' years if cosmos succeeds with items", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    setMockedItems(CosmosDbCardRequestRepository.containerName)([aCardRequest]);
     const res = await getExistingCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
@@ -110,9 +125,15 @@ describe("post-requests | getExistingCardRequests", () => {
     if (E.isRight(res)) expect(res.right).toEqual([aCardRequest.year]);
   });
 
-  it("should return InternalServerError if cosmos fails", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
-    cosmosFetchAllMock.mockRejectedValueOnce("Error");
+  it("1. should return InternalServerError if cosmos fails during fetch", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    setCosmosErrorMock(
+      CosmosDbCardRequestRepository.containerName,
+      CosmosOperation.fetchAll,
+    );
     const res = await getExistingCardRequests(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
@@ -153,9 +174,12 @@ describe("post-requests | saveNewCardRequests", () => {
     vi.clearAllMocks();
   });
 
-  it("should return an array of CardRequests' years if cosmos succeeds", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
-    const res = await saveNewCardRequests(aValidFiscalCode, {
+  it("2. saveNewCards | should return an array of CardRequests' years if cosmos succeeds", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    const res = await saveNewRequestAudit(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
@@ -165,14 +189,22 @@ describe("post-requests | saveNewCardRequests", () => {
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res))
       expect(res.right).toEqual([{ year: "2020" }, { year: "2021" }]);
-    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(
+      createMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
     expect(enqueueMessageMock).toBeCalledTimes(1);
   });
 
-  it("should return InternalServerError if cosmos fails", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
-    cosmosCreateMock.mockRejectedValueOnce("Error");
-    const res = await saveNewCardRequests(aValidFiscalCode, {
+  it("2. should return InternalServerError if cosmos fails", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    setCosmosErrorMock(
+      CosmosDbRequestAuditRepository.containerName,
+      CosmosOperation.create,
+    );
+    const res = await saveNewRequestAudit(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
@@ -186,16 +218,21 @@ describe("post-requests | saveNewCardRequests", () => {
         message: "Error",
         title: "Internal Server Error",
       });
-    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(
+      createMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
     expect(enqueueMessageMock).toBeCalledTimes(0);
   });
 
-  it("should return InternalServerError if queue storage fails", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
+  it("2. should return InternalServerError if queue storage fails", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
     enqueueMessageMock.mockImplementationOnce(() =>
       TE.left(new Error("Error")),
     );
-    const res = await saveNewCardRequests(aValidFiscalCode, {
+    const res = await saveNewRequestAudit(aValidFiscalCode, {
       config,
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
@@ -209,7 +246,9 @@ describe("post-requests | saveNewCardRequests", () => {
         message: "Error",
         title: "Internal Server Error",
       });
-    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(
+      createMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
     expect(enqueueMessageMock).toBeCalledTimes(1);
   });
 });
@@ -219,9 +258,12 @@ describe("post-requests | postCardRequests", () => {
     vi.clearAllMocks();
   });
 
-  it("should return an array of CardRequests' years if cosmos succeeds", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock();
-    clearMockedItems();
+  it("3. postCardRquests | should return an array of CardRequests' years if cosmos succeeds", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    clearContainersItems(CosmosDbCardRequestRepository.containerName);
     const res = await postCardRequests(aValidFiscalCode, ["2020", "2021"])({
       config,
       cosmosDbClient: cosmosClientMock,
@@ -231,7 +273,9 @@ describe("post-requests | postCardRequests", () => {
     })();
     if (E.isRight(res))
       expect(res.right).toEqual([{ year: "2020" }, { year: "2021" }]);
-    expect(cosmosCreateMock).toBeCalledTimes(1);
+    expect(
+      createMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
     expect(enqueueMessageMock).toBeCalledTimes(1);
   });
 });
