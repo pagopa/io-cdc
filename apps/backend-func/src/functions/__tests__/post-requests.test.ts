@@ -3,8 +3,8 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  clearContainersItems,
   CosmosOperation,
+  clearContainersItems,
   createMocks,
   getCosmosDbClientInstanceMock,
   setCosmosErrorMock,
@@ -50,7 +50,7 @@ describe("post-requests | getSession", () => {
   it("should return aValidSession if redis GET succeeds", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
       CosmosDbCardRequestRepository.containerName,
-      CosmosDbRequestAuditRepository.containerName
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     redisGetMock.mockResolvedValueOnce(JSON.stringify(aValidSession));
     const res = await getSession("sessiontoken")({

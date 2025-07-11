@@ -15,9 +15,9 @@ interface RequestAuditRepository {
 }
 
 export class CosmosDbRequestAuditRepository implements RequestAuditRepository {
-  #RequestAuditContainer: Container;
-
   static containerName = "requests-audit-test";
+
+  #RequestAuditContainer: Container;
 
   constructor(db: Database) {
     this.#RequestAuditContainer = db.container(

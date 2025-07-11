@@ -7,14 +7,14 @@ import * as A from "fp-ts/lib/Array.js";
 import * as O from "fp-ts/lib/Option.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { flow, pipe } from "fp-ts/lib/function.js";
+import { pipe } from "fp-ts/lib/function.js";
 import { ulid } from "ulid";
 
 import { Config } from "../config.js";
 import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
-import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
+import { PendingCardRequestMessage } from "../types/queue-message.js";
 
 interface Dependencies {
   config: Config;
@@ -104,6 +104,7 @@ export const saveCardRequests =
           A.sequence(TE.ApplicativePar),
         ),
       ),
+      TE.map(() => true as const),
     );
 
 export const processPendingCardRequests =

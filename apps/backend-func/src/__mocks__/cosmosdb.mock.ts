@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Container,
   CosmosClient,
@@ -6,7 +7,7 @@ import {
 } from "@azure/cosmos";
 import { vi } from "vitest";
 
-let containersItems: Record<string, unknown[]> = {};
+const containersItems: Record<string, unknown[]> = {};
 
 export const clearContainersItems = (containerName: string) => {
   console.log(`called clearContainersItems for ${containerName}`);
@@ -20,7 +21,7 @@ export const setMockedItems =
     containersItems[containerName] = mockedItems;
   };
 
-export let createMocks: Record<string, ReturnType<typeof vi.fn>> = {};
+export const createMocks: Record<string, ReturnType<typeof vi.fn>> = {};
 const cosmosCreateMock = (containerName: string) => {
   console.log(`called cosmosCreateMock factory for ${containerName}`);
 
@@ -36,7 +37,7 @@ const cosmosCreateMock = (containerName: string) => {
   return createMocks[containerName];
 };
 
-export let fetchAllMocks: Record<string, ReturnType<typeof vi.fn>> = {};
+export const fetchAllMocks: Record<string, ReturnType<typeof vi.fn>> = {};
 const cosmosFetchAllMock = (containerName: string) => {
   console.log(`called cosmosFetchAllMock factory for ${containerName}`);
 
@@ -116,8 +117,8 @@ const cosmosDbClientMock: CosmosClient = {
 } as unknown as CosmosClient;
 
 export const getCosmosDbClientInstanceMock = (containers: string[]) => {
-  for (const c in containers) {
-    initCosmosMock(containers[c]);
+  for (const c of containers) {
+    initCosmosMock(c);
   }
   return cosmosDbClientMock;
 };

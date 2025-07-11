@@ -145,7 +145,7 @@ describe("get-requests | getCardRequests", () => {
     ]);
     setCosmosErrorMock(
       CosmosDbCardRequestRepository.containerName,
-      CosmosOperation.fetchAll
+      CosmosOperation.fetchAll,
     );
     const deps = {
       config,

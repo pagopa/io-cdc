@@ -3,8 +3,8 @@ import * as E from "fp-ts/lib/Either.js";
 import { afterEach, assert, describe, expect, it, vi } from "vitest";
 
 import {
-  clearContainersItems,
   CosmosOperation,
+  clearContainersItems,
   createMocks,
   fetchAllMocks,
   getCosmosDbClientInstanceMock,
@@ -105,7 +105,7 @@ describe("CosmosDbCardRequestRepository|operations", () => {
     const repository = new CosmosDbCardRequestRepository(
       cosmosDbClientMock.database("a-database"),
     );
-    
+
     const inserted = await repository.insert(aCardRequest)();
     expect(
       createMocks[CosmosDbCardRequestRepository.containerName],
