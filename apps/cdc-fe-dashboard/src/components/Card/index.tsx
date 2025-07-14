@@ -1,51 +1,42 @@
 import { Icon } from '@io-cdc/ui';
 import { Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { Notches } from '../Notches';
-import LinearProgress from '@mui/material/LinearProgress';
 import { CDC } from '../../features/app/model';
+import { Footer } from './Footer';
 
 export const Card = ({ balance, expire_date, max_amount, year }: CDC) => {
   return (
-    <Stack direction="column" width="100%">
+    <Stack direction="column" width="100%" height="100%">
       <Stack sx={{ bgcolor: '#F1ECE6' }}>
-        <Stack direction="row" justifyContent="flex-end" gap={2} padding={3}>
+        <Stack direction="row" justifyContent="flex-end" gap={2} padding={'16px'}>
           <Icon name="info" />
-          <Icon name="question" />
+          <Icon name="help" sx={{ width: 60, height: 60 }} />
         </Stack>
-        <Stack padding={4} alignItems="center" gap={3}>
-          <Icon name="ente" sx={{ width: 66, height: 66 }} />
+        <Stack padding={1} alignItems="center" gap={2}>
+          <Stack
+            bgcolor="#FFF"
+            width={66}
+            height={66}
+            borderRadius={1}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Icon name="ente" sx={{ width: 48, height: 48 }} />
+          </Stack>
           <Typography fontWeight={700} fontSize={28}>
             {`Carta della Cultura ${year}`}
           </Typography>
           <Typography fontWeight={400} fontSize={16} color="#17324D">
             Ministero della cultura
           </Typography>
-          <Typography color="#5C6F82">{`Valida fino al ${expire_date}`}</Typography>
+          <Typography
+            color="#5C6F82"
+            fontSize="12px"
+            fontWeight={400}
+          >{`Valida fino al ${expire_date}`}</Typography>
         </Stack>
       </Stack>
-      <Stack>
-        <Notches />
-        <Stack
-          sx={{ bgcolor: '#F1ECE6', borderRadius: '0 0 16px 16px' }}
-          direction="column"
-          paddingBottom={4}
-          gap={2}
-          alignItems="center"
-        >
-          <Stack direction="row" justifyContent="center" alignItems="baseline" gap={1}>
-            <Typography fontWeight={700} fontSize={22}>
-              {balance}
-            </Typography>
-            <Typography>{`di ${max_amount}€`}</Typography>
-          </Stack>
-          <LinearProgress
-            variant="determinate"
-            value={balance}
-            sx={{ background: '#fff', width: '30%', borderRadius: '4px' }}
-          />
-        </Stack>
-      </Stack>
+      <Footer balance={balance} total={max_amount} />
     </Stack>
   );
 };

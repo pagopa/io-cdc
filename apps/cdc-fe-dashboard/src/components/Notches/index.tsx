@@ -1,49 +1,14 @@
-import { Box, Paper, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import { Notch, NotchContainer, NotchedPaper } from './styled';
 
 export const Notches = () => {
   return (
-    <Box position="relative" display="inline-block">
-      <Paper
-        elevation={3}
-        sx={{
-          px: 4,
-          py: 3,
-          bgcolor: '#F1ECE6',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Left notch */}
-        <Box
-          sx={{
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            bgcolor: 'white',
-            position: 'absolute',
-            left: -16,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 1,
-          }}
-        />
-
-        {/* Right notch */}
-        <Box
-          sx={{
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            bgcolor: 'white',
-            position: 'absolute',
-            right: -16,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 1,
-          }}
-        />
-        <Typography textAlign="center">Residuo</Typography>
-      </Paper>
-    </Box>
+    <NotchContainer>
+      <NotchedPaper elevation={3}>
+        <Notch side="left" />
+        <Notch side="right" />
+        <Typography fontSize="12px">Disponibile</Typography>
+      </NotchedPaper>
+    </NotchContainer>
   );
 };

@@ -3,10 +3,11 @@ import { Stack } from '@mui/system';
 import { CdcInput } from '../../components/Input';
 import { CdcSelect } from '../../components/Select';
 import { useSelector } from 'react-redux';
-import { selectCardSelected, selectCardsList } from '../../features/app/selectors';
+import { selectCardsList } from '../../features/app/selectors';
 import { CDC } from '../../features/app/model';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { APP_ROUTES } from '../../utils/appRoutes';
 
 type TicketState = {
   selectedCard?: CDC;
@@ -43,7 +44,7 @@ const GenerateTicket = () => {
       <Stack width="100%" justifySelf="end">
         <Button
           variant="contained"
-          onClick={() => navigate('/home')}
+          onClick={() => navigate(APP_ROUTES.HOME)}
           disabled={!selectedCard && !ticketAmount}
         >
           Continua

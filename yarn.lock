@@ -5611,7 +5611,9 @@ __metadata:
     globals: "npm:^16.0.0"
     prettier: "npm:^3.5.3"
     react: "npm:^18.3.1"
+    react-barcode: "npm:^1.6.1"
     react-dom: "npm:^18.3.1"
+    react-qr-code: "npm:^2.0.18"
     react-redux: "npm:^9.2.0"
     react-router-dom: "npm:^7.5.0"
     tslib: "npm:^2.8.1"
@@ -8626,6 +8628,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsbarcode@npm:^3.8.0":
+  version: 3.12.1
+  resolution: "jsbarcode@npm:3.12.1"
+  checksum: 10c0/0bd3f276dcce0afab9a995e4c52da0e755a7a6bb8eaa85510886fcb9eb80f4608df26fc2c0114ba9f324d9003076e3049bf49b2c0534e9e7677ce46ec939e4e9
+  languageName: node
+  linkType: hard
+
 "jsbi@npm:^4.3.0":
   version: 4.3.2
   resolution: "jsbi@npm:4.3.2"
@@ -10321,6 +10330,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qr.js@npm:0.0.0":
+  version: 0.0.0
+  resolution: "qr.js@npm:0.0.0"
+  checksum: 10c0/1c6a4c7a58d04e52ec2fee99e39b680fdc5b2a510a981df42c36b716a8eac6634d130fc4d65af8f030f2a07dbf5fa046b97cdfa7456c250ebb50a73916efdcb5
+  languageName: node
+  linkType: hard
+
 "quansync@npm:^0.2.7, quansync@npm:^0.2.8":
   version: 0.2.10
   resolution: "quansync@npm:0.2.10"
@@ -10332,6 +10348,18 @@ __metadata:
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
   checksum: 10c0/900a93d3cdae3acd7d16f642c29a642aea32c2026446151f0778c62ac089d4b8e6c986811076e1ae180a694cedf077d453a11b58ff0a865629a4f82ab558e102
+  languageName: node
+  linkType: hard
+
+"react-barcode@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "react-barcode@npm:1.6.1"
+  dependencies:
+    jsbarcode: "npm:^3.8.0"
+    prop-types: "npm:^15.6.2"
+  peerDependencies:
+    react: 16 - 19
+  checksum: 10c0/2d20114e631b2a0c4f93f7e95ec4b517d0db9705e303977684ff3f102331574a4c700db857003394e679a42a4afac1bff992a48dd37a4964ff0f95506942c71d
   languageName: node
   linkType: hard
 
@@ -10365,6 +10393,18 @@ __metadata:
   version: 19.1.0
   resolution: "react-is@npm:19.1.0"
   checksum: 10c0/b6c6cadd172d5d39f66d493700d137a5545c294a62ce0f8ec793d59794c97d2bed6bad227626f16bd0e90004ed7fdc8ed662a004e6edcf5d2b7ecb6e3040ea6b
+  languageName: node
+  linkType: hard
+
+"react-qr-code@npm:^2.0.18":
+  version: 2.0.18
+  resolution: "react-qr-code@npm:2.0.18"
+  dependencies:
+    prop-types: "npm:^15.8.1"
+    qr.js: "npm:0.0.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/4e13b795cbb10f1dcf0e39d682bb59851e4c84010ba2be7225b2ad9d5c1ffea52d2d38f884ee26235b7002b8ca99e83b805f55e877663c39d67496764d975cf1
   languageName: node
   linkType: hard
 

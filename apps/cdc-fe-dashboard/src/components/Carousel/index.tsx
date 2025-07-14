@@ -1,13 +1,12 @@
 import { CDC } from '../../features/app/model';
 import { Card } from '../Card';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Stack, Box } from '@mui/material';
-import { StyledDots } from './styled';
+import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
+import { Stack } from '@mui/material';
 
 type CarouselProps = {
   list: Array<CDC>;
 };
-
 export const Carousel = ({ list }: CarouselProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
@@ -16,24 +15,23 @@ export const Carousel = ({ list }: CarouselProps) => {
     const container = containerRef.current;
     if (!container) return;
 
-    const items = Array.from(container.children) as HTMLElement[];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let maxRatio = 0;
-        let visibleIdx = activeIdx;
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio > maxRatio) {
-            maxRatio = entry.intersectionRatio;
-            visibleIdx = items.indexOf(entry.target as HTMLElement);
-          }
-        });
-        setActiveIdx(visibleIdx);
-      },
-      { root: container, threshold: Array.from({ length: 101 }, (_, i) => i / 100) },
-    );
+    let scrollTimeout: NodeJS.Timeout;
 
-    items.forEach((item) => observer.observe(item));
-    return () => observer.disconnect();
+    const handleScroll = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+
+      scrollTimeout = setTimeout(() => {
+        const scrollLeft = container.scrollLeft;
+        const containerWidth = container.offsetWidth;
+        const visibleIndex = Math.round(scrollLeft / containerWidth);
+        setActiveIdx(visibleIndex);
+      }, 0);
+    };
+    container.addEventListener('scroll', handleScroll);
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
   }, [list]);
 
   const onClickDots = useCallback((index: number) => {
@@ -45,35 +43,16 @@ export const Carousel = ({ list }: CarouselProps) => {
   if (list.length === 1) return <Card {...list[0]} />;
 
   return (
-    <Stack sx={{ width: '100%', overflow: 'hidden', py: 2 }}>
-      <Stack
-        ref={containerRef}
-        sx={{
-          display: 'flex', // layout in riga
-          flexDirection: 'row',
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
-          WebkitOverflowScrolling: 'touch',
-          gap: 2,
-          px: 2,
-          scrollBehavior: 'smooth',
-        }}
-      >
+    <CarouselContainer>
+      <ScrollArea ref={containerRef}>
         {list.map((item, idx) => (
-          <Box
-            key={idx}
-            sx={{
-              flexShrink: 0,
-              scrollSnapAlign: 'start',
-            }}
-          >
+          <SlideBox key={idx}>
             <Card {...item} />
-          </Box>
+          </SlideBox>
         ))}
-      </Stack>
+      </ScrollArea>
 
-      {/* Indicator Dots */}
-      <Stack direction="row" justifyContent="center" alignItems="center" spacing={1} mt={2}>
+      <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
         {list.map((_, idx) => (
           <StyledDots
             key={idx}
@@ -82,6 +61,6 @@ export const Carousel = ({ list }: CarouselProps) => {
           />
         ))}
       </Stack>
-    </Stack>
+    </CarouselContainer>
   );
 };

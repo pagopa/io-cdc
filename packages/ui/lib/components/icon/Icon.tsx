@@ -2,11 +2,13 @@ import { SvgIconProps } from "@mui/material/SvgIcon";
 
 import IconArrowCircleLeftBold from "./svg/IconArrowCircleLeftBold";
 import IconArrowCircleRightBold from "./svg/IconArrowCircleRightBold";
+import IconBack from "./svg/IconBack";
 import IconCloseCircle from "./svg/IconCloseCircle";
 import IconEnte from "./svg/IconEnte";
 import IconError from "./svg/IconError";
 import IconEuro from "./svg/IconEuro";
 import IconExpandUp from "./svg/IconExpandUp";
+import IconHelp from "./svg/IconHelp";
 import IconInfoOutlined from "./svg/IconInfoOutlined";
 import IconInitiativeExpired from "./svg/IconInitiativeExpired";
 import IconParty from "./svg/IconParty";
@@ -18,11 +20,13 @@ export const Icons = {
   allYearsRequested: IconRequestedAllYears,
   arrowCircleLeftBold: IconArrowCircleLeftBold,
   arrowCircleRightBold: IconArrowCircleRightBold,
+  back: IconBack,
   closeCircle: IconCloseCircle,
   ente: IconEnte,
   error: IconError,
   euro: IconEuro,
   expandUp: IconExpandUp,
+  help: IconHelp,
   info: IconInfoOutlined,
   initiativeExpired: IconInitiativeExpired,
   party: IconParty,

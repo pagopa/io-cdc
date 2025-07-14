@@ -1,4 +1,5 @@
-import { Box, styled } from '@mui/system';
+import { Box, Stack } from '@mui/material';
+import { styled } from '@mui/system';
 
 export const StyledDots = styled(Box)`
   cursor: none;
@@ -19,3 +20,34 @@ export const StyledDots = styled(Box)`
     border: none;
   }
 `;
+
+export const CarouselContainer = styled(Stack)({
+  width: '100%',
+  overflow: 'hidden',
+  paddingTop: 16,
+  paddingBottom: 16,
+  rowGap: 8,
+});
+
+export const ScrollArea = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  overflowX: 'auto',
+  scrollSnapType: 'x mandatory',
+  WebkitOverflowScrolling: 'touch',
+  scrollBehavior: 'smooth',
+  width: '100%',
+  columnGap: '16px',
+  scrollbarWidth: 'none', // Firefox
+  '&::-webkit-scrollbar': {
+    display: 'none', // Chrome, Safari
+  },
+});
+
+export const SlideBox = styled(Box)({
+  flexShrink: 0,
+  width: '100%',
+  minWidth: '100%',
+  scrollSnapAlign: 'start',
+  height: 376,
+});
