@@ -111,7 +111,6 @@ const ProcessPendingRequest = ProcessPendingRequestFn({
   config,
   cosmosDbClient,
   inputDecoder: PendingCardRequestMessage,
-  redisClientFactory,
 });
 app.storageQueue("ProcessPendingRequest", {
   connection: "STORAGE_ACCOUNT",
