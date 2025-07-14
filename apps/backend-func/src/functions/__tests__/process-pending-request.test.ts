@@ -1,6 +1,7 @@
 import * as E from "fp-ts/lib/Either.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { CdcUtilsMock } from "../../__mocks__/cdc.mock.js";
 import {
   CosmosOperation,
   clearContainersItems,
@@ -14,7 +15,6 @@ import {
   aCardRequest,
   aPendingCardRequestMessage,
   aRequestAudit,
-  aValidFiscalCode,
 } from "../../__mocks__/types.mock.js";
 import { Config } from "../../config.js";
 import { CosmosDbCardRequestRepository } from "../../repository/card_request_repository.js";
@@ -38,7 +38,8 @@ describe("process-pending-requests | getExistingCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
     ]);
-    const res = await getExistingCardRequests(aValidFiscalCode, {
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -52,7 +53,8 @@ describe("process-pending-requests | getExistingCardRequests", () => {
       CosmosDbRequestAuditRepository.containerName,
     ]);
     setMockedItems(CosmosDbCardRequestRepository.containerName)([aCardRequest]);
-    const res = await getExistingCardRequests(aValidFiscalCode, {
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -69,7 +71,8 @@ describe("process-pending-requests | getExistingCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosOperation.fetchAll,
     );
-    const res = await getExistingCardRequests(aValidFiscalCode, {
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -93,6 +96,7 @@ describe("process-pending-requests | saveCardRequests", () => {
       CosmosOperation.fetchAll,
     );
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();
@@ -116,6 +120,7 @@ describe("process-pending-requests | saveCardRequests", () => {
       CosmosOperation.create,
     );
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();
@@ -136,6 +141,7 @@ describe("process-pending-requests | saveCardRequests", () => {
     ]);
     clearContainersItems(CosmosDbRequestAuditRepository.containerName);
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();
@@ -179,6 +185,7 @@ describe("process-pending-requests | saveCardRequests", () => {
       aRequestAudit, // this request audit has request_date "2025-07-11T14:16:49.633Z"
     ]);
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();

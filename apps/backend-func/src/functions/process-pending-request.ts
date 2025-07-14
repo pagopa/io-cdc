@@ -2,7 +2,7 @@ import { CosmosClient } from "@azure/cosmos";
 import * as H from "@pagopa/handler-kit";
 import { azureFunction } from "@pagopa/handler-kit-azure-func";
 import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as A from "fp-ts/lib/Array.js";
 import * as O from "fp-ts/lib/Option.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
@@ -15,15 +15,16 @@ import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
-import { getRandomError } from "../utils/testing.js";
+import { CdcUtils } from "../utils/cdc.js";
 
 interface Dependencies {
+  cdcUtils: CdcUtils;
   config: Config;
   cosmosDbClient: CosmosClient;
 }
 
 export const getExistingCardRequests = (
-  fiscalCode: FiscalCode,
+  pendingCardRequestMessage: PendingCardRequestMessage,
   deps: Dependencies,
 ) =>
   pipe(
@@ -32,8 +33,23 @@ export const getExistingCardRequests = (
         deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
       ),
     ),
-    TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
+    TE.chain((repository) =>
+      repository.getAllByFiscalCode(pendingCardRequestMessage.fiscal_code),
+    ),
     TE.map(A.map((cardRequest) => cardRequest.year)),
+    TE.chain((alreadyRequestedYears) =>
+      pipe(
+        deps.cdcUtils.getAlreadyRequestedYearsCdcTE({
+          first_name: pendingCardRequestMessage.first_name,
+          fiscal_code: pendingCardRequestMessage.fiscal_code,
+          last_name: pendingCardRequestMessage.last_name,
+        }),
+        TE.map((alreadyRequestedYearsCdc) =>
+          // we merge the years we know with years that cdc api knows and deduplicate
+          [...new Set(alreadyRequestedYears.concat(alreadyRequestedYearsCdc))],
+        ),
+      ),
+    ),
   );
 
 export const filterAlreadyRequestedYears =
@@ -76,6 +92,7 @@ export const saveCardRequests =
           A.map((year) =>
             pipe(
               TE.of(requestsAudit),
+              // we check request date from previous audit
               TE.map((requests) =>
                 pipe(
                   // get smaller date from all requests audits that include this year
@@ -89,7 +106,21 @@ export const saveCardRequests =
                   O.getOrElse(() => pendingCardRequestMessage.request_date),
                 ),
               ),
-              // TODO: Call sogei api
+              // we call sogei
+              TE.chainFirst((requestDate) =>
+                deps.cdcUtils.requestCdcTE(
+                  {
+                    first_name: pendingCardRequestMessage.first_name,
+                    fiscal_code: pendingCardRequestMessage.fiscal_code,
+                    last_name: pendingCardRequestMessage.last_name,
+                  },
+                  {
+                    request_date: requestDate,
+                    years: [year],
+                  },
+                ),
+              ),
+              // we save requests on our end
               TE.chain((requestDate) =>
                 cardRequestsRepository.insert({
                   createdAt: new Date() as IsoDateFromString,
@@ -112,7 +143,7 @@ export const processPendingCardRequests =
   (pendingCardRequestMessage: PendingCardRequestMessage) =>
   (deps: Dependencies) =>
     pipe(
-      getExistingCardRequests(pendingCardRequestMessage.fiscal_code, deps),
+      getExistingCardRequests(pendingCardRequestMessage, deps),
       TE.map(filterAlreadyRequestedYears(pendingCardRequestMessage.years)),
       TE.chain(saveCardRequests(pendingCardRequestMessage, deps)),
     );
