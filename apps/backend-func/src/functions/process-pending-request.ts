@@ -15,6 +15,7 @@ import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
+import { getRandomError } from "../utils/testing.js";
 
 interface Dependencies {
   config: Config;
@@ -69,6 +70,7 @@ export const saveCardRequests =
           ),
         ),
       ),
+      TE.chain(getRandomError),
       TE.chain(({ cardRequestsRepository, requestsAudit }) =>
         pipe(
           years,
