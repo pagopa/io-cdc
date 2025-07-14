@@ -81,6 +81,6 @@ resource "azurerm_cosmosdb_sql_container" "requests-audit-test" {
   database_name       = azurerm_cosmosdb_sql_database.cdc_cosmos_db.name
   partition_key_paths = ["/fiscalCode"]
   autoscale_settings {
-    max_throughput = 2000
+    max_throughput = 8000
   }
 }

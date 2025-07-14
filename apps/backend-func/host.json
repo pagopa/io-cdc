@@ -10,10 +10,10 @@
       "routePrefix": ""
     },
     "queues": {
-      "maxPollingInterval": "00:00:10",
+      "maxPollingInterval": "00:01:00",
       "visibilityTimeout": "00:01:00",
       "batchSize": 1,
-      "maxDequeueCount": 5,
+      "maxDequeueCount": 100,
       "newBatchThreshold": 0
     }
   },
