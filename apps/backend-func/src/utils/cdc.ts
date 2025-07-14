@@ -58,7 +58,12 @@ const isCdcApiCallSuccess = (
 ): res is IResponseType<200, ListaEsitoRichiestaBean, never> =>
   res.status === 200;
 
-const statusSuccessfulCodes = ["RICHIESTA INSERITA"];
+const statusSuccessfulCodes = [
+  "RICHIESTA INSERITA",
+  "RICHIESTA NON INSERIBILE",
+  "CARTA ATTIVA",
+  "IN VALUTAZIONE",
+];
 
 const getAlreadyRequestedYearsCdcTE =
   (config: Config) => (user: CdcApiUserData) =>
