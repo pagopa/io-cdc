@@ -17,6 +17,12 @@ module "roles" {
       resource_group_name  = module.storage_be.cdc_storage_be.resource_group_name
       role                 = "reader"
       description          = "we need to read queue"
+    },
+    {
+      storage_account_name = module.storage_be.cdc_storage_be.name
+      resource_group_name  = module.storage_be.cdc_storage_be.resource_group_name
+      role                 = "owner"
+      description          = "we need to own the queue"
     }
   ]
 }

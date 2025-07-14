@@ -24,15 +24,21 @@
     "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/0.1.0"
   },
   "roles": {
-    "hash": "b2cac5b9d354adabbef1e0404691e8cbda83fde6e16fd9a2ececd03d9278b119",
-    "version": "1.1.1",
+    "hash": "433fe44b2863b8af8d4f4206ee2590599b0cb67d78b372e65d68317d3199aaa1",
+    "version": "1.1.2",
     "name": "azure_role_assignments",
-    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/1.1.1"
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/1.1.2"
   },
   "storage_be.cdc_storage_be": {
     "hash": "614654ccd1c9a2d91ff766f3a9e5e2dee08c15e871f8de36ea4b05dcec82855d",
     "version": "0.1.0",
     "name": "azure_storage_account",
     "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/0.1.0"
+  },
+  "backend_func.func_autoscaler": {
+    "hash": "42ca301a262ca7cb78e9dfb2072922e778328460b91e9859d1bf2af974f9518a",
+    "version": "2.0.0",
+    "name": "azure_app_service_plan_autoscaler",
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-app-service-plan-autoscaler/azurerm/2.0.0"
   }
 }

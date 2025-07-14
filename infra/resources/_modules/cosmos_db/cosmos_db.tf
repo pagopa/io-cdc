@@ -60,3 +60,27 @@ resource "azurerm_cosmosdb_sql_container" "requests-audit" {
     max_throughput = 2000
   }
 }
+
+resource "azurerm_cosmosdb_sql_container" "card_requests-test" {
+  name                = "card-requests-test"
+  resource_group_name = var.resource_group
+
+  account_name        = module.cdc_cosmos_account.name
+  database_name       = azurerm_cosmosdb_sql_database.cdc_cosmos_db.name
+  partition_key_paths = ["/fiscalCode"]
+  autoscale_settings {
+    max_throughput = 2000
+  }
+}
+
+resource "azurerm_cosmosdb_sql_container" "requests-audit-test" {
+  name                = "requests-audit-test"
+  resource_group_name = var.resource_group
+
+  account_name        = module.cdc_cosmos_account.name
+  database_name       = azurerm_cosmosdb_sql_database.cdc_cosmos_db.name
+  partition_key_paths = ["/fiscalCode"]
+  autoscale_settings {
+    max_throughput = 8000
+  }
+}
