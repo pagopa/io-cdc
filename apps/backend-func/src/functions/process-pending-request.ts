@@ -70,7 +70,6 @@ export const saveCardRequests =
           ),
         ),
       ),
-      TE.chain(getRandomError),
       TE.chain(({ cardRequestsRepository, requestsAudit }) =>
         pipe(
           years,
