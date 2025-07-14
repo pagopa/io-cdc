@@ -121,9 +121,9 @@ const cosmosDbClientMock: CosmosClient = {
  * You can then access to createMocks, fetchAllMock and setMockedItems by container name.
  * You can set a cosmos error with setCosmosErrorMock(containerName, CosmosOperation.fetchAll | CosmosOperation.create) and it will be triggered once.
  * You can expect spy to have been called with expect(createMocks|fetchAllMocks[containerName]).toBeCalled...;
- * 
+ *
  * @param containers string[] the container names you want to initialize
- * @returns 
+ * @returns
  */
 export const getCosmosDbClientInstanceMock = (containers: string[]) => {
   for (const c of containers) {
