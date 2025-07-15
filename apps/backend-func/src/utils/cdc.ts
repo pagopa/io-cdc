@@ -73,7 +73,7 @@ const getAlreadyRequestedYearsCdcTE =
         pipe(
           TE.of(getCdcClient(config)(jwt)),
           TE.chain((client) =>
-            TE.tryCatch(async () => client.stato({"Content-Type":"text/plain"}), E.toError),
+            TE.tryCatch(async () => client.stato({}), E.toError),
           ),
           TE.chainW((response) =>
             pipe(

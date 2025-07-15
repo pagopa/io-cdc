@@ -19,12 +19,6 @@ paths:
       operationId: stato
       security:
         - JwtAuth: []
-      parameters:
-        - in: header
-          name: Content-Type
-          required: true
-          schema:
-            type: string
       responses:
         "200":
           description: Tutto OK
