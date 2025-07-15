@@ -73,21 +73,22 @@ const getAlreadyRequestedYearsCdcTE =
       TE.chain((client) =>
         TE.tryCatch(async () => client.stato({}), E.toError),
       ),
-      TE.chainW(
-        flow(
+      TE.chainW((response) =>
+        pipe(
+          response,
           TE.fromEither,
           TE.mapLeft(
             (errors) => new Error(errorsToReadableMessages(errors).join(" / ")),
           ),
         ),
       ),
-      TE.chainW(
+      TE.chainW((response) =>
         TE.fromPredicate(
           isCdcApiCallSuccess,
           mapCdcApiCallFailure(
-            "Citizen status CDC failure | API result not compliant.",
+            `Citizen status CDC failure | API result not success. | ${response.status} | ${response.value}`,
           ),
-        ),
+        )(response),
       ),
       TE.map((successResponse) => successResponse.value),
       TE.map((res) =>
