@@ -18,7 +18,13 @@ paths:
       summary: controllo anno registrazione per il beneficiario
       operationId: stato
       security:
-        - JwtAuth: []  
+        - JwtAuth: []
+      parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Tutto OK
