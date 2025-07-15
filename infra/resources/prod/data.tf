@@ -178,3 +178,13 @@ data "azurerm_key_vault_secret" "pagopa_idp_keys_base_url" {
   name         = "PAGOPA-IDP-KEYS-BASE-URL"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
+
+data "azurerm_key_vault_secret" "cdc_api_base_url" {
+  name         = "CDC-API-BASE-URL"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "cdc_api_base_url_test" {
+  name         = "CDC-API-BASE-URL-TEST"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}

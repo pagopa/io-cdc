@@ -26,6 +26,9 @@ module "backend_func" {
 
   cdc_base_url = data.azurerm_key_vault_secret.cdc_base_url.value
 
+  cdc_api_base_url = data.azurerm_key_vault_secret.cdc_api_base_url.value
+  cdc_api_base_url_test = data.azurerm_key_vault_secret.cdc_api_base_url_test.value
+
   cosmosdb_cdc_uri           = module.cosmos_db.cosmos_db.endpoint
   cosmosdb_cdc_key           = data.azurerm_key_vault_secret.cosmosdb_cdc_key.value
   cosmosdb_cdc_database_name = data.azurerm_key_vault_secret.cosmosdb_cdc_database_name.value

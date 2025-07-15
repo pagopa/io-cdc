@@ -26,7 +26,14 @@ const fetchApi: typeof fetchWithTimeout =
 
 export const CdcAPIClient = (config: Config) => (jwt: string) =>
   createClient<"JwtAuth">({
-    baseUrl: config.SERVICES_API_URL,
+    baseUrl: config.CDC_API_BASE_URL,
+    fetchApi,
+    withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
+  });
+
+export const CdcAPIClientTest = (config: Config) => (jwt: string) =>
+  createClient<"JwtAuth">({
+    baseUrl: config.CDC_API_BASE_URL_TEST,
     fetchApi,
     withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
   });

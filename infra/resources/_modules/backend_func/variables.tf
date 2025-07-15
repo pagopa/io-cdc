@@ -262,3 +262,15 @@ variable "pagopa_idp_keys_base_url" {
   description = "The base url to get idp keys"
   sensitive   = true
 }
+
+variable "cdc_api_base_url" {
+  type        = string
+  description = "The base url for cdc api"
+  sensitive   = true
+}
+
+variable "cdc_api_base_url_test" {
+  type        = string
+  description = "The test base url for cdc api"
+  sensitive   = true
+}
