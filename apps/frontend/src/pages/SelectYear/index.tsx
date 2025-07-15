@@ -49,6 +49,7 @@ const SelectYear = () => {
         navigate(APP_ROUTES.FEEDBACK, {
           state: {
             status: 200,
+            years: newYears.length,
           },
         });
     } catch (e) {
