@@ -51,7 +51,7 @@ const getJwtTE = (config: Config, user: CdcApiUserData) => {
 const mapCdcApiCallFailure =
   (message: string) =>
   (res: IResponseType<number, unknown, never>): Error =>
-    new Error(`${message} | ${res.status}`);
+    new Error(`${message} | ${res.status} | ${res.value}`);
 
 const isCdcApiCallSuccess = (
   res: IResponseType<number, unknown, never>,
@@ -69,38 +69,43 @@ const getAlreadyRequestedYearsCdcTE =
   (config: Config) => (user: CdcApiUserData) =>
     pipe(
       getJwtTE(config, user),
-      TE.map(getCdcClient(config)),
-      TE.chain((client) =>
-        TE.tryCatch(async () => client.stato({}), E.toError),
-      ),
-      TE.chainW((response) =>
+      TE.chain((jwt) =>
         pipe(
-          response,
-          TE.fromEither,
-          TE.mapLeft(
-            (errors) => new Error(errorsToReadableMessages(errors).join(" / ")),
+          TE.of(getCdcClient(config)(jwt)),
+          TE.chain((client) =>
+            TE.tryCatch(async () => client.stato({}), E.toError),
+          ),
+          TE.chainW((response) =>
+            pipe(
+              response,
+              TE.fromEither,
+              TE.mapLeft(
+                (errors) =>
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
+              ),
+            ),
+          ),
+          TE.chainW((response) =>
+            TE.fromPredicate(
+              isCdcApiCallSuccess,
+              mapCdcApiCallFailure(
+                `Citizen status CDC failure | API result not success. | ${jwt}`,
+              ),
+            )(response),
+          ),
+          TE.map((successResponse) => successResponse.value),
+          TE.map((res) =>
+            (
+              res.listaEsitoRichiestaPerAnno
+                ?.filter((req) =>
+                  req?.esitoRichiesta
+                    ? statusSuccessfulCodes.includes(req.esitoRichiesta)
+                    : false,
+                )
+                .map((yr) => yr.annoRiferimento as Year) || []
+            ).filter((y) => y !== undefined),
           ),
         ),
-      ),
-      TE.chainW((response) =>
-        TE.fromPredicate(
-          isCdcApiCallSuccess,
-          mapCdcApiCallFailure(
-            `Citizen status CDC failure | API result not success. | ${response.status} | ${response.value}`,
-          ),
-        )(response),
-      ),
-      TE.map((successResponse) => successResponse.value),
-      TE.map((res) =>
-        (
-          res.listaEsitoRichiestaPerAnno
-            ?.filter((req) =>
-              req?.esitoRichiesta
-                ? statusSuccessfulCodes.includes(req.esitoRichiesta)
-                : false,
-            )
-            .map((yr) => yr.annoRiferimento as Year) || []
-        ).filter((y) => y !== undefined),
       ),
     );
 
