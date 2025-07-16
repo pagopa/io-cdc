@@ -5,9 +5,11 @@ import { initAnalytics } from '@io-cdc/mixpanel';
 export const useMixPanelSession = () => {
   const { search } = useLocation();
 
-  const deviceId = useMemo(() => search.split('deviceId=')[1], [search]);
+  const deviceId = useMemo(() => new URLSearchParams(search).get('deviceId'), [search]);
 
   useEffect(() => {
-    initAnalytics(deviceId);
+    if (deviceId) {
+      initAnalytics(deviceId);
+    }
   }, [deviceId]);
 };

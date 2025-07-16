@@ -10,8 +10,12 @@ import { useRequestBonusMutation } from '../../features/app/services';
 const SelectYear = () => {
   const annualities = useSelector(selectAnnualitiesWithStatus);
   const notAvailableYears = useSelector(selectNotAvailableYears);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
+
   const [requestBonus] = useRequestBonusMutation();
+  const navigate = useNavigate();
 
   const mappedYearsList = useMemo(
     () =>
@@ -28,9 +32,10 @@ const SelectYear = () => {
     [annualities],
   );
 
-  const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
-
-  const navigate = useNavigate();
+  const allSelected = useMemo(
+    () => mappedYearsList.every(({ value, disabled }) => disabled || selectedItems.includes(value)),
+    [mappedYearsList, selectedItems],
+  );
 
   const onSelectYear = useCallback((value: string[]) => {
     setSelectedItems(value);
@@ -58,24 +63,20 @@ const SelectYear = () => {
           status: 500,
         },
       });
-    } finally {
-      setIsLoading(false);
     }
   }, [selectedItems, notAvailableYears, requestBonus, navigate]);
 
-  const allSelected = useMemo(
-    () => mappedYearsList.every(({ value, disabled }) => disabled || selectedItems.includes(value)),
-    [mappedYearsList, selectedItems],
-  );
+  if (isLoading)
+    return (
+      <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+        <Loader />
+        <Typography fontSize={22} fontWeight={700} textAlign="center">
+          Stiamo inviando la tua richiesta
+        </Typography>
+      </Stack>
+    );
 
-  return isLoading ? (
-    <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-      <Loader />
-      <Typography fontSize={22} fontWeight={700} textAlign="center">
-        Stiamo inviando la tua richiesta
-      </Typography>
-    </Stack>
-  ) : (
+  return (
     <Stack padding={2} flex={1} justifyContent="space-between" rowGap={2} overflow="hidden">
       <SectionTitle
         title="Per quale anno vuoi richiedere la Carta della Cultura?"
