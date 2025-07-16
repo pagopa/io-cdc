@@ -69,5 +69,7 @@ module "backend_func" {
   cdc_backend_func_url = data.azurerm_key_vault_secret.cdc_backend_func_url.value
   cdc_backend_func_key = data.azurerm_key_vault_secret.cdc_backend_func_key.value
 
+  action_group_id = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
+
   tags = local.tags
 }

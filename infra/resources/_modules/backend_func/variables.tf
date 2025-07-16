@@ -274,3 +274,9 @@ variable "cdc_api_base_url_test" {
   description = "The test base url for cdc api"
   sensitive   = true
 }
+
+variable "action_group_id" {
+  type        = string
+  description = "The action group id for alerts"
+  sensitive   = true
+}

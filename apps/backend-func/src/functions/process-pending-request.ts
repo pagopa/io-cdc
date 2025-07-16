@@ -7,7 +7,7 @@ import * as A from "fp-ts/lib/Array.js";
 import * as O from "fp-ts/lib/Option.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { pipe } from "fp-ts/lib/function.js";
+import { identity, pipe } from "fp-ts/lib/function.js";
 import { ulid } from "ulid";
 
 import { Config } from "../config.js";
@@ -60,80 +60,85 @@ export const saveCardRequests =
   (pendingCardRequestMessage: PendingCardRequestMessage, deps: Dependencies) =>
   (years: Year[]) =>
     pipe(
-      TE.Do,
-      TE.bind("cardRequestsRepository", () =>
-        TE.of(
-          new CosmosDbCardRequestRepository(
-            deps.cosmosDbClient.database(
-              deps.config.COSMOSDB_CDC_DATABASE_NAME,
+      TE.of(
+        new CosmosDbRequestAuditRepository(
+          deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+        ),
+      ),
+      TE.chain((requestsAuditRepository) =>
+        requestsAuditRepository.getAllByFiscalCode(
+          pendingCardRequestMessage.fiscal_code,
+        ),
+      ),
+      TE.map((requestsAudit) =>
+        // build request payload
+        pipe(
+          years,
+          A.map((year) =>
+            pipe(
+              // we check request date from previous audits
+              // get smaller date from all requests audits that include this year
+              // or get pendingCardRequestMessage.request_date
+              requestsAudit
+                .filter((req) => req.years.includes(year))
+                .map((req) => req.requestDate)
+                .sort()
+                .shift(),
+              O.fromNullable,
+              O.getOrElse(() => pendingCardRequestMessage.request_date),
+              (requestDate) => ({
+                request_date: requestDate,
+                year,
+              }),
             ),
           ),
         ),
       ),
-      TE.bind("requestsAudit", () =>
+      // we call CdC API with a cumulative request
+      TE.chainFirst((requestData) =>
+        pipe(
+          deps.cdcUtils.requestCdcTE(
+            {
+              first_name: pendingCardRequestMessage.first_name,
+              fiscal_code: pendingCardRequestMessage.fiscal_code,
+              last_name: pendingCardRequestMessage.last_name,
+            },
+            requestData,
+          ),
+          TE.chain(
+            // we check that ALL requested years has been successfully requested
+            TE.fromPredicate(identity, () => new Error("CdC API Call failed")),
+          ),
+        ),
+      ),
+      // we save requests singularly on our end
+      TE.chain((requestData) =>
         pipe(
           TE.of(
-            new CosmosDbRequestAuditRepository(
+            new CosmosDbCardRequestRepository(
               deps.cosmosDbClient.database(
                 deps.config.COSMOSDB_CDC_DATABASE_NAME,
               ),
             ),
           ),
-          TE.chain((requestsAuditRepository) =>
-            requestsAuditRepository.getAllByFiscalCode(
-              pendingCardRequestMessage.fiscal_code,
-            ),
-          ),
-        ),
-      ),
-      TE.chain(({ cardRequestsRepository, requestsAudit }) =>
-        pipe(
-          years,
-          A.map((year) =>
+          TE.chain((cardRequestsRepository) =>
             pipe(
-              TE.of(requestsAudit),
-              // we check request date from previous audit
-              TE.map((requests) =>
+              requestData,
+              A.map((request) =>
                 pipe(
-                  // get smaller date from all requests audits that include this year
-                  // or get pendingCardRequestMessage.request_date
-                  requests
-                    .filter((req) => req.years.includes(year))
-                    .map((req) => req.requestDate)
-                    .sort()
-                    .shift(),
-                  O.fromNullable,
-                  O.getOrElse(() => pendingCardRequestMessage.request_date),
+                  cardRequestsRepository.insert({
+                    createdAt: new Date() as IsoDateFromString,
+                    fiscalCode: pendingCardRequestMessage.fiscal_code,
+                    id: ulid() as NonEmptyString,
+                    requestDate: request.request_date,
+                    requestId: pendingCardRequestMessage.request_id,
+                    year: request.year,
+                  }),
                 ),
               ),
-              // we call sogei
-              TE.chainFirst((requestDate) =>
-                deps.cdcUtils.requestCdcTE(
-                  {
-                    first_name: pendingCardRequestMessage.first_name,
-                    fiscal_code: pendingCardRequestMessage.fiscal_code,
-                    last_name: pendingCardRequestMessage.last_name,
-                  },
-                  {
-                    request_date: requestDate,
-                    years: [year],
-                  },
-                ),
-              ),
-              // we save requests on our end
-              TE.chain((requestDate) =>
-                cardRequestsRepository.insert({
-                  createdAt: new Date() as IsoDateFromString,
-                  fiscalCode: pendingCardRequestMessage.fiscal_code,
-                  id: ulid() as NonEmptyString,
-                  requestDate,
-                  requestId: pendingCardRequestMessage.request_id,
-                  year,
-                }),
-              ),
+              A.sequence(TE.ApplicativePar),
             ),
           ),
-          A.sequence(TE.ApplicativePar),
         ),
       ),
       TE.map(() => true as const),

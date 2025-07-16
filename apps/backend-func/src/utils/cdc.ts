@@ -12,7 +12,6 @@ import { Config } from "../config.js";
 import { EsitoRichiestaEnum } from "../generated/cdc-api/EsitoRichiestaBean.js";
 import { InputBeneficiarioBean } from "../generated/cdc-api/InputBeneficiarioBean.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
-import { Years } from "../generated/definitions/internal/Years.js";
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 
@@ -23,10 +22,12 @@ export const CdcApiUserData = t.type({
 });
 export type CdcApiUserData = t.TypeOf<typeof CdcApiUserData>;
 
-export const CdcApiRequestData = t.type({
-  request_date: IsoDateFromString,
-  years: Years,
-});
+export const CdcApiRequestData = t.array(
+  t.type({
+    request_date: IsoDateFromString,
+    year: Year,
+  }),
+);
 export type CdcApiRequestData = t.TypeOf<typeof CdcApiRequestData>;
 
 const getCdcClient = (config: Config) => CdcAPIClient(config);
@@ -75,7 +76,7 @@ const getAlreadyRequestedYearsCdcTE =
           TE.chain((client) =>
             TE.tryCatch(async () => client.stato({}), E.toError),
           ),
-          TE.chainW((response) =>
+          TE.chain((response) =>
             pipe(
               response,
               TE.fromEither,
@@ -85,7 +86,7 @@ const getAlreadyRequestedYearsCdcTE =
               ),
             ),
           ),
-          TE.chainW((response) =>
+          TE.chain((response) =>
             TE.fromPredicate(
               isCdcApiCallSuccess,
               mapCdcApiCallFailure(
@@ -124,8 +125,10 @@ const requestCdcTE =
           async () =>
             client.registrazione({
               body: {
-                anniRif: request.years.map((y) => ({ anno: y })),
-                tsRichiestaEffettuata: request.request_date,
+                anniRif: request.map((i) => ({
+                  anno: i.year,
+                  tsRichiestaEffettuata: i.request_date,
+                })),
               } as InputBeneficiarioBean,
             }),
           E.toError,

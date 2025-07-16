@@ -11,6 +11,15 @@ tags:
 - name: /secured/utente
   description: metodi inerenti all'utente
 paths:
+  /CDCUtenteWS/rest/secured/beneficiario/versione:
+    get:
+      tags:
+      - /secured/utente
+      security:
+        - JwtAuth: [] 
+      responses:
+        default:
+          description: Default response
   /CDCUtenteWS/rest/secured/beneficiario/stato:
     get:
       tags:
@@ -38,15 +47,6 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
-  /CDCUtenteWS/rest/secured/beneficiario/versione:
-    get:
-      tags:
-      - /secured/utente
-      security:
-        - JwtAuth: [] 
-      responses:
-        default:
-          description: Default response
   /CDCUtenteWS/rest/secured/beneficiario/registrazione:
     post:
       tags:
@@ -105,9 +105,6 @@ components:
     InputBeneficiarioBean:
       type: object
       properties:
-        tsRichiestaEffettuata:
-          type: string
-          format: date-time
         anniRif:
           type: array
           items:
@@ -164,3 +161,6 @@ components:
       properties:
         anno:
           type: string
+        tsRichiestaEffettuata:
+          type: string
+          format: date-time
