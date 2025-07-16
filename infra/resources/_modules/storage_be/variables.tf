@@ -46,3 +46,9 @@ variable "resource_group_name" {
 variable "subnet_pep_id" {
   type = string
 }
+
+variable "action_group_id" {
+  type        = string
+  description = "The action group id for alerts"
+  sensitive   = true
+}

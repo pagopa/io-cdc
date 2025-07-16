@@ -15,6 +15,7 @@ import { Config } from "../config.js";
 import { CardRequests } from "../generated/definitions/internal/CardRequests.js";
 import { withParams } from "../middlewares/withParams.js";
 import { Year, years } from "../models/card_request.js";
+import { Session } from "../models/session.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
@@ -81,7 +82,7 @@ export const filterAlreadyRequestedYears =
     requestedYears.filter((year) => alreadyRequestedYears.indexOf(year) < 0);
 
 export const saveNewRequestAudit =
-  (fiscalCode: FiscalCode, deps: Dependencies) => (years: Year[]) =>
+  (user: Session, deps: Dependencies) => (years: Year[]) =>
     pipe(
       TE.of(
         new CosmosDbRequestAuditRepository(
@@ -96,7 +97,7 @@ export const saveNewRequestAudit =
           TE.chain(({ requestDate, requestId }) =>
             pipe(
               repository.insert({
-                fiscalCode,
+                fiscalCode: user.fiscal_code,
                 id: ulid() as NonEmptyString,
                 requestDate,
                 requestId,
@@ -104,7 +105,9 @@ export const saveNewRequestAudit =
               }),
               TE.chain(() =>
                 deps.queueStorage.enqueuePendingCardRequestMessage({
-                  fiscal_code: fiscalCode,
+                  first_name: user.given_name,
+                  fiscal_code: user.fiscal_code,
+                  last_name: user.family_name,
                   request_date: requestDate,
                   request_id: requestId,
                   years: years,
@@ -124,13 +127,13 @@ export const saveNewRequestAudit =
     );
 
 export const postCardRequests =
-  (fiscalCode: FiscalCode, years: Year[]) => (deps: Dependencies) =>
+  (user: Session, years: Year[]) => (deps: Dependencies) =>
     pipe(
-      activateSpecialService(fiscalCode, deps),
-      TE.chain(getExistingCardRequests(fiscalCode, deps)),
+      activateSpecialService(user.fiscal_code, deps),
+      TE.chain(getExistingCardRequests(user.fiscal_code, deps)),
       TE.map(filterNotEligibleYears),
       TE.map(filterAlreadyRequestedYears(years)),
-      TE.chain(saveNewRequestAudit(fiscalCode, deps)),
+      TE.chain(saveNewRequestAudit(user, deps)),
     );
 
 export const makePostCardRequestsHandler: H.Handler<
@@ -150,7 +153,7 @@ export const makePostCardRequestsHandler: H.Handler<
         RTE.map((years) => ({ user, years })),
       ),
     ),
-    RTE.chain(({ user, years }) => postCardRequests(user.fiscal_code, years)),
+    RTE.chain(({ user, years }) => postCardRequests(user, years)),
     RTE.map((years) => pipe(H.successJson(years), H.withStatusCode(201))),
     responseErrorToHttpError,
   ),

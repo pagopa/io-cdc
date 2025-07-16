@@ -1,6 +1,12 @@
 import * as E from "fp-ts/lib/Either.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import {
+  CdcUtilsMock,
+  getAlreadyRequestedYearsCdcTEMock,
+  requestCdcTEMock,
+} from "../../__mocks__/cdc.mock.js";
 import {
   CosmosOperation,
   clearContainersItems,
@@ -14,7 +20,6 @@ import {
   aCardRequest,
   aPendingCardRequestMessage,
   aRequestAudit,
-  aValidFiscalCode,
 } from "../../__mocks__/types.mock.js";
 import { Config } from "../../config.js";
 import { CosmosDbCardRequestRepository } from "../../repository/card_request_repository.js";
@@ -38,7 +43,8 @@ describe("process-pending-requests | getExistingCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
     ]);
-    const res = await getExistingCardRequests(aValidFiscalCode, {
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -52,12 +58,29 @@ describe("process-pending-requests | getExistingCardRequests", () => {
       CosmosDbRequestAuditRepository.containerName,
     ]);
     setMockedItems(CosmosDbCardRequestRepository.containerName)([aCardRequest]);
-    const res = await getExistingCardRequests(aValidFiscalCode, {
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res)) expect(res.right).toEqual([aCardRequest.year]);
+  });
+
+  it("1. should return an array of CardRequests' years merged with CdC API years", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    setMockedItems(CosmosDbCardRequestRepository.containerName)([aCardRequest]);
+    getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(TE.of(["2025"]));
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
+      config,
+      cosmosDbClient: cosmosClientMock,
+    })();
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) expect(res.right).toEqual([aCardRequest.year, "2025"]);
   });
 
   it("1. should return InternalServerError if cosmos fails during fetch", async () => {
@@ -69,7 +92,25 @@ describe("process-pending-requests | getExistingCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosOperation.fetchAll,
     );
-    const res = await getExistingCardRequests(aValidFiscalCode, {
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
+      config,
+      cosmosDbClient: cosmosClientMock,
+    })();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res)) expect(res.left).toEqual(new Error("Error"));
+  });
+
+  it("1. should return InternalServerError if cdcUtils getAlreadyRequestedYearsCdcTE fails", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(
+      TE.left(new Error("Error")),
+    );
+    const res = await getExistingCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -93,6 +134,7 @@ describe("process-pending-requests | saveCardRequests", () => {
       CosmosOperation.fetchAll,
     );
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();
@@ -116,6 +158,7 @@ describe("process-pending-requests | saveCardRequests", () => {
       CosmosOperation.create,
     );
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();
@@ -129,6 +172,49 @@ describe("process-pending-requests | saveCardRequests", () => {
     ).toBeCalledTimes(3);
   });
 
+  it("1. should return error when cdcUtils requestCdcTE returns fails", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    requestCdcTEMock.mockReturnValueOnce(TE.left(new Error("Error")));
+    const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
+      config,
+      cosmosDbClient: cosmosClientMock,
+    })(["2020", "2021", "2023"])();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res)) expect(res.left).toEqual(new Error("Error"));
+    expect(
+      fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(
+      createMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(0);
+  });
+
+  it("1. should return error when cdcUtils requestCdcTE returns false", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    requestCdcTEMock.mockReturnValueOnce(TE.of(false));
+    const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
+      config,
+      cosmosDbClient: cosmosClientMock,
+    })(["2020", "2021", "2023"])();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual(new Error("CdC API Call failed"));
+    expect(
+      fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(
+      createMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(0);
+  });
+
   it("1. should succeed and create CardRequests if no previous RequestsAudit are present", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
       CosmosDbCardRequestRepository.containerName,
@@ -136,6 +222,7 @@ describe("process-pending-requests | saveCardRequests", () => {
     ]);
     clearContainersItems(CosmosDbRequestAuditRepository.containerName);
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();
@@ -179,6 +266,7 @@ describe("process-pending-requests | saveCardRequests", () => {
       aRequestAudit, // this request audit has request_date "2025-07-11T14:16:49.633Z"
     ]);
     const res = await saveCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })(["2020", "2021", "2023"])();

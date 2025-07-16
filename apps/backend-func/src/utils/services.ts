@@ -11,7 +11,7 @@ import { Activation } from "../generated/services-api/Activation.js";
 import { ActivationStatusEnum } from "../generated/services-api/ActivationStatus.js";
 import { ProblemJson } from "../generated/services-api/ProblemJson.js";
 
-const isServiceApiGetActivationCallNotFound = (
+const isServiceApiGetActivationCallSuccessOrNotFound = (
   res: IResponseType<number, unknown, never>,
 ): res is
   | IResponseType<200, Activation, never>
@@ -81,7 +81,7 @@ const getServiceActivation = (
     ),
     TE.chainW(
       TE.fromPredicate(
-        isServiceApiGetActivationCallNotFound,
+        isServiceApiGetActivationCallSuccessOrNotFound,
         mapServiceApiActivationCallFailure("Cannot get service activation"),
       ),
     ),

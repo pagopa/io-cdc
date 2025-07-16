@@ -7,6 +7,8 @@ import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { OidcConfig } from "../utils/fims.js";
 
 export const aValidFiscalCode = "AAABBB00C00D000E" as FiscalCode;
+export const aValidFirstName = "Aname" as NonEmptyString;
+export const aValidLastName = "Asurname" as NonEmptyString;
 
 export const aRequestAudit: RequestAudit = {
   fiscalCode: aValidFiscalCode,
@@ -26,16 +28,18 @@ export const aCardRequest: CardRequest = {
 };
 
 export const aPendingCardRequestMessage: PendingCardRequestMessage = {
+  first_name: aValidFirstName,
   fiscal_code: aValidFiscalCode,
+  last_name: aValidLastName,
   request_date: new Date("2025-07-12T14:16:49.633Z"),
   request_id: "anystringedid" as NonEmptyString,
   years: ["2020", "2021", "2023"],
 };
 
 export const aValidSession: Session = {
-  family_name: "Asurname" as NonEmptyString,
+  family_name: aValidLastName,
   fiscal_code: aValidFiscalCode,
-  given_name: "Aname" as NonEmptyString,
+  given_name: aValidFirstName,
 };
 
 export const anOidcConfig: OidcConfig = {

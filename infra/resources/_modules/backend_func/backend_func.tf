@@ -39,6 +39,8 @@ module "cdc_backend_func" {
     "AzureWebJobs.ProcessPendingRequest.Disabled"
   ]
 
+  action_group_id = var.action_group_id
+
   tags = var.tags
 }
 
