@@ -1,56 +1,36 @@
-import { Button, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { CdcInput } from '../../components/Input';
-import { CdcSelect } from '../../components/Select';
-import { useSelector } from 'react-redux';
-import { selectCardsList } from '../../features/app/selectors';
-import { CDC } from '../../features/app/model';
-import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { APP_ROUTES } from '../../utils/appRoutes';
-
-type TicketState = {
-  selectedCard?: CDC;
-  ticketAmount?: number;
-};
+import { useMemo } from 'react';
+import { Header } from '../../components/Header';
+import { NewBonusForm } from './components/NewBonusForm';
+import { useCreateBonusMutation, useGetCardsQuery } from '../../store/services/api';
+import { BonusCreationLoader } from './components/BonusCreationLoader';
+import { Navigate } from 'react-router-dom';
 
 const GenerateTicket = () => {
-  const navigate = useNavigate();
-  const { data } = useSelector(selectCardsList);
+  const { data: cards } = useGetCardsQuery();
 
-  const [{ selectedCard, ticketAmount }, setState] = useState<TicketState>({});
+  const [
+    createBonus,
+    { isLoading: isCreatingBonus, isSuccess: isBonusCreationCompleted, data: newBonus },
+  ] = useCreateBonusMutation();
 
-  const handleChangeState = useCallback((value: CDC | number, key: keyof TicketState) => {
-    setState((prev) => ({ ...prev, [key]: value }));
-  }, []);
+  console.log(isBonusCreationCompleted, newBonus);
 
-  const inputError = useMemo(
-    () => !!ticketAmount && !!selectedCard && ticketAmount > selectedCard?.balance,
-    [selectedCard, ticketAmount],
-  );
+  const cardOptions = useMemo(() => {
+    if (!cards) return [];
+    return cards.map(({ balance, year }) => ({ balance, year }));
+  }, [cards]);
 
-  return (
-    <Stack p={4} justifyContent="space-between" height="100dvh">
-      <Stack gap={8}>
-        <Stack gap={2}>
-          <Typography variant="h2">Genera un buono</Typography>
-          <Typography>Scegli quale Carta della Cultura vuoi usare e l&apos;importo</Typography>
-        </Stack>
-        <Stack gap={2}>
-          <CdcSelect data={data} handleChange={handleChangeState} year={selectedCard?.year} />
-          <CdcInput icon="euro" onChange={handleChangeState} error={inputError} />
-        </Stack>
-      </Stack>
-      <Stack width="100%" justifySelf="end">
-        <Button
-          variant="contained"
-          onClick={() => navigate(APP_ROUTES.HOME)}
-          disabled={!selectedCard && !ticketAmount}
-        >
-          Continua
-        </Button>
-        <Button variant="text">Annulla</Button>
-      </Stack>
+  if (isBonusCreationCompleted && newBonus) {
+    return <Navigate to={`/dettaglio-buono/${newBonus}`} />;
+  }
+
+  return isCreatingBonus ? (
+    <BonusCreationLoader />
+  ) : (
+    <Stack p={4} height="100dvh">
+      <Header />
+      <NewBonusForm cards={cardOptions} createBonus={createBonus} />
     </Stack>
   );
 };

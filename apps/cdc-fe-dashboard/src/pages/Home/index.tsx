@@ -1,19 +1,41 @@
 import { Button, Divider, Stack, Typography } from '@mui/material';
-import { useGetCardsQuery } from '../../features/app/services';
 import { Carousel } from '../../components/Carousel';
 import { useNavigate } from 'react-router-dom';
+import { useGetCardsQuery } from '../../store/services/api';
+import { useMemo } from 'react';
+
+const TEXT_COLOR = '#5C6F82';
 
 const Home = () => {
   const { isError, isSuccess, error, data } = useGetCardsQuery();
   const navigate = useNavigate();
+
+  const lastUpdateLabel = useMemo(() => {
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString('it-IT', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const formattedTime = date.toLocaleTimeString('it-IT', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+
+    const label = `Saldo aggiornato al ${formattedDate}, ${formattedTime}`;
+    return label;
+  }, []);
 
   if (!data) return <div>no data</div>;
 
   return (
     <Stack justifyContent="center" alignItems="center" paddingInline={2}>
       <Carousel list={data} />
-      <Divider sx={{ height: 16 }} />
-      <Typography sx={{ fontSize: 12 }}>Saldo aggiornato al 12 dicembre 2025, 12:34</Typography>
+      <Typography sx={{ fontSize: 12 }} color={TEXT_COLOR}>
+        {lastUpdateLabel}
+      </Typography>
       <Stack justifyContent="center" alignItems="center" py={4} gap={2}>
         <Typography fontWeight={600}>Genera un buono</Typography>
         <Typography textAlign="center">

@@ -1,41 +1,32 @@
-import { InputAdornment, InputProps, TextFieldProps, Typography } from '@mui/material';
-import { Icon, IconType } from '@io-cdc/ui';
-import { StyledInput } from './Styled';
-import { useMemo } from 'react';
+import { InputAdornment, TextField, TextFieldProps } from '@mui/material';
+import { Icon } from '@io-cdc/ui';
+import { UseFormRegister } from 'react-hook-form';
+import { BonusGeneratorForm } from '../../pages/GenerateTicket/components/NewBonusForm';
 
 type CdcInputProps = Omit<TextFieldProps, 'onChange'> & {
-  icon: IconType;
-  onChange: (value: number, key: 'ticketAmount') => void;
+  fieldConfig: ReturnType<UseFormRegister<BonusGeneratorForm>>;
 };
 
-export const CdcInput = ({ icon, onChange, error, ...rest }: CdcInputProps) => {
-  const HelperText = useMemo(
-    () => error && 'L’ importo è superiore al credito disponibile',
-    [error],
-  );
+export const CdcInput = ({ fieldConfig, ...props }: CdcInputProps) => {
   return (
-    <>
-      <StyledInput
-        type="number"
-        id={rest.placeholder}
-        onChange={(e) => onChange(Number(e.target.value), 'ticketAmount')}
-        error={error}
-        helperText={HelperText}
-        sx={{
-          '& .MuiOutlinedInput-notchedOutline': {
-            border: '2px solid #e3e7eb',
-          },
-        }}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Icon name="euro" />
-            </InputAdornment>
-          ),
-        }}
-        label="Importo"
-        {...rest}
-      />
-    </>
+    <TextField
+      type="number"
+      {...props}
+      {...fieldConfig}
+      inputProps={{ inputMode: 'decimal', pattern: '[0-9.,]*' }}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <Icon name="euro" />
+          </InputAdornment>
+        ),
+      }}
+      sx={{
+        borderRadius: '4px',
+        '& .MuiOutlinedInput-notchedOutline': {
+          border: '2px solid #e3e7eb',
+        },
+      }}
+    />
   );
 };

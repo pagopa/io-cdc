@@ -1,16 +1,16 @@
 import { Icon } from '@io-cdc/ui';
 import { Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { CDC } from '../../features/app/model';
 import { Footer } from './Footer';
+import { Card as CardType } from '../../store/services/model';
 
-export const Card = ({ balance, expire_date, max_amount, year }: CDC) => {
+export const Card = ({ balance, expireDate, maxAmount, year }: CardType) => {
   return (
     <Stack direction="column" width="100%" height="100%">
       <Stack sx={{ bgcolor: '#F1ECE6' }}>
         <Stack direction="row" justifyContent="flex-end" gap={2} padding={'16px'}>
           <Icon name="info" />
-          <Icon name="help" sx={{ width: 60, height: 60 }} />
+          <Icon name="help" />
         </Stack>
         <Stack padding={1} alignItems="center" gap={2}>
           <Stack
@@ -33,10 +33,10 @@ export const Card = ({ balance, expire_date, max_amount, year }: CDC) => {
             color="#5C6F82"
             fontSize="12px"
             fontWeight={400}
-          >{`Valida fino al ${expire_date}`}</Typography>
+          >{`Valida fino al ${expireDate}`}</Typography>
         </Stack>
       </Stack>
-      <Footer balance={balance} total={max_amount} />
+      <Footer balance={balance} total={maxAmount} />
     </Stack>
   );
 };

@@ -1,47 +1,93 @@
-import { Button, Divider, Typography } from '@mui/material';
+import { Chip, ChipProps, Divider, IconButton, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
-import { QrCode } from '../../components/QrCode';
-import { BarCode } from '../../components/BarCode';
+import { Icon } from '@io-cdc/ui';
+import { useGetBonusByIdQuery } from '../../store/services/api';
+import { useCallback } from 'react';
+import { CodesSection } from './components/CodesSection';
+import { BonusDescription } from './components/BonusDescription';
+import { MerchantDescription } from './components/MerchantDescription';
+import { Footer } from './components/Footer';
 
 const BonusDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id = '' } = useParams();
+  const { data: bonusDetail, isLoading, error } = useGetBonusByIdQuery(id);
 
-  return (
+  const spent = !!bonusDetail?.spentDate;
+
+  const copyBonusCode = useCallback((text: string) => {
+    return navigator.clipboard.writeText(text);
+  }, []);
+
+  const chipConfig = {
+    label: spent ? 'SPESO' : 'DA SPENDERE',
+    color: (spent ? 'info' : 'primary') as ChipProps['color'],
+  };
+
+  if (isLoading) return <>Loading...</>;
+  if (error) return <>Errore</>;
+
+  return bonusDetail ? (
     <Stack p={4} gap={3}>
       <Header />
       <Stack gap={8}>
         <Stack gap={2}>
           <Typography variant="h2">Il tuo buono</Typography>
-          <Typography color="#5C6F82">
-            Se acquisti online, inserisci il codice nel campo dedicato. Per acquisti in negozio,
-            mostralo all&apos;esercente. Il buono è personale e può essere utilizzato solo da te.
+          <BonusDescription spent={spent} />
+        </Stack>
+      </Stack>
+      <Stack direction="row" gap={1}>
+        <Icon name="ticket" />
+        <Typography fontWeight={700}>DETTAGLI DEL BUONO</Typography>
+      </Stack>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack>
+          <Typography color="#5C6F82">Importo</Typography>
+          <Typography fontWeight={600} fontSize={18}>
+            {bonusDetail.amount.toFixed(2)} €
           </Typography>
-          <Typography color="#5C6F82">
-            Il buono è personale e può essere utilizzato solo da te.
-          </Typography>
+        </Stack>
+        <Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />
+      </Stack>
+
+      <Divider />
+      <Stack>
+        <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
+        <Typography fontWeight={600} fontSize={18}>
+          {bonusDetail.expireDate}
+        </Typography>
+      </Stack>
+      <Divider />
+      <Stack>
+        <Typography color="#5C6F82">Carta della cultura usata:</Typography>
+        <Typography fontWeight={600} fontSize={18}>
+          {bonusDetail.cardYear}
+        </Typography>
+      </Stack>
+      <Stack rowGap={4}>
+        <Stack direction="row" gap={1}>
+          <Icon name="key" />
+          <Typography fontWeight={700}>CODICI</Typography>
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack>
+            <Typography color="#5C6F82">Codice univoco</Typography>
+            <Typography fontWeight={600} fontSize={18} color="#0073E6">
+              {bonusDetail.code}
+            </Typography>
+          </Stack>
+          <IconButton onClick={() => copyBonusCode(bonusDetail.code)}>
+            <Icon name="copy" />
+          </IconButton>
         </Stack>
       </Stack>
       <Divider />
-      <Stack gap={3}>
-        <Typography color="#5C6F82">Bar code</Typography>
-        <Stack gap={3} alignItems="center">
-          <BarCode />
-        </Stack>
-      </Stack>
-      <Divider />
-      <Stack gap={3}>
-        <Typography color="#5C6F82">QR Code</Typography>
-        <Stack gap={3} alignItems="center">
-          <QrCode />
-        </Stack>
-      </Stack>
-      <Button variant="contained" onClick={() => navigate(-1)}>
-        Chiudi
-      </Button>
+      {spent ? <MerchantDescription /> : <CodesSection code={bonusDetail.code} />}
+      {!spent && <Footer />}
     </Stack>
+  ) : (
+    <>not found</>
   );
 };
 

@@ -1,15 +1,15 @@
-import { CDC } from '../../features/app/model';
 import { Card } from '../Card';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
 import { Stack } from '@mui/material';
+import { Card as CardType } from '../../store/services/model';
 
 type CarouselProps = {
-  list: Array<CDC>;
+  list: Array<CardType>;
 };
 export const Carousel = ({ list }: CarouselProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const [activeIdx, setActiveIdx] = useState<number | null>(0);
 
   useEffect(() => {
     const container = containerRef.current;

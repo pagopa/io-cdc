@@ -26,7 +26,7 @@ export const Footer = ({ balance, total }: FooterProps) => {
         </Stack>
         <LinearProgress
           variant="determinate"
-          value={balance}
+          value={(balance * 100) / total}
           sx={{ background: '#fff', width: '30%', borderRadius: '4px' }}
         />
       </Stack>

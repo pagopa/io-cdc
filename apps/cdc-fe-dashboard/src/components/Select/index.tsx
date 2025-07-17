@@ -1,63 +1,47 @@
-import { forwardRef, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyledSelect } from './styled';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  InputAdornment,
-  Slide,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Divider, IconButton, InputAdornment, Stack, Typography } from '@mui/material';
 import { Icon } from '@io-cdc/ui';
 import { ArrowDropDown } from '@mui/icons-material';
-import { TransitionProps } from '@mui/material/transitions';
-import { ResponseGetCardsDto } from '../../features/app/dto';
-import { CDC } from '../../features/app/model';
-
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children: React.ReactElement },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" timeout={{ enter: 700, exit: 500 }} ref={ref} {...props} />;
-});
+import { Sheet } from 'react-modal-sheet';
+import { Card } from '../../store/services/model';
+import { UseFormSetValue } from 'react-hook-form';
+import { BonusGeneratorForm } from '../../pages/GenerateTicket/components/NewBonusForm';
 
 type CdcSelectProps = {
-  data: ResponseGetCardsDto | undefined;
-  year: string | undefined;
-  handleChange: (value: CDC, key: 'selectedCard') => void;
+  cards: Pick<Card, 'balance' | 'year'>[];
+  onSelect: UseFormSetValue<BonusGeneratorForm>;
+  value?: string;
 };
 
-export const CdcSelect = ({ data, handleChange, year }: CdcSelectProps) => {
-  const [open, setOpen] = useState(false);
+const TEXT_COLOR = '#5C6F82';
 
-  const handleOpenSelect = useCallback(() => {
-    setOpen(true);
-  }, []);
+export const CdcSelect = ({ cards, onSelect, value }: CdcSelectProps) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSelectOption = useCallback(
-    (value: CDC) => {
-      handleChange(value, 'selectedCard');
-      setOpen(false);
+    (card: Pick<Card, 'balance' | 'year'>) => {
+      onSelect('card', card);
+      setIsOpen(false);
     },
-    [handleChange],
+    [onSelect],
   );
 
   return (
     <>
       <StyledSelect
-        onClick={handleOpenSelect}
+        onClick={() => setIsOpen(true)}
         variant="outlined"
-        value={year}
-        label={'Seleziona la Carta della Cultura'}
-        InputLabelProps={{ shrink: !!year }}
+        value={value}
+        label={value ? undefined : 'Seleziona la Carta della Cultura'}
+        // InputLabelProps={{ shrink: !!year }}
         sx={{
           '& .MuiOutlinedInput-notchedOutline': {
             border: '2px solid #e3e7eb',
           },
         }}
         InputProps={{
+          readOnly: true,
           endAdornment: (
             <InputAdornment position="end">
               <ArrowDropDown />
@@ -65,35 +49,61 @@ export const CdcSelect = ({ data, handleChange, year }: CdcSelectProps) => {
           ),
         }}
       />
-
-      <Dialog
-        fullScreen
-        open={open}
-        TransitionComponent={Transition}
-        PaperProps={{ style: { backgroundColor: '#fff', gap: 24 } }}
+      <Sheet
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        disableDrag
+        snapPoints={[1]}
+        initialSnap={0}
+        detent="full-height"
       >
-        <DialogTitle alignSelf="end">
-          <Icon name="closeCircle" onClick={() => setOpen(false)} />
-        </DialogTitle>
-        <DialogContent>
-          <Stack gap={4}>
-            {data?.map((card) => (
-              <Stack
-                key={card.year}
-                sx={{ width: '100%' }}
-                onClick={() => handleSelectOption(card)}
+        <Sheet.Container
+          style={{
+            height: '100dvh',
+            borderRadius: 0,
+            transitionDuration: isOpen ? '0ms' : '500ms',
+          }}
+        >
+          <Sheet.Header>
+            <Stack alignItems="end" paddingX={3}>
+              <IconButton
+                onClick={() => setIsOpen(false)}
+                sx={{
+                  color: 'unset',
+                  fontSize: '14px',
+                }}
               >
-                <Typography fontWeight={600}>{`Carta della Cultura ${card.year}`}</Typography>
-                <Typography
-                  fontSize={14}
-                  lineHeight={'18px'}
-                >{`Credito disponibile ${card.balance}€`}</Typography>
-                <Divider />
-              </Stack>
-            ))}
-          </Stack>
-        </DialogContent>
-      </Dialog>
+                <Icon name="close" />
+              </IconButton>
+            </Stack>
+          </Sheet.Header>
+          <Sheet.Content>
+            <Stack padding={3} paddingTop={1}>
+              {cards.map(({ balance, year }, index, array) => (
+                <Box key={year}>
+                  <Stack
+                    onClick={() => handleSelectOption({ year, balance })}
+                    gap={0.5}
+                    paddingX={1.25}
+                    paddingY={2}
+                  >
+                    <Typography
+                      fontSize={16}
+                      fontWeight={600}
+                    >{`Carta della Cultura ${year}`}</Typography>
+                    <Typography
+                      fontSize={14}
+                      color={TEXT_COLOR}
+                    >{`Credito disponibile ${balance}€`}</Typography>
+                  </Stack>
+                  {index !== array.length - 1 && <Divider />}
+                </Box>
+              ))}
+            </Stack>
+          </Sheet.Content>
+        </Sheet.Container>
+        <Sheet.Backdrop />
+      </Sheet>
     </>
   );
 };

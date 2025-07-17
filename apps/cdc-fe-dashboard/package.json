@@ -15,6 +15,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^5.1.1",
     "@io-cdc/ui": "workspace:*",
     "@mui/icons-material": "^5.14.3",
     "@mui/lab": "^5.0.0-alpha.140",
@@ -22,15 +23,20 @@
     "@mui/system": "^5.14.5",
     "@pagopa/mui-italia": "^1.5.0",
     "@reduxjs/toolkit": "^2.7.0",
+    "motion": "^12.23.6",
     "react": "^18.3.1",
     "react-barcode": "^1.6.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.60.0",
+    "react-modal-sheet": "^4.4.0",
     "react-qr-code": "^2.0.18",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.5.0"
+    "react-router-dom": "^7.5.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@faker-js/faker": "^9.9.0",
     "@pagopa/eslint-config": "^4.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "@testing-library/dom": "^10.4.0",
