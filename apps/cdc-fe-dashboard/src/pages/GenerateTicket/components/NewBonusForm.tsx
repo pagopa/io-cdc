@@ -5,7 +5,6 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import { CdcInput } from '../../../components/Input';
 import { Card } from '../../../store/services/model';
 import { CdcSelect } from '../../../components/Select';
-import { UndoDialog } from './UndoDialog';
 import { useCallback } from 'react';
 import { CreateBonusRequestDTO } from '../../../store/services/dto';
 
@@ -42,8 +41,9 @@ export type BonusGeneratorForm = z.infer<typeof bonusGeneratorSchema>;
 type NewBonusFormProps = {
   cards: Pick<Card, 'balance' | 'year'>[];
   createBonus: (newBonus: CreateBonusRequestDTO) => void;
+  onCancel: () => void;
 };
-export const NewBonusForm = ({ cards, createBonus }: NewBonusFormProps) => {
+export const NewBonusForm = ({ cards, createBonus, onCancel }: NewBonusFormProps) => {
   const {
     register,
     handleSubmit,
@@ -95,7 +95,9 @@ export const NewBonusForm = ({ cards, createBonus }: NewBonusFormProps) => {
         <Button variant="contained" type="submit">
           Continua
         </Button>
-        <UndoDialog />
+        <Button variant="text" onClick={onCancel}>
+          Annulla
+        </Button>
       </Stack>
     </Box>
   );

@@ -1,6 +1,6 @@
 import { Chip, ChipProps, Divider, IconButton, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { Icon } from '@io-cdc/ui';
 import { useGetBonusByIdQuery } from '../../store/services/api';
@@ -9,8 +9,10 @@ import { CodesSection } from './components/CodesSection';
 import { BonusDescription } from './components/BonusDescription';
 import { MerchantDescription } from './components/MerchantDescription';
 import { Footer } from './components/Footer';
+import { APP_ROUTES } from '../../utils/appRoutes';
 
 const BonusDetail = () => {
+  const navigate = useNavigate();
   const { id = '' } = useParams();
   const { data: bonusDetail, isLoading, error } = useGetBonusByIdQuery(id);
 
@@ -30,7 +32,7 @@ const BonusDetail = () => {
 
   return bonusDetail ? (
     <Stack p={4} gap={3}>
-      <Header />
+      <Header onBack={() => navigate(APP_ROUTES.BONUS_LIST)} />
       <Stack gap={8}>
         <Stack gap={2}>
           <Typography variant="h2">Il tuo buono</Typography>
@@ -84,7 +86,7 @@ const BonusDetail = () => {
       </Stack>
       <Divider />
       {spent ? <MerchantDescription /> : <CodesSection code={bonusDetail.code} />}
-      {!spent && <Footer />}
+      {!spent && <Footer bonusId={id} />}
     </Stack>
   ) : (
     <>not found</>

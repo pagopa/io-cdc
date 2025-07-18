@@ -5,7 +5,7 @@ const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const BonusList = React.lazy(() => import('../pages/BonusList'));
 
 export enum APP_ROUTES {
-  HOME = '/home',
+  HOME = '/',
   GENERATE_TICKET = '/genera-buono',
   BONUS_DETAIL = '/dettaglio-buono/:id',
   BONUS_LIST = '/lista-buoni',

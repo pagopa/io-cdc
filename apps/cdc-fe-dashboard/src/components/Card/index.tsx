@@ -1,16 +1,25 @@
 import { Icon } from '@io-cdc/ui';
-import { Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import { Stack, IconButton, Typography } from '@mui/material';
 import { Footer } from './Footer';
 import { Card as CardType } from '../../store/services/model';
+import { useState } from 'react';
+import { HelpSheet } from '../../pages/Home/components/HelpSheet';
+
+const ICON_STYLE_RESET = { color: 'unset', backgroundColor: 'unset', padding: 0 };
 
 export const Card = ({ balance, expireDate, maxAmount, year }: CardType) => {
+  const [isHelpSheetOpen, setIsHelpSheetOpen] = useState(false);
   return (
     <Stack direction="column" width="100%" height="100%">
       <Stack sx={{ bgcolor: '#F1ECE6' }}>
         <Stack direction="row" justifyContent="flex-end" gap={2} padding={'16px'}>
-          <Icon name="info" />
-          <Icon name="help" />
+          <IconButton sx={ICON_STYLE_RESET}>
+            <Icon name="info" />
+          </IconButton>
+          <IconButton onClick={() => setIsHelpSheetOpen(true)} sx={ICON_STYLE_RESET}>
+            <Icon name="help" />
+          </IconButton>
+          <HelpSheet isOpen={isHelpSheetOpen} onClose={() => setIsHelpSheetOpen(false)} />
         </Stack>
         <Stack padding={1} alignItems="center" gap={2}>
           <Stack

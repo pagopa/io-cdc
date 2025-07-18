@@ -13,6 +13,11 @@ export type GetCardsResponseDTO = Card[];
 
 export type GetBonusResponseDTO = BonusItem[];
 
+export type DeleteBonusResponseDTO = {
+  deleted: boolean;
+  bonusId: string;
+};
+
 export type CreateBonusRequestDTO = {
   year: string;
   amount: number;

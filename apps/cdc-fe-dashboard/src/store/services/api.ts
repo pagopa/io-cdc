@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { apiMocks } from './apiMock';
 import {
   CreateBonusRequestDTO,
+  DeleteBonusResponseDTO,
   GetBonusByIdResponseDTO,
   GetBonusResponseDTO,
   GetCardsResponseDTO,
@@ -45,8 +46,23 @@ export const api = createApi({
         return { data: apiMocks.createBonus(newBonus).id };
       },
     }),
+    deleteBonus: builder.mutation<DeleteBonusResponseDTO, string>({
+      queryFn: (bonusId) => {
+        return {
+          data: {
+            deleted: true,
+            bonusId,
+          },
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetBonusByIdQuery, useGetCardsQuery, useGetBonusQuery, useCreateBonusMutation } =
-  api;
+export const {
+  useGetBonusByIdQuery,
+  useGetCardsQuery,
+  useGetBonusQuery,
+  useCreateBonusMutation,
+  useDeleteBonusMutation,
+} = api;

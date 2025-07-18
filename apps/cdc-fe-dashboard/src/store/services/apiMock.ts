@@ -28,6 +28,8 @@ export const apiMocks = {
       .reverse();
   },
   getBonus: () => {
+    const emptyBonus = faker.datatype.boolean();
+    if (emptyBonus) return [];
     return Array.from({ length: 20 }, () => {
       const spent = faker.datatype.boolean();
       const fromOthers = faker.datatype.boolean();
