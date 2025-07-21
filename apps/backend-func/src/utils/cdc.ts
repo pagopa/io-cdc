@@ -14,6 +14,7 @@ import { InputBeneficiarioBean } from "../generated/cdc-api/InputBeneficiarioBea
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
+import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 
 export const CdcApiUserData = t.type({
   first_name: NonEmptyString,
@@ -54,7 +55,11 @@ const mapCdcApiCallFailure =
   (res: IResponseType<number, unknown, never>): Error =>
     new Error(`${message} | ${res.status} | ${res.value}`);
 
-const isCdcApiCallSuccess = (
+const isCdcApiStatusCallSuccess = (
+  res: IResponseType<number, unknown, never>,
+): res is IResponseType<200, ListaRegistratoBean, never> => res.status === 200;
+
+const isCdcApiRequestCallSuccess = (
   res: IResponseType<number, unknown, never>,
 ): res is IResponseType<200, ListaEsitoRichiestaBean, never> =>
   res.status === 200;
@@ -88,7 +93,7 @@ const getAlreadyRequestedYearsCdcTE =
           ),
           TE.chain((response) =>
             TE.fromPredicate(
-              isCdcApiCallSuccess,
+              isCdcApiStatusCallSuccess,
               mapCdcApiCallFailure(
                 `Citizen status CDC failure | API result not success. | ${jwt}`,
               ),
@@ -97,10 +102,10 @@ const getAlreadyRequestedYearsCdcTE =
           TE.map((successResponse) => successResponse.value),
           TE.map((res) =>
             (
-              res.listaEsitoRichiestaPerAnno
+              res.listaStatoPerAnno
                 ?.filter((req) =>
-                  req?.esitoRichiesta
-                    ? statusSuccessfulCodes.includes(req.esitoRichiesta)
+                  req?.statoBeneficiario
+                    ? statusSuccessfulCodes.includes(req.statoBeneficiario)
                     : false,
                 )
                 .map((yr) => yr.annoRiferimento as Year) || []
@@ -144,9 +149,9 @@ const requestCdcTE =
       ),
       TE.chainW(
         TE.fromPredicate(
-          isCdcApiCallSuccess,
+          isCdcApiRequestCallSuccess,
           mapCdcApiCallFailure(
-            "Card request CDC failure | API result not compliant.",
+            "Card request CDC failure | API result not success.",
           ),
         ),
       ),
