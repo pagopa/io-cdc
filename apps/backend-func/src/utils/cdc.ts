@@ -78,12 +78,7 @@ const getAlreadyRequestedYearsCdcTE =
       TE.chain((jwt) =>
         pipe(
           TE.of(getCdcClient(config)(jwt)),
-          TE.chain((client) =>
-            TE.tryCatch(
-              () => client.stato({}),
-              (e) => new Error(`${JSON.stringify(e)} | Api call failed`),
-            ),
-          ),
+          TE.chain((client) => TE.tryCatch(async () => await client.stato({}), E.toError)),
           TE.chain((response) =>
             pipe(
               response,
@@ -130,8 +125,8 @@ const requestCdcTE =
       TE.map(getCdcClient(config)),
       TE.chain((client) =>
         TE.tryCatch(
-          () =>
-            client.registrazione({
+          async () =>
+            await client.registrazione({
               body: {
                 anniRif: request.map((i) => ({
                   anno: i.year,
@@ -139,7 +134,7 @@ const requestCdcTE =
                 })),
               } as InputBeneficiarioBean,
             }),
-          (e) => new Error(`${JSON.stringify(e)} | Api call failed`),
+          E.toError,
         ),
       ),
       TE.chainW(
