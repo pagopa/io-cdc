@@ -87,7 +87,9 @@ const getAlreadyRequestedYearsCdcTE =
               TE.fromEither,
               TE.mapLeft(
                 (errors) =>
-                  new Error(errorsToReadableMessages(errors).join(" / ")),
+                  new Error(
+                    errorsToReadableMessages(errors).join(" / "),
+                  ),
               ),
             ),
           ),
@@ -95,7 +97,7 @@ const getAlreadyRequestedYearsCdcTE =
             TE.fromPredicate(
               isCdcApiStatusCallSuccess,
               mapCdcApiCallFailure(
-                `Citizen status CDC failure | API result not success. | ${jwt}`,
+                `Citizen status CDC failure | API result not success.`,
               ),
             )(response),
           ),
