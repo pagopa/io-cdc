@@ -139,7 +139,7 @@ const requestCdcTE =
                 })),
               } as InputBeneficiarioBean,
             }),
-          E.toError,
+          (e) => new Error(`${JSON.stringify(e)} | Api call failed`),
         ),
       ),
       TE.chainW(
