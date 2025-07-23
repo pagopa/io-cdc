@@ -79,7 +79,10 @@ const getAlreadyRequestedYearsCdcTE =
         pipe(
           TE.of(getCdcClient(config)(jwt)),
           TE.chain((client) =>
-            TE.tryCatch(async () => client.stato({}), E.toError),
+            TE.tryCatch(
+              async () => client.stato({}),
+              (e) => new Error(`${JSON.stringify(e)} | Api call failed`),
+            ),
           ),
           TE.chain((response) =>
             pipe(
@@ -87,9 +90,7 @@ const getAlreadyRequestedYearsCdcTE =
               TE.fromEither,
               TE.mapLeft(
                 (errors) =>
-                  new Error(
-                    errorsToReadableMessages(errors).join(" / "),
-                  ),
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
               ),
             ),
           ),
