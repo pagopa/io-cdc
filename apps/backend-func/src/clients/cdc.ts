@@ -9,6 +9,7 @@ import nodeFetch from "node-fetch";
 
 import { Config } from "../config.js";
 import { createClient } from "../generated/cdc-api/client.js";
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 
 // 10 seconds timeout by default
 const DEFAULT_REQUEST_TIMEOUT_MS = 10000;
@@ -29,8 +30,14 @@ const safeFetch: typeof fetchWithTimeout = async (...args) => {
 
   try {
     const clone = response.clone();
-    await clone.text();
+    const text = await clone.text();
+    emitCustomEvent("cdc.stato.response.parsed", { response: text })(
+      "safeFetch",
+    );
   } catch (e) {
+    emitCustomEvent("cdc.stato.response.not.parsed", {
+      error: JSON.stringify(e),
+    })("safeFetch");
     throw e;
   }
 
