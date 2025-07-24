@@ -69,6 +69,9 @@ export const sendCdcCardRequests = (
             O.fromNullable,
             O.getOrElse(() => pendingCardRequestMessage.request_date),
             (requestDate) => {
+              emitCustomEvent("cdc.request.audits", {
+                audits: JSON.stringify(requestsAudit),
+              })("process-pending-request");
               emitCustomEvent("cdc.request.date.found", {
                 message: `Got date ${requestDate} for year ${year}`,
               })("process-pending-request");
