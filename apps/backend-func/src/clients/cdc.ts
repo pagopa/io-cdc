@@ -25,7 +25,7 @@ const fetchApi: typeof fetchWithTimeout =
   nodeFetch as any as typeof fetchWithTimeout;
 
 const safeFetch: typeof fetchWithTimeout = async (...args) => {
-  const response = await fetch(...args);
+  const response = await fetchApi(...args);
 
   try {
     const clone = response.clone();
