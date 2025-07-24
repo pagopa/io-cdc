@@ -27,15 +27,16 @@ const fetchApi: typeof fetchWithTimeout =
 
 const safeFetch: typeof fetchWithTimeout = async (...args) => {
   const response = await fetchApi(...args);
+  emitCustomEvent("cdc.request.args", { args: JSON.stringify(args) })("safeFetch");
 
   try {
     const clone = response.clone();
     const text = await clone.text();
-    emitCustomEvent("cdc.stato.response.parsed", { response: text })(
+    emitCustomEvent("cdc.response.parsed", { response: text })(
       "safeFetch",
     );
   } catch (e) {
-    emitCustomEvent("cdc.stato.response.not.parsed", {
+    emitCustomEvent("cdc.response.not.parsed", {
       error: JSON.stringify(e),
     })("safeFetch");
     throw e;
