@@ -15,6 +15,7 @@ import { CosmosDbCardRequestRepository } from "../repository/card_request_reposi
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { CdcApiRequestData, CdcUtils } from "../utils/cdc.js";
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 
 interface Dependencies {
   cdcUtils: CdcUtils;
@@ -28,13 +29,13 @@ interface Dependencies {
  * in the pending message, and sends the request to the CdC API.
  * If the request is successful, it returns the request data.
  * If the request fails, it returns an error.
- * 
+ *
  * Request data could contain a previously done request that we failed to archive.
  * It will be used to archive the requests later.
- * 
- * @param pendingCardRequestMessage 
- * @param deps 
- * @returns 
+ *
+ * @param pendingCardRequestMessage
+ * @param deps
+ * @returns
  */
 export const sendCdcCardRequests = (
   pendingCardRequestMessage: PendingCardRequestMessage,
@@ -67,12 +68,24 @@ export const sendCdcCardRequests = (
               .shift(),
             O.fromNullable,
             O.getOrElse(() => pendingCardRequestMessage.request_date),
+            (requestDate) => {
+              emitCustomEvent("cdc.request.date.found", {
+                message: `Got date ${requestDate} for year ${year}`,
+              })("process-pending-request");
+              return requestDate;
+            },
             (requestDate) => ({
               request_date: requestDate,
               year,
             }),
           ),
         ),
+        (requestData) => {
+          emitCustomEvent("cdc.request.data", {
+            data: JSON.stringify(requestData),
+          })("process-pending-request");
+          return requestData;
+        },
       ),
     ),
     // we call CdC API with a cumulative request
@@ -94,18 +107,18 @@ export const sendCdcCardRequests = (
     ),
   );
 
-  /**
-   * This function archives card requests for the given pending card request message.
-   * It retrieves all card requests for the fiscal code, checks which years have already been archived
-   * and then archives the years that have not been archived yet.
-   * 
-   * It uses the CdC API to get the years that have already been requested.
-   * It then saves the requests singularly in the Cosmos DB.
-   * 
-   * @param pendingCardRequestMessage 
-   * @param deps 
-   * @returns 
-   */
+/**
+ * This function archives card requests for the given pending card request message.
+ * It retrieves all card requests for the fiscal code, checks which years have already been archived
+ * and then archives the years that have not been archived yet.
+ *
+ * It uses the CdC API to get the years that have already been requested.
+ * It then saves the requests singularly in the Cosmos DB.
+ *
+ * @param pendingCardRequestMessage
+ * @param deps
+ * @returns
+ */
 export const archiveCardRequests =
   (pendingCardRequestMessage: PendingCardRequestMessage, deps: Dependencies) =>
   (requestData: CdcApiRequestData) =>
