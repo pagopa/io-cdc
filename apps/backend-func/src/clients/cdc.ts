@@ -24,11 +24,24 @@ const fetchApi: typeof fetchWithTimeout =
   // eslint-disable-next-line
   nodeFetch as any as typeof fetchWithTimeout;
 
+const safeFetch: typeof fetchWithTimeout = async (...args) => {
+  const response = await fetch(...args);
+
+  try {
+    const clone = response.clone();
+    await clone.text();
+  } catch (e) {
+    throw e;
+  }
+
+  return response;
+};
+
 export const CdcAPIClient = (config: Config) => (jwt: string) =>
   createClient<"JwtAuth">({
     basePath: "",
     baseUrl: config.CDC_API_BASE_URL,
-    fetchApi,
+    fetchApi: safeFetch,
     withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
   });
 
@@ -36,7 +49,7 @@ export const CdcAPIClientTest = (config: Config) => (jwt: string) =>
   createClient<"JwtAuth">({
     basePath: "",
     baseUrl: config.CDC_API_BASE_URL_TEST,
-    fetchApi,
+    fetchApi: safeFetch,
     withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
   });
 
