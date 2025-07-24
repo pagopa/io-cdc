@@ -64,7 +64,7 @@ export const sendCdcCardRequests = (
             requestsAudit
               .filter((req) => req.years.includes(year))
               .map((req) => req.requestDate)
-              .sort()
+              .sort((a, b) => a.getTime() - b.getTime())
               .shift(),
             O.fromNullable,
             O.getOrElse(() => pendingCardRequestMessage.request_date),
