@@ -9,7 +9,6 @@ import nodeFetch from "node-fetch";
 
 import { Config } from "../config.js";
 import { createClient } from "../generated/cdc-api/client.js";
-import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 
 // 10 seconds timeout by default
 const DEFAULT_REQUEST_TIMEOUT_MS = 10000;
@@ -25,23 +24,12 @@ const fetchApi: typeof fetchWithTimeout =
   // eslint-disable-next-line
   nodeFetch as any as typeof fetchWithTimeout;
 
+// This function is used to ensure that the fetch API is safe to use
+// It allows us to get also chunked data
 const safeFetch: typeof fetchWithTimeout = async (...args) => {
   const response = await fetchApi(...args);
-  emitCustomEvent("cdc.request.args", { args: JSON.stringify(args) })("safeFetch");
-
-  try {
-    const clone = response.clone();
-    const text = await clone.text();
-    emitCustomEvent("cdc.response.parsed", { response: text })(
-      "safeFetch",
-    );
-  } catch (e) {
-    emitCustomEvent("cdc.response.not.parsed", {
-      error: JSON.stringify(e),
-    })("safeFetch");
-    throw e;
-  }
-
+  const clone = response.clone();
+  await clone.text();
   return response;
 };
 

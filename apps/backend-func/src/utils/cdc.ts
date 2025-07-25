@@ -12,9 +12,9 @@ import { Config } from "../config.js";
 import { EsitoRichiestaEnum } from "../generated/cdc-api/EsitoRichiestaBean.js";
 import { InputBeneficiarioBean } from "../generated/cdc-api/InputBeneficiarioBean.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
+import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
-import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 
 export const CdcApiUserData = t.type({
   first_name: NonEmptyString,
@@ -78,7 +78,9 @@ const getAlreadyRequestedYearsCdcTE =
       TE.chain((jwt) =>
         pipe(
           TE.of(getCdcClient(config)(jwt)),
-          TE.chain((client) => TE.tryCatch(async () => await client.stato({}), E.toError)),
+          TE.chain((client) =>
+            TE.tryCatch(async () => await client.stato({}), E.toError),
+          ),
           TE.chain((response) =>
             pipe(
               response,

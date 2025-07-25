@@ -194,7 +194,7 @@ describe("process-pending-requests | archiveCardRequests", () => {
       {
         request_date: new Date("2025-07-11T14:16:49.633Z"),
         year: "2020",
-      }
+      },
     ])();
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res)) expect(res.left).toEqual(new Error("Error"));
@@ -208,7 +208,9 @@ describe("process-pending-requests | archiveCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
     ]);
-    getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(TE.left(new Error("Error")));
+    getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(
+      TE.left(new Error("Error")),
+    );
     const res = await archiveCardRequests(aPendingCardRequestMessage, {
       cdcUtils: CdcUtilsMock,
       config,
@@ -261,7 +263,7 @@ describe("process-pending-requests | archiveCardRequests", () => {
       CosmosDbRequestAuditRepository.containerName,
     ]);
     setMockedItems(CosmosDbCardRequestRepository.containerName)([
-      aCardRequest // year "2020" is already archived
+      aCardRequest, // year "2020" is already archived
     ]);
     getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(
       TE.of(["2020", "2021"]),
@@ -305,8 +307,7 @@ describe("process-pending-requests | archiveCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
     ]);
-    setMockedItems(CosmosDbCardRequestRepository.containerName)([
-    ]);
+    setMockedItems(CosmosDbCardRequestRepository.containerName)([]);
     getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(
       TE.of(["2020", "2021"]),
     );

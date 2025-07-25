@@ -15,7 +15,6 @@ import { CosmosDbCardRequestRepository } from "../repository/card_request_reposi
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { CdcApiRequestData, CdcUtils } from "../utils/cdc.js";
-import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 
 interface Dependencies {
   cdcUtils: CdcUtils;
@@ -68,27 +67,12 @@ export const sendCdcCardRequests = (
               .shift(),
             O.fromNullable,
             O.getOrElse(() => pendingCardRequestMessage.request_date),
-            (requestDate) => {
-              emitCustomEvent("cdc.request.audits", {
-                audits: JSON.stringify(requestsAudit),
-              })("process-pending-request");
-              emitCustomEvent("cdc.request.date.found", {
-                message: `Got date ${requestDate} for year ${year}`,
-              })("process-pending-request");
-              return requestDate;
-            },
             (requestDate) => ({
               request_date: requestDate,
               year,
             }),
           ),
         ),
-        (requestData) => {
-          emitCustomEvent("cdc.request.data", {
-            data: JSON.stringify(requestData),
-          })("process-pending-request");
-          return requestData;
-        },
       ),
     ),
     // we call CdC API with a cumulative request
