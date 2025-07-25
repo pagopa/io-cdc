@@ -11,15 +11,6 @@ tags:
 - name: /secured/utente
   description: metodi inerenti all'utente
 paths:
-  /CDCUtenteWS/rest/secured/beneficiario/versione:
-    get:
-      tags:
-      - /secured/utente
-      security:
-        - JwtAuth: [] 
-      responses:
-        default:
-          description: Default response
   /CDCUtenteWS/rest/secured/beneficiario/stato:
     get:
       tags:
@@ -79,15 +70,6 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
-  /CDCUtenteWS/rest/unsecured/versione:
-    get:
-      tags:
-      - unsecured
-      responses:
-        default:
-          description: Default response
-          content:
-            text/plain: {}
 components:
   securitySchemes:
     JwtAuth:
