@@ -19,9 +19,10 @@
     "lint": "yarn lint:check --fix",
     "lint:check": "eslint src",
     "lint:api": "sh api-lint.sh",
-    "generate": "yarn generate:definitions-internal && yarn generate:api-services",
-    "generate:api-services": "shx rm -rf ./src/generated/services-api && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/io-functions-services/v3.43.5/openapi/index.yaml --no-strict --out-dir ./src/generated/services-api --request-types --response-decoders --client",
+    "generate": "yarn generate:definitions-internal && yarn generate:api-services && yarn generate:api-cdc",
     "generate:definitions-internal": "shx mkdir -p ./src/generated/definitions/internal && yarn gen-api-models --api-spec ./api/internal.yaml --no-strict --out-dir ./src/generated/definitions/internal ",
+    "generate:api-services": "shx rm -rf ./src/generated/services-api && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/io-functions-services/v3.3.0/openapi/index.yaml --no-strict --out-dir ./src/generated/services-api --request-types --response-decoders --client",
+    "generate:api-cdc": "shx rm -rf ./src/generated/cdc-api && gen-api-models --api-spec ./api/cdc.yaml --no-strict --out-dir ./src/generated/cdc-api --request-types --response-decoders --client",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },

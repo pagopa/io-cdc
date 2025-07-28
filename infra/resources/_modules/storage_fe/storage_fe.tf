@@ -19,6 +19,8 @@ module "cdc_storage_fe" {
     enabled = true
   }
 
+  action_group_id = var.action_group_id
+
   tier = "l"
 
   tags = var.tags

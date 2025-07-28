@@ -24,6 +24,9 @@ export const Config = t.type({
   APPLICATIONINSIGHTS_CONNECTION_STRING: NonEmptyString,
   CARD_REQUEST_QUEUE_NAME: NonEmptyString,
 
+  CDC_API_BASE_URL: NonEmptyString,
+  CDC_API_BASE_URL_TEST: NonEmptyString,
+
   CDC_BASE_URL: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
