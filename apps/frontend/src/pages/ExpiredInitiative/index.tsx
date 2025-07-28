@@ -1,16 +1,17 @@
 import { Icon } from '@io-cdc/ui';
 import { Button, Stack, Typography } from '@mui/material';
 import { EXPIRED_INITIATIVE_CONFIG_MAP } from './constants';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const STATUSES = {
   500: 'expired',
   501: 'alreadyRequested',
 };
 
-//TODO -> define what should be done on close
 const ExpiredInitiative = () => {
   const { state } = useLocation();
+  const navigate = useNavigate();
+
   const status = STATUSES[(state.status as keyof typeof STATUSES) ?? 500];
   const { image, description, title } = EXPIRED_INITIATIVE_CONFIG_MAP[status];
   return (
@@ -22,7 +23,7 @@ const ExpiredInitiative = () => {
         </Typography>
         {description && <Typography textAlign="center">{description}</Typography>}
       </Stack>
-      <Button onClick={() => window.location.reload()} size="small" variant="contained">
+      <Button onClick={() => navigate('iossoapi://cancel')} size="small" variant="contained">
         Chiudi
       </Button>
     </Stack>
