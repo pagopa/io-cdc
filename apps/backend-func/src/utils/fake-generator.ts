@@ -104,7 +104,13 @@ const generateRandomNumber = (numberOfDigits: number) => {
   return result;
 };
 
-const generateFiscalCode = () => {
+type FakeUser = {
+  first_name: string;
+  last_name: string;
+  fiscal_code: FiscalCode;
+};
+
+const generateUser = () => {
   const firstName = generateFirstName();
   const lastName = generateLastName();
   const birthday = generateRandomDate(
@@ -131,17 +137,21 @@ const generateFiscalCode = () => {
   const secondChar = generateRandomCharacter().toUpperCase();
   const thirdChar = generateRandomCharacter().toUpperCase();
   const number = generateRandomNumber(3);
-  return `${cuttedLastName.substring(0, 3)}${cuttedFirstName.substring(
-    0,
-    3,
-  )}${year}${firstChar}${day}${secondChar}${number}${thirdChar}`;
+  return {
+    first_name: firstName,
+    last_name: lastName,
+    fiscal_code: `${cuttedLastName.substring(0, 3)}${cuttedFirstName.substring(
+      0,
+      3,
+    )}${year}${firstChar}${day}${secondChar}${number}${thirdChar}` as FiscalCode,
+  };
 };
 
-export const generateFakeFiscalCodes = (n: number) => {
+export const generateFakeUsers = (n: number) => {
   // generate random fiscal codes
-  const fiscalCodes: FiscalCode[] = [];
+  const users: FakeUser[] = [];
   for (let i = 0; i < n; i++) {
-    fiscalCodes.push(generateFiscalCode() as FiscalCode);
+    users.push(generateUser());
   }
-  return fiscalCodes;
+  return users;
 };
