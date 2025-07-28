@@ -53,7 +53,7 @@ const getJwtTE = (config: Config, user: CdcApiUserData) => {
 const mapCdcApiCallFailure =
   (message: string) =>
   (res: IResponseType<number, unknown, never>): Error =>
-    new Error(`${message} | ${res.status} | ${res.value}`);
+    new Error(`${message} | ${res.status} | ${JSON.stringify(res.value)}`);
 
 const isCdcApiStatusCallSuccess = (
   res: IResponseType<number, unknown, never>,
