@@ -49,7 +49,6 @@ const SelectYear = () => {
           },
         });
     } catch (e) {
-      console.log(e);
       navigate(APP_ROUTES.FEEDBACK, {
         state: {
           status: 500,

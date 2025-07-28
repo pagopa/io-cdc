@@ -1,6 +1,29 @@
 <policies>
     <inbound>
         <base />
+        <cors allow-credentials="true">
+            <allowed-origins>
+                <origin>https://cdc.io.pagopa.it</origin>
+                <origin>https://oauth.io.pagopa.it</origin>
+            </allowed-origins>
+            <allowed-methods preflight-result-max-age="300">
+                <method>GET</method>
+                <method>POST</method>
+                <method>PUT</method>
+                <method>DELETE</method>
+                <method>OPTIONS</method>
+            </allowed-methods>
+            <allowed-headers>
+                <header>Content-Type</header>
+                <header>Accept</header>
+                <header>token</header>
+                <header>signature</header>
+                <header>signature-input</header>
+            </allowed-headers>
+            <expose-headers>
+                <header>*</header>
+            </expose-headers>
+        </cors>
         <set-backend-service base-url="{{io-cdc-backend-func-url}}/api/v1" />
         <set-header name="x-functions-key" exists-action="override">
             <value>{{io-cdc-backend-func-key}}</value>

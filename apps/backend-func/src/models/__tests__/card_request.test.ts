@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { aCardRequest } from "../../__mocks__/types.mock.js";
 import { CardRequest } from "../card_request.js";
 
-describe("Codec", () => {
+describe("CardRequest|Codec", () => {
   afterEach(() => {
     vi.clearAllMocks();
   });

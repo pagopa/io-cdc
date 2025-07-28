@@ -22,38 +22,43 @@ export const Config = t.type({
 
   ALGORITHM_SIGNATURE: NonEmptyString,
   APPLICATIONINSIGHTS_CONNECTION_STRING: NonEmptyString,
+  CARD_REQUEST_QUEUE_NAME: NonEmptyString,
+
   CDC_BASE_URL: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
-
   COSMOSDB_CDC_KEY: NonEmptyString,
+
   COSMOSDB_CDC_URI: NonEmptyString,
   ENCODING_ENCRYPTION: NonEmptyString,
+
   ENCRYPTION_PRIVATE_KEY: NonEmptyString,
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
-
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
 
   FIMS_CLIENT_ID: NonEmptyString,
+
   FIMS_CLIENT_SECRET: NonEmptyString,
   FIMS_ISSUER_URL: NonEmptyString,
   FIMS_REDIRECT_URL: NonEmptyString,
   FIMS_SCOPE: NonEmptyString,
-
   JWT_AUDIENCE: NonEmptyString,
+
   JWT_EXPIRATION: NonEmptyString,
   JWT_ISSUER: NonEmptyString,
   JWT_PRIVATE_KEY: NonEmptyString,
   JWT_PUBLIC_KEY: NonEmptyString,
-
+  PAGOPA_IDP_KEYS_BASE_URL: NonEmptyString,
   REDIS_CLUSTER_ENABLED: t.boolean,
+
   REDIS_PASSWORD: NonEmptyString,
   REDIS_PORT: NonEmptyString,
   REDIS_TLS_ENABLED: t.boolean,
   REDIS_URL: NonEmptyString,
-
   SERVICES_API_KEY: NonEmptyString,
+
   SERVICES_API_URL: NonEmptyString,
+  STORAGE_ACCOUNT__queueServiceUri: NonEmptyString,
 
   isProduction: t.boolean,
 });

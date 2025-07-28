@@ -1,5 +1,4 @@
-import { Loader } from '@io-cdc/ui';
-import { Stack, Typography } from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { APP_ROUTES } from '../../utils/appRoutes';
@@ -29,7 +28,7 @@ const Home = () => {
 
   return (
     <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-      <Loader />
+      <CircularProgress size={40} style={{ color: '#1a73e8' }} />
       <Typography fontSize={22} fontWeight={700} textAlign="center">
         Ti stiamo indirizzando al servizio
       </Typography>

@@ -64,6 +64,16 @@ data "azurerm_key_vault_secret" "cosmosdb_cdc_key" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
+data "azurerm_key_vault_secret" "storage_account_queue_uri" {
+  name         = "STORAGE-ACCOUNT-QUEUE-URI"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "card_request_queue_name" {
+  name         = "CARD-REQUEST-QUEUE-NAME"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
 data "azurerm_key_vault_secret" "services_api_url" {
   name         = "SERVICES-API-URL"
   key_vault_id = module.key_vaults.key_vault_cdc.id
@@ -161,5 +171,10 @@ data "azurerm_key_vault_secret" "cdc_backend_func_url" {
 
 data "azurerm_key_vault_secret" "cdc_backend_func_key" {
   name         = "CDC-BACKEND-FUNC-KEY"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "pagopa_idp_keys_base_url" {
+  name         = "PAGOPA-IDP-KEYS-BASE-URL"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }

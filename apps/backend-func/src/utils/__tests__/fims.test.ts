@@ -33,6 +33,8 @@ describe("Fims TE", () => {
       "cburl",
       "anauthcode",
       "state",
+      "nonce",
+      "iss",
     )();
     expect(E.isRight(userInfo)).toBe(true);
   });

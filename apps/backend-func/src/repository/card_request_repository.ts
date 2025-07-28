@@ -15,10 +15,14 @@ interface CardRequestRepository {
 }
 
 export class CosmosDbCardRequestRepository implements CardRequestRepository {
+  static containerName = "card-requests-test";
+
   #cardRequestContainer: Container;
 
   constructor(db: Database) {
-    this.#cardRequestContainer = db.container("card-requests");
+    this.#cardRequestContainer = db.container(
+      CosmosDbCardRequestRepository.containerName,
+    );
   }
 
   getAllByFiscalCode(
@@ -46,7 +50,7 @@ export class CosmosDbCardRequestRepository implements CardRequestRepository {
     );
   }
 
-  insert(cardRequest: CardRequest) {
+  insert(cardRequest: CardRequest): TE.TaskEither<Error, void> {
     return TE.tryCatch(async () => {
       await this.#cardRequestContainer.items.create(cardRequest);
     }, E.toError);
