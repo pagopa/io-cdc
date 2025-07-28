@@ -104,11 +104,11 @@ const generateRandomNumber = (numberOfDigits: number) => {
   return result;
 };
 
-type FakeUser = {
+interface FakeUser {
   first_name: string;
-  last_name: string;
   fiscal_code: FiscalCode;
-};
+  last_name: string;
+}
 
 const generateUser = () => {
   const firstName = generateFirstName();
@@ -139,11 +139,11 @@ const generateUser = () => {
   const number = generateRandomNumber(3);
   return {
     first_name: firstName,
-    last_name: lastName,
     fiscal_code: `${cuttedLastName.substring(0, 3)}${cuttedFirstName.substring(
       0,
       3,
     )}${year}${firstChar}${day}${secondChar}${number}${thirdChar}` as FiscalCode,
+    last_name: lastName,
   };
 };
 
