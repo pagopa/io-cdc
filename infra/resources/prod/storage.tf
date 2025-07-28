@@ -45,3 +45,17 @@ resource "azurerm_storage_queue" "card_request_poison" {
   name                 = "card-request-poison"
   storage_account_name = module.storage_be.cdc_storage_be.name
 }
+
+module "storage_audit" {
+  source = "../_modules/storage_audit"
+
+  location = local.location
+  project  = local.project
+  domain   = local.domain
+
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  subnet_pep_id       = data.azurerm_subnet.pep.id
+  key_vault_id        = module.key_vaults.key_vault_cdc.id
+
+  tags = local.tags
+}
