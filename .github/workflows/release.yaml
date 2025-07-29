@@ -20,7 +20,7 @@ jobs:
         with:
           node-version-file: ".node-version"
           cache: "yarn"
-          cache-dependency-path: "yarn.lock"
+          cache-dependency-path: "./out/yarn.lock"
 
       - name: Install dependencies
         run: yarn install --immutable
