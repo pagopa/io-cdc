@@ -179,7 +179,7 @@ describe("post-requests | saveNewCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
     ]);
-    const res = await saveNewRequestAudit(aValidFiscalCode, {
+    const res = await saveNewRequestAudit(aValidSession, {
       config,
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
@@ -204,7 +204,7 @@ describe("post-requests | saveNewCardRequests", () => {
       CosmosDbRequestAuditRepository.containerName,
       CosmosOperation.create,
     );
-    const res = await saveNewRequestAudit(aValidFiscalCode, {
+    const res = await saveNewRequestAudit(aValidSession, {
       config,
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
@@ -232,7 +232,7 @@ describe("post-requests | saveNewCardRequests", () => {
     enqueueMessageMock.mockImplementationOnce(() =>
       TE.left(new Error("Error")),
     );
-    const res = await saveNewRequestAudit(aValidFiscalCode, {
+    const res = await saveNewRequestAudit(aValidSession, {
       config,
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
@@ -264,7 +264,7 @@ describe("post-requests | postCardRequests", () => {
       CosmosDbRequestAuditRepository.containerName,
     ]);
     clearContainersItems(CosmosDbCardRequestRepository.containerName);
-    const res = await postCardRequests(aValidFiscalCode, ["2020", "2021"])({
+    const res = await postCardRequests(aValidSession, ["2020", "2021"])({
       config,
       cosmosDbClient: cosmosClientMock,
       queueStorage: queueStorageMock,
