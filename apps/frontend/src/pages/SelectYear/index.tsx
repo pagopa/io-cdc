@@ -1,15 +1,15 @@
 import { CheckboxList, Loader, SectionTitle } from '@io-cdc/ui';
 import { Button, Chip, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Location, useLocation, useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/appRoutes';
-import { selectAnnualitiesWithStatus, selectNotAvailableYears } from '../../features/app/selectors';
-import { useSelector } from 'react-redux';
 import { useRequestBonusMutation } from '../../features/app/services';
+import { Year } from '../../features/app/model';
 
 const SelectYear = () => {
-  const annualities = useSelector(selectAnnualitiesWithStatus);
-  const notAvailableYears = useSelector(selectNotAvailableYears);
+  const { state: years = [] } = useLocation() as Location<Year[]>;
+
+  const notAvailableYears = years.filter(({ disabled }) => disabled).map(({ value }) => value);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
@@ -19,7 +19,7 @@ const SelectYear = () => {
 
   const mappedYearsList = useMemo(
     () =>
-      annualities
+      years
         .map(({ label, value, disabled }) => ({
           label,
           value,
@@ -29,7 +29,7 @@ const SelectYear = () => {
           ) : undefined,
         }))
         .sort((a, b) => Number(a.value) - Number(b.value)),
-    [annualities],
+    [years],
   );
 
   const allSelected = useMemo(
@@ -37,9 +37,12 @@ const SelectYear = () => {
     [mappedYearsList, selectedItems],
   );
 
-  const onSelectYear = useCallback((value: string[]) => {
-    setSelectedItems(value);
-  }, []);
+  const onSelectYear = useCallback(
+    (value: string[]) => {
+      setSelectedItems(value.length ? value : notAvailableYears);
+    },
+    [notAvailableYears],
+  );
 
   const onConfirm = useCallback(async () => {
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));

@@ -6,14 +6,14 @@ import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 
 const Home = () => {
-  const { isError, isSuccess, error } = useLoadYears();
+  const { isError, isSuccess, error, yearsList } = useLoadYears();
   const navigate = useNavigate();
   const hasCompleted = isSuccess || isError;
 
   useEffect(() => {
     if (hasCompleted) {
       if (isSuccess) {
-        navigate(APP_ROUTES.SELECT_YEAR);
+        navigate(APP_ROUTES.SELECT_YEAR, { state: yearsList });
       }
       if (isError && isFetchBaseQueryError(error)) {
         const ROUTE = error.status === 401 ? APP_ROUTES.UNAUTHORIZED : APP_ROUTES.EXPIRED;
@@ -24,7 +24,7 @@ const Home = () => {
         });
       }
     }
-  }, [error, hasCompleted, isError, isSuccess, navigate]);
+  }, [error, hasCompleted, isError, isSuccess, navigate, yearsList]);
 
   return (
     <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
