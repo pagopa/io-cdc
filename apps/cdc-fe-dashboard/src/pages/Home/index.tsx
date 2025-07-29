@@ -1,4 +1,4 @@
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { Carousel } from '../../components/Carousel';
 import { useNavigate } from 'react-router-dom';
 import { useGetBonusQuery, useGetCardsQuery } from '../../store/services/api';

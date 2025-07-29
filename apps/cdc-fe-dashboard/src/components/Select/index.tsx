@@ -6,7 +6,7 @@ import { ArrowDropDown } from '@mui/icons-material';
 import { Sheet } from 'react-modal-sheet';
 import { Card } from '../../store/services/model';
 import { UseFormSetValue } from 'react-hook-form';
-import { BonusGeneratorForm } from '../../pages/GenerateTicket/components/NewBonusForm';
+import { BonusGeneratorForm } from '../../pages/GenerateTicket/components/SelectCard';
 
 type CdcSelectProps = {
   cards: Pick<Card, 'balance' | 'year'>[];

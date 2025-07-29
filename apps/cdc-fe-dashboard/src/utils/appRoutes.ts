@@ -7,6 +7,7 @@ const BonusList = React.lazy(() => import('../pages/BonusList'));
 export enum APP_ROUTES {
   HOME = '/',
   GENERATE_TICKET = '/genera-buono',
+  SELECT_AMOUNT = '/genera-buono/:year',
   BONUS_DETAIL = '/dettaglio-buono/:id',
   BONUS_LIST = '/lista-buoni',
 }
@@ -14,6 +15,10 @@ export enum APP_ROUTES {
 export const APP_ROUTES_CONFIG = [
   {
     path: APP_ROUTES.GENERATE_TICKET,
+    Element: GenerateTicket,
+  },
+  {
+    path: APP_ROUTES.SELECT_AMOUNT,
     Element: GenerateTicket,
   },
   {
