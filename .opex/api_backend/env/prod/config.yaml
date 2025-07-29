@@ -1,0 +1,10 @@
+oa3_spec: ./apps/backend-func/api/internal.yaml
+name: opex_cdc_api_backend
+location: North Italy
+timespan: 5m
+evaluation_frequency: 10
+evaluation_time_window: 30
+event_occurrences: 4 # After 5*4=20 min
+data_source: /subscriptions/ec285037-c673-4f58-b594-d7c480da4e8b/resourceGroups/io-p-itn-common-rg-01/providers/Microsoft.Network/applicationGateways/io-p-itn-agw-01
+action_groups:
+  - /subscriptions/ec285037-c673-4f58-b594-d7c480da4e8b/resourcegroups/io-p-itn-cdc-rg-01/providers/microsoft.insights/actiongroups/io-p-itn-cdc-error-ag-01
