@@ -113,6 +113,7 @@ export const checkAssertionSignatures = async (
   let doc;
   try {
     doc = new DOMParser().parseFromString(assertionXml, "text/xml");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (ex) {
     throw "Invalid assertion";
   }
