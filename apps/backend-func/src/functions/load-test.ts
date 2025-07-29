@@ -19,7 +19,7 @@ import {
   errorToValidationError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
-import { generateFakeFiscalCodes } from "../utils/fake-generator.js";
+import { generateFakeUsers } from "../utils/fake-generator.js";
 import { QueueStorage } from "../utils/queue.js";
 
 const QueryParams = t.type({
@@ -43,8 +43,8 @@ export const insertFakeNewCardRequests =
       ),
       TE.chain((repository) =>
         pipe(
-          generateFakeFiscalCodes(parseInt(params.n, 10)),
-          A.map((fiscalCode) =>
+          generateFakeUsers(parseInt(params.n, 10)),
+          A.map((fakeUser) =>
             pipe(
               TE.Do,
               TE.bind("requestDate", () =>
@@ -54,7 +54,7 @@ export const insertFakeNewCardRequests =
               TE.chain(({ requestDate, requestId }) =>
                 pipe(
                   repository.insert({
-                    fiscalCode,
+                    fiscalCode: fakeUser.fiscal_code,
                     id: ulid() as NonEmptyString,
                     requestDate,
                     requestId,
@@ -62,7 +62,9 @@ export const insertFakeNewCardRequests =
                   }),
                   TE.chain(() =>
                     deps.queueStorage.enqueuePendingCardRequestMessage({
-                      fiscal_code: fiscalCode,
+                      first_name: fakeUser.first_name,
+                      fiscal_code: fakeUser.fiscal_code,
+                      last_name: fakeUser.last_name,
                       request_date: requestDate,
                       request_id: requestId,
                       years: ["2020", "2021", "2022"],
