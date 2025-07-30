@@ -20,11 +20,11 @@ describe("getFimsRedirect", () => {
     vi.clearAllMocks();
   });
 
-  it("should return a redirect url when fims client succeed", async () => {
+  it("should return a redirect url when fims client succeed and no device is passed", async () => {
     const fimsClientMock = getFimsClient({
       ...anOidcConfig,
     } as unknown as Config);
-    const res = await getFimsRedirect({
+    const res = await getFimsRedirect()({
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
     })();
@@ -33,12 +33,25 @@ describe("getFimsRedirect", () => {
     expect(redisSetExMock).toBeCalledTimes(1);
   });
 
+  it("should return a redirect url when fims client succeed", async () => {
+    const fimsClientMock = getFimsClient({
+      ...anOidcConfig,
+    } as unknown as Config);
+    const res = await getFimsRedirect("aDevice")({
+      fimsClient: fimsClientMock,
+      redisClientFactory: redisClientFactoryMock,
+    })();
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) expect(res.right).toBe("http://fims.it/auth");
+    expect(redisSetExMock).toBeCalledTimes(2);
+  });
+
   it("should return an Error when redis client fails", async () => {
     redisSetExMock.mockRejectedValueOnce("Error");
     const fimsClientMock = getFimsClient({
       ...anOidcConfig,
     } as unknown as Config);
-    const res = await getFimsRedirect({
+    const res = await getFimsRedirect("aDevice")({
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
     })();
@@ -57,7 +70,7 @@ describe("getFimsRedirect", () => {
       ...anOidcConfig,
     } as unknown as Config);
     authorizationUrlMock.mockRejectedValueOnce("Error");
-    const res = await getFimsRedirect({
+    const res = await getFimsRedirect("aDevice")({
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
     })();
@@ -68,6 +81,6 @@ describe("getFimsRedirect", () => {
         message: "Error",
         title: "Internal Server Error",
       });
-    expect(redisSetExMock).toBeCalledTimes(1);
+    expect(redisSetExMock).toBeCalledTimes(2);
   });
 });
