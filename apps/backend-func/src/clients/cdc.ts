@@ -1,3 +1,4 @@
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 import { agent } from "@pagopa/ts-commons";
 import {
   AbortableFetch,
@@ -9,7 +10,6 @@ import nodeFetch from "node-fetch";
 
 import { Config } from "../config.js";
 import { createClient } from "../generated/cdc-api/client.js";
-import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 
 // 10 seconds timeout by default
 const DEFAULT_REQUEST_TIMEOUT_MS = 10000;
