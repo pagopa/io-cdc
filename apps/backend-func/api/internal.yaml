@@ -159,8 +159,6 @@ components:
       type: array
       items:
         type: string
-      required:
-        - items
     InternalServerError:
       description: InternalServerError
       allOf:
@@ -230,14 +228,10 @@ components:
       type: array
       items:
         type: string
-      required:
-        - items
     CardRequests:
       type: array
       items:
         $ref: "#/components/schemas/CardRequest"
-      required:
-        - items
     CardRequest:
       type: object
       properties:
