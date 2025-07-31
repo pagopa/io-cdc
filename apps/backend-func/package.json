@@ -1,6 +1,6 @@
 {
   "name": "backend-func",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Backend functions app for CdC",
   "main": "./dist/main.js",
   "license": "MIT",
