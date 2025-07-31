@@ -127,11 +127,14 @@ describe("createSessionAndRedirect", () => {
       ...anOidcConfig,
     } as unknown as Config);
 
-    const res = await createSessionAndRedirect({
-      family_name: "Surname",
-      fiscal_code: "AAABBB00C00D000E",
-      given_name: "Name",
-    } as OidcUser)({
+    const res = await createSessionAndRedirect(
+      {
+        family_name: "Surname",
+        fiscal_code: "AAABBB00C00D000E",
+        given_name: "Name",
+      } as OidcUser,
+      "aState",
+    )({
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
@@ -142,6 +145,30 @@ describe("createSessionAndRedirect", () => {
       expect(res.right).toContain("https://baseurl.it/authorize?id=");
   });
 
+  it("should create session and return a redirect if redis succeed and find a device", async () => {
+    const fimsClientMock = getFimsClient({
+      ...anOidcConfig,
+    } as unknown as Config);
+
+    redisGetMock.mockResolvedValueOnce("aDevice");
+
+    const res = await createSessionAndRedirect(
+      {
+        family_name: "Surname",
+        fiscal_code: "AAABBB00C00D000E",
+        given_name: "Name",
+      } as OidcUser,
+      "aState",
+    )({
+      config,
+      fimsClient: fimsClientMock,
+      redisClientFactory: redisClientFactoryMock,
+    })();
+
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) expect(res.right).toContain("&device=aDevice");
+  });
+
   it("should return an error if redis fail", async () => {
     const fimsClientMock = getFimsClient({
       ...anOidcConfig,
@@ -149,11 +176,14 @@ describe("createSessionAndRedirect", () => {
 
     redisSetExMock.mockRejectedValue("Error");
 
-    const res = await createSessionAndRedirect({
-      family_name: "Surname",
-      fiscal_code: "AAABBB00C00D000E",
-      given_name: "Name",
-    } as OidcUser)({
+    const res = await createSessionAndRedirect(
+      {
+        family_name: "Surname",
+        fiscal_code: "AAABBB00C00D000E",
+        given_name: "Name",
+      } as OidcUser,
+      "aState",
+    )({
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
