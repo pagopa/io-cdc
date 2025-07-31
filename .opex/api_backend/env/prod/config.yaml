@@ -1,6 +1,6 @@
 oa3_spec: ./apps/backend-func/api/internal.yaml
 name: opex_cdc_api_backend
-location: North Italy
+location: Italy North
 timespan: 5m
 evaluation_frequency: 10
 evaluation_time_window: 30
