@@ -181,7 +181,7 @@ export const createSessionAndRedirect =
               deps.redisClientFactory,
               sessionId,
               sessionToken,
-              30,
+              60,
             ),
           ),
           TE.map(
