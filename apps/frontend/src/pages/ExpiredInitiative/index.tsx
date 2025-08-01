@@ -1,15 +1,16 @@
 import { Icon } from '@io-cdc/ui';
 import { Button, Stack, Typography } from '@mui/material';
 import { DEFAULT_CONFIG, EXPIRED_INITIATIVE_CONFIG_MAP } from './constants';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { trackEvent } from '@io-cdc/mixpanel';
 
-//TODO -> define what should be done on close
 const ExpiredInitiative = () => {
   const {
     state: { status },
   } = useLocation();
+
+  const navigate = useNavigate();
 
   const { image, description, title, trackProperties } =
     EXPIRED_INITIATIVE_CONFIG_MAP?.[status] ?? DEFAULT_CONFIG;
@@ -29,7 +30,7 @@ const ExpiredInitiative = () => {
         </Typography>
         {description && <Typography textAlign="center">{description}</Typography>}
       </Stack>
-      <Button onClick={() => window.location.reload()} size="small" variant="contained">
+      <Button onClick={() => navigate('iossoapi://cancel')} size="small" variant="contained">
         Chiudi
       </Button>
     </Stack>
