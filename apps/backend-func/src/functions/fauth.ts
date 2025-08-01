@@ -39,7 +39,7 @@ export const getFimsRedirect =
       TE.chain(({ nonce, state }) =>
         pipe(
           // store nonce in redis
-          setWithExpirationTask(deps.redisClientFactory, state, nonce, 30),
+          setWithExpirationTask(deps.redisClientFactory, state, nonce, 60),
           TE.chain(() =>
             // store device in redis if provided
             pipe(
@@ -50,7 +50,7 @@ export const getFimsRedirect =
                   deps.redisClientFactory,
                   `device-${state}`,
                   device,
-                  30,
+                  60,
                 ),
               ),
               O.getOrElse(() => TE.of(true)),
