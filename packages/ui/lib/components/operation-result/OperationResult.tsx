@@ -35,7 +35,7 @@ export const OperationResult = ({
   >
     {illustration && <Box>{illustration}</Box>}
     <Stack alignItems="center" justifyContent="center" spacing={1}>
-      <Typography fontWeight={700} variant="h5">
+      <Typography fontSize={24} fontWeight={700} lineHeight={32} variant="h5">
         {title}
       </Typography>
       {subTitle && <Typography variant="body2">{subTitle}</Typography>}
