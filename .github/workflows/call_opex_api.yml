@@ -31,9 +31,9 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - uses: pagopa/opex-dashboard-azure-action@v1.1.2
+      - uses: pagopa/opex-dashboard-azure-action@3bbf7e465d7dcf31f0676effb726c43670909b8b # v1.2.3
         with:
-          environment: opex-prod-cd
+          environment: prod
           api-name: ${{ env.API_NAME }}
           config: .opex/${{ env.API_NAME }}/env/prod/config.yaml
           client-id: ${{ secrets.ARM_CLIENT_ID }}
