@@ -13,7 +13,7 @@ export const useLoadYears = () => {
 
   const session = useSelector(selectFirstSessionData);
 
-  const redirectToken = useMemo(() => search.split('id=')[1], [search]);
+  const redirectToken = useMemo(() => search.split('id=')[1].replace(/\&device=.*/,""), [search]);
 
   const [getSession] = useLazyGetSessionQuery();
   const [getYearsList] = useLazyGetYearsListQuery();
