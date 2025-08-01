@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import { StyledComponent } from "@emotion/styled";
+import { Box, BoxProps } from "@mui/material";
 import { keyframes, styled } from "@mui/system";
 
 const rotate = keyframes`
@@ -7,7 +8,9 @@ const rotate = keyframes`
   }
 `;
 
-export const Spinner = styled(Box)(() => ({
+export const Spinner: StyledComponent<{ index: number } & BoxProps> = styled(
+  Box,
+)(() => ({
   animation: `${rotate} 1.2s linear infinite`,
   height: "60px",
   position: "relative",

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import { Box } from "@mui/material";
+import { StyledComponent } from "@emotion/styled";
+import { Box, BoxProps } from "@mui/material";
 import { keyframes, styled } from "@mui/system";
 
 const fade = keyframes`
@@ -7,7 +8,7 @@ const fade = keyframes`
   50% { opacity: 1; }
 `;
 
-export const Dot = styled(Box, {
+export const Dot: StyledComponent<{ index: number } & BoxProps> = styled(Box, {
   shouldForwardProp: (prop) => prop !== "index",
 })<{ index: number }>(({ index }) => {
   const angle = (index * 360) / 8;
