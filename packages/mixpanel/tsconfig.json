@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES2020", // output moderno
-    "module": "esnext", // supporta import/export + import.meta
+    "target": "ES2020",
+    "module": "esnext",
     "lib": [
       "ES2020",
       "DOM"
-    ], // ambiente browser con API DOM
-    "declaration": true, // genera .d.ts per tipi
-    "declarationMap": true, // mappe per .d.ts (utile)
-    "outDir": "dist", // cartella output
-    "strict": true, // tutte le verifiche strette
-    "moduleResolution": "node", // risoluzione moduli node-style
-    "esModuleInterop": true, // interop con CommonJS
-    "skipLibCheck": true, // evita controlli sui .d.ts delle dipendenze
+    ],
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true, // per bundler come vite
-    "noEmit": false // produce output (necessario per build)
+    "isolatedModules": true,
+    "noEmit": false
   },
   "include": [
     "src"
