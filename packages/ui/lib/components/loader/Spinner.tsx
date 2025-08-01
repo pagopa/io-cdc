@@ -8,9 +8,7 @@ const rotate = keyframes`
   }
 `;
 
-export const Spinner: StyledComponent<{ index: number } & BoxProps> = styled(
-  Box,
-)(() => ({
+export const Spinner: StyledComponent<BoxProps> = styled(Box)(() => ({
   animation: `${rotate} 1.2s linear infinite`,
   height: "60px",
   position: "relative",
