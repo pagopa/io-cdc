@@ -25,7 +25,7 @@ const SelectYear = () => {
           value,
           disabled,
           rightComponent: disabled ? (
-            <Chip label="Già richiesta" color="primary" size="small" />
+            <Chip label="Già richiesta" color="info" size="small" />
           ) : undefined,
         }))
         .sort((a, b) => Number(a.value) - Number(b.value)),
