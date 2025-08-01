@@ -3,7 +3,6 @@ import mixpanel, { Persistence } from 'mixpanel-browser';
 import { isEnvConfigEnabled } from './utils';
 
 const ANALYTICS_ENABLE = import.meta.env.VITE_ANALYTICS_ENABLE;
-// const ANALYTICS_MOCK = isEnvConfigEnabled(import.meta.env.VITE_ANALYTICS_MOCK);
 const ANALYTICS_TOKEN = import.meta.env.VITE_ANALYTICS_TOKEN || '';
 const ANALYTICS_API_HOST = import.meta.env.VITE_ANALYTICS_API_HOST;
 const ANALYTICS_PERSISTENCE = import.meta.env.VITE_ANALYTICS_PERSISTENCE;
@@ -23,8 +22,6 @@ export interface EventProperties {
   event_category?: EventCategory;
   event_type?: EventType;
 }
-// eslint-disable-next-line prefer-const, @typescript-eslint/no-unused-vars
-// let mockSuperProperties: Record<string, unknown> = {};
 
 /** To call in order to start the analytics service, otherwise no event will be sent */
 export const initAnalytics = (deviceId: string | undefined): void => {

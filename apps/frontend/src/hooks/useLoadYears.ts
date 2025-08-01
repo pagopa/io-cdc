@@ -7,6 +7,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectFirstSessionData } from '../features/app/selectors';
+import { Year } from '../features/app/model';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
 
@@ -22,11 +23,14 @@ export const useLoadYears = () => {
   const [getNotAvailableYearsList] = useLazyGetNotAvailableYearsListQuery();
 
   const [response, setResponse] = useState<
-    Pick<Awaited<ReturnType<typeof getYearsList>>, 'isError' | 'isSuccess' | 'error'>
+    Pick<Awaited<ReturnType<typeof getYearsList>>, 'isError' | 'isSuccess' | 'error'> & {
+      yearsList: Year[];
+    }
   >({
     isError: false,
     isSuccess: false,
     error: undefined,
+    yearsList: [],
   });
 
   const loadData = useCallback(async () => {
@@ -75,10 +79,17 @@ export const useLoadYears = () => {
       ? { status: 501, data: null }
       : getYearsListError || getNotAvailableYearsListError;
 
+    const yearsList = (availableYears || []).map((year) => ({
+      label: year,
+      value: year,
+      disabled: (notAvailableYears || []).map(({ year }) => year).includes(year),
+    }));
+
     setResponse({
       isError,
       isSuccess,
       error,
+      yearsList,
     });
   }, [getNotAvailableYearsList, getSession, getYearsList, redirectToken, session]);
 
