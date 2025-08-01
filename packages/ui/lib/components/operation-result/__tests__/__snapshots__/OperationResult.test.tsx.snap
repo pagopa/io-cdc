@@ -35,7 +35,7 @@ exports[`Test OperationResult Component > Should match the snapshot with all pro
           class="MuiStack-root css-1cuev0n-MuiStack-root"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5 css-bezmlo-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 css-1n88trk-MuiTypography-root"
           >
             sample-title
           </h5>
@@ -104,7 +104,7 @@ exports[`Test OperationResult Component > Should match the snapshot with all pro
         class="MuiStack-root css-1cuev0n-MuiStack-root"
       >
         <h5
-          class="MuiTypography-root MuiTypography-h5 css-bezmlo-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-1n88trk-MuiTypography-root"
         >
           sample-title
         </h5>

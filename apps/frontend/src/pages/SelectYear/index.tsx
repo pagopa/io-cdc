@@ -1,43 +1,54 @@
 import { CheckboxList, Loader, SectionTitle } from '@io-cdc/ui';
 import { Button, Chip, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Location, useLocation, useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/appRoutes';
-import { selectAnnualitiesWithStatus, selectNotAvailableYears } from '../../features/app/selectors';
-import { useSelector } from 'react-redux';
 import { useRequestBonusMutation } from '../../features/app/services';
+import { Year } from '../../features/app/model';
 
 const SelectYear = () => {
-  const annualities = useSelector(selectAnnualitiesWithStatus);
-  const notAvailableYears = useSelector(selectNotAvailableYears);
-  const [requestBonus, { isLoading }] = useRequestBonusMutation();
+  const { state: years = [] } = useLocation() as Location<Year[]>;
+
+  const notAvailableYears = years.filter(({ disabled }) => disabled).map(({ value }) => value);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
+
+  const [requestBonus] = useRequestBonusMutation();
+  const navigate = useNavigate();
 
   const mappedYearsList = useMemo(
     () =>
-      annualities
+      years
         .map(({ label, value, disabled }) => ({
           label,
           value,
           disabled,
           rightComponent: disabled ? (
-            <Chip label="Già richiesta" color="primary" size="small" />
+            <Chip label="Già richiesta" color="info" size="small" />
           ) : undefined,
         }))
         .sort((a, b) => Number(a.value) - Number(b.value)),
-    [annualities],
+    [years],
   );
 
-  const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
+  const allSelected = useMemo(
+    () => mappedYearsList.every(({ value, disabled }) => disabled || selectedItems.includes(value)),
+    [mappedYearsList, selectedItems],
+  );
 
-  const navigate = useNavigate();
-
-  const onSelectYear = useCallback((value: string[]) => {
-    setSelectedItems(value);
-  }, []);
+  const onSelectYear = useCallback(
+    (value: string[]) => {
+      setSelectedItems(value.length ? value : notAvailableYears);
+    },
+    [notAvailableYears],
+  );
 
   const onConfirm = useCallback(async () => {
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
+
     try {
+      setIsLoading(true);
       const { error, data } = await requestBonus(newYears);
       if (error) {
         throw new Error('Something went wrong');
@@ -46,6 +57,7 @@ const SelectYear = () => {
         navigate(APP_ROUTES.FEEDBACK, {
           state: {
             status: 200,
+            years: newYears.length,
           },
         });
     } catch (e) {
@@ -57,19 +69,17 @@ const SelectYear = () => {
     }
   }, [selectedItems, notAvailableYears, requestBonus, navigate]);
 
-  const allSelected = useMemo(
-    () => mappedYearsList.every(({ value, disabled }) => disabled || selectedItems.includes(value)),
-    [mappedYearsList, selectedItems],
-  );
+  if (isLoading)
+    return (
+      <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+        <Loader />
+        <Typography fontSize={22} fontWeight={700} textAlign="center">
+          Stiamo inviando la tua richiesta
+        </Typography>
+      </Stack>
+    );
 
-  return isLoading ? (
-    <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-      <Loader />
-      <Typography fontSize={22} fontWeight={700} textAlign="center">
-        Stiamo inviando la tua richiesta
-      </Typography>
-    </Stack>
-  ) : (
+  return (
     <Stack padding={2} flex={1} justifyContent="space-between" rowGap={2} overflow="hidden">
       <SectionTitle
         title="Per quale anno vuoi richiedere la Carta della Cultura?"

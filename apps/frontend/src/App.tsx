@@ -3,8 +3,10 @@ import { Layout } from './components/Layout';
 import { APP_ROUTES, APP_ROUTES_CONFIG } from './utils/appRoutes';
 import { HomeIndex } from './pages/Home/routes';
 import Home from './pages/Home';
+import { useMixPanelSession } from './hooks';
 
 function App() {
+  useMixPanelSession();
   return (
     <Routes>
       <Route element={<Layout />}>

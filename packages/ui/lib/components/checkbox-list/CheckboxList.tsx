@@ -1,8 +1,8 @@
 import {
   Box,
-  Button,
   Checkbox,
   FormControlLabel,
+  Link,
   Typography,
 } from "@mui/material";
 import { ReactNode, useCallback } from "react";
@@ -83,9 +83,9 @@ export function CheckboxList<T>({
           {title}
         </Typography>
         {multiple && !disableSelectAll && (
-          <Button onClick={onSelectAll} variant="text">
+          <Link fontWeight="bold" onClick={onSelectAll}>
             {buttonLabel}
-          </Button>
+          </Link>
         )}
       </Box>
       {options.map(
