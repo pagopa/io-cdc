@@ -11,18 +11,6 @@ servers:
 security:
   - ApiKeyAuth: []
 paths:
-  /info:
-    get:
-      operationId: info
-      responses:
-        "200":
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApplicationInfo"
-        "500":
-          description: Internal Server error
   /fauth:
     get:
       operationId: fimsAuth
