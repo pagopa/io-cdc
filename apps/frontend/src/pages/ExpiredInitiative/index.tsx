@@ -2,6 +2,8 @@ import { Icon } from '@io-cdc/ui';
 import { Button, Stack, Typography } from '@mui/material';
 import { DEFAULT_CONFIG, EXPIRED_INITIATIVE_CONFIG_MAP } from './constants';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { trackEvent } from '@io-cdc/mixpanel';
 
 const ExpiredInitiative = () => {
   const {
@@ -10,9 +12,17 @@ const ExpiredInitiative = () => {
 
   const navigate = useNavigate();
 
-  const { image, description, title } = EXPIRED_INITIATIVE_CONFIG_MAP?.[status] ?? DEFAULT_CONFIG;
+  const { image, description, title, trackProperties } =
+    EXPIRED_INITIATIVE_CONFIG_MAP?.[status] ?? DEFAULT_CONFIG;
+
+  useEffect(() => {
+    if (trackProperties) {
+      trackEvent('CDC_REQUEST_EXPIRED', trackProperties);
+    }
+  }, []);
+
   return (
-    <Stack justifyContent="center" alignItems="center" height="100%" gap={4}>
+    <Stack justifyContent="center" alignItems="center" height="100%" gap={4} padding={2}>
       <Icon name={image} sx={{ width: 60, height: 60 }} />
       <Stack gap={4} justifyContent="center" alignItems="center">
         <Typography variant="h4" textAlign="center">

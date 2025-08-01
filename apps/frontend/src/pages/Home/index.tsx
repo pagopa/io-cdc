@@ -2,7 +2,7 @@ import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { APP_ROUTES } from '../../utils/appRoutes';
-import { useLoadYears } from '../../hooks/useLoadYears';
+import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 
 const Home = () => {

@@ -23,6 +23,23 @@ export const appApi = createApi({
   }),
   endpoints: (builder) => ({
     getSession: builder.query<SessionResponseDTO, SessionParams>({
+      // queryFn: async () => {
+      //   const shouldFail = getRandomResponse();
+      //   await delay(2000);
+      //   if (shouldFail) {
+      //     return {
+      //       error: {
+      //         status: getRandomError(),
+      //         data: { message: 'Unauthorized' },
+      //       },
+      //     };
+      //   }
+      //   return {
+      //     data: {
+      //       token: 'aiij182980wfyh3brfyw',
+      //     },
+      //   };
+      // },
       query: ({ id }) => ({
         url: '/authorize',
         params: { id },
@@ -31,9 +48,35 @@ export const appApi = createApi({
     }),
     getYearsList: builder.query<YearsList, void>({
       query: () => 'years',
+      // queryFn: async () => {
+      //   const shouldFail = getRandomResponse();
+      //   await delay(2000);
+      //   if (shouldFail) {
+      //     return {
+      //       error: {
+      //         status: getRandomError(),
+      //         data: { message: 'Non puoi richiedere la carta della cultura' },
+      //       },
+      //     };
+      //   }
+      //   return { data: mockYearsList };
+      // },
     }),
     getNotAvailableYearsList: builder.query<RequestedYearsList, void>({
       query: () => 'card-requests',
+      // queryFn: async () => {
+      //   const shouldFail = getRandomResponse();
+      //   await delay(2000);
+      //   if (shouldFail) {
+      //     return {
+      //       error: {
+      //         status: getRandomError(),
+      //         data: { message: 'Non puoi richiedere la carta della cultura' },
+      //       },
+      //     };
+      //   }
+      //   return { data: mockYears };
+      // },
     }),
     requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({
       query: (annualities) => ({
@@ -41,6 +84,21 @@ export const appApi = createApi({
         method: 'POST',
         body: annualities,
       }),
+      // queryFn: async () => {
+      //   const shouldFail = getRandomResponse();
+      //   await delay(2000);
+      //   if (shouldFail) {
+      //     return {
+      //       error: {
+      //         status: 500,
+      //         data: { message: 'Errore nella richiesta' },
+      //       },
+      //     };
+      //   }
+      //   return {
+      //     data: { success: true },
+      //   };
+      // },
     }),
   }),
 });
