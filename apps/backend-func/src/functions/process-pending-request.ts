@@ -11,6 +11,7 @@ import { identity, pipe } from "fp-ts/lib/function.js";
 import { ulid } from "ulid";
 
 import { Config } from "../config.js";
+import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
@@ -41,20 +42,39 @@ export const sendCdcCardRequests = (
   deps: Dependencies,
 ) =>
   pipe(
-    TE.of(
-      new CosmosDbRequestAuditRepository(
-        deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+    TE.Do,
+    TE.bind("requestsAudit", () =>
+      pipe(
+        new CosmosDbRequestAuditRepository(
+          deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+        ),
+        (requestsAuditRepository) =>
+          requestsAuditRepository.getAllByFiscalCode(
+            pendingCardRequestMessage.fiscal_code,
+          ),
       ),
     ),
-    TE.chain((requestsAuditRepository) =>
-      requestsAuditRepository.getAllByFiscalCode(
-        pendingCardRequestMessage.fiscal_code,
+    TE.bind("alreadyArchivedYears", () =>
+      pipe(
+        new CosmosDbCardRequestRepository(
+          deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
+        ),
+        (cardRequestsRepository) =>
+          cardRequestsRepository.getAllByFiscalCode(
+            pendingCardRequestMessage.fiscal_code,
+          ),
+        TE.map((existingCardRequests) =>
+          existingCardRequests.map((r) => r.year),
+        ),
       ),
     ),
-    TE.map((requestsAudit) =>
+    TE.map(({ alreadyArchivedYears, requestsAudit }) =>
       // build request payload
       pipe(
         pendingCardRequestMessage.years,
+        // filter out years that have already been requested
+        A.filter((year) => !alreadyArchivedYears.includes(year)),
+        // map years to request data
         A.map((year) =>
           pipe(
             // we check request date from previous audits
@@ -73,10 +93,14 @@ export const sendCdcCardRequests = (
             }),
           ),
         ),
+        (requestData) => ({
+          alreadyArchivedYears,
+          requestData,
+        }),
       ),
     ),
     // we call CdC API with a cumulative request
-    TE.chainFirst((requestData) =>
+    TE.chainFirst(({ requestData }) =>
       pipe(
         deps.cdcUtils.requestCdcTE(
           {
@@ -108,26 +132,19 @@ export const sendCdcCardRequests = (
  */
 export const archiveCardRequests =
   (pendingCardRequestMessage: PendingCardRequestMessage, deps: Dependencies) =>
-  (requestData: CdcApiRequestData) =>
+  (input: { alreadyArchivedYears: Year[]; requestData: CdcApiRequestData }) =>
     pipe(
-      TE.of(
-        new CosmosDbCardRequestRepository(
-          deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
-        ),
-      ),
-      TE.chain((repository) =>
-        repository.getAllByFiscalCode(pendingCardRequestMessage.fiscal_code),
-      ),
-      TE.map(A.map((cardRequest) => cardRequest.year)),
-      TE.chain((alreadyArchivedYears) =>
-        pipe(
-          deps.cdcUtils.getAlreadyRequestedYearsCdcTE({
-            first_name: pendingCardRequestMessage.first_name,
-            fiscal_code: pendingCardRequestMessage.fiscal_code,
-            last_name: pendingCardRequestMessage.last_name,
-          }),
-          TE.map((cdcRequestedYears) =>
-            cdcRequestedYears.filter((y) => !alreadyArchivedYears.includes(y)),
+      pipe(
+        // we check CdC API for all user requested years
+        deps.cdcUtils.getAlreadyRequestedYearsCdcTE({
+          first_name: pendingCardRequestMessage.first_name,
+          fiscal_code: pendingCardRequestMessage.fiscal_code,
+          last_name: pendingCardRequestMessage.last_name,
+        }),
+        // we filter out years that have already been archived
+        TE.map((cdcRequestedYears) =>
+          cdcRequestedYears.filter(
+            (y) => !input.alreadyArchivedYears.includes(y),
           ),
         ),
       ),
@@ -143,7 +160,7 @@ export const archiveCardRequests =
           ),
           TE.chain((cardRequestsRepository) =>
             pipe(
-              requestData,
+              input.requestData,
               A.filter((r) => yearsToArchive.includes(r.year)),
               A.map((request) =>
                 pipe(
