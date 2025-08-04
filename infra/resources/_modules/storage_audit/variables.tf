@@ -1,3 +1,13 @@
+variable "prefix" {
+  type        = string
+  description = "IO Prefix"
+}
+
+variable "env_short" {
+  type        = string
+  description = "Short environment"
+}
+
 variable "project" {
   type        = string
   description = "IO prefix and short environment"
@@ -13,6 +23,17 @@ variable "domain" {
   description = "Domain"
 }
 
+variable "app_name" {
+  type        = string
+  description = "App name"
+}
+
+variable "instance_number" {
+  type        = string
+  description = "The istance number to create"
+}
+
+
 variable "tags" {
   type        = map(any)
   description = "Resource tags"
@@ -24,8 +45,24 @@ variable "resource_group_name" {
 }
 
 variable "subnet_pep_id" {
-  type = string
+  type        = string
   description = "ID of the subnet for private endpoints"
+}
+
+variable "privatelink_blob_core_windows_net_id" {
+  type        = string
+  description = "Blob private link"
+}
+
+variable "tenant_id" {
+  type        = string
+  description = "Tenant ID for the Azure subscription"
+}
+
+variable "action_group_id" {
+  type        = string
+  description = "The action group id for alerts"
+  sensitive   = true
 }
 
 variable "cdc_storage_immutability_policy_days" {

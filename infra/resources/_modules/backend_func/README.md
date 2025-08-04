@@ -16,6 +16,7 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_cdc_backend_func"></a> [cdc\_backend\_func](#module\_cdc\_backend\_func) | pagopa-dx/azure-function-app/azurerm | 0.2.9 |
+| <a name="module_func_autoscaler"></a> [func\_autoscaler](#module\_func\_autoscaler) | pagopa-dx/azure-app-service-plan-autoscaler/azurerm | 2.0.0 |
 
 ## Resources
 
@@ -36,6 +37,7 @@ No requirements.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_action_group_id"></a> [action\_group\_id](#input\_action\_group\_id) | The action group id for alerts | `string` | n/a | yes |
 | <a name="input_ai_connection_string"></a> [ai\_connection\_string](#input\_ai\_connection\_string) | The connection string to connect to application insights | `string` | n/a | yes |
 | <a name="input_ai_instrumentation_key"></a> [ai\_instrumentation\_key](#input\_ai\_instrumentation\_key) | The key to connect to application insights | `string` | n/a | yes |
 | <a name="input_ai_sampling_percentage"></a> [ai\_sampling\_percentage](#input\_ai\_sampling\_percentage) | The sampling percentage for application insights | `string` | n/a | yes |
@@ -43,6 +45,8 @@ No requirements.
 | <a name="input_algorithm_keys"></a> [algorithm\_keys](#input\_algorithm\_keys) | Keys' algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_signature"></a> [algorithm\_signature](#input\_algorithm\_signature) | Signature's algorithm | `string` | n/a | yes |
 | <a name="input_card_request_queue_name"></a> [card\_request\_queue\_name](#input\_card\_request\_queue\_name) | Card request queue name | `string` | n/a | yes |
+| <a name="input_cdc_api_base_url"></a> [cdc\_api\_base\_url](#input\_cdc\_api\_base\_url) | The base url for cdc api | `string` | n/a | yes |
+| <a name="input_cdc_api_base_url_test"></a> [cdc\_api\_base\_url\_test](#input\_cdc\_api\_base\_url\_test) | The test base url for cdc api | `string` | n/a | yes |
 | <a name="input_cdc_backend_func_key"></a> [cdc\_backend\_func\_key](#input\_cdc\_backend\_func\_key) | The key for apim to call functions APIs | `string` | n/a | yes |
 | <a name="input_cdc_backend_func_url"></a> [cdc\_backend\_func\_url](#input\_cdc\_backend\_func\_url) | The url for apim to call functions APIs | `string` | n/a | yes |
 | <a name="input_cdc_base_url"></a> [cdc\_base\_url](#input\_cdc\_base\_url) | The base url for CDC redirects | `string` | n/a | yes |

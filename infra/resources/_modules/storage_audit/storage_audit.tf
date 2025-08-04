@@ -2,38 +2,42 @@
 # Immutable Audit Log Storage
 ###
 module "immutable_cdc_audit_logs_storage" {
-  source = "git::https://github.com/pagopa/terraform-azurerm-v4//storage_account?ref=v7.26.3"
+  source  = "pagopa-dx/azure-storage-account/azurerm"
+  version = "0.1.0"
 
-  name                          = replace(format("%s-%s-audit-st", var.project, var.domain), "-", "")
-  domain                        = upper(var.domain)
-  account_kind                  = "StorageV2"
-  account_tier                  = "Standard"
-  access_tier                   = "Hot"
-  account_replication_type      = "GZRS"
-  resource_group_name           = var.resource_group_name
-  location                      = var.location
-  advanced_threat_protection    = true
-  enable_identity               = true
-  public_network_access_enabled = false
-
-  # Needed for immtability policy
-  blob_versioning_enabled = true
-
-  blob_storage_policy = {
-    enable_immutability_policy = true
-    blob_restore_policy_days   = 0
+  environment = {
+    prefix          = var.prefix
+    env_short       = var.env_short
+    location        = var.location
+    domain          = var.domain
+    app_name        = var.app_name
+    instance_number = var.instance_number
   }
-  immutability_policy_props = {
-    allow_protected_append_writes = false
-    period_since_creation_in_days = var.cdc_storage_immutability_policy_days
+
+  resource_group_name = var.resource_group_name
+  subnet_pep_id       = var.subnet_pep_id
+
+  blob_features = {
+    versioning          = true
+    restore_policy_days = 0
+    immutability_policy = {
+      enabled                       = true
+      allow_protected_append_writes = false
+      period_since_creation_in_days = var.cdc_storage_immutability_policy_days
+    }
   }
+
+  action_group_id = var.action_group_id
+
+  tier = "l"
 
   tags = var.tags
 }
 
+
 module "immutable_cdc_audit_logs_storage_customer_managed_key" {
   source               = "git::https://github.com/pagopa/terraform-azurerm-v4//storage_account_customer_managed_key?ref=v7.26.3"
-  tenant_id            = data.azurerm_subscription.current.tenant_id
+  tenant_id            = var.tenant_id
   location             = var.location
   resource_group_name  = var.resource_group_name
   key_vault_id         = var.key_vault_id
@@ -59,7 +63,7 @@ resource "azurerm_private_endpoint" "immutable_cdc_audit_logs_storage_blob" {
 
   private_dns_zone_group {
     name                 = "private-dns-zone-group"
-    private_dns_zone_ids = [data.azurerm_private_dns_zone.privatelink_blob_core_windows_net.id]
+    private_dns_zone_ids = [var.privatelink_blob_core_windows_net_id]
   }
 
   tags = var.tags
