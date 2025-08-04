@@ -43,7 +43,7 @@ module "immutable_cdc_audit_logs_storage_customer_managed_key" {
   key_vault_id         = var.key_vault_id
   key_name             = format("%s-key", module.immutable_cdc_audit_logs_storage.name)
   storage_id           = module.immutable_cdc_audit_logs_storage.id
-  storage_principal_id = module.immutable_cdc_audit_logs_storage.identity.0.principal_id
+  storage_principal_id = module.immutable_cdc_audit_logs_storage.principal_id
 }
 
 resource "azurerm_private_endpoint" "immutable_cdc_audit_logs_storage_blob" {
