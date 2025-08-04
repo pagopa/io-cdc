@@ -1,1 +1,1 @@
-export { initAnalytics, trackEvent } from "./mixpanel";
+export { initAnalytics, trackEventBuilder } from "./mixpanel";

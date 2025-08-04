@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
 import { CONFIG_BY_STATUS } from './constants';
 import { useEffect } from 'react';
-import { trackEvent } from '@io-cdc/mixpanel';
+import { trackEvent } from '../../utils/trackEvent';
 
 const Feedback = () => {
   const {

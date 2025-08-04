@@ -3,7 +3,7 @@ import { Button, Stack, Typography } from '@mui/material';
 import { DEFAULT_CONFIG, EXPIRED_INITIATIVE_CONFIG_MAP } from './constants';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { trackEvent } from '@io-cdc/mixpanel';
+import { trackEvent } from '../../utils/trackEvent';
 
 const ExpiredInitiative = () => {
   const {
