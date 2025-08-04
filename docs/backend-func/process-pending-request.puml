@@ -6,7 +6,9 @@ participant "Sogei" as sogei
 
 queue -> be: Process Pending Request Message
 activate be
-be <-> cosmos: GET RequestAudit for CIT
+be <-> cosmos: GET all RequestAudit for CIT
+be <-> cosmos: GET all CardRequest for CIT
+be -> be: Filter already archived requests
 be -> be: Build Request Data
 be -> sogei: Send Request Data to Sogei with all requested years
 activate sogei
