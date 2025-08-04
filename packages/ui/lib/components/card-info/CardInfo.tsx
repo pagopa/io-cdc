@@ -53,7 +53,7 @@ export const CardInfo = ({
       <Stack
         alignItems="center"
         direction="row"
-        fontSize={24} // useful for inherited icon fontSize
+        fontSize={24}
         justifyContent="flex-start"
         spacing={1}
       >

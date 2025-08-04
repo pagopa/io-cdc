@@ -5,9 +5,11 @@ import IconArrowCircleRightBold from "./svg/IconArrowCircleRightBold";
 import IconCloseCircle from "./svg/IconCloseCircle";
 import IconError from "./svg/IconError";
 import IconExpandUp from "./svg/IconExpandUp";
+import IconHourglass from "./svg/IconHourglass";
 import IconInitiativeExpired from "./svg/IconInitiativeExpired";
 import IconParty from "./svg/IconParty";
 import IconRequestedAllYears from "./svg/IconRequestedAllYears";
+import IconTimeout from "./svg/IconTimeout";
 import IconUmbrella from "./svg/IconUmbrella";
 
 export const Icons = {
@@ -17,8 +19,10 @@ export const Icons = {
   closeCircle: IconCloseCircle,
   error: IconError,
   expandUp: IconExpandUp,
+  hourglass: IconHourglass,
   initiativeExpired: IconInitiativeExpired,
   party: IconParty,
+  timeout: IconTimeout,
   umbrella: IconUmbrella,
 } as const;
 
