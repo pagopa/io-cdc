@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.2
+
+### Patch Changes
+
+- 038e986: do not resend already requested card request
+
 ## 1.0.1
 
 ### Patch Changes
