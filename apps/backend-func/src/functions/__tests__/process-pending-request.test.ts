@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -58,8 +59,34 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
       fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
     ).toBeCalledTimes(1);
     expect(
-      createMocks[CosmosDbCardRequestRepository.containerName],
-    ).not.toBeCalled();
+      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(0);
+    expect(requestCdcTEMock).toBeCalledTimes(0);
+  });
+
+  it("1. should return error when CosmosDbCardRequestRepository fetchAll fails", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    setCosmosErrorMock(
+      CosmosDbCardRequestRepository.containerName,
+      CosmosOperation.fetchAll,
+    );
+    const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
+      config,
+      cosmosDbClient: cosmosClientMock,
+    })();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res)) expect(res.left).toEqual(new Error("Error"));
+    expect(
+      fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(
+      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(requestCdcTEMock).toBeCalledTimes(0);
   });
 
   it("1. should return error when cdcUtils requestCdcTE returns fails", async () => {
@@ -79,8 +106,9 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
       fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
     ).toBeCalledTimes(1);
     expect(
-      createMocks[CosmosDbCardRequestRepository.containerName],
-    ).toBeCalledTimes(0);
+      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(requestCdcTEMock).toBeCalledTimes(1);
   });
 
   it("1. should return error when cdcUtils requestCdcTE returns false", async () => {
@@ -101,11 +129,12 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
       fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
     ).toBeCalledTimes(1);
     expect(
-      createMocks[CosmosDbCardRequestRepository.containerName],
-    ).toBeCalledTimes(0);
+      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(requestCdcTEMock).toBeCalledTimes(1);
   });
 
-  it("1. should succeed and return requests data if no previous RequestsAudit are present", async () => {
+  it("1. should succeed and return requests data and already requested years if no previous RequestsAudit are present", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
@@ -118,26 +147,33 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
     })();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res))
-      expect(res.right).toEqual([
-        {
-          request_date: new Date("2025-07-12T14:16:49.633Z"),
-          year: "2020",
-        },
-        {
-          request_date: new Date("2025-07-12T14:16:49.633Z"),
-          year: "2021",
-        },
-        {
-          request_date: new Date("2025-07-12T14:16:49.633Z"),
-          year: "2023",
-        },
-      ]);
+      expect(res.right).toEqual({
+        alreadyArchivedYears: [],
+        requestData: [
+          {
+            request_date: new Date("2025-07-12T14:16:49.633Z"),
+            year: "2020",
+          },
+          {
+            request_date: new Date("2025-07-12T14:16:49.633Z"),
+            year: "2021",
+          },
+          {
+            request_date: new Date("2025-07-12T14:16:49.633Z"),
+            year: "2023",
+          },
+        ],
+      });
     expect(
       fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
     ).toBeCalledTimes(1);
+    expect(
+      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(requestCdcTEMock).toBeCalledTimes(1);
   });
 
-  it("1. should succeed and return requests data with previous RequestsAudit request_date if present", async () => {
+  it("1. should succeed and return requests data and already requested years with previous RequestsAudit request_date if present", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
@@ -152,55 +188,76 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
     })();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res))
-      expect(res.right).toEqual([
-        {
-          request_date: new Date("2025-07-11T14:16:49.633Z"),
-          year: "2020",
-        },
-        {
-          request_date: new Date("2025-07-11T14:16:49.633Z"),
-          year: "2021",
-        },
-        {
-          request_date: new Date("2025-07-11T14:16:49.633Z"),
-          year: "2023",
-        },
-      ]);
+      expect(res.right).toEqual({
+        alreadyArchivedYears: [],
+        requestData: [
+          {
+            request_date: new Date("2025-07-11T14:16:49.633Z"),
+            year: "2020",
+          },
+          {
+            request_date: new Date("2025-07-11T14:16:49.633Z"),
+            year: "2021",
+          },
+          {
+            request_date: new Date("2025-07-11T14:16:49.633Z"),
+            year: "2023",
+          },
+        ],
+      });
     expect(
       fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
     ).toBeCalledTimes(1);
+    expect(
+      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(requestCdcTEMock).toBeCalledTimes(1);
+  });
+
+  it("1. should succeed with only not requested cards and return requests data and already requested years if there are CardRequests", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    setMockedItems(CosmosDbRequestAuditRepository.containerName)([
+      aRequestAudit, // this request audit has request_date "2025-07-11T14:16:49.633Z"
+    ]);
+    setMockedItems(CosmosDbCardRequestRepository.containerName)([
+      aCardRequest, // 2020 was already requested
+    ]);
+    const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
+      cdcUtils: CdcUtilsMock,
+      config,
+      cosmosDbClient: cosmosClientMock,
+    })();
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res))
+      expect(res.right).toEqual({
+        alreadyArchivedYears: ["2020"],
+        requestData: [
+          {
+            request_date: new Date("2025-07-11T14:16:49.633Z"),
+            year: "2021",
+          },
+          {
+            request_date: new Date("2025-07-11T14:16:49.633Z"),
+            year: "2023",
+          },
+        ],
+      });
+    expect(
+      fetchAllMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(
+      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(requestCdcTEMock).toBeCalledTimes(1);
   });
 });
 
 describe("process-pending-requests | archiveCardRequests", () => {
   afterEach(() => {
     vi.clearAllMocks();
-  });
-
-  it("2. should return error when CosmosDbCardRequestRepository fetchAll fails", async () => {
-    const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
-      CosmosDbRequestAuditRepository.containerName,
-    ]);
-    setCosmosErrorMock(
-      CosmosDbCardRequestRepository.containerName,
-      CosmosOperation.fetchAll,
-    );
-    const res = await archiveCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
-      config,
-      cosmosDbClient: cosmosClientMock,
-    })([
-      {
-        request_date: new Date("2025-07-11T14:16:49.633Z"),
-        year: "2020",
-      },
-    ])();
-    expect(E.isLeft(res)).toBe(true);
-    if (E.isLeft(res)) expect(res.left).toEqual(new Error("Error"));
-    expect(
-      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
-    ).toBeCalledTimes(1);
   });
 
   it("2. should return error when getAlreadyRequestedYearsCdcTEMock fails", async () => {
@@ -215,17 +272,18 @@ describe("process-pending-requests | archiveCardRequests", () => {
       cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
-    })([
-      {
-        request_date: new Date("2025-07-11T14:16:49.633Z"),
-        year: "2020",
-      },
-    ])();
+    })({
+      alreadyArchivedYears: [],
+      requestData: [
+        {
+          request_date: new Date("2025-07-11T14:16:49.633Z"),
+          year: "2020",
+        },
+      ],
+    })();
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res)) expect(res.left).toEqual(new Error("Error"));
-    expect(
-      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
-    ).toBeCalledTimes(1);
+    expect(getAlreadyRequestedYearsCdcTEMock).toBeCalledTimes(1);
   });
 
   it("2. should return error when CosmosDbCardRequestRepository create fails", async () => {
@@ -244,16 +302,20 @@ describe("process-pending-requests | archiveCardRequests", () => {
       cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
-    })([
-      {
-        request_date: new Date("2025-07-11T14:16:49.633Z"),
-        year: "2020",
-      },
-    ])();
+    })({
+      alreadyArchivedYears: [],
+      requestData: [
+        {
+          request_date: new Date("2025-07-11T14:16:49.633Z"),
+          year: "2020",
+        },
+      ],
+    })();
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res)) expect(res.left).toEqual(new Error("Error"));
+    expect(getAlreadyRequestedYearsCdcTEMock).toBeCalledTimes(1);
     expect(
-      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
+      createMocks[CosmosDbCardRequestRepository.containerName],
     ).toBeCalledTimes(1);
   });
 
@@ -262,9 +324,6 @@ describe("process-pending-requests | archiveCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
     ]);
-    setMockedItems(CosmosDbCardRequestRepository.containerName)([
-      aCardRequest, // year "2020" is already archived
-    ]);
     getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(
       TE.of(["2020", "2021"]),
     );
@@ -272,21 +331,22 @@ describe("process-pending-requests | archiveCardRequests", () => {
       cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
-    })([
-      {
-        request_date: new Date("2025-07-11T14:16:49.633Z"),
-        year: "2020",
-      },
-      {
-        request_date: new Date("2025-07-12T14:16:49.633Z"),
-        year: "2021",
-      },
-    ])();
+    })({
+      alreadyArchivedYears: ["2020"],
+      requestData: [
+        {
+          request_date: new Date("2025-07-11T14:16:49.633Z"),
+          year: "2020",
+        },
+        {
+          request_date: new Date("2025-07-12T14:16:49.633Z"),
+          year: "2021",
+        },
+      ],
+    })();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res)) expect(res.right).toEqual(true);
-    expect(
-      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
-    ).toBeCalledTimes(1);
+    expect(getAlreadyRequestedYearsCdcTEMock).toBeCalledTimes(1);
     expect(
       createMocks[CosmosDbCardRequestRepository.containerName],
     ).toBeCalledTimes(1);
@@ -307,7 +367,6 @@ describe("process-pending-requests | archiveCardRequests", () => {
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
     ]);
-    setMockedItems(CosmosDbCardRequestRepository.containerName)([]);
     getAlreadyRequestedYearsCdcTEMock.mockReturnValueOnce(
       TE.of(["2020", "2021"]),
     );
@@ -315,21 +374,22 @@ describe("process-pending-requests | archiveCardRequests", () => {
       cdcUtils: CdcUtilsMock,
       config,
       cosmosDbClient: cosmosClientMock,
-    })([
-      {
-        request_date: new Date("2025-07-11T14:16:49.633Z"),
-        year: "2020",
-      },
-      {
-        request_date: new Date("2025-07-12T14:16:49.633Z"),
-        year: "2021",
-      },
-    ])();
+    })({
+      alreadyArchivedYears: [],
+      requestData: [
+        {
+          request_date: new Date("2025-07-11T14:16:49.633Z"),
+          year: "2020",
+        },
+        {
+          request_date: new Date("2025-07-12T14:16:49.633Z"),
+          year: "2021",
+        },
+      ],
+    })();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res)) expect(res.right).toEqual(true);
-    expect(
-      fetchAllMocks[CosmosDbCardRequestRepository.containerName],
-    ).toBeCalledTimes(1);
+    expect(getAlreadyRequestedYearsCdcTEMock).toBeCalledTimes(1);
     expect(
       createMocks[CosmosDbCardRequestRepository.containerName],
     ).toBeCalledTimes(2);

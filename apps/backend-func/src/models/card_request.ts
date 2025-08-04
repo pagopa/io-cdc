@@ -2,7 +2,7 @@ import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as t from "io-ts";
 
-export const years = ["2020", "2021", "2022", "2023", "2024", "2025"] as const;
+export const years = ["2020", "2021", "2022", "2023", "2024"] as const;
 
 const [first, second, ...rest] = years;
 
