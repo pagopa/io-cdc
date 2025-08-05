@@ -48,7 +48,7 @@ module "immutable_cdc_audit_logs_storage_customer_managed_key" {
 
 # Containers
 resource "azurerm_storage_container" "immutable_cdc_audit_logs_storage_logs" {
-  depends_on = [module.immutable_cdc_audit_logs_storage, azurerm_private_endpoint.immutable_cdc_audit_logs_storage_blob]
+  depends_on = [module.immutable_cdc_audit_logs_storage]
 
   name                  = "logs"
   storage_account_name  = module.immutable_cdc_audit_logs_storage.name
