@@ -23,6 +23,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_action_group_id"></a> [action\_group\_id](#input\_action\_group\_id) | The action group id for alerts | `string` | n/a | yes |
 | <a name="input_app_name"></a> [app\_name](#input\_app\_name) | App name | `string` | n/a | yes |
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | Short environment | `string` | n/a | yes |
