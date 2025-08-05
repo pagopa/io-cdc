@@ -41,32 +41,9 @@ module "immutable_cdc_audit_logs_storage_customer_managed_key" {
   location             = var.location
   resource_group_name  = var.resource_group_name
   key_vault_id         = var.key_vault_id
-  key_name             = format("%s-key", module.immutable_cdc_audit_logs_storage.name)
+  key_name             = format("%s-key-%s", module.immutable_cdc_audit_logs_storage.name, var.instance_number)
   storage_id           = module.immutable_cdc_audit_logs_storage.id
   storage_principal_id = module.immutable_cdc_audit_logs_storage.principal_id
-}
-
-resource "azurerm_private_endpoint" "immutable_cdc_audit_logs_storage_blob" {
-  depends_on = [module.immutable_cdc_audit_logs_storage]
-
-  name                = "${module.immutable_cdc_audit_logs_storage.name}-blob-endpoint"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  subnet_id           = var.subnet_pep_id
-
-  private_service_connection {
-    name                           = "${module.immutable_cdc_audit_logs_storage.name}-blob"
-    private_connection_resource_id = module.immutable_cdc_audit_logs_storage.id
-    is_manual_connection           = false
-    subresource_names              = ["blob"]
-  }
-
-  private_dns_zone_group {
-    name                 = "private-dns-zone-group"
-    private_dns_zone_ids = [var.privatelink_blob_core_windows_net_id]
-  }
-
-  tags = var.tags
 }
 
 # Containers
