@@ -3,7 +3,7 @@
 ###
 module "immutable_cdc_audit_logs_storage" {
   source  = "pagopa-dx/azure-storage-account/azurerm"
-  version = "0.1.0"
+  version = "~> 1.0"
 
   environment = {
     prefix          = var.prefix
