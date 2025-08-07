@@ -11,12 +11,12 @@ tags:
 security:
   - JwtAuth: []
 paths:
-  /citizen-status:
+  /status:
     get:
       tags:
       - secured
       summary: Get the citizen's status about the Carta della Cultura
-      operationId: getCitizenStatus
+      operationId: getStatus
       responses:
         '200':
           description: Successful response
@@ -119,8 +119,6 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden
-        '404':
-          description: Not Found
         '429':
           description: Too Many Requests
         '500':
@@ -203,6 +201,9 @@ components:
           format: date-time
           description: The expiration date of the Carta della Cultura
           example: "2026-12-31T23:59:59Z"
+      required:
+        - number_of_cards
+        - expiration_date
     CardsList:
       type: array
       items:
@@ -231,6 +232,12 @@ components:
             format: float
             description: Remaining balance on the card
             example: 50.01
+        required:
+          - card_name
+          - year
+          - status
+          - expiration_date
+          - residual_amount
     VoucherRequest:
       type: object
       properties:
@@ -266,7 +273,7 @@ components:
         status:
           type: string
           description: Status of the voucher (e.g., active, used, expired)
-          enum: ["PENDING", "USED", "EXPIRED"]
+          enum: ["PENDING", "USED", "EXPIRED", "REFUNDED"]
           example: "PENDING"
         card_year:
           type: string
