@@ -133,10 +133,12 @@ export const theme = createTheme(
       },
       body1: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
         lineHeight: 1.35 /* ~24px */,
       },
       body2: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
       },
       button: {
         color: colorTextPrimary,
@@ -149,24 +151,31 @@ export const theme = createTheme(
         color: colorTextPrimary,
         fontSize: pxToRem(12),
       },
+      fontFamily: '"Titillium Web", sans-serif !important',
       h1: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
         fontSize: pxToRem(40),
       },
       h2: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
       },
       h3: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
       },
       h4: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
       },
       h5: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
       },
       h6: {
         color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
         fontSize: pxToRem(20),
       },
       headline: {
@@ -177,6 +186,10 @@ export const theme = createTheme(
       },
       overline: {
         color: colorTextPrimary,
+      },
+      p: {
+        color: colorTextPrimary,
+        fontFamily: '"Titillium Web", sans-serif !important',
       },
       sidenav: {
         color: colorTextPrimary,
