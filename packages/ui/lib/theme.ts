@@ -57,6 +57,16 @@ export const theme = createTheme(
           },
         },
       },
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            fontFamily: '"Titillium Web", sans-serif',
+          },
+          html: {
+            fontFamily: '"Titillium Web", sans-serif',
+          },
+        },
+      },
       MuiListItem: {
         styleOverrides: {
           root: {
@@ -149,8 +159,10 @@ export const theme = createTheme(
         color: colorTextPrimary,
         fontSize: pxToRem(12),
       },
+
       h1: {
         color: colorTextPrimary,
+
         fontSize: pxToRem(40),
       },
       h2: {
@@ -176,6 +188,9 @@ export const theme = createTheme(
         color: colorTextPrimary,
       },
       overline: {
+        color: colorTextPrimary,
+      },
+      p: {
         color: colorTextPrimary,
       },
       sidenav: {
