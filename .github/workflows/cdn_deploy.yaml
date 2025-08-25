@@ -50,9 +50,16 @@ env:
 jobs:
   build:
     name: Build Artifact
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
     env:
       WORKSPACE: ${{ inputs.workspace_name }}
+      VITE_ANALYTICS_API_HOST: ${{ secrets.VITE_ANALYTICS_API_HOST }}
+      VITE_ANALYTICS_DEBUG: ${{ secrets.VITE_ANALYTICS_DEBUG }}
+      VITE_ANALYTICS_ENABLE: ${{ secrets.VITE_ANALYTICS_ENABLE }}
+      VITE_ANALYTICS_LOG_IP: ${{ secrets.VITE_ANALYTICS_LOG_IP }}
+      VITE_ANALYTICS_MOCK: ${{ secrets.VITE_ANALYTICS_MOCK }}
+      VITE_ANALYTICS_PERSISTENCE: ${{ secrets.VITE_ANALYTICS_PERSISTENCE }}
+      VITE_ANALYTICS_TOKEN: ${{ secrets.VITE_ANALYTICS_TOKEN }}
       TURBO_CACHE_DIR: .turbo-cache
 
     steps:
@@ -105,13 +112,12 @@ jobs:
           yarn workspaces focus --production
 
           mkdir ${{ github.run_id }}
-          
+
           # create the artifact (zip)
           zip -r $BUNDLE_NAME.zip dist/*
 
           echo "artifact-path=$(realpath $BUNDLE_NAME.zip)" >> "$GITHUB_OUTPUT"
         working-directory: ./out/apps/${{ env.WORKSPACE }}
-
 
       - name: Upload Artifact
         uses: pagopa/dx/.github/actions/upload-artifact@main
