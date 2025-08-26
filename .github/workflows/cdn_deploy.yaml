@@ -51,6 +51,7 @@ jobs:
   build:
     name: Build Artifact
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}-cd
     env:
       WORKSPACE: ${{ inputs.workspace_name }}
       VITE_ANALYTICS_API_HOST: ${{ secrets.VITE_ANALYTICS_API_HOST }}
