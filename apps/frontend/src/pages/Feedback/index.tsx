@@ -20,7 +20,7 @@ const Feedback = () => {
       return;
     }
     trackEvent(name, properties);
-  }, []);
+  }, [trackProperties]);
 
   return (
     <Stack flex={1} justifyContent="center" alignItems="center">
