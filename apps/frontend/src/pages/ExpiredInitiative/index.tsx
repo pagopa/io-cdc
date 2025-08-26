@@ -17,7 +17,7 @@ const ExpiredInitiative = () => {
     if (trackProperties) {
       trackEvent('CDC_REQUEST_EXPIRED', trackProperties);
     }
-  }, [trackProperties]);
+  }, []);
 
   return (
     <Stack justifyContent="center" alignItems="center" height="100%" gap={4} padding={2}>
