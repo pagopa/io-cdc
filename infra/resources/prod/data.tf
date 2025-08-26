@@ -48,6 +48,11 @@ data "azurerm_application_insights" "common" {
   resource_group_name = data.azurerm_resource_group.weu_common.name
 }
 
+data "azurerm_application_gateway" "io_app_gateway" {
+  name                = "io-p-itn-agw-01"
+  resource_group_name = "io-p-itn-common-rg-01"
+}
+
 // SECRETS
 data "azurerm_key_vault_secret" "cdc_base_url" {
   name         = "CDC-BASE-URL"
@@ -187,4 +192,9 @@ data "azurerm_key_vault_secret" "cdc_api_base_url" {
 data "azurerm_key_vault_secret" "cdc_api_base_url_test" {
   name         = "CDC-API-BASE-URL-TEST"
   key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_storage_account" "storage_cdc_be" {
+  name                = "iopitncdcbest01"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
 }
