@@ -17,7 +17,6 @@ export const useMixPanelSession = () => {
   };
 
   useEffect(() => {
-    console.info('useMixpanelSession effect', { deviceId, config });
     if (!!deviceId) {
       initAnalytics(deviceId, config);
     }

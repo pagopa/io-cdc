@@ -48,24 +48,9 @@ export const initAnalytics = (
       secure_cookie: true, // change this value as false if you run in local .env
     });
 
-    console.info('START MIXPANEL SESSION', {
-      ANALYTICS_ENABLE,
-      ANALYTICS_TOKEN,
-    });
-
     mixpanel.identify(deviceId);
 
     (window as WindowMPValues).initMixPanelCdcWeb = true;
-  } else {
-    console.warn('MIXPANEL SESSION NOT STARTED', {
-      deviceId,
-      ANALYTICS_API_HOST,
-      ANALYTICS_DEBUG,
-      ANALYTICS_LOG_IP,
-      ANALYTICS_ENABLE,
-      ANALYTICS_PERSISTENCE,
-      ANALYTICS_TOKEN,
-    });
   }
   return;
 };
@@ -79,14 +64,6 @@ export const initAnalytics = (
 export const trackEventBuilder =
   (ANALYTICS_ENABLE: string) =>
   (event_name: string, properties?: EventProperties, callback?: () => void): void => {
-    console.info(
-      {
-        event_name,
-        properties,
-        ANALYTICS_ENABLE,
-      },
-      'trackEvent builder',
-    );
     if (ANALYTICS_ENABLE && (window as WindowMPValues).initMixPanelCdcWeb) {
       trackEventThroughAnalyticTool(event_name, properties, callback);
     } else {
