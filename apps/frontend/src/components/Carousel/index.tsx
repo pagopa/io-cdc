@@ -2,7 +2,7 @@ import { Card } from '../Card';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
 import { Stack } from '@mui/material';
-import { Card as CardType } from '../../store/services/model';
+import { Card as CardType } from '../../features/app/model';
 
 type CarouselProps = {
   list: Array<CardType>;

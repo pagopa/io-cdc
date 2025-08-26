@@ -2,9 +2,10 @@ import { FetchArgs } from '@reduxjs/toolkit/query';
 import { SessionParams } from './model';
 import { delay, getRandomError, getRandomResponse } from './utils';
 import { mockYears, mockYearsList } from './mock';
-import { RequestBonusDto } from './dto';
+import { CreateBonusRequestDTO, RequestBonusDto } from './dto';
+import { apiMocks } from './apiMock';
 
-export const API = {
+export const API_REQUEST = {
   PROD: {
     getSession: {
       query: ({ id }: SessionParams): string | FetchArgs => ({
@@ -90,6 +91,87 @@ export const API = {
         }
         return {
           data: { success: true },
+        };
+      },
+    },
+  },
+};
+
+export const API_DASHBOARD = {
+  PROD: {
+    getBonusById: {
+      queryFn: (bonusId: string) => {
+        return {
+          data: apiMocks.getBonusById(bonusId),
+        };
+      },
+    },
+    getCards: {
+      queryFn: () => {
+        return {
+          data: apiMocks.getCards(),
+        };
+      },
+    },
+    getBonus: {
+      queryFn: () => {
+        return {
+          data: apiMocks.getBonus(),
+        };
+      },
+    },
+    createBonus: {
+      queryFn: async (newBonus: CreateBonusRequestDTO) => {
+        await delay(2500);
+        return { data: apiMocks.createBonus(newBonus).id };
+      },
+    },
+    deleteBonus: {
+      queryFn: (bonusId: string) => {
+        return {
+          data: {
+            deleted: true,
+            bonusId,
+          },
+        };
+      },
+    },
+  },
+  DEV: {
+    getBonusById: {
+      queryFn: (bonusId: string) => {
+        return {
+          data: apiMocks.getBonusById(bonusId),
+        };
+      },
+    },
+    getCards: {
+      queryFn: () => {
+        return {
+          data: apiMocks.getCards(),
+        };
+      },
+    },
+    getBonus: {
+      queryFn: () => {
+        return {
+          data: apiMocks.getBonus(),
+        };
+      },
+    },
+    createBonus: {
+      queryFn: async (newBonus: CreateBonusRequestDTO) => {
+        await delay(2500);
+        return { data: apiMocks.createBonus(newBonus).id };
+      },
+    },
+    deleteBonus: {
+      queryFn: (bonusId: string) => {
+        return {
+          data: {
+            deleted: true,
+            bonusId,
+          },
         };
       },
     },
