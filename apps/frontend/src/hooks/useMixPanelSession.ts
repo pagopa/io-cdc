@@ -18,5 +18,5 @@ export const useMixPanelSession = () => {
         ANALYTICS_DEBUG: import.meta.env.VITE_ANALYTICS_DEBUG,
       });
     }
-  }, []);
+  }, [deviceId]);
 };
