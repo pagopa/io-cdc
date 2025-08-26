@@ -12,6 +12,7 @@ import IconEuro from "./svg/IconEuro";
 import IconExpandUp from "./svg/IconExpandUp";
 import IconHelp from "./svg/IconHelp";
 import IconInfoOutlined from "./svg/IconInfoOutlined";
+import IconHourglass from "./svg/IconHourglass";
 import IconInitiativeExpired from "./svg/IconInitiativeExpired";
 import IconKey from "./svg/IconKey";
 import IconParty from "./svg/IconParty";
@@ -20,6 +21,7 @@ import IconQuestionMarker from "./svg/IconQuestionMarker";
 import IconRequestedAllYears from "./svg/IconRequestedAllYears";
 import IconStore from "./svg/IconStore";
 import IconTicket from "./svg/IconTicket";
+import IconTimeout from "./svg/IconTimeout";
 import IconUmbrella from "./svg/IconUmbrella";
 
 export const Icons = {
@@ -34,15 +36,9 @@ export const Icons = {
   error: IconError,
   euro: IconEuro,
   expandUp: IconExpandUp,
-  help: IconHelp,
-  info: IconInfoOutlined,
   initiativeExpired: IconInitiativeExpired,
   key: IconKey,
   party: IconParty,
-  people: IconPeople,
-  question: IconQuestionMarker,
-  store: IconStore,
-  ticket: IconTicket,
   umbrella: IconUmbrella,
 } as const;
 

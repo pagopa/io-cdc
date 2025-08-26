@@ -24,10 +24,10 @@
     "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/0.1.0"
   },
   "roles": {
-    "hash": "433fe44b2863b8af8d4f4206ee2590599b0cb67d78b372e65d68317d3199aaa1",
-    "version": "1.1.2",
+    "hash": "9d429fd0aba8a29c1a0dbb6005e7dd72a79d9d8dda5076220eb9f0c8bef438ae",
+    "version": "1.2.1",
     "name": "azure_role_assignments",
-    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/1.1.2"
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/1.2.1"
   },
   "storage_be.cdc_storage_be": {
     "hash": "614654ccd1c9a2d91ff766f3a9e5e2dee08c15e871f8de36ea4b05dcec82855d",

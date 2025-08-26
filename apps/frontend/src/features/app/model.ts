@@ -9,7 +9,7 @@ export type RequestedYearsList = Array<{ year: string }>;
 export type Year = {
   label: string;
   value: string;
-  alreadyRequested: boolean;
+  disabled: boolean;
 };
 
 export type ApiError = {

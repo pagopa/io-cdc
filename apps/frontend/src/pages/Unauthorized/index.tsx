@@ -1,7 +1,6 @@
 import { Icon } from '@io-cdc/ui';
 import { Button, Stack, Typography } from '@mui/material';
 
-//TODO -> define what should be done on close
 const Unauthorized = () => {
   return (
     <Stack justifyContent="center" alignItems="center" height="100%" gap={4}>
@@ -12,7 +11,11 @@ const Unauthorized = () => {
         </Typography>
         {/* {config.description && <Typography textAlign="center">{config.description}</Typography>} */}
       </Stack>
-      <Button onClick={() => window.location.reload()} size="small" variant="contained">
+      <Button
+        onClick={() => window.location.replace('iossoapi://cancel')}
+        size="small"
+        variant="contained"
+      >
         Chiudi
       </Button>
     </Stack>

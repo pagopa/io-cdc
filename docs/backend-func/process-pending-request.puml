@@ -1,0 +1,31 @@
+@startuml Sequence ProcessPendingRequest
+participant "Queue" as queue
+participant "CdC Backend Functions" as be
+participant "Cosmos" as cosmos
+participant "Sogei" as sogei
+
+queue -> be: Process Pending Request Message
+activate be
+be <-> cosmos: GET all RequestAudit for CIT
+be <-> cosmos: GET all CardRequest for CIT
+be -> be: Filter already archived requests
+be -> be: Build Request Data
+be -> sogei: Send Request Data to Sogei with all requested years
+activate sogei
+sogei -> sogei: Process Request Data
+sogei -> be: Acknowledge Request Processing
+deactivate sogei
+be <-> cosmos: GET Card Requests for CIT
+be -> sogei: Get Status of all requests for CIT
+activate sogei
+sogei -> sogei: Check Status of CIT
+sogei -> be: Return Status of all requests for CIT
+deactivate sogei
+be -> be: Check if we missed some requests previously made
+be -> be: Check if we already storicized some of the current requests
+loop For each not storicized request
+    be -> cosmos: PUT CardRequest
+end
+deactivate be
+
+@enduml

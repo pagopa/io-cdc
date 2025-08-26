@@ -5,9 +5,10 @@ import { readableReportSimplified } from "@pagopa/ts-commons/lib/reporters.js";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as E from "fp-ts/lib/Either.js";
+import * as O from "fp-ts/lib/Option.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { pipe } from "fp-ts/lib/function.js";
+import { flow, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
@@ -151,14 +152,27 @@ export const checkLollipop =
 
 // we create a fake session until FIMS is not integrated
 export const createSessionAndRedirect =
-  (user: OidcUser) => (deps: Dependencies) =>
+  (user: OidcUser, state: string) => (deps: Dependencies) =>
     pipe(
       TE.Do,
       TE.bind("sessionId", () => TE.of(crypto.randomBytes(32).toString("hex"))),
       TE.bind("sessionToken", () =>
         TE.of(crypto.randomBytes(32).toString("hex")),
       ),
-      TE.chain(({ sessionId, sessionToken }) =>
+      TE.bind("deviceQueryParam", () =>
+        pipe(
+          getTask(deps.redisClientFactory, `device-${state}`),
+          TE.map(
+            flow(
+              O.fold(
+                () => "",
+                (device) => `&device=${device}`,
+              ),
+            ),
+          ),
+        ),
+      ),
+      TE.chain(({ deviceQueryParam, sessionId, sessionToken }) =>
         pipe(
           storeSessionTe(deps.redisClientFactory, sessionToken, user),
           TE.chain(() =>
@@ -170,7 +184,10 @@ export const createSessionAndRedirect =
               60,
             ),
           ),
-          TE.map(() => `${deps.config.CDC_BASE_URL}/authorize?id=${sessionId}`),
+          TE.map(
+            () =>
+              `${deps.config.CDC_BASE_URL}/authorize?id=${sessionId}${deviceQueryParam}`,
+          ),
         ),
       ),
       TE.mapLeft(() =>
@@ -196,7 +213,9 @@ export const makeFimsCallbackHandler: H.Handler<
         RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
         RTE.chain((user) => checkAssertion(user)),
         RTE.chain((user) => checkLollipop(user, headers, query.state)),
-        RTE.chain((user) => createSessionAndRedirect(user as OidcUser)),
+        RTE.chain((user) =>
+          createSessionAndRedirect(user as OidcUser, query.state),
+        ),
       ),
     ),
     RTE.map((redirectUrl) =>

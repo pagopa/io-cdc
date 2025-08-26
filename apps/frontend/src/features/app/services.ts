@@ -3,8 +3,16 @@ import { RequestedYearsList, SessionParams, SessionResponseDTO, YearsList } from
 import { RequestBonusDto } from './dto';
 import { RootState } from '../store';
 import { retrieveSessionQueryCached } from './utils';
+import { API } from './api';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+enum API_ENV_OPTIONS {
+  DEV = 'DEV',
+  PROD = 'PROD',
+}
+
+const API_ENV = API_ENV_OPTIONS.PROD;
 
 export const appApi = createApi({
   reducerPath: 'app',
@@ -23,24 +31,17 @@ export const appApi = createApi({
   }),
   endpoints: (builder) => ({
     getSession: builder.query<SessionResponseDTO, SessionParams>({
-      query: ({ id }) => ({
-        url: '/authorize',
-        params: { id },
-      }),
+      ...API[API_ENV].getSession,
       providesTags: (_, __, { id }, ___) => [{ type: 'getSession' as const, id }],
     }),
     getYearsList: builder.query<YearsList, void>({
-      query: () => 'years',
+      ...API[API_ENV].getYearsList,
     }),
     getNotAvailableYearsList: builder.query<RequestedYearsList, void>({
-      query: () => 'card-requests',
+      ...API[API_ENV].getNotAvailableYearsList,
     }),
     requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({
-      query: (annualities) => ({
-        url: '/card-requests',
-        method: 'POST',
-        body: annualities,
-      }),
+      ...API[API_ENV].requestBonus,
     }),
   }),
 });

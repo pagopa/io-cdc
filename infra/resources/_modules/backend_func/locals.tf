@@ -21,6 +21,10 @@ locals {
       SERVICES_API_URL = var.services_api_url
       SERVICES_API_KEY = var.services_api_key
 
+      // CDC API
+      CDC_API_BASE_URL      = var.cdc_api_base_url
+      CDC_API_BASE_URL_TEST = var.cdc_api_base_url_test
+
       // FIMS
       FIMS_REDIRECT_URL  = var.fims_redirect_url
       FIMS_CLIENT_ID     = var.fims_client_id

@@ -12,6 +12,8 @@ module "storage_fe" {
   resource_group_name = data.azurerm_resource_group.itn_cdc.name
   subnet_pep_id       = data.azurerm_subnet.pep.id
 
+  action_group_id = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
+
   tags = local.tags
 }
 
@@ -29,6 +31,8 @@ module "storage_be" {
   resource_group_name = data.azurerm_resource_group.itn_cdc.name
   subnet_pep_id       = data.azurerm_subnet.pep.id
 
+  action_group_id = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
+
   tags = local.tags
 }
 
@@ -37,17 +41,7 @@ resource "azurerm_storage_queue" "card_request" {
   storage_account_name = module.storage_be.cdc_storage_be.name
 }
 
-resource "azurerm_storage_queue" "message" {
-  name                 = "message"
-  storage_account_name = module.storage_be.cdc_storage_be.name
-}
-
 resource "azurerm_storage_queue" "card_request_poison" {
   name                 = "card-request-poison"
-  storage_account_name = module.storage_be.cdc_storage_be.name
-}
-
-resource "azurerm_storage_queue" "message_poison" {
-  name                 = "message-poison"
   storage_account_name = module.storage_be.cdc_storage_be.name
 }

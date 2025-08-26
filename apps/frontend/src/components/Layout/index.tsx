@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 
 export const Layout = () => {
   return (
-    <Stack height="100vh">
+    <Stack height="100dvh">
       <Outlet />
     </Stack>
   );
