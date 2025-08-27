@@ -24,6 +24,18 @@ module "roles" {
       description          = "we need to read queue"
     }
   ]
+
+  key_vault = [
+    {
+      name                = "io-p-itn-cdc-kv-01"
+      resource_group_name = "io-p-itn-cdc-rg-01"
+      has_rbac_support    = true
+      description         = "Allow write access to keys"
+      roles = {
+        keys = "writer"
+      }
+    }
+  ]
 }
 
 module "roles_cd" {
@@ -45,6 +57,18 @@ module "roles_cd" {
       resource_group_name  = data.azurerm_storage_account.storage_be.resource_group_name
       role                 = "reader"
       description          = "we need to read queue"
+    }
+  ]
+
+  key_vault = [
+    {
+      name                = "io-p-itn-cdc-kv-01"
+      resource_group_name = "io-p-itn-cdc-rg-01"
+      has_rbac_support    = true
+      description         = "Allow write access to keys"
+      roles = {
+        keys = "writer"
+      }
     }
   ]
 }
