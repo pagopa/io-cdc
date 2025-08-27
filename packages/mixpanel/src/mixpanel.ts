@@ -2,12 +2,14 @@ import mixpanel, { Persistence } from 'mixpanel-browser';
 
 import { isEnvConfigEnabled } from './utils';
 
-const ANALYTICS_ENABLE = import.meta.env.VITE_ANALYTICS_ENABLE;
-const ANALYTICS_TOKEN = import.meta.env.VITE_ANALYTICS_TOKEN || '';
-const ANALYTICS_API_HOST = import.meta.env.VITE_ANALYTICS_API_HOST;
-const ANALYTICS_PERSISTENCE = import.meta.env.VITE_ANALYTICS_PERSISTENCE;
-const ANALYTICS_LOG_IP = isEnvConfigEnabled(import.meta.env.VITE_ANALYTICS_LOG_IP);
-const ANALYTICS_DEBUG = isEnvConfigEnabled(import.meta.env.VITE_ANALYTICS_DEBUG);
+type CONFIG = {
+  ANALYTICS_ENABLE: string;
+  ANALYTICS_TOKEN: string;
+  ANALYTICS_API_HOST: string;
+  ANALYTICS_PERSISTENCE: string;
+  ANALYTICS_LOG_IP: string;
+  ANALYTICS_DEBUG: string;
+};
 
 type EventCategory = 'KO' | 'UX';
 
@@ -24,17 +26,28 @@ export interface EventProperties {
 }
 
 /** To call in order to start the analytics service, otherwise no event will be sent */
-export const initAnalytics = (deviceId: string | undefined): void => {
+export const initAnalytics = (
+  deviceId: string | undefined,
+  {
+    ANALYTICS_API_HOST,
+    ANALYTICS_DEBUG,
+    ANALYTICS_LOG_IP,
+    ANALYTICS_ENABLE,
+    ANALYTICS_PERSISTENCE,
+    ANALYTICS_TOKEN,
+  }: CONFIG,
+): void => {
   if (ANALYTICS_ENABLE && !(window as WindowMPValues).initMixPanelCdcWeb && !!deviceId) {
     mixpanel.init(ANALYTICS_TOKEN, {
       api_host: ANALYTICS_API_HOST,
       cookie_domain: '.ioapp.it', // change this value with your dev domain
       cookie_expiration: 0,
-      debug: ANALYTICS_DEBUG,
-      ip: ANALYTICS_LOG_IP,
+      debug: isEnvConfigEnabled(ANALYTICS_DEBUG),
+      ip: isEnvConfigEnabled(ANALYTICS_LOG_IP),
       persistence: ANALYTICS_PERSISTENCE as Persistence,
       secure_cookie: true, // change this value as false if you run in local .env
     });
+
     mixpanel.identify(deviceId);
 
     (window as WindowMPValues).initMixPanelCdcWeb = true;
@@ -48,19 +61,17 @@ export const initAnalytics = (deviceId: string | undefined): void => {
  * @property properties: the additional payload sent with the event
  * @property callback: an action taken when the track has completed (If the action taken immediately after the track is an exit action from the application, it's better to use this callback to perform the exit, in order to give to mixPanel the time to send the event)
  */
-export const trackEvent = (
-  event_name: string,
-  properties?: EventProperties,
-  callback?: () => void,
-): void => {
-  if (ANALYTICS_ENABLE && (window as WindowMPValues).initMixPanelCdcWeb) {
-    trackEventThroughAnalyticTool(event_name, properties, callback);
-  } else {
-    if (callback) {
-      callback();
+export const trackEventBuilder =
+  (ANALYTICS_ENABLE: string) =>
+  (event_name: string, properties?: EventProperties, callback?: () => void): void => {
+    if (ANALYTICS_ENABLE && (window as WindowMPValues).initMixPanelCdcWeb) {
+      trackEventThroughAnalyticTool(event_name, properties, callback);
+    } else {
+      if (callback) {
+        callback();
+      }
     }
-  }
-};
+  };
 
 const trackEventThroughAnalyticTool = (
   event_name: string,
