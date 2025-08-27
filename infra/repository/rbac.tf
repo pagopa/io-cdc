@@ -30,7 +30,7 @@ module "roles" {
       name                = "io-p-itn-cdc-kv-01"
       resource_group_name = "io-p-itn-cdc-rg-01"
       has_rbac_support    = true
-      description         = "Allow read access to keys"
+      description         = "Allow write access to keys"
       roles = {
         keys = "writer"
       }
@@ -65,7 +65,7 @@ module "roles_cd" {
       name                = "io-p-itn-cdc-kv-01"
       resource_group_name = "io-p-itn-cdc-rg-01"
       has_rbac_support    = true
-      description         = "Allow read access to keys"
+      description         = "Allow write access to keys"
       roles = {
         keys = "writer"
       }
