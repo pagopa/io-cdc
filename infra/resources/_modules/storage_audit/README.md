@@ -16,7 +16,6 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_immutable_cdc_audit_logs_storage"></a> [immutable\_cdc\_audit\_logs\_storage](#module\_immutable\_cdc\_audit\_logs\_storage) | pagopa-dx/azure-storage-account/azurerm | ~> 1.0 |
-| <a name="module_immutable_cdc_audit_logs_storage_customer_managed_key"></a> [immutable\_cdc\_audit\_logs\_storage\_customer\_managed\_key](#module\_immutable\_cdc\_audit\_logs\_storage\_customer\_managed\_key) | git::https://github.com/pagopa/terraform-azurerm-v4//storage_account_customer_managed_key | v7.26.3 |
 
 ## Resources
 

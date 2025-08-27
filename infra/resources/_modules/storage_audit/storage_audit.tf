@@ -27,23 +27,17 @@ module "immutable_cdc_audit_logs_storage" {
     }
   }
 
+  customer_managed_key = {
+    enabled      = true
+    type         = "kv"
+    key_vault_id = var.key_vault_id
+  }
+
   action_group_id = var.action_group_id
 
   tier = "l"
 
   tags = var.tags
-}
-
-
-module "immutable_cdc_audit_logs_storage_customer_managed_key" {
-  source               = "git::https://github.com/pagopa/terraform-azurerm-v4//storage_account_customer_managed_key?ref=v7.26.3"
-  tenant_id            = var.tenant_id
-  location             = var.location
-  resource_group_name  = var.resource_group_name
-  key_vault_id         = var.key_vault_id
-  key_name             = format("%s-key-%s", module.immutable_cdc_audit_logs_storage.name, var.instance_number)
-  storage_id           = module.immutable_cdc_audit_logs_storage.id
-  storage_principal_id = module.immutable_cdc_audit_logs_storage.principal_id
 }
 
 # Containers
