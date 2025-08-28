@@ -3,13 +3,14 @@ import { Stack } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { Icon } from '@io-cdc/ui';
-import { useGetBonusByIdQuery } from '../../store/services/api';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { CodesSection } from './components/CodesSection';
 import { BonusDescription } from './components/BonusDescription';
 import { MerchantDescription } from './components/MerchantDescription';
 import { Footer } from './components/Footer';
 import { APP_ROUTES } from '../../utils/appRoutes';
+import { useGetBonusByIdQuery } from '../../features/app/services';
+import { trackWebviewEvent } from '../../utils/trackEvent';
 
 const BonusDetail = () => {
   const navigate = useNavigate();
@@ -18,21 +19,23 @@ const BonusDetail = () => {
 
   const spent = !!bonusDetail?.spentDate;
 
-  const copyBonusCode = useCallback((text: string) => {
-    return navigator.clipboard.writeText(text);
-  }, []);
-
   const chipConfig = {
     label: spent ? 'SPESO' : 'DA SPENDERE',
     color: (spent ? 'info' : 'primary') as ChipProps['color'],
   };
+
+  useEffect(() => {
+    trackWebviewEvent('CDC_BONUS_DETAIL', {
+      bonus_status: spent ? 'spent' : 'to spend',
+    });
+  }, [spent]);
 
   if (isLoading) return <>Loading...</>;
   if (error) return <>Errore</>;
 
   return bonusDetail ? (
     <Stack p={4} gap={3}>
-      <Header onBack={() => navigate(APP_ROUTES.BONUS_LIST)} />
+      <Header onBack={() => navigate(-1)} />
       <Stack gap={8}>
         <Stack gap={2}>
           <Typography variant="h2">Il tuo buono</Typography>
@@ -68,11 +71,11 @@ const BonusDetail = () => {
         </Typography>
       </Stack>
       <Stack rowGap={4}>
-        <Stack direction="row" gap={1}>
+        {/* <Stack direction="row" gap={1}>
           <Icon name="key" />
           <Typography fontWeight={700}>CODICI</Typography>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        </Stack> */}
+        {/* <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Stack>
             <Typography color="#5C6F82">Codice univoco</Typography>
             <Typography fontWeight={600} fontSize={18} color="#0073E6">
@@ -82,11 +85,11 @@ const BonusDetail = () => {
           <IconButton onClick={() => copyBonusCode(bonusDetail.code)}>
             <Icon name="copy" />
           </IconButton>
-        </Stack>
+        </Stack> */}
       </Stack>
-      <Divider />
-      {spent ? <MerchantDescription /> : <CodesSection code={bonusDetail.code} />}
-      {!spent && <Footer bonusId={id} />}
+      {/* <Divider /> */}
+      {/* {spent ? <MerchantDescription /> : <CodesSection code={bonusDetail.code} />} */}
+      {!spent && <Footer bonusId={id} code={bonusDetail.code} />}
     </Stack>
   ) : (
     <>not found</>

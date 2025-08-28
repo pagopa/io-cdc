@@ -2,15 +2,19 @@ import { Button, Divider, Stack, Typography } from '@mui/material';
 import { Carousel } from '../../components/Carousel';
 import { useNavigate } from 'react-router-dom';
 import { useGetBonusQuery, useGetCardsQuery } from '../../features/app/services';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { BonusList } from '../../components/BonusList';
 import { APP_ROUTES } from '../../utils/appRoutes';
+import { trackWebviewEvent } from '../../utils/trackEvent';
+import { BonusCard } from '../BonusList/components/BonusItem';
+import { EmptyState } from '@io-cdc/ui';
 
 const TEXT_COLOR = '#5C6F82';
 
 const Home = () => {
   const { isError, isSuccess, error, data } = useGetCardsQuery();
   const { data: bonusList } = useGetBonusQuery();
+  console.log('🚀 ~ Home ~ bonusList:', bonusList);
 
   const navigate = useNavigate();
 
@@ -32,6 +36,35 @@ const Home = () => {
     return label;
   }, []);
 
+  const onClickBonus = useCallback(() => {
+    trackWebviewEvent('CDC_BONUS_GENERATION_START');
+    navigate(APP_ROUTES.SELECT_CARD);
+  }, [navigate]);
+
+  const onClickBRetailers = useCallback(() => {
+    trackWebviewEvent('CDC_CARD_SHOW_RETAILERS');
+    //TODO add retailers redirect
+  }, []);
+
+  useEffect(() => {
+    if (!data) return;
+    trackWebviewEvent('CDC_CARD_DETAIL');
+  }, [data]);
+
+  const onClickShowAll = useCallback(() => {
+    trackWebviewEvent('CDC_SHOW_BONUS_LIST');
+    navigate(APP_ROUTES.BONUS_LIST);
+  }, [navigate]);
+
+  const toSpend = useMemo(() => {
+    const tbs = bonusList?.filter(({ amount }) => amount > 0) ?? [];
+    return tbs.slice(0, 4);
+  }, [bonusList]);
+
+  const spent = useMemo(() => {
+    const tbs = bonusList?.filter(({ amount }) => amount < 0) ?? [];
+    return tbs.slice(0, 4);
+  }, [bonusList]);
   if (!data) return <div>no data</div>;
 
   return (
@@ -44,12 +77,41 @@ const Home = () => {
         {bonusList && bonusList.length > 0 ? (
           <Stack width="100%" gap={2} paddingTop={3}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography fontWeight={700}>BUONI</Typography>
-              <Button sx={{ padding: 0 }} onClick={() => navigate(APP_ROUTES.BONUS_LIST)}>
+              <Typography fontWeight={700}>BUONI DA SPENDERE</Typography>
+              <Button sx={{ padding: 0 }} onClick={onClickShowAll}>
                 Mostra tutti
               </Button>
             </Stack>
-            <BonusList bonusList={bonusList} limit={3} />
+            {toSpend.length ? (
+              toSpend.map((bonus, index, array) => (
+                <Stack gap={3} key={bonus.id} paddingTop={3}>
+                  <BonusCard bonus={bonus} spent={false} />
+                  {index !== array.length - 1 && <Divider />}
+                </Stack>
+              ))
+            ) : (
+              <Stack minHeight={100} justifyContent="center">
+                <EmptyState icon="info" title="Non sono stati trovati buoni" />
+              </Stack>
+            )}
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Typography fontWeight={700}>BUONI SPESI</Typography>
+              <Button sx={{ padding: 0 }} onClick={onClickShowAll}>
+                Mostra tutti
+              </Button>
+            </Stack>
+            {spent.length ? (
+              spent.map((bonus, index, array) => (
+                <Stack gap={3} key={bonus.id} paddingTop={3}>
+                  <BonusCard bonus={bonus} spent={true} />
+                  {index !== array.length - 1 && <Divider />}
+                </Stack>
+              ))
+            ) : (
+              <Stack minHeight={100} justifyContent="center">
+                <EmptyState icon="info" title="Non sono stati trovati buoni" />
+              </Stack>
+            )}
           </Stack>
         ) : (
           <Stack justifyContent="center" alignItems="center" py={4} gap={2}>
@@ -61,10 +123,12 @@ const Home = () => {
         )}
 
         <Stack gap={2}>
-          <Button variant="contained" onClick={() => navigate(APP_ROUTES.GENERATE_TICKET)}>
+          <Button variant="contained" onClick={onClickBonus}>
             Genera buono
           </Button>
-          <Button variant="text">Mostra esercenti</Button>
+          <Button variant="text" onClick={onClickBRetailers}>
+            Mostra esercenti
+          </Button>
         </Stack>
       </Stack>
     </Stack>

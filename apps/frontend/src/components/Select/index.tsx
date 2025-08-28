@@ -4,9 +4,9 @@ import { Box, Divider, IconButton, InputAdornment, Stack, Typography } from '@mu
 import { Icon } from '@io-cdc/ui';
 import { ArrowDropDown } from '@mui/icons-material';
 import { Sheet } from 'react-modal-sheet';
-import { Card } from '../../store/services/model';
 import { UseFormSetValue } from 'react-hook-form';
-import { BonusGeneratorForm } from '../../pages/GenerateTicket/components/NewBonusForm';
+import { BonusGeneratorForm } from '../../pages/SelectCardGenerateTicket/components/NewBonusForm';
+import { Card } from '../../features/app/model';
 
 type CdcSelectProps = {
   cards: Pick<Card, 'balance' | 'year'>[];

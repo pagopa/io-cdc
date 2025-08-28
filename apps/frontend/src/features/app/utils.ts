@@ -5,7 +5,7 @@ export const getRandomResponse = () => {
   return Math.random() < 0.2;
 };
 export const getRandomError = () => {
-  const codes = [500, 501];
+  const codes = [500, 501, 502];
   const index = Math.floor(Math.random() * codes.length);
   return codes[index];
 };

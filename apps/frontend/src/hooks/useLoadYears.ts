@@ -1,60 +1,32 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   useLazyGetNotAvailableYearsListQuery,
-  useLazyGetSessionQuery,
   useLazyGetYearsListQuery,
 } from '../features/app/services';
-import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectFirstSessionData } from '../features/app/selectors';
 import { Year } from '../features/app/model';
-
-const redirectTokenError = { data: 'Session ID not provided', status: 401 };
+import { useNavigate } from 'react-router-dom';
+import { APP_ROUTES } from '../utils/appRoutes';
+import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 
 export const useLoadYears = () => {
-  const { search } = useLocation();
-
-  const session = useSelector(selectFirstSessionData);
-
-  const redirectToken = useMemo(() => new URLSearchParams(search).get('id'), [search]);
-
-  const [getSession] = useLazyGetSessionQuery();
+  const navigate = useNavigate();
   const [getYearsList] = useLazyGetYearsListQuery();
   const [getNotAvailableYearsList] = useLazyGetNotAvailableYearsListQuery();
 
   const [response, setResponse] = useState<
     Pick<Awaited<ReturnType<typeof getYearsList>>, 'isError' | 'isSuccess' | 'error'> & {
       yearsList: Year[];
+      notAvailableYears: string[];
     }
   >({
     isError: false,
     isSuccess: false,
     error: undefined,
     yearsList: [],
+    notAvailableYears: [],
   });
 
   const loadData = useCallback(async () => {
-    if (!redirectToken) {
-      setResponse((response) => ({
-        ...response,
-        isError: true,
-        error: redirectTokenError,
-      }));
-      return;
-    }
-    if (!session || !session?.token) {
-      const {
-        data,
-        isError: sessionError,
-        error: sessionErrorMsg,
-      } = await getSession({ id: redirectToken! });
-
-      if (!data) {
-        setResponse((response) => ({ ...response, isError: sessionError, error: sessionErrorMsg }));
-        return;
-      }
-    }
-
     const {
       data: availableYears,
       isError: getYearsListIsError,
@@ -73,11 +45,20 @@ export const useLoadYears = () => {
       Boolean(notAvailableYears?.find(({ year }) => year === y)),
     );
 
-    const isError = allRequestsDone || getYearsListIsError || getNotAvailableYearsListIsError;
+    if (allRequestsDone) {
+      navigate(APP_ROUTES.EXPIRED, { state: { status: 502 } });
+      return;
+    }
+
+    const isError = getYearsListIsError || getNotAvailableYearsListIsError;
     const isSuccess = getYearsListIsSuccess && getNotAvailableYearsListIsSuccess;
-    const error = allRequestsDone
-      ? { status: 501, data: null }
-      : getYearsListError || getNotAvailableYearsListError;
+    const error = getYearsListError || getNotAvailableYearsListError;
+
+    if (isError && isFetchBaseQueryError(error)) {
+      console.log({ error, isError }, 'akhsidhaishdakh');
+      navigate(APP_ROUTES.EXPIRED, { state: { status: error.status } });
+      return;
+    }
 
     const yearsList = (availableYears || []).map((year) => ({
       label: year,
@@ -90,8 +71,9 @@ export const useLoadYears = () => {
       isSuccess,
       error,
       yearsList,
+      notAvailableYears: (notAvailableYears ?? []).map(({ year }) => year),
     });
-  }, [getNotAvailableYearsList, getSession, getYearsList, redirectToken, session]);
+  }, [getNotAvailableYearsList, getYearsList, navigate]);
 
   useEffect(() => {
     loadData();

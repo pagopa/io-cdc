@@ -1,0 +1,67 @@
+import { Stack } from '@mui/system';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Header } from '../../components/Header';
+import { useNavigate } from 'react-router-dom';
+import { PopConfirm } from '../../components/PopConfirm';
+import { APP_ROUTES } from '../../utils/appRoutes';
+import { useGetCardsQuery } from '../../features/app/services';
+import { trackWebviewEvent } from '../../utils/trackEvent';
+import { RadioList } from './components/RadioList';
+
+const GenerateTicket = () => {
+  const { data: cards } = useGetCardsQuery();
+  const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const cardOptions = useMemo(() => {
+    if (!cards) return [];
+    return cards.map(({ balance, year }) => ({ balance, year }));
+  }, [cards]);
+
+  const onBackHeader = useCallback(() => {
+    setIsDialogOpen(true);
+    trackWebviewEvent('CDC_BONUS_GENERATION_BACK', {
+      screen: 'CDC_CARD_SELECTION',
+    });
+  }, []);
+
+  const stopCreation = useCallback(() => {
+    trackWebviewEvent('CDC_BONUS_GENERATION_EXIT_CONFIRM');
+    navigate(APP_ROUTES.HOME);
+  }, [navigate]);
+
+  const backToCreation = useCallback(() => {
+    trackWebviewEvent('CDC_BONUS_GENERATION_EXIT_BACK');
+    setIsDialogOpen(false);
+  }, []);
+
+  const showCloseModal = useCallback(() => {
+    trackWebviewEvent('CDC_BONUS_GENERATION_EXIT_REQUEST');
+  }, []);
+
+  useEffect(() => {
+    trackWebviewEvent('CDC_CARD_SELECTION');
+  }, []);
+
+  return (
+    <Stack p={4} height="100dvh">
+      <Header onBack={onBackHeader} />
+      <RadioList cards={cardOptions} />
+      <PopConfirm
+        isOpen={isDialogOpen}
+        onOpen={showCloseModal}
+        title="Vuoi interrompere l'operazione?"
+        buttonConfirm={{
+          title: 'SI, INTERROMPI',
+          onClick: stopCreation,
+        }}
+        buttonClose={{
+          title: 'TORNA INDIETRO',
+          onClick: backToCreation,
+        }}
+      />
+    </Stack>
+  );
+};
+
+export default GenerateTicket;

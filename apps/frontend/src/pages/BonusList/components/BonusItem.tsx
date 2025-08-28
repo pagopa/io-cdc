@@ -1,8 +1,10 @@
 import { Stack, Typography } from '@mui/material';
-import { BonusItem } from '../../../store/services/model';
+
 import { Icon } from '@io-cdc/ui';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
+import { BonusItem } from '../../../features/app/model';
+import { trackWebviewEvent } from '../../../utils/trackEvent';
 
 type BonusCardProps = {
   bonus: BonusItem;
@@ -11,11 +13,14 @@ type BonusCardProps = {
 
 export const BonusCard = ({ bonus, spent }: BonusCardProps) => {
   const navigate = useNavigate();
-  const itemLabel = `Buono ${bonus.fromOthers ? (spent ? 'speso da altri' : 'generato da altri') : bonus.id}`;
+  const itemLabel = `Buono ${
+    bonus.fromOthers ? (spent ? 'speso da altri' : 'generato da altri') : bonus.id
+  }`;
   const mainColor = bonus.fromOthers ? '#5C6F82' : '#17324D';
 
   const goToDetail = useCallback(() => {
     if (bonus.fromOthers) return;
+    trackWebviewEvent('CDC_BONUS_SHOW_DETAIL');
     navigate(`/dettaglio-buono/${bonus.id}`);
   }, [bonus.fromOthers, bonus.id, navigate]);
 

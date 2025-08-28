@@ -1,6 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { endpoints } from './services';
 import { retrieveSessionQueryCached } from './utils';
+import { RootState } from '../store';
+
+const selectGenerateBonus = (state: RootState) => state.generateBonus;
 
 export const selectYearsResult = endpoints.getYearsList.select();
 
@@ -24,3 +27,10 @@ export const selectAnnualitiesWithStatus = createSelector(
   (available, notAvailable) =>
     available.map((year) => ({ label: year, value: year, disabled: notAvailable.includes(year) })),
 );
+
+export const selectSelectedCardBonus = createSelector(
+  selectGenerateBonus,
+  (state) => state.selectedCard,
+);
+
+export const selectAmountBonus = createSelector(selectGenerateBonus, (state) => state.amount);

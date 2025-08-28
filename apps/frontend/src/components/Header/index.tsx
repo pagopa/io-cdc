@@ -22,9 +22,12 @@ export const Header = ({ onBack }: HeaderProps) => {
       sx={{
         width: 'max-content',
         padding: 0,
+        display: 'flex',
+        gap: '8px',
       }}
     >
       <Icon name="back" />
+      Indietro
     </Button>
   );
 };

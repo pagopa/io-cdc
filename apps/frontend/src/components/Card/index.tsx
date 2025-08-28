@@ -1,7 +1,7 @@
 import { Icon } from '@io-cdc/ui';
 import { Stack, IconButton, Typography } from '@mui/material';
 import { Footer } from './Footer';
-import { Card as CardType } from '../../store/services/model';
+import { Card as CardType } from '../../features/app/model';
 import { useState } from 'react';
 import { HelpSheet } from '../../pages/Home/components/HelpSheet';
 

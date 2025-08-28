@@ -4,14 +4,17 @@ const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'))
 const Unauthorized = React.lazy(() => import('../pages/Unauthorized'));
 const Feedback = React.lazy(() => import('../pages/Feedback'));
 const SelectYear = React.lazy(() => import('../pages/SelectYear'));
-const GenerateTicket = React.lazy(() => import('../pages/GenerateTicket'));
+const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
+const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
+
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const BonusList = React.lazy(() => import('../pages/BonusList'));
 
 export enum APP_ROUTES {
-  AUTHOIRIZE = '/authorize',
+  AUTHORIZE = '/authorize',
   HOME = '/',
-  GENERATE_TICKET = '/genera-buono',
+  SELECT_CARD = '/genera-buono/seleziona-carta',
+  SELECT_AMOUNT = '/genera-buono/seleziona-importo',
   BONUS_DETAIL = '/dettaglio-buono/:id',
   BONUS_LIST = '/lista-buoni',
   SELECT_YEAR = '/scelta-anno',
@@ -51,8 +54,13 @@ const APP_ROUTES_REQUEST: APP_ROUTES_CONFIG_TYPE[] = [
 
 const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
-    path: APP_ROUTES.GENERATE_TICKET,
-    Element: GenerateTicket,
+    path: APP_ROUTES.SELECT_CARD,
+    Element: SelectCardGenerateTicket,
+    flag: 'dashboard',
+  },
+  {
+    path: APP_ROUTES.SELECT_AMOUNT,
+    Element: SelectAmountGenerateTicket,
     flag: 'dashboard',
   },
   {

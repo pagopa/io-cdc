@@ -7,7 +7,6 @@ type ExpiredInitiativeConfig = Record<
     title: string;
     description: string | null;
     trackProperties: {
-      webview: true;
       already_requested: 'yes' | 'no';
       event_category: 'KO';
     };
@@ -19,7 +18,6 @@ export const DEFAULT_CONFIG: ExpiredInitiativeConfig[number] = {
   title: 'Il periodo per richiedere la Carta della Cultura è terminato',
   description: null,
   trackProperties: {
-    webview: true,
     already_requested: 'no',
     event_category: 'KO',
   },
@@ -33,7 +31,6 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
     description:
       "La valutazione della tua richiesta è in corso, attendi un messaggio su IO con l'esito entro il <gg> <mese>.",
     trackProperties: {
-      webview: true,
       already_requested: 'yes',
       event_category: 'KO',
     },
@@ -44,7 +41,6 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
     title: "Hai già richiesto Carta della Cultura, attenti l'esito",
     description: 'Riceverai un messaggio su IO entro il <gg> <mese>.',
     trackProperties: {
-      webview: true,
       already_requested: 'yes',
       event_category: 'KO',
     },

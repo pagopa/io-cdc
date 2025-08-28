@@ -1,25 +1,40 @@
 import { CheckboxList, Loader, SectionTitle } from '@io-cdc/ui';
 import { Button, Chip, Stack, Typography } from '@mui/material';
-import { useCallback, useMemo, useState } from 'react';
-import { Location, useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { useRequestBonusMutation } from '../../features/app/services';
-import { Year } from '../../features/app/model';
+import { useLoadYears } from '../../hooks';
+import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
+import { RequestLoader } from '../../components/RequestLoader';
 
 const SelectYear = () => {
-  const { state: years = [] } = useLocation() as Location<Year[]>;
+  const navigate = useNavigate();
+  const [requestBonus] = useRequestBonusMutation();
+  const { yearsList, notAvailableYears, isError, error, isSuccess } = useLoadYears();
 
-  const notAvailableYears = years.filter(({ disabled }) => disabled).map(({ value }) => value);
+  const hasCompleted = isSuccess || isError;
+
+  useEffect(() => {
+    if (isError && isFetchBaseQueryError(error)) {
+      navigate(APP_ROUTES.EXPIRED, {
+        state: {
+          status: error.status,
+        },
+      });
+    }
+  }, [error, isError, navigate]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>(notAvailableYears);
 
-  const [requestBonus] = useRequestBonusMutation();
-  const navigate = useNavigate();
+  useEffect(() => {
+    setSelectedItems(notAvailableYears);
+  }, [notAvailableYears]);
 
   const mappedYearsList = useMemo(
     () =>
-      years
+      yearsList
         .map(({ label, value, disabled }) => ({
           label,
           value,
@@ -29,12 +44,17 @@ const SelectYear = () => {
           ) : undefined,
         }))
         .sort((a, b) => Number(a.value) - Number(b.value)),
-    [years],
+    [yearsList],
   );
 
   const allSelected = useMemo(
     () => mappedYearsList.every(({ value, disabled }) => disabled || selectedItems.includes(value)),
     [mappedYearsList, selectedItems],
+  );
+
+  const buttonDisabled = useMemo(
+    () => selectedItems.length <= notAvailableYears.length,
+    [notAvailableYears.length, selectedItems.length],
   );
 
   const onSelectYear = useCallback(
@@ -69,6 +89,8 @@ const SelectYear = () => {
     }
   }, [selectedItems, notAvailableYears, requestBonus, navigate]);
 
+  if (!hasCompleted) return <RequestLoader />;
+
   if (isLoading)
     return (
       <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
@@ -99,12 +121,7 @@ const SelectYear = () => {
           }
         />
       </Stack>
-      <Button
-        onClick={onConfirm}
-        disabled={selectedItems.length <= notAvailableYears.length}
-        size="small"
-        variant="contained"
-      >
+      <Button onClick={onConfirm} disabled={buttonDisabled} size="small" variant="contained">
         Continua
       </Button>
     </Stack>

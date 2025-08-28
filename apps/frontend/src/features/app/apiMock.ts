@@ -3,7 +3,7 @@ import { CreateBonusRequestDTO } from './dto';
 
 export const apiMocks = {
   getBonusById: (bonusId: string) => {
-    const spent = faker.datatype.boolean();
+    const spent = false;
 
     const bonusData = {
       id: bonusId,
@@ -28,8 +28,8 @@ export const apiMocks = {
       .reverse();
   },
   getBonus: () => {
-    const emptyBonus = faker.datatype.boolean();
-    if (emptyBonus) return [];
+    // const emptyBonus = faker.datatype.boolean();
+    // if (emptyBonus) return [];
     return Array.from({ length: 20 }, () => {
       const spent = faker.datatype.boolean();
       const fromOthers = faker.datatype.boolean();

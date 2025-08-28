@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material';
+import { useEffect } from 'react';
 
 type ButtonConfig = {
   title: string;
@@ -17,6 +18,7 @@ type PopConfirmProps = {
   buttonConfirm: ButtonConfig;
   buttonClose: ButtonConfig;
   isOpen: boolean;
+  onOpen?: () => void;
 };
 
 export const PopConfirm = ({
@@ -25,7 +27,11 @@ export const PopConfirm = ({
   buttonConfirm,
   buttonClose,
   isOpen,
+  onOpen,
 }: PopConfirmProps) => {
+  useEffect(() => {
+    onOpen?.();
+  }, [onOpen]);
   return (
     <Dialog
       open={isOpen}

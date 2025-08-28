@@ -13,8 +13,7 @@ export const BonusDescription = ({ spent }: BonusDescriptionProps) => {
   ) : (
     <>
       <Typography color={TEXT_COLOR}>
-        Se acquisti online, inserisci il codice nel campo dedicato. Per acquisti in negozio,
-        mostralo all&apos;esercente. Il buono è personale e può essere utilizzato solo da te.
+        Premi su “Usa il buono” e scegli la modalità di utilizzo.
       </Typography>
       <Typography color={TEXT_COLOR}>
         Il buono è personale e può essere utilizzato solo da te.

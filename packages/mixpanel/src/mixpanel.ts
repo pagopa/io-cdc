@@ -11,7 +11,7 @@ type CONFIG = {
   ANALYTICS_DEBUG: string;
 };
 
-type EventCategory = 'KO' | 'UX';
+type EventCategory = 'KO' | 'UX' | 'TECH';
 
 type WindowMPValues = {
   initMixPanelCdcWeb?: boolean;
@@ -87,7 +87,7 @@ const trackEventThroughAnalyticTool = (
         } catch (reason) {
           // eslint-disable-next-line no-console
           console.error(
-            `Something gone wrong while calling trackEvent ${event_name} callback`,
+            `Something gone wrong while calling trackWebviewEvent( ${event_name} callback`,
             reason,
           );
         }

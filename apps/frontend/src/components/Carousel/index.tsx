@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
 import { Stack } from '@mui/material';
 import { Card as CardType } from '../../features/app/model';
+import { trackWebviewEvent } from '../../utils/trackEvent';
 
 type CarouselProps = {
   list: Array<CardType>;
@@ -25,6 +26,7 @@ export const Carousel = ({ list }: CarouselProps) => {
         const containerWidth = container.offsetWidth;
         const visibleIndex = Math.round(scrollLeft / containerWidth);
         setActiveIdx(visibleIndex);
+        trackWebviewEvent('CDC_CARD_SWIPE');
       }, 0);
     };
     container.addEventListener('scroll', handleScroll);

@@ -3,7 +3,7 @@ import { Button, Stack, Typography } from '@mui/material';
 import { DEFAULT_CONFIG, EXPIRED_INITIATIVE_CONFIG_MAP } from './constants';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import { trackEvent } from '../../utils/trackEvent';
+import { trackWebviewEvent } from '../../utils/trackEvent';
 
 const ExpiredInitiative = () => {
   const {
@@ -15,7 +15,7 @@ const ExpiredInitiative = () => {
 
   useEffect(() => {
     if (trackProperties) {
-      trackEvent('CDC_REQUEST_EXPIRED', trackProperties);
+      trackWebviewEvent('CDC_REQUEST_EXPIRED', trackProperties);
     }
   }, []);
 

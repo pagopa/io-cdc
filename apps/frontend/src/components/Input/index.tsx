@@ -1,18 +1,13 @@
 import { InputAdornment, TextField, TextFieldProps } from '@mui/material';
 import { Icon } from '@io-cdc/ui';
-import { UseFormRegister } from 'react-hook-form';
-import { BonusGeneratorForm } from '../../pages/GenerateTicket/components/NewBonusForm';
 
-type CdcInputProps = Omit<TextFieldProps, 'onChange'> & {
-  fieldConfig: ReturnType<UseFormRegister<BonusGeneratorForm>>;
-};
+type CdcInputProps = TextFieldProps;
 
-export const CdcInput = ({ fieldConfig, ...props }: CdcInputProps) => {
+export const CdcInput = ({ ...props }: CdcInputProps) => {
   return (
     <TextField
       type="number"
       {...props}
-      {...fieldConfig}
       inputProps={{ inputMode: 'decimal', pattern: '[0-9.,]*' }}
       InputProps={{
         endAdornment: (
