@@ -33,8 +33,11 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
+import { ContainerClient } from "@azure/storage-blob";
+import { OperationTypes, storeAuditLog } from "../utils/audit_logs.js";
 
 interface Dependencies {
+  auditContainerClient: ContainerClient;
   config: Config;
   fimsClient: OidcClient;
   redisClientFactory: RedisClientFactory;
@@ -71,6 +74,22 @@ export const getFimsData =
               nonce,
               iss,
             ),
+          ),
+        ),
+      ),
+      TE.chainFirst((fimsUser) =>
+        pipe(
+          storeAuditLog(
+            deps.auditContainerClient,
+            {
+              fiscalCode: fimsUser.fiscal_code,
+              authCode: code,
+            },
+            {
+              DateTime: fimsUser.auth_time || new Date().toISOString(),
+              FiscalCode: fimsUser.fiscal_code,
+              Type: OperationTypes.FIMS,
+            },
           ),
         ),
       ),
@@ -145,6 +164,23 @@ export const checkLollipop =
         ),
       ),
       TE.map(() => user),
+      TE.chainFirst((user) =>
+        pipe(
+          storeAuditLog(
+            deps.auditContainerClient,
+            {
+              fiscalCode: user.fiscal_code,
+              assertion: user.assertion,
+              assertionRef: user.assertion_ref,
+            },
+            {
+              DateTime: user.auth_time || new Date().toISOString(),
+              FiscalCode: user.fiscal_code,
+              Type: OperationTypes.LOLLIPOP,
+            },
+          ),
+        ),
+      ),
       TE.mapLeft((e) =>
         responseError(401, `Lollipop|${e.message}`, "Unauthorized"),
       ),

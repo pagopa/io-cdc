@@ -280,3 +280,15 @@ variable "action_group_id" {
   description = "The action group id for alerts"
   sensitive   = true
 }
+
+variable "audit_log_connection_string" {
+  type        = string
+  description = "The connection string for audit log storage account"
+  sensitive   = true
+}
+
+variable "audit_log_container" {
+  type        = string
+  description = "The container name for audit logs"
+  sensitive   = true
+}
