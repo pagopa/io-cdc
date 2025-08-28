@@ -123,9 +123,9 @@ export const Footer = ({ bonusId, code }: FooterProps) => {
               alignItems="end"
               paddingX={3}
               sx={{
-                borderTopLeftRadius: '16px', // 👈 solo angolo alto sinistro
-                borderTopRightRadius: '16px', // 👈 solo angolo alto destro
-                overflow: 'hidden', // evita che il contenuto esca dagli angoli
+                borderTopLeftRadius: '16px',
+                borderTopRightRadius: '16px',
+                overflow: 'hidden',
               }}
             >
               <IconButton
@@ -144,6 +144,7 @@ export const Footer = ({ bonusId, code }: FooterProps) => {
               display: 'flex',
             }}
           >
+            {/** //TODO adjust style  */}
             <Stack display="flex" flexDirection="column" justifyContent="space-between">
               <CodesTabs tabIndex={tabIndex} onChangeTab={setTabIndex} />
               <Stack padding={2} alignItems="center" marginTop={4}>
