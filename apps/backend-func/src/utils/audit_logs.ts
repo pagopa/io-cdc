@@ -1,13 +1,10 @@
-import { randomBytes } from "crypto";
-import * as t from "io-ts";
-import * as TE from "fp-ts/TaskEither";
-import {
-  BlockBlobUploadResponse,
-  ContainerClient,
-  RestError,
-} from "@azure/storage-blob";
+import { ContainerClient, RestError } from "@azure/storage-blob";
 import { hashFiscalCode } from "@pagopa/ts-commons/lib/hash.js";
 import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
+import { randomBytes } from "crypto";
+import * as TE from "fp-ts/TaskEither";
+import { pipe } from "fp-ts/lib/function.js";
+import * as t from "io-ts";
 
 export enum OperationTypes {
   FIMS = "fims",
@@ -15,14 +12,14 @@ export enum OperationTypes {
 }
 
 const AuditExchangeDoc = t.type({
-  fiscalCode: FiscalCode,
   authCode: t.string,
+  fiscalCode: FiscalCode,
 });
 
 const AuditVerifyDoc = t.type({
-  fiscalCode: FiscalCode,
+  assertion: t.string,
   assertionRef: t.string,
-  assertion: t.string
+  fiscalCode: FiscalCode,
 });
 
 const ActionTag = t.type({
@@ -72,15 +69,20 @@ export const storeAuditLog = (
   containerClient: ContainerClient,
   auditLogDoc: AuditExchangeDoc | AuditVerifyDoc,
   tags: ActionTag,
-): TE.TaskEither<RestError, BlockBlobUploadResponse> => {
-  return TE.tryCatch(
-    () => {
-      const content = encodeAuditLogDoc(auditLogDoc);
-      const blockBlobClient = containerClient.getBlockBlobClient(
-        generateBlobName(tags.FiscalCode, tags.Type),
-      );
-      return blockBlobClient.upload(content, content.length, { tags });
-    },
-    (err) => (err instanceof RestError ? err : new RestError(String(err))),
+): TE.TaskEither<Error, true> =>
+  pipe(
+    TE.tryCatch(
+      () => {
+        const content = encodeAuditLogDoc(auditLogDoc);
+        const blockBlobClient = containerClient.getBlockBlobClient(
+          generateBlobName(tags.FiscalCode, tags.Type),
+        );
+        return blockBlobClient.upload(content, content.length, { tags });
+      },
+      (err) =>
+        err instanceof RestError
+          ? new Error(err.message)
+          : new Error(String(err)),
+    ),
+    TE.map(() => true),
   );
-};

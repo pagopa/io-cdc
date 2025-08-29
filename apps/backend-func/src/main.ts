@@ -1,4 +1,5 @@
 import { app } from "@azure/functions";
+import { BlobServiceClient } from "@azure/storage-blob";
 import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
 
 import { ServicesAPIClient } from "./clients/services.js";
@@ -18,7 +19,6 @@ import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 import { getFimsClient } from "./utils/fims.js";
 import { QueueStorage } from "./utils/queue.js";
 import { getRedisClientFactory } from "./utils/redis.js";
-import { BlobServiceClient } from "@azure/storage-blob";
 
 registerAzureFunctionHooks(app);
 

@@ -1,3 +1,4 @@
+import { ContainerClient } from "@azure/storage-blob";
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
@@ -13,6 +14,7 @@ import * as t from "io-ts";
 
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
+import { OperationTypes, storeAuditLog } from "../utils/audit_logs.js";
 import { fromBase64 } from "../utils/base64.js";
 import {
   errorToValidationError,
@@ -33,8 +35,6 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
-import { ContainerClient } from "@azure/storage-blob";
-import { OperationTypes, storeAuditLog } from "../utils/audit_logs.js";
 
 interface Dependencies {
   auditContainerClient: ContainerClient;
@@ -82,8 +82,8 @@ export const getFimsData =
           storeAuditLog(
             deps.auditContainerClient,
             {
-              fiscalCode: fimsUser.fiscal_code,
               authCode: code,
+              fiscalCode: fimsUser.fiscal_code,
             },
             {
               DateTime: fimsUser.auth_time || new Date().toISOString(),
@@ -169,9 +169,9 @@ export const checkLollipop =
           storeAuditLog(
             deps.auditContainerClient,
             {
-              fiscalCode: user.fiscal_code,
               assertion: user.assertion,
               assertionRef: user.assertion_ref,
+              fiscalCode: user.fiscal_code,
             },
             {
               DateTime: user.auth_time || new Date().toISOString(),
