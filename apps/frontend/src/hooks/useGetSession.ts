@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useLazyGetSessionQuery } from '../features/app/services';
 import { APP_ROUTES } from '../utils/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
+import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
 
@@ -19,6 +20,7 @@ export const useGetSession = () => {
   const [getSession] = useLazyGetSessionQuery();
 
   const retrieveSession = useCallback(async () => {
+    console.log('🚀 ~ useGetSession ~ redirectToken:', getPathFromEvironment());
     if (!redirectToken) {
       navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
@@ -29,7 +31,7 @@ export const useGetSession = () => {
     }
 
     if (session && session.token) {
-      navigate(APP_ROUTES.SELECT_YEAR);
+      navigate(getPathFromEvironment());
       return;
     }
 
@@ -37,6 +39,7 @@ export const useGetSession = () => {
       id: redirectToken!,
     });
 
+    console.log('🚀 ~ useGetSession ~ sessionError:', sessionError);
     if (sessionError && isFetchBaseQueryError(sessionErrorMsg)) {
       navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
@@ -45,7 +48,7 @@ export const useGetSession = () => {
       });
       return;
     }
-    navigate(APP_ROUTES.SELECT_YEAR);
+    navigate(getPathFromEvironment());
     return;
   }, [getSession, navigate, redirectToken, session]);
 

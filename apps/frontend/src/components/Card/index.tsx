@@ -5,7 +5,7 @@ import { Card as CardType } from '../../features/app/model';
 import { useState } from 'react';
 import { HelpSheet } from '../../pages/Home/components/HelpSheet';
 
-const ICON_STYLE_RESET = { color: 'unset', backgroundColor: 'unset', padding: 0 };
+const ICON_STYLE_RESET = { color: '#17324D', backgroundColor: 'unset', padding: 0 };
 
 export const Card = ({ balance, expireDate, maxAmount, year }: CardType) => {
   const [isHelpSheetOpen, setIsHelpSheetOpen] = useState(false);
@@ -13,9 +13,6 @@ export const Card = ({ balance, expireDate, maxAmount, year }: CardType) => {
     <Stack direction="column" width="100%" height="100%">
       <Stack sx={{ bgcolor: '#F1ECE6' }}>
         <Stack direction="row" justifyContent="flex-end" gap={2} padding={'16px'}>
-          <IconButton sx={ICON_STYLE_RESET}>
-            <Icon name="info" />
-          </IconButton>
           <IconButton onClick={() => setIsHelpSheetOpen(true)} sx={ICON_STYLE_RESET}>
             <Icon name="help" />
           </IconButton>

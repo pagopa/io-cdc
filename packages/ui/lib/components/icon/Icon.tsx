@@ -1,5 +1,6 @@
 import { SvgIconProps } from "@mui/material/SvgIcon";
 
+import IconAlertCheckCircle from "./svg/IconAlertCheckCircle";
 import IconArrowBack from "./svg/IconArrowBack";
 import IconArrowCircleLeftBold from "./svg/IconArrowCircleLeftBold";
 import IconArrowCircleRightBold from "./svg/IconArrowCircleRightBold";
@@ -25,6 +26,7 @@ import IconTimeout from "./svg/IconTimeout";
 import IconUmbrella from "./svg/IconUmbrella";
 
 export const Icons = {
+  alertCheckCircle: IconAlertCheckCircle,
   allYearsRequested: IconRequestedAllYears,
   arrowCircleLeftBold: IconArrowCircleLeftBold,
   arrowCircleRightBold: IconArrowCircleRightBold,

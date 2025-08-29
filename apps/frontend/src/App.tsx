@@ -5,13 +5,12 @@ import { HomeIndex } from './pages/Authorize/routes';
 import { Authorize } from './pages/Authorize';
 import { useMixPanelSession } from './hooks';
 import { featureFlags } from './utils/featureFlags';
-import Home from './pages/Home';
-import { getDefaultPathFromEvironment } from './utils/getDefaultPathFromEnv';
 import { NotFound } from './pages/NotFound';
+import Home from './pages/Home';
 
 function App() {
   useMixPanelSession();
-  console.log(featureFlags);
+
   return (
     <Routes>
       <Route element={<Layout />}>

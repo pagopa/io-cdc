@@ -3,7 +3,7 @@ import { endpoints } from './services';
 import { retrieveSessionQueryCached } from './utils';
 import { RootState } from '../store';
 
-const selectGenerateBonus = (state: RootState) => state.generateBonus;
+const selectTickets = (state: RootState) => state.tickets;
 
 export const selectYearsResult = endpoints.getYearsList.select();
 
@@ -28,9 +28,8 @@ export const selectAnnualitiesWithStatus = createSelector(
     available.map((year) => ({ label: year, value: year, disabled: notAvailable.includes(year) })),
 );
 
-export const selectSelectedCardBonus = createSelector(
-  selectGenerateBonus,
-  (state) => state.selectedCard,
-);
+export const selectSelectedCardBonus = createSelector(selectTickets, (state) => state.selectedCard);
 
-export const selectAmountBonus = createSelector(selectGenerateBonus, (state) => state.amount);
+export const selectAmountBonus = createSelector(selectTickets, (state) => state.amount);
+
+export const selectTicketDeleted = createSelector(selectTickets, (state) => state.deleted);

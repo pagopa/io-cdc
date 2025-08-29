@@ -139,7 +139,17 @@ export const API_DASHBOARD = {
   },
   DEV: {
     getBonusById: {
-      queryFn: (bonusId: string) => {
+      queryFn: async (bonusId: string) => {
+        const shouldFail = getRandomResponse();
+        await delay(2000);
+        if (shouldFail) {
+          return {
+            error: {
+              status: 503,
+              data: { message: 'Unauthorized' },
+            },
+          };
+        }
         return {
           data: apiMocks.getBonusById(bonusId),
         };
@@ -161,12 +171,32 @@ export const API_DASHBOARD = {
     },
     createBonus: {
       queryFn: async (newBonus: CreateBonusRequestDTO) => {
+        const shouldFail = getRandomResponse();
+        await delay(2000);
+        if (shouldFail) {
+          return {
+            error: {
+              status: 503,
+              data: { message: 'Unauthorized' },
+            },
+          };
+        }
         await delay(2500);
         return { data: apiMocks.createBonus(newBonus).id };
       },
     },
     deleteBonus: {
-      queryFn: (bonusId: string) => {
+      queryFn: async (bonusId: string) => {
+        const shouldFail = getRandomResponse();
+        await delay(2000);
+        if (shouldFail) {
+          return {
+            error: {
+              status: 503,
+              data: { message: 'Unauthorized' },
+            },
+          };
+        }
         return {
           data: {
             deleted: true,

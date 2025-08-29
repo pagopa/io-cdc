@@ -7,22 +7,34 @@ export const apiMocks = {
 
     const bonusData = {
       id: bonusId,
-      amount: Number(faker.commerce.price()) * (spent ? -1 : 1),
+      amount: faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1),
       code: faker.string.numeric(12),
       cardYear: faker.date.past().getFullYear().toString(),
       expireDate: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
       spentDate: spent ? faker.date.past({ years: 1 }).toLocaleDateString('it-IT') : undefined,
+      merchant: {
+        date: faker.date.future({ years: 1 }).toLocaleDateString('it-IT', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        name: faker.company.name(),
+      },
     };
 
     return bonusData;
   },
   getCards: () => {
-    return Array.from({ length: 5 }, (_, i) => (new Date().getFullYear() - i).toString())
+    return Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, (_, i) =>
+      (new Date().getFullYear() - i).toString(),
+    )
       .map((year) => ({
         id: faker.string.uuid(),
-        balance: faker.number.int({ min: 10, max: 150 }),
+        balance: year === '2022' ? 0 : faker.number.int({ min: 0, max: 100 }),
         expireDate: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
-        maxAmount: faker.number.int({ min: 150, max: 300 }),
+        maxAmount: 100,
         year,
       }))
       .reverse();
@@ -53,7 +65,7 @@ export const apiMocks = {
         id,
         fromOthers,
         date: formattedDate,
-        amount: Number(faker.commerce.price()) * (spent ? -1 : 1),
+        amount: faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1),
       };
     });
   },

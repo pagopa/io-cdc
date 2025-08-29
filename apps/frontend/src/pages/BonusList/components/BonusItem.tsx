@@ -6,12 +6,19 @@ import { useCallback } from 'react';
 import { BonusItem } from '../../../features/app/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 
-type BonusCardProps = {
-  bonus: BonusItem;
-  spent: boolean;
-};
+type BonusCardProps =
+  | {
+      bonus: BonusItem;
+      spent: true;
+      openSheet?: null;
+    }
+  | {
+      bonus: BonusItem;
+      spent: false;
+      openSheet: () => void;
+    };
 
-export const BonusCard = ({ bonus, spent }: BonusCardProps) => {
+export const BonusCard = ({ bonus, spent, openSheet }: BonusCardProps) => {
   const navigate = useNavigate();
   const itemLabel = `Buono ${
     bonus.fromOthers ? (spent ? 'speso da altri' : 'generato da altri') : bonus.id
@@ -19,10 +26,13 @@ export const BonusCard = ({ bonus, spent }: BonusCardProps) => {
   const mainColor = bonus.fromOthers ? '#5C6F82' : '#17324D';
 
   const goToDetail = useCallback(() => {
-    if (bonus.fromOthers) return;
+    if (bonus.fromOthers) {
+      openSheet?.();
+      return;
+    }
     trackWebviewEvent('CDC_BONUS_SHOW_DETAIL');
     navigate(`/dettaglio-buono/${bonus.id}`);
-  }, [bonus.fromOthers, bonus.id, navigate]);
+  }, [bonus.fromOthers, bonus.id, navigate, openSheet]);
 
   return (
     <Stack onClick={goToDetail}>

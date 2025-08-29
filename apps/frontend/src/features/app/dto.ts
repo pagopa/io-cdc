@@ -9,6 +9,10 @@ export type GetBonusByIdResponseDTO = {
   expireDate: string;
   spentDate?: string;
   cardYear: string;
+  merchant: {
+    name: string;
+    date: string;
+  };
 };
 
 export type GetCardsResponseDTO = Card[];

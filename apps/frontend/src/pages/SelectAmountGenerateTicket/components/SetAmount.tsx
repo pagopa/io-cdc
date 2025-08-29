@@ -1,7 +1,7 @@
 import { CdcInput } from '../../../components/Input';
 import { useDispatch } from 'react-redux';
-import { generateBonusActions } from '../../../features/app/reducers';
 import { useCallback, useMemo } from 'react';
+import { ticketsActions } from '../../../features/app/reducers';
 
 type SetAmountProps = {
   amount: string;
@@ -15,7 +15,7 @@ export const SetAmount = ({ amount, balance, error, required }: SetAmountProps) 
 
   const onChange = useCallback(
     (amount: string) => {
-      dispatch(generateBonusActions.setAmount(amount));
+      dispatch(ticketsActions.setAmount(amount));
     },
     [dispatch],
   );

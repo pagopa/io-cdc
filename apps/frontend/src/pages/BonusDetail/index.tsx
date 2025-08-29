@@ -1,21 +1,20 @@
-import { Chip, ChipProps, Divider, IconButton, Typography } from '@mui/material';
+import { Chip, ChipProps, Divider, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
-import { Icon } from '@io-cdc/ui';
-import { useCallback, useEffect } from 'react';
-import { CodesSection } from './components/CodesSection';
+import { Icon, Loader } from '@io-cdc/ui';
+import { useEffect } from 'react';
 import { BonusDescription } from './components/BonusDescription';
-import { MerchantDescription } from './components/MerchantDescription';
 import { Footer } from './components/Footer';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { useGetBonusByIdQuery } from '../../features/app/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';
+import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 
 const BonusDetail = () => {
   const navigate = useNavigate();
   const { id = '' } = useParams();
-  const { data: bonusDetail, isLoading, error } = useGetBonusByIdQuery(id);
+  const { data: bonusDetail, isLoading, error, isError } = useGetBonusByIdQuery(id);
 
   const spent = !!bonusDetail?.spentDate;
 
@@ -25,13 +24,24 @@ const BonusDetail = () => {
   };
 
   useEffect(() => {
+    if (isError && isFetchBaseQueryError(error)) {
+      navigate(APP_ROUTES.TICKET_FEEDBACK, {
+        state: { status: error.status, name: 'CDC_BONUS_SHOW_DETAIL_ERROR' },
+        replace: true,
+      });
+      return;
+    }
     trackWebviewEvent('CDC_BONUS_DETAIL', {
       bonus_status: spent ? 'spent' : 'to spend',
     });
-  }, [spent]);
+  }, [error, isError, navigate, spent]);
 
-  if (isLoading) return <>Loading...</>;
-  if (error) return <>Errore</>;
+  if (isLoading)
+    return (
+      <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+        <Loader />
+      </Stack>
+    );
 
   return bonusDetail ? (
     <Stack p={4} gap={3}>
@@ -65,30 +75,24 @@ const BonusDetail = () => {
       </Stack>
       <Divider />
       <Stack>
-        <Typography color="#5C6F82">Carta della cultura usata:</Typography>
+        <Typography color="#5C6F82">Carta della cultura usata</Typography>
         <Typography fontWeight={600} fontSize={18}>
           {bonusDetail.cardYear}
         </Typography>
       </Stack>
-      <Stack rowGap={4}>
-        {/* <Stack direction="row" gap={1}>
-          <Icon name="key" />
-          <Typography fontWeight={700}>CODICI</Typography>
-        </Stack> */}
-        {/* <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack>
-            <Typography color="#5C6F82">Codice univoco</Typography>
-            <Typography fontWeight={600} fontSize={18} color="#0073E6">
-              {bonusDetail.code}
-            </Typography>
-          </Stack>
-          <IconButton onClick={() => copyBonusCode(bonusDetail.code)}>
-            <Icon name="copy" />
-          </IconButton>
-        </Stack> */}
+      <Stack direction="row" gap={2}>
+        <Icon name="store" />
+        <Typography fontWeight={700} fontSize={18}>
+          ESERCENTE
+        </Typography>
       </Stack>
-      {/* <Divider /> */}
-      {/* {spent ? <MerchantDescription /> : <CodesSection code={bonusDetail.code} />} */}
+
+      <Stack>
+        <Typography fontWeight={700} fontSize={18}>
+          {bonusDetail.merchant.name}
+        </Typography>
+        <Typography>{bonusDetail.merchant.date}</Typography>
+      </Stack>
       {!spent && <Footer bonusId={id} code={bonusDetail.code} />}
     </Stack>
   ) : (

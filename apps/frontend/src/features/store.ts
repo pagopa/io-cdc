@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { appApi } from './app/services';
-import { generateBonusReducer } from './app/reducers';
+import { ticketsReducer } from './app/reducers';
 
 export const store = configureStore({
   reducer: {
     [appApi.reducerPath]: appApi.reducer,
-    generateBonus: generateBonusReducer,
+    tickets: ticketsReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(appApi.middleware),
 });

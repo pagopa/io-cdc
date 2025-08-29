@@ -1,31 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Card } from './model';
 
-type GenerateBonusState = {
+type TicketsState = {
   selectedCard: Pick<Card, 'balance' | 'year'>;
   amount: string;
+  deleted: boolean;
 };
 
-const initialState: GenerateBonusState = {
+const initialState: TicketsState = {
   amount: '',
   selectedCard: {
     balance: 0,
     year: '',
   },
+  deleted: false,
 };
 
-const generateBonusSlice = createSlice({
-  name: 'generateBonus',
+const ticketsSlice = createSlice({
+  name: 'tickets',
   initialState,
   reducers: {
-    setSelectedCard: (state, { payload }: PayloadAction<GenerateBonusState['selectedCard']>) => {
+    setSelectedCard: (state, { payload }: PayloadAction<TicketsState['selectedCard']>) => {
       state.selectedCard = payload;
     },
-    setAmount: (state, { payload }: PayloadAction<GenerateBonusState['amount']>) => {
+    setAmount: (state, { payload }: PayloadAction<TicketsState['amount']>) => {
       state.amount = payload;
+    },
+    setDeleted: (state, { payload }: PayloadAction<TicketsState['deleted']>) => {
+      state.deleted = payload;
     },
   },
 });
 
-export const generateBonusActions = generateBonusSlice.actions;
-export const generateBonusReducer = generateBonusSlice.reducer;
+export const ticketsActions = ticketsSlice.actions;
+export const ticketsReducer = ticketsSlice.reducer;

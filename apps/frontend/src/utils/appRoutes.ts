@@ -3,6 +3,8 @@ import React from 'react';
 const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'));
 const Unauthorized = React.lazy(() => import('../pages/Unauthorized'));
 const Feedback = React.lazy(() => import('../pages/Feedback'));
+const TicketFeedback = React.lazy(() => import('../pages/TicketFeedback'));
+
 const SelectYear = React.lazy(() => import('../pages/SelectYear'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
@@ -21,6 +23,7 @@ export enum APP_ROUTES {
   FEEDBACK = '/esito',
   EXPIRED = '/iniziativa-scaduta',
   UNAUTHORIZED = '/unauthorized',
+  TICKET_FEEDBACK = '/ticket-feedback',
 }
 
 type APP_ROUTES_CONFIG_TYPE = {
@@ -73,6 +76,13 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
     Element: BonusList,
     flag: 'dashboard',
   },
+  {
+    path: APP_ROUTES.TICKET_FEEDBACK,
+    Element: TicketFeedback,
+    flag: 'dashboard',
+  },
 ];
+
+//TicketFeedback
 
 export const APP_ROUTES_CONFIG = [...APP_ROUTES_REQUEST, ...APP_ROUTES_DASHBOARD];

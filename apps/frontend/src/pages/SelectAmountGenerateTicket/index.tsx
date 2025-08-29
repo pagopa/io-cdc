@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { selectAmountBonus, selectSelectedCardBonus } from '../../features/app/selectors';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
+import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 
 const TEXT_COLOR = '#5C6F82';
 
@@ -18,7 +19,13 @@ const SelectAmountGenerateTicket = () => {
 
   const [
     createBonus,
-    { isLoading: isCreatingBonus, isSuccess: isBonusCreationCompleted, data: newBonus },
+    {
+      isLoading: isCreatingBonus,
+      isSuccess: isBonusCreationCompleted,
+      data: newBonus,
+      isError,
+      error: creationError,
+    },
   ] = useCreateBonusMutation();
 
   const selectedCard = useSelector(selectSelectedCardBonus);
@@ -50,7 +57,18 @@ const SelectAmountGenerateTicket = () => {
     trackWebviewEvent('CDC_BONUS_AMOUNT_INSERT');
   }, []);
 
+  if (isError && isFetchBaseQueryError(creationError)) {
+    return (
+      <Navigate
+        to={APP_ROUTES.TICKET_FEEDBACK}
+        state={{ status: creationError.status, name: 'CDC_BONUS_GENERATION_ERROR' }}
+        replace
+      />
+    );
+  }
+
   if (isBonusCreationCompleted && newBonus) {
+    console.log(isError, isFetchBaseQueryError(creationError), 'aihsidhiash');
     trackWebviewEvent('CDC_BONUS_GENERATION_SUCCESS', { event_category: 'TECH' });
     return <Navigate to={`/dettaglio-buono/${newBonus}`} />;
   }

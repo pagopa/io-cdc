@@ -1,20 +1,29 @@
 import { Button, Divider, Stack, Typography } from '@mui/material';
 import { Carousel } from '../../components/Carousel';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useGetBonusQuery, useGetCardsQuery } from '../../features/app/services';
-import { useCallback, useEffect, useMemo } from 'react';
-import { BonusList } from '../../components/BonusList';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { BonusCard } from '../BonusList/components/BonusItem';
 import { EmptyState } from '@io-cdc/ui';
+import { Toast } from '../../components/Toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectTicketDeleted } from '../../features/app/selectors';
+import { ticketsActions } from '../../features/app/reducers';
+import { OthersBonusSheet } from '../../components/OthersBonusSheet';
 
 const TEXT_COLOR = '#5C6F82';
 
 const Home = () => {
-  const { isError, isSuccess, error, data } = useGetCardsQuery();
+  const dispatch = useDispatch();
+  const deleted = useSelector(selectTicketDeleted);
+
+  const { data } = useGetCardsQuery();
   const { data: bonusList } = useGetBonusQuery();
-  console.log('🚀 ~ Home ~ bonusList:', bonusList);
+
+  const [openToast, setOpenToast] = useState(deleted);
+  const [openSheet, setOpenSheet] = useState(false);
 
   const navigate = useNavigate();
 
@@ -85,7 +94,7 @@ const Home = () => {
             {toSpend.length ? (
               toSpend.map((bonus, index, array) => (
                 <Stack gap={3} key={bonus.id} paddingTop={3}>
-                  <BonusCard bonus={bonus} spent={false} />
+                  <BonusCard bonus={bonus} spent={false} openSheet={() => setOpenSheet(true)} />
                   {index !== array.length - 1 && <Divider />}
                 </Stack>
               ))
@@ -131,6 +140,16 @@ const Home = () => {
           </Button>
         </Stack>
       </Stack>
+      <Toast
+        open={openToast}
+        onClose={() => {
+          dispatch(ticketsActions.setDeleted(false));
+          setOpenToast(false);
+        }}
+        iconName="alertCheckCircle"
+        bodyText="Hai annullato il buono"
+      />
+      <OthersBonusSheet isOpen={openSheet} onClose={() => setOpenSheet(false)} />
     </Stack>
   );
 };

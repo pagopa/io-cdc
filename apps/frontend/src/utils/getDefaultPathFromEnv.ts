@@ -1,7 +1,7 @@
 import { APP_ROUTES } from './appRoutes';
+import { featureFlags } from './featureFlags';
 
-export const getDefaultPathFromEvironment = () => {
-  const dashboard = import.meta.env.VITE_ENABLE_DASHBOARD;
-  if (dashboard) return APP_ROUTES.HOME;
-  return APP_ROUTES.AUTHORIZE;
+export const getPathFromEvironment = () => {
+  if (featureFlags.dashboard) return APP_ROUTES.HOME;
+  return APP_ROUTES.SELECT_YEAR;
 };

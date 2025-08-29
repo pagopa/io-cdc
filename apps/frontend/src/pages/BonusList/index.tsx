@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetBonusQuery } from '../../features/app/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';
+import { APP_ROUTES } from '../../utils/appRoutes';
 
 const BonusList = () => {
   const { data: bonusList, isLoading, error } = useGetBonusQuery();
@@ -19,7 +20,7 @@ const BonusList = () => {
 
   return bonusList ? (
     <Stack p={4} gap={3}>
-      <Header onBack={() => navigate(-1)} />
+      <Header onBack={() => navigate(APP_ROUTES.HOME)} />
       <BonusListComponent bonusList={bonusList} />
     </Stack>
   ) : (

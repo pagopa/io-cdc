@@ -1,16 +1,14 @@
 import { Icon } from '@io-cdc/ui';
-import { Box, Button, Divider, IconButton, Stack, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { PopConfirm } from '../../../components/PopConfirm';
-import { useCallback, useMemo, useState } from 'react';
-
+import { useCallback, useState } from 'react';
 import { APP_ROUTES } from '../../../utils/appRoutes';
 import { useDeleteBonusMutation } from '../../../features/app/services';
-import { Sheet } from 'react-modal-sheet';
-import { CodesTabs } from '../../../components/CodesTabs';
-import { BarCode } from '../../../components/BarCode';
-import { QrCode } from '../../../components/QrCode';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
+import { useDispatch } from 'react-redux';
+import { ticketsActions } from '../../../features/app/reducers';
+import { UseCodeSheet } from './UseCodeSheet';
 
 type FooterProps = {
   bonusId: string;
@@ -18,34 +16,12 @@ type FooterProps = {
 };
 
 export const Footer = ({ bonusId, code }: FooterProps) => {
+  const dispatch = useDispatch();
+
   const [deleteBonus, { isSuccess: isBonusDeleteSuccess }] = useDeleteBonusMutation();
   const [isOpen, setIsOpen] = useState(false);
-
-  const [tabIndex, setTabIndex] = useState(0);
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const copyBonusCode = useCallback(() => {
-    trackWebviewEvent('CDC_BONUS_COPY_CODE', {
-      code_type: 'barcode',
-    });
-    return navigator.clipboard.writeText(code);
-  }, [code]);
-
-  const SheetContentChild = useMemo(
-    () =>
-      tabIndex ? (
-        <QrCode code={code} />
-      ) : (
-        <Stack direction="column">
-          <BarCode code={code} />
-          <Button variant="contained" onClick={copyBonusCode}>
-            Copia codice
-          </Button>
-        </Stack>
-      ),
-    [code, copyBonusCode, tabIndex],
-  );
 
   const onClickUseBonus = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_SHOW_CODE');
@@ -58,14 +34,18 @@ export const Footer = ({ bonusId, code }: FooterProps) => {
   }, []);
 
   const onDeleteBonus = useCallback(() => {
-    trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
-  }, []);
+    deleteBonus(bonusId);
+  }, [bonusId, deleteBonus]);
+
   const onStopDeleteBonus = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_CANCELLATION_BACK');
+    setIsDialogOpen(false);
   }, []);
 
   if (isBonusDeleteSuccess) {
-    return <Navigate to={APP_ROUTES.BONUS_LIST} />;
+    dispatch(ticketsActions.setDeleted(true));
+    trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
+    return <Navigate to={APP_ROUTES.HOME} state={{ deleted: true }} />;
   }
   return (
     <>
@@ -103,58 +83,7 @@ export const Footer = ({ bonusId, code }: FooterProps) => {
         Chiudi
       </Button>
 
-      <Sheet
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        disableDrag
-        snapPoints={[0.75, 0.5]}
-        initialSnap={0}
-        detent="full-height"
-      >
-        <Sheet.Container
-          style={{
-            height: '100dvh',
-            borderRadius: 16,
-            transitionDuration: isOpen ? '0ms' : '500ms',
-          }}
-        >
-          <Sheet.Header>
-            <Stack
-              alignItems="end"
-              paddingX={3}
-              sx={{
-                borderTopLeftRadius: '16px',
-                borderTopRightRadius: '16px',
-                overflow: 'hidden',
-              }}
-            >
-              <IconButton
-                onClick={() => setIsOpen(false)}
-                sx={{
-                  color: 'unset',
-                  fontSize: '14px',
-                }}
-              >
-                <Icon name="close" />
-              </IconButton>
-            </Stack>
-          </Sheet.Header>
-          <Sheet.Content
-            style={{
-              display: 'flex',
-            }}
-          >
-            {/** //TODO adjust style  */}
-            <Stack display="flex" flexDirection="column" justifyContent="space-between">
-              <CodesTabs tabIndex={tabIndex} onChangeTab={setTabIndex} />
-              <Stack padding={2} alignItems="center" marginTop={4}>
-                {SheetContentChild}
-              </Stack>
-            </Stack>
-          </Sheet.Content>
-        </Sheet.Container>
-        <Sheet.Backdrop />
-      </Sheet>
+      <UseCodeSheet code={code} isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 };
