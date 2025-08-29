@@ -2,7 +2,7 @@ import { ContainerClient, RestError } from "@azure/storage-blob";
 import { hashFiscalCode } from "@pagopa/ts-commons/lib/hash.js";
 import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
 import { randomBytes } from "crypto";
-import * as TE from "fp-ts/TaskEither";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
