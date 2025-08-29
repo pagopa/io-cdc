@@ -1,4 +1,5 @@
 import { app } from "@azure/functions";
+import { BlobServiceClient } from "@azure/storage-blob";
 import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
 
 import { ServicesAPIClient } from "./clients/services.js";
@@ -29,6 +30,11 @@ const fimsClient = getFimsClient(config);
 
 // Queue Storage
 const queueStorage: QueueStorage = new QueueStorage(config);
+
+// Audit Blob Storage
+const auditContainerClient = BlobServiceClient.fromConnectionString(
+  config.AUDIT_LOG_CONNECTION_STRING,
+).getContainerClient(config.AUDIT_LOG_CONTAINER);
 
 // CosmosDB singleton
 const cosmosDbClient = getCosmosDbClientInstance(
@@ -61,7 +67,12 @@ app.http("FimsAuth", {
   route: "api/v1/fauth",
 });
 
-const FimsCallback = FimsCallbackFn({ config, fimsClient, redisClientFactory });
+const FimsCallback = FimsCallbackFn({
+  auditContainerClient,
+  config,
+  fimsClient,
+  redisClientFactory,
+});
 app.http("FimsCallback", {
   authLevel: "function",
   handler: FimsCallback,

@@ -199,6 +199,16 @@ data "azurerm_key_vault_secret" "cdc_api_base_url_test" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
+data "azurerm_key_vault_secret" "audit_log_connection_string" {
+  name         = "CDC-AUDIT-LOG-CONNECTION-STRING"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
+data "azurerm_key_vault_secret" "audit_log_container" {
+  name         = "CDC-AUDIT-LOG-CONTAINER"
+  key_vault_id = module.key_vaults.key_vault_cdc.id
+}
+
 data "azurerm_storage_account" "storage_cdc_be" {
   name                = "iopitncdcbest01"
   resource_group_name = data.azurerm_resource_group.itn_cdc.name

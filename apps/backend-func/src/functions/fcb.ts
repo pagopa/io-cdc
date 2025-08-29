@@ -1,3 +1,4 @@
+import { ContainerClient } from "@azure/storage-blob";
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { JwkPublicKey } from "@pagopa/ts-commons/lib/jwk.js";
@@ -13,6 +14,7 @@ import * as t from "io-ts";
 
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
+import { OperationTypes, storeAuditLog } from "../utils/audit_logs.js";
 import { fromBase64 } from "../utils/base64.js";
 import {
   errorToValidationError,
@@ -35,6 +37,7 @@ import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
 
 interface Dependencies {
+  auditContainerClient: ContainerClient;
   config: Config;
   fimsClient: OidcClient;
   redisClientFactory: RedisClientFactory;
@@ -71,6 +74,22 @@ export const getFimsData =
               nonce,
               iss,
             ),
+          ),
+        ),
+      ),
+      TE.chainFirst((fimsUser) =>
+        pipe(
+          storeAuditLog(
+            deps.auditContainerClient,
+            {
+              authCode: code,
+              fiscalCode: fimsUser.fiscal_code,
+            },
+            {
+              DateTime: fimsUser.auth_time || new Date().toISOString(),
+              FiscalCode: fimsUser.fiscal_code,
+              Type: OperationTypes.FIMS,
+            },
           ),
         ),
       ),
@@ -145,6 +164,23 @@ export const checkLollipop =
         ),
       ),
       TE.map(() => user),
+      TE.chainFirst((user) =>
+        pipe(
+          storeAuditLog(
+            deps.auditContainerClient,
+            {
+              assertion: user.assertion,
+              assertionRef: user.assertion_ref,
+              fiscalCode: user.fiscal_code,
+            },
+            {
+              DateTime: user.auth_time || new Date().toISOString(),
+              FiscalCode: user.fiscal_code,
+              Type: OperationTypes.LOLLIPOP,
+            },
+          ),
+        ),
+      ),
       TE.mapLeft((e) =>
         responseError(401, `Lollipop|${e.message}`, "Unauthorized"),
       ),

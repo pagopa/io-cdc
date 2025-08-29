@@ -2,6 +2,11 @@ import * as E from "fp-ts/lib/Either.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  blobContainerClientMock,
+  getBlockBlobClientMock,
+  uploadMock,
+} from "../../__mocks__/blob.mock.js";
+import {
   fimsUserMock,
   getFimsClient,
   userinfoMock,
@@ -34,6 +39,7 @@ describe("getFimsData", () => {
       "state",
       "iss",
     )({
+      auditContainerClient: blobContainerClientMock,
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
@@ -55,6 +61,7 @@ describe("getFimsData", () => {
       "state",
       "iss",
     )({
+      auditContainerClient: blobContainerClientMock,
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
@@ -81,6 +88,7 @@ describe("getFimsData", () => {
       "state",
       "iss",
     )({
+      auditContainerClient: blobContainerClientMock,
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
@@ -106,6 +114,7 @@ describe("getFimsData", () => {
       "state",
       "iss",
     )({
+      auditContainerClient: blobContainerClientMock,
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
@@ -116,6 +125,62 @@ describe("getFimsData", () => {
       expect(res.left).toEqual({
         code: 401,
         message: "Cannot retrieve user data | Error",
+        title: "Unauthorized",
+      });
+  });
+
+  it("should return error if audit blob client fails", async () => {
+    const fimsClientMock = getFimsClient({
+      ...anOidcConfig,
+    } as unknown as Config);
+
+    getBlockBlobClientMock.mockImplementationOnce(() => {
+      throw "Blob Client Error";
+    });
+
+    const res = await getFimsData(
+      "code",
+      "state",
+      "iss",
+    )({
+      auditContainerClient: blobContainerClientMock,
+      config,
+      fimsClient: fimsClientMock,
+      redisClientFactory: redisClientFactoryMock,
+    })();
+
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 401,
+        message: "Cannot retrieve user data | Blob Client Error",
+        title: "Unauthorized",
+      });
+  });
+
+  it("should return error if audit blob upload fails", async () => {
+    const fimsClientMock = getFimsClient({
+      ...anOidcConfig,
+    } as unknown as Config);
+
+    uploadMock.mockRejectedValueOnce("Blob Upload Error");
+
+    const res = await getFimsData(
+      "code",
+      "state",
+      "iss",
+    )({
+      auditContainerClient: blobContainerClientMock,
+      config,
+      fimsClient: fimsClientMock,
+      redisClientFactory: redisClientFactoryMock,
+    })();
+
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 401,
+        message: "Cannot retrieve user data | Blob Upload Error",
         title: "Unauthorized",
       });
   });
@@ -135,6 +200,7 @@ describe("createSessionAndRedirect", () => {
       } as OidcUser,
       "aState",
     )({
+      auditContainerClient: blobContainerClientMock,
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
@@ -160,6 +226,7 @@ describe("createSessionAndRedirect", () => {
       } as OidcUser,
       "aState",
     )({
+      auditContainerClient: blobContainerClientMock,
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,
@@ -184,6 +251,7 @@ describe("createSessionAndRedirect", () => {
       } as OidcUser,
       "aState",
     )({
+      auditContainerClient: blobContainerClientMock,
       config,
       fimsClient: fimsClientMock,
       redisClientFactory: redisClientFactoryMock,

@@ -5,6 +5,10 @@ locals {
       NODE_ENV                       = "production"
       NODE_OPTIONS                   = "--import @pagopa/azure-tracing"
 
+      // AUDIT
+      AUDIT_LOG_CONNECTION_STRING = var.audit_log_connection_string
+      AUDIT_LOG_CONTAINER = var.audit_log_container
+
       // CDC
       CDC_BASE_URL = var.cdc_base_url
 
