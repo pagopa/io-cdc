@@ -165,21 +165,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/core-client@npm:^1.6.2":
-  version: 1.9.4
-  resolution: "@azure/core-client@npm:1.9.4"
-  dependencies:
-    "@azure/abort-controller": "npm:^2.0.0"
-    "@azure/core-auth": "npm:^1.4.0"
-    "@azure/core-rest-pipeline": "npm:^1.20.0"
-    "@azure/core-tracing": "npm:^1.0.0"
-    "@azure/core-util": "npm:^1.6.1"
-    "@azure/logger": "npm:^1.0.0"
-    tslib: "npm:^2.6.2"
-  checksum: 10c0/c38c494c0bf085a89720d97c5bfc098cd1a2bbc5b9c41f8c32ecf2f3b81b476af1afe2f0d996d7e23900581415306e59280d507410bf0aa80804e0e411b8a2be
-  languageName: node
-  linkType: hard
-
 "@azure/core-http-compat@npm:^2.0.0, @azure/core-http-compat@npm:^2.2.0":
   version: 2.3.0
   resolution: "@azure/core-http-compat@npm:2.3.0"
@@ -203,7 +188,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/core-paging@npm:^1.1.1, @azure/core-paging@npm:^1.6.2":
+"@azure/core-paging@npm:^1.6.2":
   version: 1.6.2
   resolution: "@azure/core-paging@npm:1.6.2"
   dependencies:
@@ -228,21 +213,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/core-rest-pipeline@npm:^1.10.1":
-  version: 1.21.0
-  resolution: "@azure/core-rest-pipeline@npm:1.21.0"
-  dependencies:
-    "@azure/abort-controller": "npm:^2.0.0"
-    "@azure/core-auth": "npm:^1.8.0"
-    "@azure/core-tracing": "npm:^1.0.1"
-    "@azure/core-util": "npm:^1.11.0"
-    "@azure/logger": "npm:^1.0.0"
-    "@typespec/ts-http-runtime": "npm:^0.2.3"
-    tslib: "npm:^2.6.2"
-  checksum: 10c0/54d1243992d363c68e76ea9fa3c2af08e4e4f0f4dd5ab2a5d50b48b76437f23d6c567a4cc2b33f9d1fbbd3ecf550128ec866f154a347e4cd511003df85a6cfad
-  languageName: node
-  linkType: hard
-
 "@azure/core-rest-pipeline@npm:^1.15.1, @azure/core-rest-pipeline@npm:^1.17.0, @azure/core-rest-pipeline@npm:^1.18.2, @azure/core-rest-pipeline@npm:^1.19.0, @azure/core-rest-pipeline@npm:^1.19.1, @azure/core-rest-pipeline@npm:^1.20.0":
   version: 1.22.0
   resolution: "@azure/core-rest-pipeline@npm:1.22.0"
@@ -264,15 +234,6 @@ __metadata:
   dependencies:
     tslib: "npm:^2.6.2"
   checksum: 10c0/7d533264407dae4cd46aefaf4c7bac2b3aaa57912acf5234ddab079b5bb4eb3cd2edecaa3ccbf3f339a6f2fee8fceb28855be7cff0907d3f9a687ef5037286b8
-  languageName: node
-  linkType: hard
-
-"@azure/core-tracing@npm:^1.1.2":
-  version: 1.2.0
-  resolution: "@azure/core-tracing@npm:1.2.0"
-  dependencies:
-    tslib: "npm:^2.6.2"
-  checksum: 10c0/7cd114b3c11730a1b8b71d89b64f9d033dfe0710f2364ef65645683381e2701173c08ff8625a0b0bc65bb3c3e0de46c80fdb2735e37652425489b65a283f043d
   languageName: node
   linkType: hard
 
@@ -347,9 +308,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/identity@npm:^4.10.1":
-  version: 4.10.1
-  resolution: "@azure/identity@npm:4.10.1"
+"@azure/identity@npm:^4.11.1":
+  version: 4.11.2
+  resolution: "@azure/identity@npm:4.11.2"
   dependencies:
     "@azure/abort-controller": "npm:^2.0.0"
     "@azure/core-auth": "npm:^1.9.0"
@@ -362,7 +323,7 @@ __metadata:
     "@azure/msal-node": "npm:^3.5.0"
     open: "npm:^10.1.0"
     tslib: "npm:^2.2.0"
-  checksum: 10c0/c75cf6ff420761b70a335b45d74ed7f2641742a2c42804f95be7e1d20b99a4731c105ad1350d62469298e5407ca351d648ba7646987c91eab3e16fd55911a6ac
+  checksum: 10c0/b4c5ab920788ae9d2067423979855a732e2758ba1269c7141938340bcdeb7a1f370d3c09afd9697f4bbcf21b11c7c4716cb76b788f82fc1e697a89572019df00
   languageName: node
   linkType: hard
 
@@ -475,7 +436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/storage-blob@npm:^12.26.0":
+"@azure/storage-blob@npm:^12.28.0":
   version: 12.29.0
   resolution: "@azure/storage-blob@npm:12.29.0"
   dependencies:
@@ -514,22 +475,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/storage-queue@npm:^12.26.0":
-  version: 12.26.0
-  resolution: "@azure/storage-queue@npm:12.26.0"
+"@azure/storage-queue@npm:^12.27.0":
+  version: 12.28.0
+  resolution: "@azure/storage-queue@npm:12.28.0"
   dependencies:
     "@azure/abort-controller": "npm:^2.1.2"
-    "@azure/core-auth": "npm:^1.4.0"
-    "@azure/core-client": "npm:^1.6.2"
+    "@azure/core-auth": "npm:^1.9.0"
+    "@azure/core-client": "npm:^1.9.3"
     "@azure/core-http-compat": "npm:^2.0.0"
-    "@azure/core-paging": "npm:^1.1.1"
-    "@azure/core-rest-pipeline": "npm:^1.10.1"
-    "@azure/core-tracing": "npm:^1.1.2"
-    "@azure/core-util": "npm:^1.6.1"
+    "@azure/core-paging": "npm:^1.6.2"
+    "@azure/core-rest-pipeline": "npm:^1.19.1"
+    "@azure/core-tracing": "npm:^1.2.0"
+    "@azure/core-util": "npm:^1.11.0"
     "@azure/core-xml": "npm:^1.4.3"
-    "@azure/logger": "npm:^1.0.0"
-    tslib: "npm:^2.2.0"
-  checksum: 10c0/a4862ca53098e89a1d6926d8f479a29f08280a1b1ab0acd1428ce72caf9e032b4813d06653d0c133e61d466c40c0b563882a4bcdaae0d3163a08bed7586c4df9
+    "@azure/logger": "npm:^1.1.4"
+    "@azure/storage-common": "npm:^12.1.0"
+    tslib: "npm:^2.8.1"
+  checksum: 10c0/90a740ff505ba4a01f12fd6ed85d7a52a143a5771a2b3bb80c2d36993b959e24e51e2635335f6a41d8cc767a170524823df1aca0a8366bacee4b800c15cc7c56
   languageName: node
   linkType: hard
 
@@ -4996,7 +4958,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typespec/ts-http-runtime@npm:^0.2.2, @typespec/ts-http-runtime@npm:^0.2.3":
+"@typespec/ts-http-runtime@npm:^0.2.2":
   version: 0.2.3
   resolution: "@typespec/ts-http-runtime@npm:0.2.3"
   dependencies:
@@ -5943,9 +5905,9 @@ __metadata:
   dependencies:
     "@azure/cosmos": "npm:4.2.0"
     "@azure/functions": "npm:^4.0.1"
-    "@azure/identity": "npm:^4.10.1"
-    "@azure/storage-blob": "npm:^12.26.0"
-    "@azure/storage-queue": "npm:^12.26.0"
+    "@azure/identity": "npm:^4.11.1"
+    "@azure/storage-blob": "npm:^12.28.0"
+    "@azure/storage-queue": "npm:^12.27.0"
     "@mattrglobal/http-signatures": "npm:^4.0.1"
     "@pagopa/azure-tracing": "npm:^0.4.0"
     "@pagopa/eslint-config": "npm:^4.0.1"

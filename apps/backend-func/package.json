@@ -46,9 +46,9 @@
   "dependencies": {
     "@azure/cosmos": "4.2.0",
     "@azure/functions": "^4.0.1",
-    "@azure/identity": "^4.10.1",
-    "@azure/storage-blob": "^12.26.0",
-    "@azure/storage-queue": "^12.26.0",
+    "@azure/identity": "^4.11.1",
+    "@azure/storage-blob": "^12.28.0",
+    "@azure/storage-queue": "^12.27.0",
     "@mattrglobal/http-signatures": "^4.0.1",
     "@pagopa/azure-tracing": "^0.4.0",
     "@pagopa/handler-kit": "^1.1.0",
