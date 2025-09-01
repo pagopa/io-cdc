@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.5
+
+### Patch Changes
+
+- d1bcf7a: added pk to audit logs
+
 ## 1.0.4
 
 ### Patch Changes
