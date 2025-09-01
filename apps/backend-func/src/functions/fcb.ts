@@ -172,6 +172,7 @@ export const checkLollipop =
               assertion: user.assertion,
               assertionRef: user.assertion_ref,
               fiscalCode: user.fiscal_code,
+              publicKey: user.public_key,
             },
             {
               DateTime: user.auth_time || new Date().toISOString(),
