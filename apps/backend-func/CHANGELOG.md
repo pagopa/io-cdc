@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.4
+
+### Patch Changes
+
+- d32f923: updated deps (working)
+
 ## 1.0.3
 
 ### Patch Changes
