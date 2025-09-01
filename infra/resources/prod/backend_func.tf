@@ -24,6 +24,9 @@ module "backend_func" {
 
   pagopa_idp_keys_base_url = data.azurerm_key_vault_secret.pagopa_idp_keys_base_url.value
 
+  audit_log_connection_string = data.azurerm_key_vault_secret.audit_log_connection_string.value
+  audit_log_container         = data.azurerm_key_vault_secret.audit_log_container.value
+
   cdc_base_url = data.azurerm_key_vault_secret.cdc_base_url.value
 
   cdc_api_base_url      = data.azurerm_key_vault_secret.cdc_api_base_url.value

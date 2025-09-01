@@ -44,6 +44,8 @@ No requirements.
 | <a name="input_algorithm_encryption"></a> [algorithm\_encryption](#input\_algorithm\_encryption) | Encryption's algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_keys"></a> [algorithm\_keys](#input\_algorithm\_keys) | Keys' algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_signature"></a> [algorithm\_signature](#input\_algorithm\_signature) | Signature's algorithm | `string` | n/a | yes |
+| <a name="input_audit_log_connection_string"></a> [audit\_log\_connection\_string](#input\_audit\_log\_connection\_string) | The connection string for audit log storage account | `string` | n/a | yes |
+| <a name="input_audit_log_container"></a> [audit\_log\_container](#input\_audit\_log\_container) | The container name for audit logs | `string` | n/a | yes |
 | <a name="input_card_request_queue_name"></a> [card\_request\_queue\_name](#input\_card\_request\_queue\_name) | Card request queue name | `string` | n/a | yes |
 | <a name="input_cdc_api_base_url"></a> [cdc\_api\_base\_url](#input\_cdc\_api\_base\_url) | The base url for cdc api | `string` | n/a | yes |
 | <a name="input_cdc_api_base_url_test"></a> [cdc\_api\_base\_url\_test](#input\_cdc\_api\_base\_url\_test) | The test base url for cdc api | `string` | n/a | yes |
