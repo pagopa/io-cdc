@@ -7,25 +7,24 @@ import { APP_ROUTES } from '../../utils/appRoutes';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { BonusCard } from '../BonusList/components/BonusItem';
 import { EmptyState } from '@io-cdc/ui';
-import { Toast } from '../../components/Toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTicketDeleted } from '../../features/app/selectors';
 import { ticketsActions } from '../../features/app/reducers';
 import { OthersBonusSheet } from '../../components/OthersBonusSheet';
+import { useToast } from '../../contexts';
 
 const TEXT_COLOR = '#5C6F82';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const deleted = useSelector(selectTicketDeleted);
+  const { showToast } = useToast();
+  const navigate = useNavigate();
 
+  const deleted = useSelector(selectTicketDeleted);
   const { data } = useGetCardsQuery();
   const { data: bonusList } = useGetBonusQuery();
 
-  const [openToast, setOpenToast] = useState(deleted);
   const [openSheet, setOpenSheet] = useState(false);
-
-  const navigate = useNavigate();
 
   const lastUpdateLabel = useMemo(() => {
     const date = new Date();
@@ -74,6 +73,19 @@ const Home = () => {
     const tbs = bonusList?.filter(({ amount }) => amount < 0) ?? [];
     return tbs.slice(0, 4);
   }, [bonusList]);
+
+  useEffect(() => {
+    if (deleted) {
+      showToast({
+        message: 'Hai annullato il buono',
+        messageType: 'success',
+        onClose: () => {
+          dispatch(ticketsActions.setDeleted(false));
+        },
+      });
+    }
+  }, []);
+
   if (!data) return <div>no data</div>;
 
   return (
@@ -140,15 +152,7 @@ const Home = () => {
           </Button>
         </Stack>
       </Stack>
-      <Toast
-        open={openToast}
-        onClose={() => {
-          dispatch(ticketsActions.setDeleted(false));
-          setOpenToast(false);
-        }}
-        iconName="alertCheckCircle"
-        bodyText="Hai annullato il buono"
-      />
+
       <OthersBonusSheet isOpen={openSheet} onClose={() => setOpenSheet(false)} />
     </Stack>
   );

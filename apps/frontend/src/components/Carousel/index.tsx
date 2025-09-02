@@ -1,16 +1,17 @@
 import { Card } from '../Card';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { Card as CardType } from '../../features/app/model';
 import { trackWebviewEvent } from '../../utils/trackEvent';
+import { Icon } from '@io-cdc/ui';
 
 type CarouselProps = {
   list: Array<CardType>;
 };
 export const Carousel = ({ list }: CarouselProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIdx, setActiveIdx] = useState<number | null>(0);
+  const [activeIdx, setActiveIdx] = useState<number>(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -54,14 +55,28 @@ export const Carousel = ({ list }: CarouselProps) => {
         ))}
       </ScrollArea>
 
-      <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-        {list.map((_, idx) => (
-          <StyledDots
-            key={idx}
-            onClick={() => onClickDots(idx)}
-            className={activeIdx === idx ? 'active' : 'inactive'}
-          />
-        ))}
+      <Stack direction="row" justifyContent="space-between">
+        <Icon
+          name="chevronLeft"
+          onClick={() => {
+            onClickDots(activeIdx - 1);
+          }}
+        />
+        <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
+          {list.map((_, idx) => (
+            <StyledDots
+              key={idx}
+              onClick={() => onClickDots(idx)}
+              className={activeIdx === idx ? 'active' : 'inactive'}
+            />
+          ))}
+        </Stack>
+        <Icon
+          name="chevronRight"
+          onClick={() => {
+            onClickDots(activeIdx + 1);
+          }}
+        />
       </Stack>
     </CarouselContainer>
   );

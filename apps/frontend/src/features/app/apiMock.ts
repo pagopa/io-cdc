@@ -3,15 +3,24 @@ import { CreateBonusRequestDTO } from './dto';
 
 export const apiMocks = {
   getBonusById: (bonusId: string) => {
-    const spent = false;
+    const spent = faker.datatype.boolean();
+    const requestedRefund = spent && faker.datatype.boolean();
+    const refundCompleted = spent && requestedRefund && faker.datatype.boolean();
+
+    const amount = faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1);
+
+    const refund =
+      requestedRefund && spent ? faker.number.int({ min: 0, max: amount * -1 }) : undefined;
 
     const bonusData = {
       id: bonusId,
-      amount: faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1),
+      amount,
+      refund,
       code: faker.string.numeric(12),
       cardYear: faker.date.past().getFullYear().toString(),
       expireDate: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
       spentDate: spent ? faker.date.past({ years: 1 }).toLocaleDateString('it-IT') : undefined,
+      refundCompleted,
       merchant: {
         date: faker.date.future({ years: 1 }).toLocaleDateString('it-IT', {
           day: '2-digit',
@@ -44,10 +53,18 @@ export const apiMocks = {
     // if (emptyBonus) return [];
     return Array.from({ length: 20 }, () => {
       const spent = faker.datatype.boolean();
+      const requestedRefund = faker.datatype.boolean();
+      const refundCompleted = faker.datatype.boolean();
+
       const fromOthers = faker.datatype.boolean();
       const id = faker.string.numeric(6);
 
       const date = faker.date.between({ from: '2024-01-01', to: '2026-12-31' });
+
+      const amount = faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1);
+
+      const refund =
+        spent && requestedRefund ? faker.number.int({ min: 0, max: amount * -1 }) : undefined;
       const formattedDate =
         date.toLocaleDateString('it-IT', {
           day: '2-digit',
@@ -65,7 +82,9 @@ export const apiMocks = {
         id,
         fromOthers,
         date: formattedDate,
-        amount: faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1),
+        amount,
+        refund,
+        refundCompleted,
       };
     });
   },

@@ -7,6 +7,7 @@ import { Card } from '../../../features/app/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { APP_ROUTES } from '../../../utils/appRoutes';
 import { ticketsActions } from '../../../features/app/reducers';
+import { useToast } from '../../../contexts';
 
 type RadioListProps = {
   cards: Pick<Card, 'balance' | 'year'>[];
@@ -17,6 +18,7 @@ const TEXT_COLOR = '#5C6F82';
 export const RadioList = ({ cards }: RadioListProps) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const value = useSelector(selectSelectedCardBonus);
 
@@ -28,9 +30,16 @@ export const RadioList = ({ cards }: RadioListProps) => {
   );
 
   const onClickBottom = useCallback(() => {
+    if (!value.year) {
+      showToast({
+        messageType: 'error',
+        message: "Scegli un'opzione per continuare",
+      });
+      return;
+    }
     trackWebviewEvent('CDC_BONUS_CARD_SELECTED');
     navigate(APP_ROUTES.SELECT_AMOUNT);
-  }, [navigate]);
+  }, [navigate, showToast, value]);
 
   return (
     <Box display="flex" flexDirection="column" justifyContent="space-between" flex={1}>

@@ -18,9 +18,18 @@ const BonusDetail = () => {
 
   const spent = !!bonusDetail?.spentDate;
 
+  const refund = !!bonusDetail?.refund;
+  const refundCompleted = bonusDetail?.refundCompleted;
+
   const chipConfig = {
-    label: spent ? 'SPESO' : 'DA SPENDERE',
-    color: (spent ? 'info' : 'primary') as ChipProps['color'],
+    label: refundCompleted ? 'COMPLETATO' : refund ? 'IN CORSO' : spent ? 'SPESO' : 'DA SPENDERE',
+    color: (refundCompleted
+      ? 'success'
+      : refund
+        ? 'warning'
+        : spent
+          ? 'info'
+          : 'primary') as ChipProps['color'],
   };
 
   useEffect(() => {
@@ -63,10 +72,25 @@ const BonusDetail = () => {
             {bonusDetail.amount.toFixed(2)} €
           </Typography>
         </Stack>
-        <Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />
+        {!refund && <Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />}
       </Stack>
-
       <Divider />
+
+      {bonusDetail?.refund && (
+        <>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack>
+              <Typography color="#5C6F82">Da riaccreditare</Typography>
+              <Typography fontWeight={600} fontSize={18}>
+                {bonusDetail.refund.toFixed(2)} €
+              </Typography>
+            </Stack>
+            <Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />
+          </Stack>
+          <Divider />
+        </>
+      )}
+
       <Stack>
         <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
         <Typography fontWeight={600} fontSize={18}>

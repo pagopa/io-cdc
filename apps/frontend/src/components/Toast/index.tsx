@@ -1,9 +1,14 @@
-import { Icon, IconType } from '@io-cdc/ui';
+import { Icon } from '@io-cdc/ui';
 import { Box, Snackbar, SnackbarProps, Typography } from '@mui/material';
+import { ICON_COLOR_CONFIG } from './constants';
 
-type ToastProps = SnackbarProps & { iconName: IconType; bodyText?: string };
+type ToastProps = SnackbarProps & {
+  messageType?: 'success' | 'error' | 'default';
+  message?: string;
+};
 
-export const Toast = ({ open, onClose, iconName, bodyText }: ToastProps) => {
+export const Toast = ({ open, onClose, message, messageType = 'default' }: ToastProps) => {
+  const { icon, color } = ICON_COLOR_CONFIG?.[messageType];
   return (
     <Snackbar
       open={open}
@@ -22,7 +27,7 @@ export const Toast = ({ open, onClose, iconName, bodyText }: ToastProps) => {
           overflow: 'hidden',
         }}
       >
-        <Box sx={{ width: 6, height: '3.5rem', bgcolor: '#6CC66A' }} />
+        <Box sx={{ width: 6, height: '3.5rem', bgcolor: color }} />
         <Box
           sx={{
             display: 'flex',
@@ -30,8 +35,8 @@ export const Toast = ({ open, onClose, iconName, bodyText }: ToastProps) => {
             p: 1.5,
           }}
         >
-          <Icon name={iconName} />
-          <Typography>{bodyText}</Typography>
+          <Icon name={icon} sx={{ color }} />
+          <Typography>{message}</Typography>
         </Box>
       </Box>
     </Snackbar>

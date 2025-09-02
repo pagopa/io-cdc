@@ -4,6 +4,8 @@ import IconAlertCheckCircle from "./svg/IconAlertCheckCircle";
 import IconArrowBack from "./svg/IconArrowBack";
 import IconArrowCircleLeftBold from "./svg/IconArrowCircleLeftBold";
 import IconArrowCircleRightBold from "./svg/IconArrowCircleRightBold";
+import IconChevronLeft from "./svg/IconChevronLeft";
+import IconChevronRight from "./svg/IconChevronRight";
 import IconClose from "./svg/IconClose";
 import IconCloseCircle from "./svg/IconCloseCircle";
 import IconCopy from "./svg/IconCopy";
@@ -31,6 +33,8 @@ export const Icons = {
   arrowCircleLeftBold: IconArrowCircleLeftBold,
   arrowCircleRightBold: IconArrowCircleRightBold,
   back: IconArrowBack,
+  chevronLeft: IconChevronLeft,
+  chevronRight: IconChevronRight,
   close: IconClose,
   closeCircle: IconCloseCircle,
   copy: IconCopy,

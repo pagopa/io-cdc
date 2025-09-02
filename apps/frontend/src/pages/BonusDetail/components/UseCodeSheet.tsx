@@ -2,11 +2,11 @@ import { Icon, SectionTitle } from '@io-cdc/ui';
 import { Stack, IconButton, Button } from '@mui/material';
 import { Sheet } from 'react-modal-sheet';
 import { CodesTabs } from '../../../components/CodesTabs';
-import { Toast } from '../../../components/Toast';
 import { useCallback, useMemo, useState } from 'react';
 import { QrCode } from '../../../components/QrCode';
 import { BarCode } from '../../../components/BarCode';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
+import { useToast } from '../../../contexts';
 
 type UseCodeSheetProps = {
   isOpen: boolean;
@@ -16,15 +16,18 @@ type UseCodeSheetProps = {
 
 export const UseCodeSheet = ({ isOpen, onClose, code }: UseCodeSheetProps) => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [openToast, setOpenToast] = useState(false);
+  const { showToast } = useToast();
 
   const copyBonusCode = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_COPY_CODE', {
       code_type: 'barcode',
     });
     navigator.clipboard.writeText(code);
-    setOpenToast(true);
-  }, [code]);
+    showToast({
+      message: 'Il codice è stato copiato',
+      messageType: 'success',
+    });
+  }, [code, showToast]);
 
   const SheetContentChild = useMemo(
     () =>
@@ -102,13 +105,6 @@ export const UseCodeSheet = ({ isOpen, onClose, code }: UseCodeSheetProps) => {
         </Sheet.Content>
       </Sheet.Container>
       <Sheet.Backdrop />
-
-      <Toast
-        open={openToast}
-        onClose={() => setOpenToast(false)}
-        iconName="alertCheckCircle"
-        bodyText="Il codice è stato copiato"
-      />
     </Sheet>
   );
 };

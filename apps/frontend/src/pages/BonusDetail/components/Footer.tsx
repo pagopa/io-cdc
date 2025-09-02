@@ -45,7 +45,7 @@ export const Footer = ({ bonusId, code }: FooterProps) => {
   if (isBonusDeleteSuccess) {
     dispatch(ticketsActions.setDeleted(true));
     trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
-    return <Navigate to={APP_ROUTES.HOME} state={{ deleted: true }} />;
+    return <Navigate to={APP_ROUTES.HOME} />;
   }
   return (
     <>

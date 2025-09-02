@@ -8,14 +8,17 @@ import App from './App.tsx';
 import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import { store } from './features/store.ts';
+import { ToastProvider } from './contexts/index.ts';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ThemeProvider>
+    <ToastProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
+    </ToastProvider>
   </Provider>,
 );

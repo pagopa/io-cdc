@@ -5,6 +5,8 @@ export type RequestBonusDto = string[];
 export type GetBonusByIdResponseDTO = {
   id: string;
   amount: number;
+  refund?: number;
+  refundCompleted?: boolean;
   code: string;
   expireDate: string;
   spentDate?: string;

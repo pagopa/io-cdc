@@ -40,4 +40,6 @@ export type BonusItem = {
   date: string;
   amount: number;
   fromOthers: boolean;
+  refund?: number;
+  refundCompleted?: boolean;
 };
