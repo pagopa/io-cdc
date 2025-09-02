@@ -55,7 +55,6 @@ export const useLoadYears = () => {
     const error = getYearsListError || getNotAvailableYearsListError;
 
     if (isError && isFetchBaseQueryError(error)) {
-      console.log({ error, isError }, 'akhsidhaishdakh');
       navigate(APP_ROUTES.EXPIRED, { state: { status: error.status } });
       return;
     }

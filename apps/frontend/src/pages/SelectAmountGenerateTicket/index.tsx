@@ -68,7 +68,6 @@ const SelectAmountGenerateTicket = () => {
   }
 
   if (isBonusCreationCompleted && newBonus) {
-    console.log(isError, isFetchBaseQueryError(creationError), 'aihsidhiash');
     trackWebviewEvent('CDC_BONUS_GENERATION_SUCCESS', { event_category: 'TECH' });
     return <Navigate to={`/dettaglio-buono/${newBonus}`} />;
   }
