@@ -1,70 +1,80 @@
 import { faker } from '@faker-js/faker';
-import { CreateBonusRequestDTO } from './dto';
+import { CreateVoucherRequestDTO } from './dto';
+import { APPLICANTS, CARD_STATUS, REFUND_STATUS, VOUCHER_STATUS } from './model';
+
+const CARDS_NAMES = [
+  'Carta della Cultura 2020',
+  'Carta della Cultura 2021',
+  'Carta della Cultura 2022',
+  'Carta della Cultura 2023',
+  'Carta della Cultura 2024',
+];
 
 export const apiMocks = {
-  getBonusById: (bonusId: string) => {
+  getVoucherById: (voucherId: string) => {
     const spent = faker.datatype.boolean();
+    const status = faker.helpers.arrayElement(Object.values(VOUCHER_STATUS));
+
     const requestedRefund = spent && faker.datatype.boolean();
-    const refundCompleted = spent && requestedRefund && faker.datatype.boolean();
 
     const amount = faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1);
 
     const refund =
-      requestedRefund && spent ? faker.number.int({ min: 0, max: amount * -1 }) : undefined;
+      requestedRefund && spent
+        ? {
+            amount: faker.number.int({ min: 0, max: amount * -1 }),
+            status: faker.helpers.arrayElement(Object.values(REFUND_STATUS)),
+          }
+        : undefined;
 
-    const bonusData = {
-      id: bonusId,
+    const voucherData = {
+      id: voucherId,
       amount,
+      expiration_date: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
+      status,
+      card_year: faker.date.past().getFullYear().toString(),
+      applicant: faker.helpers.arrayElement(Object.values(APPLICANTS)),
+      merchant: faker.company.name(),
       refund,
-      code: faker.string.numeric(12),
-      cardYear: faker.date.past().getFullYear().toString(),
-      expireDate: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
-      spentDate: spent ? faker.date.past({ years: 1 }).toLocaleDateString('it-IT') : undefined,
-      refundCompleted,
-      merchant: {
-        date: faker.date.future({ years: 1 }).toLocaleDateString('it-IT', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        name: faker.company.name(),
-      },
     };
 
-    return bonusData;
+    return voucherData;
   },
   getCards: () => {
     return Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, (_, i) =>
       (new Date().getFullYear() - i).toString(),
     )
       .map((year) => ({
-        id: faker.string.uuid(),
-        balance: year === '2022' ? 0 : faker.number.int({ min: 0, max: 100 }),
-        expireDate: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
-        maxAmount: 100,
+        card_name: faker.helpers.arrayElement(CARDS_NAMES),
         year,
+        status: faker.helpers.arrayElement(Object.values(CARD_STATUS)),
+        expiration_date: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
+        residual_amount: year === '2022' ? 0 : faker.number.int({ min: 0, max: 100 }),
       }))
       .reverse();
   },
-  getBonus: () => {
-    // const emptyBonus = faker.datatype.boolean();
-    // if (emptyBonus) return [];
+  getVouchers: () => {
+    // const emptyVoucher = faker.datatype.boolean();
+    // if (emptyVoucher) return [];
     return Array.from({ length: 20 }, () => {
-      const spent = faker.datatype.boolean();
-      const requestedRefund = faker.datatype.boolean();
-      const refundCompleted = faker.datatype.boolean();
+      const id = faker.string.numeric(12);
+      const status = faker.helpers.arrayElement(Object.values(VOUCHER_STATUS));
 
-      const fromOthers = faker.datatype.boolean();
-      const id = faker.string.numeric(6);
-
-      const date = faker.date.between({ from: '2024-01-01', to: '2026-12-31' });
+      const spent = status === 'USED';
+      const refundRqst = faker.datatype.boolean();
 
       const amount = faker.number.int({ min: 0, max: 100 }) * (spent ? -1 : 1);
 
+      const date = faker.date.between({ from: '2024-01-01', to: '2026-12-31' });
+
       const refund =
-        spent && requestedRefund ? faker.number.int({ min: 0, max: amount * -1 }) : undefined;
+        spent && refundRqst
+          ? {
+              amount: faker.number.int({ min: 0, max: amount * -1 }),
+              status: faker.helpers.arrayElement(Object.values(REFUND_STATUS)),
+            }
+          : undefined;
+
       const formattedDate =
         date.toLocaleDateString('it-IT', {
           day: '2-digit',
@@ -80,19 +90,23 @@ export const apiMocks = {
 
       return {
         id,
-        fromOthers,
-        date: formattedDate,
         amount,
+        expiration_date: formattedDate,
+        status,
+        card_year: faker.date.past().getFullYear().toString(),
+        applicant: faker.helpers.arrayElement(Object.values(APPLICANTS)),
+        merchant: faker.company.name(),
         refund,
-        refundCompleted,
       };
     });
   },
-  createBonus: (newBonus: CreateBonusRequestDTO) => ({
-    id: faker.string.uuid(),
+  createVoucher: (newVoucher: CreateVoucherRequestDTO) => ({
+    id: faker.string.numeric(12),
     amount: Number(faker.commerce.price()),
-    code: faker.string.numeric(12),
-    cardYear: newBonus.year,
-    expireDate: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
+    expiration_date: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
+    status: faker.helpers.arrayElement(Object.values(VOUCHER_STATUS)),
+    card_year: newVoucher.year,
+    applicant: faker.helpers.arrayElement(Object.values(APPLICANTS)),
+    merchant: faker.company.name(),
   }),
 };

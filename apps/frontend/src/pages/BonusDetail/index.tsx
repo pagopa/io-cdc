@@ -7,29 +7,45 @@ import { useEffect } from 'react';
 import { BonusDescription } from './components/BonusDescription';
 import { Footer } from './components/Footer';
 import { APP_ROUTES } from '../../utils/appRoutes';
-import { useGetBonusByIdQuery } from '../../features/app/services';
+import { useGetVoucherByIdQuery } from '../../features/app/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
+import { REFUND_STATUS, VOUCHER_STATUS } from '../../features/app/model';
 
 const BonusDetail = () => {
   const navigate = useNavigate();
   const { id = '' } = useParams();
-  const { data: bonusDetail, isLoading, error, isError } = useGetBonusByIdQuery(id);
+  const { data: bonusDetail, isLoading, error, isError } = useGetVoucherByIdQuery(id);
+  console.log('🚀 ~ BonusDetail ~ bonusDetail:', bonusDetail);
 
-  const spent = !!bonusDetail?.spentDate;
+  const spent =
+    bonusDetail?.status === VOUCHER_STATUS.USED || bonusDetail?.status === VOUCHER_STATUS.REFUNDED;
 
-  const refund = !!bonusDetail?.refund;
-  const refundCompleted = bonusDetail?.refundCompleted;
+  const pending = bonusDetail?.status === VOUCHER_STATUS.PENDING;
+
+  const refund = bonusDetail?.refund;
+
+  const refundCompleted = refund?.status === REFUND_STATUS.COMPLETED;
 
   const chipConfig = {
-    label: refundCompleted ? 'COMPLETATO' : refund ? 'IN CORSO' : spent ? 'SPESO' : 'DA SPENDERE',
+    label: refundCompleted
+      ? 'COMPLETATO'
+      : refund?.status === REFUND_STATUS.PENDING
+        ? 'IN CORSO'
+        : refund?.status === REFUND_STATUS.FAILED
+          ? 'NEGATO'
+          : spent
+            ? 'SPESO'
+            : 'DA SPENDERE',
     color: (refundCompleted
       ? 'success'
-      : refund
-        ? 'warning'
-        : spent
-          ? 'info'
-          : 'primary') as ChipProps['color'],
+      : refund?.status === REFUND_STATUS.FAILED
+        ? 'error'
+        : refund
+          ? 'warning'
+          : spent
+            ? 'info'
+            : 'primary') as ChipProps['color'],
   };
 
   useEffect(() => {
@@ -58,7 +74,7 @@ const BonusDetail = () => {
       <Stack gap={8}>
         <Stack gap={2}>
           <Typography variant="h2">Il tuo buono</Typography>
-          <BonusDescription spent={spent} />
+          <BonusDescription pending={pending} />
         </Stack>
       </Stack>
       <Stack direction="row" gap={1}>
@@ -82,7 +98,7 @@ const BonusDetail = () => {
             <Stack>
               <Typography color="#5C6F82">Da riaccreditare</Typography>
               <Typography fontWeight={600} fontSize={18}>
-                {bonusDetail.refund.toFixed(2)} €
+                {bonusDetail.refund.amount.toFixed(2)} €
               </Typography>
             </Stack>
             <Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />
@@ -94,14 +110,14 @@ const BonusDetail = () => {
       <Stack>
         <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
         <Typography fontWeight={600} fontSize={18}>
-          {bonusDetail.expireDate}
+          {bonusDetail.expiration_date}
         </Typography>
       </Stack>
       <Divider />
       <Stack>
         <Typography color="#5C6F82">Carta della cultura usata</Typography>
         <Typography fontWeight={600} fontSize={18}>
-          {bonusDetail.cardYear}
+          {bonusDetail.card_year}
         </Typography>
       </Stack>
       <Stack direction="row" gap={2}>
@@ -113,11 +129,12 @@ const BonusDetail = () => {
 
       <Stack>
         <Typography fontWeight={700} fontSize={18}>
-          {bonusDetail.merchant.name}
+          {bonusDetail.merchant}
         </Typography>
-        <Typography>{bonusDetail.merchant.date}</Typography>
+        {/** TODO placeholder!!! this must be the date voucher was spent */}
+        <Typography>{bonusDetail.expiration_date}</Typography>
       </Stack>
-      {!spent && <Footer bonusId={id} code={bonusDetail.code} />}
+      {pending && <Footer bonusId={id} code={bonusDetail.id} />}
     </Stack>
   ) : (
     <>not found</>

@@ -79,7 +79,6 @@ export const CardCarousel = ({ children, title }: CardCarouselProps) => (
           }}
           spaceBetween={30}
         >
-          {/* workaround because swiper needs SwiperSlide as direct children */}
           {React.Children.map(children, (child: React.ReactNode, index) => (
             <SwiperSlide key={`slide-${index}`}>{child}</SwiperSlide>
           ))}

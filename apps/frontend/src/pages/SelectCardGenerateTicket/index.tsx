@@ -15,7 +15,7 @@ const GenerateTicket = () => {
 
   const cardOptions = useMemo(() => {
     if (!cards) return [];
-    return cards.map(({ balance, year }) => ({ balance, year }));
+    return cards.map(({ residual_amount, year }) => ({ residual_amount, year }));
   }, [cards]);
 
   const onBackHeader = useCallback(() => {

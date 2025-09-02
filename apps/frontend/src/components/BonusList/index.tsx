@@ -1,15 +1,21 @@
 import { useMemo } from 'react';
 import { Divider, Stack } from '@mui/material';
-import { BonusCard } from '../../pages/BonusList/components/BonusItem';
+import { VoucherCard } from '../../pages/BonusList/components/BonusItem';
 import { EmptyState, SectionTitle } from '@io-cdc/ui';
-import { BonusItem } from '../../features/app/model';
+import { VoucherItem } from '../../features/app/model';
 
-type BonusListProps = {
-  bonusList: BonusItem[];
+type VoucherListProps = {
+  vouchersList: VoucherItem[];
 };
-export const BonusList = ({ bonusList }: BonusListProps) => {
-  const toSpend = useMemo(() => bonusList.filter(({ amount }) => amount > 0), [bonusList]);
-  const spent = useMemo(() => bonusList.filter(({ amount }) => amount < 0), [bonusList]);
+export const VoucherList = ({ vouchersList }: VoucherListProps) => {
+  const toSpend = useMemo(
+    () => vouchersList.filter(({ status }) => status === 'PENDING'),
+    [vouchersList],
+  );
+  const spent = useMemo(
+    () => vouchersList.filter(({ status }) => status === 'USED'),
+    [vouchersList],
+  );
 
   const lastUpdateLabel = useMemo(() => {
     const date = new Date();
@@ -37,9 +43,9 @@ export const BonusList = ({ bonusList }: BonusListProps) => {
           description={`Saldo aggiornato al ${lastUpdateLabel}`}
         />
         {toSpend.length ? (
-          toSpend.map((bonus, index, array) => (
-            <Stack gap={3} key={bonus.id} paddingTop={3}>
-              <BonusCard bonus={bonus} spent={false} />
+          toSpend.map((voucher, index, array) => (
+            <Stack gap={3} key={voucher.id} paddingTop={3}>
+              <VoucherCard voucher={voucher} spent={false} />
               {index !== array.length - 1 && <Divider />}
             </Stack>
           ))
@@ -52,9 +58,9 @@ export const BonusList = ({ bonusList }: BonusListProps) => {
       <Stack>
         <SectionTitle title="Buoni spesi" />
         {spent.length ? (
-          spent.map((bonus, index, array) => (
-            <Stack gap={3} key={bonus.id} paddingTop={3}>
-              <BonusCard bonus={bonus} spent={true} />
+          spent.map((voucher, index, array) => (
+            <Stack gap={3} key={voucher.id} paddingTop={3}>
+              <VoucherCard voucher={voucher} spent={true} />
               {index !== array.length - 1 && <Divider />}
             </Stack>
           ))

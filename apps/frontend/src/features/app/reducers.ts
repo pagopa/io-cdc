@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Card } from './model';
 
 type TicketsState = {
-  selectedCard: Pick<Card, 'balance' | 'year'>;
+  selectedCard: Pick<Card, 'residual_amount' | 'year'>;
   amount: string;
   deleted: boolean;
 };
@@ -10,7 +10,7 @@ type TicketsState = {
 const initialState: TicketsState = {
   amount: '',
   selectedCard: {
-    balance: 0,
+    residual_amount: 0,
     year: '',
   },
   deleted: false,

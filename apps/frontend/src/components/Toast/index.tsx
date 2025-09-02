@@ -25,6 +25,7 @@ export const Toast = ({ open, onClose, message, messageType = 'default' }: Toast
           bgcolor: 'white',
           borderRadius: 2,
           overflow: 'hidden',
+          boxShadow: '4px 4px 12px rgba(0, 43, 85, 0.1)',
         }}
       >
         <Box sx={{ width: 6, height: '3.5rem', bgcolor: color }} />

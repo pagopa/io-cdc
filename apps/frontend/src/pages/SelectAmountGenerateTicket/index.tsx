@@ -5,7 +5,7 @@ import { trackWebviewEvent } from '../../utils/trackEvent';
 import { SetAmount } from './components/SetAmount';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
-import { useCreateBonusMutation } from '../../features/app/services';
+import { useCreateVoucherMutation } from '../../features/app/services';
 import { useSelector } from 'react-redux';
 import { selectAmountBonus, selectSelectedCardBonus } from '../../features/app/selectors';
 import { APP_ROUTES } from '../../utils/appRoutes';
@@ -26,7 +26,7 @@ const SelectAmountGenerateTicket = () => {
       isError,
       error: creationError,
     },
-  ] = useCreateBonusMutation();
+  ] = useCreateVoucherMutation();
 
   const selectedCard = useSelector(selectSelectedCardBonus);
 
@@ -35,8 +35,8 @@ const SelectAmountGenerateTicket = () => {
   const required = useMemo(() => !amount || amount === '0', [amount]);
 
   const error = useMemo(
-    () => selectedCard?.balance! < Number(amount) || required,
-    [amount, required, selectedCard?.balance],
+    () => selectedCard?.residual_amount! < Number(amount) || required,
+    [amount, required, selectedCard?.residual_amount],
   );
 
   const onBackHeader = useCallback(() => {
@@ -82,13 +82,13 @@ const SelectAmountGenerateTicket = () => {
           <Stack gap={2}>
             <Typography variant="h2">{"Inserisci l'importo"}</Typography>
             <Typography color={TEXT_COLOR} fontSize={16}>
-              {`Puoi generare un buono con un valore massimo di ${selectedCard?.balance} €`}
+              {`Puoi generare un buono con un valore massimo di ${selectedCard?.residual_amount} €`}
             </Typography>
           </Stack>
           <Stack>
             <SetAmount
               amount={amount}
-              balance={selectedCard?.balance}
+              balance={selectedCard?.residual_amount}
               error={error}
               required={required}
             />

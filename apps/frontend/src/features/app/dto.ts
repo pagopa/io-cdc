@@ -1,32 +1,19 @@
-import { BonusItem, Card } from './model';
+import { VoucherItem, Card } from './model';
 
 export type RequestBonusDto = string[];
 
-export type GetBonusByIdResponseDTO = {
-  id: string;
-  amount: number;
-  refund?: number;
-  refundCompleted?: boolean;
-  code: string;
-  expireDate: string;
-  spentDate?: string;
-  cardYear: string;
-  merchant: {
-    name: string;
-    date: string;
-  };
-};
+export type GetBonusByIdResponseDTO = VoucherItem;
 
 export type GetCardsResponseDTO = Card[];
 
-export type GetBonusResponseDTO = BonusItem[];
+export type GetVouchersResponseDTO = VoucherItem[];
 
-export type DeleteBonusResponseDTO = {
+export type DeleteVoucherResponseDTO = {
   deleted: boolean;
   bonusId: string;
 };
 
-export type CreateBonusRequestDTO = {
+export type CreateVoucherRequestDTO = {
   year: string;
   amount: number;
 };

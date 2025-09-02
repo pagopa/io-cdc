@@ -10,7 +10,7 @@ import { ticketsActions } from '../../../features/app/reducers';
 import { useToast } from '../../../contexts';
 
 type RadioListProps = {
-  cards: Pick<Card, 'balance' | 'year'>[];
+  cards: Pick<Card, 'residual_amount' | 'year'>[];
 };
 
 const TEXT_COLOR = '#5C6F82';
@@ -23,7 +23,7 @@ export const RadioList = ({ cards }: RadioListProps) => {
   const value = useSelector(selectSelectedCardBonus);
 
   const onSelect = useCallback(
-    (selected: Pick<Card, 'balance' | 'year'>) => {
+    (selected: Pick<Card, 'residual_amount' | 'year'>) => {
       dispatch(ticketsActions.setSelectedCard(selected));
     },
     [dispatch],
@@ -52,13 +52,13 @@ export const RadioList = ({ cards }: RadioListProps) => {
         </Stack>
         <Stack>
           <RadioGroup>
-            {cards.map(({ balance, year }) =>
-              balance <= 0 ? null : (
+            {cards.map(({ residual_amount, year }) =>
+              residual_amount <= 0 ? null : (
                 <Box key={year}>
                   <Stack direction="row">
                     <Radio
                       checked={value?.year === year}
-                      onChange={() => onSelect({ balance, year })}
+                      onChange={() => onSelect({ residual_amount, year })}
                     />
                     <Stack onClick={() => null} gap={0.5} paddingX={1.25} paddingY={2}>
                       <Typography
@@ -68,7 +68,7 @@ export const RadioList = ({ cards }: RadioListProps) => {
                       <Typography
                         fontSize={14}
                         color={TEXT_COLOR}
-                      >{`Credito disponibile ${balance}€`}</Typography>
+                      >{`Credito disponibile ${residual_amount}€`}</Typography>
                     </Stack>
                   </Stack>
                   <Divider />

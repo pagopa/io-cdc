@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RequestedYearsList, SessionParams, SessionResponseDTO, YearsList } from './model';
 import {
-  CreateBonusRequestDTO,
-  DeleteBonusResponseDTO,
+  CreateVoucherRequestDTO,
+  DeleteVoucherResponseDTO,
   GetBonusByIdResponseDTO,
-  GetBonusResponseDTO,
+  GetVouchersResponseDTO,
   GetCardsResponseDTO,
   RequestBonusDto,
 } from './dto';
@@ -19,6 +19,7 @@ enum API_ENV_OPTIONS {
   PROD = 'PROD',
 }
 
+// TODO change to PROD
 const API_ENV = API_ENV_OPTIONS.DEV;
 
 export const appApi = createApi({
@@ -52,20 +53,20 @@ export const appApi = createApi({
       ...API_REQUEST[API_ENV].requestBonus,
     }),
     // DASHBOARD APP APIS
-    getBonusById: builder.query<GetBonusByIdResponseDTO, string>({
-      ...API_DASHBOARD[API_ENV].getBonusById,
+    getVoucherById: builder.query<GetBonusByIdResponseDTO, string>({
+      ...API_DASHBOARD[API_ENV].getVoucherById,
     }),
     getCards: builder.query<GetCardsResponseDTO, void>({
       ...API_DASHBOARD[API_ENV].getCards,
     }),
-    getBonus: builder.query<GetBonusResponseDTO, void>({
-      ...API_DASHBOARD[API_ENV].getBonus,
+    getVoucher: builder.query<GetVouchersResponseDTO, void>({
+      ...API_DASHBOARD[API_ENV].getVouchers,
     }),
-    createBonus: builder.mutation<string, CreateBonusRequestDTO>({
-      ...API_DASHBOARD[API_ENV].createBonus,
+    createVoucher: builder.mutation<string, CreateVoucherRequestDTO>({
+      ...API_DASHBOARD[API_ENV].createVoucher,
     }),
-    deleteBonus: builder.mutation<DeleteBonusResponseDTO, string>({
-      ...API_DASHBOARD[API_ENV].deleteBonus,
+    deleteVoucher: builder.mutation<DeleteVoucherResponseDTO, string>({
+      ...API_DASHBOARD[API_ENV].deleteVoucher,
     }),
   }),
 });
@@ -79,9 +80,9 @@ export const {
   useRequestBonusMutation,
   useGetNotAvailableYearsListQuery,
   useLazyGetNotAvailableYearsListQuery,
-  useGetBonusByIdQuery,
+  useGetVoucherByIdQuery,
   useGetCardsQuery,
-  useGetBonusQuery,
-  useCreateBonusMutation,
-  useDeleteBonusMutation,
+  useGetVoucherQuery,
+  useCreateVoucherMutation,
+  useDeleteVoucherMutation,
 } = appApi;

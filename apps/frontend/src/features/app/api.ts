@@ -2,7 +2,7 @@ import { FetchArgs } from '@reduxjs/toolkit/query';
 import { SessionParams } from './model';
 import { delay, getRandomError, getRandomResponse } from './utils';
 import { mockYears, mockYearsList } from './mock';
-import { CreateBonusRequestDTO, RequestBonusDto } from './dto';
+import { CreateVoucherRequestDTO, RequestBonusDto } from './dto';
 import { apiMocks } from './apiMock';
 
 export const API_REQUEST = {
@@ -99,46 +99,31 @@ export const API_REQUEST = {
 
 export const API_DASHBOARD = {
   PROD: {
-    getBonusById: {
-      queryFn: (bonusId: string) => {
-        return {
-          data: apiMocks.getBonusById(bonusId),
-        };
-      },
-    },
     getCards: {
-      queryFn: () => {
-        return {
-          data: apiMocks.getCards(),
-        };
-      },
+      query: () => 'cards',
     },
-    getBonus: {
-      queryFn: () => {
-        return {
-          data: apiMocks.getBonus(),
-        };
-      },
+    getVouchers: {
+      query: () => 'vouchers',
     },
-    createBonus: {
-      queryFn: async (newBonus: CreateBonusRequestDTO) => {
-        await delay(2500);
-        return { data: apiMocks.createBonus(newBonus).id };
-      },
+    getVoucherById: {
+      query: (id: string) => `/vouchers/${id}`,
     },
-    deleteBonus: {
-      queryFn: (bonusId: string) => {
-        return {
-          data: {
-            deleted: true,
-            bonusId,
-          },
-        };
-      },
+    createVoucher: {
+      query: (voucher: CreateVoucherRequestDTO) => ({
+        url: '/vouchers',
+        method: 'POST',
+        body: voucher,
+      }),
+    },
+    deleteVoucher: {
+      query: (id: string) => ({
+        url: `/vouchers/${id}`,
+        method: 'DELETE',
+      }),
     },
   },
   DEV: {
-    getBonusById: {
+    getVoucherById: {
       queryFn: async (bonusId: string) => {
         const shouldFail = getRandomResponse();
         await delay(2000);
@@ -151,7 +136,7 @@ export const API_DASHBOARD = {
           };
         }
         return {
-          data: apiMocks.getBonusById(bonusId),
+          data: apiMocks.getVoucherById(bonusId),
         };
       },
     },
@@ -162,15 +147,15 @@ export const API_DASHBOARD = {
         };
       },
     },
-    getBonus: {
+    getVouchers: {
       queryFn: () => {
         return {
-          data: apiMocks.getBonus(),
+          data: apiMocks.getVouchers(),
         };
       },
     },
-    createBonus: {
-      queryFn: async (newBonus: CreateBonusRequestDTO) => {
+    createVoucher: {
+      queryFn: async (newBonus: CreateVoucherRequestDTO) => {
         const shouldFail = getRandomResponse();
         await delay(2000);
         if (shouldFail) {
@@ -182,10 +167,10 @@ export const API_DASHBOARD = {
           };
         }
         await delay(2500);
-        return { data: apiMocks.createBonus(newBonus).id };
+        return { data: apiMocks.createVoucher(newBonus).id };
       },
     },
-    deleteBonus: {
+    deleteVoucher: {
       queryFn: async (bonusId: string) => {
         const shouldFail = getRandomResponse();
         await delay(2000);

@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { PopConfirm } from '../../../components/PopConfirm';
 import { useCallback, useState } from 'react';
 import { APP_ROUTES } from '../../../utils/appRoutes';
-import { useDeleteBonusMutation } from '../../../features/app/services';
+import { useDeleteVoucherMutation } from '../../../features/app/services';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { useDispatch } from 'react-redux';
 import { ticketsActions } from '../../../features/app/reducers';
@@ -18,7 +18,7 @@ type FooterProps = {
 export const Footer = ({ bonusId, code }: FooterProps) => {
   const dispatch = useDispatch();
 
-  const [deleteBonus, { isSuccess: isBonusDeleteSuccess }] = useDeleteBonusMutation();
+  const [deleteBonus, { isSuccess: isBonusDeleteSuccess }] = useDeleteVoucherMutation();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);

@@ -1,14 +1,14 @@
 import { Typography } from '@mui/material';
 
 type BonusDescriptionProps = {
-  spent: boolean;
+  pending: boolean;
 };
 
 //TODO -> move to theme
 const TEXT_COLOR = '#5C6F82';
 
-export const BonusDescription = ({ spent }: BonusDescriptionProps) => {
-  return spent ? (
+export const BonusDescription = ({ pending }: BonusDescriptionProps) => {
+  return !pending ? (
     <Typography color={TEXT_COLOR}>Questo buono è già stato utilizzato. </Typography>
   ) : (
     <>

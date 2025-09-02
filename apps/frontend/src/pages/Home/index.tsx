@@ -1,11 +1,11 @@
 import { Button, Divider, Stack, Typography } from '@mui/material';
 import { Carousel } from '../../components/Carousel';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useGetBonusQuery, useGetCardsQuery } from '../../features/app/services';
+import { useNavigate } from 'react-router-dom';
+import { useGetVoucherQuery, useGetCardsQuery } from '../../features/app/services';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { trackWebviewEvent } from '../../utils/trackEvent';
-import { BonusCard } from '../BonusList/components/BonusItem';
+import { VoucherCard } from '../BonusList/components/BonusItem';
 import { EmptyState } from '@io-cdc/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTicketDeleted } from '../../features/app/selectors';
@@ -22,7 +22,7 @@ const Home = () => {
 
   const deleted = useSelector(selectTicketDeleted);
   const { data } = useGetCardsQuery();
-  const { data: bonusList } = useGetBonusQuery();
+  const { data: bonusList } = useGetVoucherQuery();
 
   const [openSheet, setOpenSheet] = useState(false);
 
@@ -104,9 +104,13 @@ const Home = () => {
               </Button>
             </Stack>
             {toSpend.length ? (
-              toSpend.map((bonus, index, array) => (
-                <Stack gap={3} key={bonus.id} paddingTop={3}>
-                  <BonusCard bonus={bonus} spent={false} openSheet={() => setOpenSheet(true)} />
+              toSpend.map((voucher, index, array) => (
+                <Stack gap={3} key={voucher.id} paddingTop={3}>
+                  <VoucherCard
+                    voucher={voucher}
+                    spent={false}
+                    openSheet={() => setOpenSheet(true)}
+                  />
                   {index !== array.length - 1 && <Divider />}
                 </Stack>
               ))
@@ -122,9 +126,9 @@ const Home = () => {
               </Button>
             </Stack>
             {spent.length ? (
-              spent.map((bonus, index, array) => (
-                <Stack gap={3} key={bonus.id} paddingTop={3}>
-                  <BonusCard bonus={bonus} spent={true} />
+              spent.map((voucher, index, array) => (
+                <Stack gap={3} key={voucher.id} paddingTop={3}>
+                  <VoucherCard voucher={voucher} spent={true} />
                   {index !== array.length - 1 && <Divider />}
                 </Stack>
               ))

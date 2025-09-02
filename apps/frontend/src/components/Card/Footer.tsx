@@ -1,12 +1,13 @@
 import { LinearProgress, Stack, Typography } from '@mui/material';
 import { Notches } from '../Notches';
 
+const MAX_AMOUNT = 100;
+
 type FooterProps = {
-  balance: number;
-  total: number;
+  residual_amount: number;
 };
 
-export const Footer = ({ balance, total }: FooterProps) => {
+export const Footer = ({ residual_amount }: FooterProps) => {
   return (
     <Stack>
       <Notches />
@@ -20,13 +21,13 @@ export const Footer = ({ balance, total }: FooterProps) => {
       >
         <Stack direction="row" justifyContent="center" alignItems="baseline" gap={1}>
           <Typography fontWeight={700} fontSize={22}>
-            {balance}
+            {residual_amount}
           </Typography>
-          <Typography>{`di ${total}€`}</Typography>
+          <Typography>{`di ${MAX_AMOUNT}€`}</Typography>
         </Stack>
         <LinearProgress
           variant="determinate"
-          value={(balance * 100) / total}
+          value={(residual_amount * 100) / MAX_AMOUNT}
           sx={{ background: '#fff', width: '30%', borderRadius: '4px' }}
         />
       </Stack>
