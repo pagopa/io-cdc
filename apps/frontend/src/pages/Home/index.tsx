@@ -24,7 +24,7 @@ const Home = () => {
   const { data } = useGetCardsQuery();
   const { data: bonusList } = useGetVoucherQuery();
 
-  const [openSheet, setOpenSheet] = useState(false);
+  const [openSheet, setOpenSheet] = useState<[boolean, boolean]>([false, false]);
 
   const lastUpdateLabel = useMemo(() => {
     const date = new Date();
@@ -109,7 +109,7 @@ const Home = () => {
                   <VoucherCard
                     voucher={voucher}
                     spent={false}
-                    openSheet={() => setOpenSheet(true)}
+                    openSheet={() => setOpenSheet([true, false])}
                   />
                   {index !== array.length - 1 && <Divider />}
                 </Stack>
@@ -128,7 +128,11 @@ const Home = () => {
             {spent.length ? (
               spent.map((voucher, index, array) => (
                 <Stack gap={3} key={voucher.id} paddingTop={3}>
-                  <VoucherCard voucher={voucher} spent={true} />
+                  <VoucherCard
+                    voucher={voucher}
+                    spent={true}
+                    openSheet={() => setOpenSheet([true, true])}
+                  />
                   {index !== array.length - 1 && <Divider />}
                 </Stack>
               ))
@@ -157,7 +161,7 @@ const Home = () => {
         </Stack>
       </Stack>
 
-      <OthersBonusSheet isOpen={openSheet} onClose={() => setOpenSheet(false)} />
+      <OthersBonusSheet status={openSheet} onClose={() => setOpenSheet([false, false])} />
     </Stack>
   );
 };

@@ -1,14 +1,13 @@
 import { FetchArgs } from '@reduxjs/toolkit/query';
-import { SessionParams } from './model';
 import { delay, getRandomError, getRandomResponse } from './utils';
 import { mockYears, mockYearsList } from './mock';
-import { CreateVoucherRequestDTO, RequestBonusDto } from './dto';
+import { CreateVoucherRequestDTO, GetSessionParamsRequestDTO, RequestBonusDto } from './dto';
 import { apiMocks } from './apiMock';
 
 export const API_REQUEST = {
   PROD: {
     getSession: {
-      query: ({ id }: SessionParams): string | FetchArgs => ({
+      query: ({ id }: GetSessionParamsRequestDTO): string | FetchArgs => ({
         url: '/authorize',
         params: { id },
       }),

@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RequestedYearsList, SessionParams, SessionResponseDTO, YearsList } from './model';
 import {
   CreateVoucherRequestDTO,
   DeleteVoucherResponseDTO,
@@ -7,6 +6,10 @@ import {
   GetVouchersResponseDTO,
   GetCardsResponseDTO,
   RequestBonusDto,
+  SessionResponseDTO,
+  GetYearsListResponseDTO,
+  GetNotAvailableYearsListResponseDTO,
+  GetSessionParamsRequestDTO,
 } from './dto';
 import { RootState } from '../store';
 import { retrieveSessionQueryCached } from './utils';
@@ -39,14 +42,14 @@ export const appApi = createApi({
   }),
   endpoints: (builder) => ({
     //REQUEST APP APIS
-    getSession: builder.query<SessionResponseDTO, SessionParams>({
+    getSession: builder.query<SessionResponseDTO, GetSessionParamsRequestDTO>({
       ...API_REQUEST[API_ENV].getSession,
       providesTags: (_, __, { id }, ___) => [{ type: 'getSession' as const, id }],
     }),
-    getYearsList: builder.query<YearsList, void>({
+    getYearsList: builder.query<GetYearsListResponseDTO, void>({
       ...API_REQUEST[API_ENV].getYearsList,
     }),
-    getNotAvailableYearsList: builder.query<RequestedYearsList, void>({
+    getNotAvailableYearsList: builder.query<GetNotAvailableYearsListResponseDTO, void>({
       ...API_REQUEST[API_ENV].getNotAvailableYearsList,
     }),
     requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({

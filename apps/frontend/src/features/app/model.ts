@@ -1,32 +1,3 @@
-export type AppState = {
-  years: YearsList;
-};
-
-export type YearsList = string[];
-
-export type RequestedYearsList = Array<{ year: string }>;
-
-export type Year = {
-  label: string;
-  value: string;
-  disabled: boolean;
-};
-
-export type ApiError = {
-  status: number;
-  data: {
-    message: string;
-  };
-};
-
-export type SessionParams = {
-  id: string;
-};
-
-export type SessionResponseDTO = {
-  token: string;
-};
-
 export enum CARD_STATUS {
   ACTIVE = 'ACTIVE',
   EXPIRED = 'EXPIRED',
@@ -50,6 +21,12 @@ export enum REFUND_STATUS {
   COMPLETED = 'COMPLETED',
   FAILED = 'FAILED',
 }
+
+export type Year = {
+  label: string;
+  value: string;
+  disabled: boolean;
+};
 
 export type Card = {
   card_name: string;

@@ -17,3 +17,15 @@ export type CreateVoucherRequestDTO = {
   year: string;
   amount: number;
 };
+
+export type SessionResponseDTO = {
+  token: string;
+};
+
+export type GetYearsListResponseDTO = string[];
+
+export type GetNotAvailableYearsListResponseDTO = Array<{ year: string }>;
+
+export type GetSessionParamsRequestDTO = {
+  id: string;
+};

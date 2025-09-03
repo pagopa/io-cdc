@@ -29,6 +29,10 @@ const ticketsSlice = createSlice({
     setDeleted: (state, { payload }: PayloadAction<TicketsState['deleted']>) => {
       state.deleted = payload;
     },
+    resetForm: (state) => {
+      state.selectedCard = initialState.selectedCard;
+      state.amount = initialState.amount;
+    },
   },
 });
 

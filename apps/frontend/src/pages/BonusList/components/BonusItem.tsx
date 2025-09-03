@@ -11,7 +11,7 @@ type VoucherCardProps =
   | {
       voucher: VoucherItem;
       spent: true;
-      openSheet?: null;
+      openSheet?: () => void;
     }
   | {
       voucher: VoucherItem;

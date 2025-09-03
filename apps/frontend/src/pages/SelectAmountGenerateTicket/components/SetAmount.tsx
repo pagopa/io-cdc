@@ -8,23 +8,26 @@ type SetAmountProps = {
   balance: number;
   required: boolean;
   error: boolean;
+  reset: () => void;
 };
 
-export const SetAmount = ({ amount, balance, error, required }: SetAmountProps) => {
+export const SetAmount = ({ amount, balance, error, required, reset }: SetAmountProps) => {
   const dispatch = useDispatch();
 
   const onChange = useCallback(
     (amount: string) => {
+      reset();
       dispatch(ticketsActions.setAmount(amount));
     },
-    [dispatch],
+    [dispatch, reset],
   );
 
   const helperText = useMemo(() => {
+    if (!error) return null;
     if (balance < Number(amount)) return 'L’ importo è superiore al credito disponibile';
     if (required) return 'Inserisci un importo';
     return null;
-  }, [amount, required, balance]);
+  }, [error, balance, amount, required]);
 
   return (
     <CdcInput

@@ -1,21 +1,25 @@
 import { Stack } from '@mui/system';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Header } from '../../components/Header';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { SetAmount } from './components/SetAmount';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
 import { useCreateVoucherMutation } from '../../features/app/services';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectAmountBonus, selectSelectedCardBonus } from '../../features/app/selectors';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
+import { ticketsActions } from '../../features/app/reducers';
 
 const TEXT_COLOR = '#5C6F82';
 
 const SelectAmountGenerateTicket = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [error, setError] = useState(false);
 
   const [
     createBonus,
@@ -34,11 +38,6 @@ const SelectAmountGenerateTicket = () => {
 
   const required = useMemo(() => !amount || amount === '0', [amount]);
 
-  const error = useMemo(
-    () => selectedCard?.residual_amount! < Number(amount) || required,
-    [amount, required, selectedCard?.residual_amount],
-  );
-
   const onBackHeader = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_GENERATION_BACK', {
       screen: 'CDC_BONUS_AMOUNT_INSERT',
@@ -47,15 +46,30 @@ const SelectAmountGenerateTicket = () => {
   }, [navigate]);
 
   const onClickBottom = useCallback(async () => {
-    if (required || error || !amount) return;
+    if (required || selectedCard?.residual_amount! < Number(amount)) {
+      setError(true);
+      return;
+    }
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
     await createBonus({ year: selectedCard?.year!, amount: Number(amount) });
+    dispatch(ticketsActions.resetForm());
     navigate(APP_ROUTES.HOME);
-  }, [amount, createBonus, error, navigate, required, selectedCard?.year]);
+  }, [
+    amount,
+    createBonus,
+    dispatch,
+    navigate,
+    required,
+    selectedCard?.residual_amount,
+    selectedCard?.year,
+  ]);
 
   useEffect(() => {
     trackWebviewEvent('CDC_BONUS_AMOUNT_INSERT');
-  }, []);
+    return () => {
+      dispatch(ticketsActions.setAmount(''));
+    };
+  }, [dispatch]);
 
   if (isError && isFetchBaseQueryError(creationError)) {
     return (
@@ -90,6 +104,7 @@ const SelectAmountGenerateTicket = () => {
               amount={amount}
               balance={selectedCard?.residual_amount}
               error={error}
+              reset={() => setError(false)}
               required={required}
             />
           </Stack>

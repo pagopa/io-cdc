@@ -1,13 +1,16 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Divider, Stack } from '@mui/material';
 import { VoucherCard } from '../../pages/BonusList/components/BonusItem';
 import { EmptyState, SectionTitle } from '@io-cdc/ui';
 import { VoucherItem } from '../../features/app/model';
+import { OthersBonusSheet } from '../OthersBonusSheet';
 
 type VoucherListProps = {
   vouchersList: VoucherItem[];
 };
 export const VoucherList = ({ vouchersList }: VoucherListProps) => {
+  const [openSheet, setOpenSheet] = useState<[boolean, boolean]>([false, false]);
+
   const toSpend = useMemo(
     () => vouchersList.filter(({ status }) => status === 'PENDING'),
     [vouchersList],
@@ -45,7 +48,11 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
         {toSpend.length ? (
           toSpend.map((voucher, index, array) => (
             <Stack gap={3} key={voucher.id} paddingTop={3}>
-              <VoucherCard voucher={voucher} spent={false} />
+              <VoucherCard
+                voucher={voucher}
+                spent={false}
+                openSheet={() => setOpenSheet([true, false])}
+              />
               {index !== array.length - 1 && <Divider />}
             </Stack>
           ))
@@ -60,7 +67,11 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
         {spent.length ? (
           spent.map((voucher, index, array) => (
             <Stack gap={3} key={voucher.id} paddingTop={3}>
-              <VoucherCard voucher={voucher} spent={true} />
+              <VoucherCard
+                voucher={voucher}
+                spent={true}
+                openSheet={() => setOpenSheet([true, true])}
+              />
               {index !== array.length - 1 && <Divider />}
             </Stack>
           ))
@@ -70,6 +81,7 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
           </Stack>
         )}
       </Stack>
+      <OthersBonusSheet status={openSheet} onClose={() => setOpenSheet([false, false])} />
     </Stack>
   );
 };

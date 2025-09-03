@@ -3,11 +3,12 @@ import { Icon } from '@io-cdc/ui';
 import { Sheet } from 'react-modal-sheet';
 
 type OthersBonusSheetProps = {
-  isOpen: boolean;
+  status: [boolean, boolean];
   onClose: () => void;
 };
 
-export const OthersBonusSheet = ({ isOpen, onClose }: OthersBonusSheetProps) => {
+export const OthersBonusSheet = ({ status, onClose }: OthersBonusSheetProps) => {
+  const [isOpen, spent] = status;
   return (
     <Sheet
       isOpen={isOpen}
@@ -41,7 +42,7 @@ export const OthersBonusSheet = ({ isOpen, onClose }: OthersBonusSheetProps) => 
         <Sheet.Content>
           <Stack padding={3} gap={3}>
             <Typography fontSize={28} fontWeight={700}>
-              Buono generato da altri
+              {spent ? 'Buono speso da altri' : 'Buono generato da altri'}
             </Typography>
             <Stack gap={4}>
               <Typography fontSize={16} fontWeight={400}>
