@@ -12,10 +12,10 @@
     "source": "https://registry.terraform.io/modules/pagopa-dx/azure-cdn/azurerm/0.2.0"
   },
   "cosmos_db.cdc_cosmos_account": {
-    "hash": "398ffd2c1fb90f2228a5d42e7f90e6601162c2e90e23daeee726e1f1f02aa322",
-    "version": "0.1.0",
+    "hash": "1e6e66245084310310d36106509c99ee0eed25e98640680c4acc8cff426ff321",
+    "version": "0.2.0",
     "name": "azure_cosmos_account",
-    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-cosmos-account/azurerm/0.1.0"
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-cosmos-account/azurerm/0.2.0"
   },
   "storage_fe.cdc_storage_fe": {
     "hash": "614654ccd1c9a2d91ff766f3a9e5e2dee08c15e871f8de36ea4b05dcec82855d",
