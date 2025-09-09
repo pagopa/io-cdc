@@ -48,16 +48,6 @@ export const Config = t.type({
 
 export const envConfig = {
   ...process.env,
-  REDIS_CLUSTER_ENABLED: pipe(
-    O.fromNullable(process.env.REDIS_CLUSTER_ENABLED),
-    O.map((value: string) => value.toLowerCase() === "true"),
-    O.toUndefined,
-  ),
-  REDIS_TLS_ENABLED: pipe(
-    O.fromNullable(process.env.REDIS_TLS_ENABLED),
-    O.map((value: string) => value.toLowerCase() === "true"),
-    O.toUndefined,
-  ),
   isProduction: process.env.NODE_ENV === "production",
 };
 
