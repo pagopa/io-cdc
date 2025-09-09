@@ -1,0 +1,23 @@
+name: Deploy Function App (support-func)
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - master
+    paths:
+      - "apps/support-func/CHANGELOG.md"
+      - ".github/workflows/deploy-support-func.yaml"
+
+jobs:
+  deploy:
+    name: Deploy Support Func
+    uses: pagopa/dx/.github/workflows/function_app_deploy.yaml@dbc5a5a25c47432b9faca8b183f26d7df707a29b
+    secrets: inherit
+    with:
+      workspace_name: support-func
+      environment: app-prod
+      resource_group_name: io-p-itn-cdc-rg-01
+      function_app_name: io-p-itn-cdc-support-func-01
+      use_staging_slot: true
+      use_labels: false

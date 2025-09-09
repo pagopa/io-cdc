@@ -1,0 +1,24 @@
+{
+  "version": "2.0",
+  "logging": {
+    "logLevel": {
+      "default": "Information"
+    }
+  },
+  "extensions": {
+    "http": {
+      "routePrefix": ""
+    },
+    "queues": {
+      "maxPollingInterval": "00:01:00",
+      "visibilityTimeout": "00:01:00",
+      "batchSize": 1,
+      "maxDequeueCount": 100,
+      "newBatchThreshold": 0
+    }
+  },
+  "extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[4.0.0, 5.0.0)"
+  }
+}
