@@ -29,15 +29,9 @@ module "cdc_support_func" {
 
   app_settings = local.cdc_support.app_settings
 
-  slot_app_settings = merge(
-    local.cdc_support.app_settings, {
-      // disable queue triggered functions on staging slot
-      "AzureWebJobs.ProcessPendingRequest.Disabled" = "1"
-  })
+  slot_app_settings = merge(local.cdc_support.app_settings, {})
 
-  sticky_app_setting_names = [
-    "AzureWebJobs.ProcessPendingRequest.Disabled"
-  ]
+  sticky_app_setting_names = []
 
   action_group_id = var.action_group_id
 
