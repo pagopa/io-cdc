@@ -5,7 +5,7 @@ info:
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
   description: |
-    These APIs serve the microfrontend related to Carta della Cultura
+    These APIs support App IO about Carta della Cultura
 servers:
   - url: /api/v1
 security:

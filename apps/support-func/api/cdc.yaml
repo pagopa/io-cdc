@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Carta della Cultura Usage APIs
-  description: These APIs allow citizens to use their Carta della Cultura.
+  title: Carta della Cultura Status APIs
+  description: These APIs App IO to known citizen status about Carta della Cultura.
   version: 1.0.0
 servers:
 - url: https://ssotest.cartadellacultura.it/cdc/v1
