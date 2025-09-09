@@ -1,0 +1,28 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "NODE_TLS_REJECT_UNAUTHORIZED": 0,
+    "AzureWebJobsStorage": "",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "SLOT_TASK_HUBNAME": "FnAzureApiSlotTaskName",
+    "NODE_ENV": "development",
+    "ALGORITHM_ENCRYPTION": "",
+    "ALGORITHM_KEYS": "",
+    "ALGORITHM_SIGNATURE": "",
+    "APPLICATIONINSIGHTS_CONNECTION_STRING": "",
+    "CDC_API_BASE_URL": "",
+    "CDC_API_BASE_URL_TEST": "",
+    "COSMOSDB_CDC_DATABASE_NAME": "",
+    "COSMOSDB_CDC_KEY": "",
+    "COSMOSDB_CDC_URI": "",
+    "ENCODING_ENCRYPTION": "",
+    "ENCRYPTION_PRIVATE_KEY": "",
+    "ENCRYPTION_PUBLIC_KEY": "",
+    "FETCH_TIMEOUT_MS": "",
+    "JWT_AUDIENCE": "",
+    "JWT_EXPIRATION": "",
+    "JWT_ISSUER": "",
+    "JWT_PRIVATE_KEY": "",
+    "JWT_PUBLIC_KEY": ""
+  }
+}

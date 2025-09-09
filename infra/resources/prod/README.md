@@ -27,6 +27,7 @@
 | <a name="module_storage_audit"></a> [storage\_audit](#module\_storage\_audit) | ../_modules/storage_audit | n/a |
 | <a name="module_storage_be"></a> [storage\_be](#module\_storage\_be) | ../_modules/storage_be | n/a |
 | <a name="module_storage_fe"></a> [storage\_fe](#module\_storage\_fe) | ../_modules/storage_fe | n/a |
+| <a name="module_support_func"></a> [support\_func](#module\_support\_func) | ../_modules/support_func | n/a |
 
 ## Resources
 
