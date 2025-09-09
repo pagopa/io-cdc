@@ -26,7 +26,7 @@ interface Dependencies {
 }
 
 const Body = t.interface({
-  fiscalCode: FiscalCode,
+  fiscal_code: FiscalCode,
 });
 type Body = t.TypeOf<typeof Body>;
 
@@ -64,7 +64,7 @@ export const makeStatusHandler: H.Handler<
   pipe(
     withParams(Body, req.body),
     RTE.mapLeft(errorToValidationError),
-    RTE.map((body) => body.fiscalCode),
+    RTE.map((body) => body.fiscal_code),
     RTE.chainW(getCitizenStatus),
     RTE.map((status) => pipe(H.successJson(status), H.withStatusCode(200))),
     responseErrorToHttpError,

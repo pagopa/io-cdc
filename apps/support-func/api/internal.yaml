@@ -29,6 +29,13 @@ paths:
       - secured
       summary: Get the citizen's status about the Carta della Cultura
       operationId: getStatus
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FiscalCodePayload"
       responses:
         '200':
           description: Successful response
@@ -53,6 +60,23 @@ components:
       in: header
       name: X-Functions-Key
   schemas:
+    FiscalCodePayload:
+      type: object
+      properties:
+        fiscal_code:
+          $ref: '#/components/schemas/FiscalCode'
+      required:
+        - fiscal_code
+      example: | 
+        {
+          "fiscal_code": "AAABBB00C00D000E"
+        }
+    FiscalCode:
+      type: string
+      description: User's fiscal code.
+      format: FiscalCode
+      x-import: '@pagopa/ts-commons/lib/strings'
+      example: AAABBB00C00D000E
     CitizenStatus:
       type: object
       properties:
