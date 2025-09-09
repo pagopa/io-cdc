@@ -38,7 +38,3 @@ module "cdc_support_func" {
   tags = var.tags
 }
 
-resource "azurerm_subnet_nat_gateway_association" "cdc_support_func_subnet" {
-  subnet_id      = module.cdc_support_func.subnet.id
-  nat_gateway_id = var.nat_gateway_id
-}
