@@ -10,7 +10,6 @@ import * as reporters from "@pagopa/ts-commons/lib/reporters.js";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import { withDefault } from "@pagopa/ts-commons/lib/types.js";
 import * as E from "fp-ts/lib/Either.js";
-import * as O from "fp-ts/lib/Option.js";
 import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
