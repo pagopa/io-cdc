@@ -1,6 +1,6 @@
 import { ContainerClient, RestError } from "@azure/storage-blob";
 import { hashFiscalCode } from "@pagopa/ts-commons/lib/hash.js";
-import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import { randomBytes } from "crypto";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
@@ -20,6 +20,7 @@ const AuditVerifyDoc = t.type({
   assertion: t.string,
   assertionRef: t.string,
   fiscalCode: FiscalCode,
+  publicKey: NonEmptyString,
 });
 
 const ActionTag = t.type({
