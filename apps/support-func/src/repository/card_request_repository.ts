@@ -15,7 +15,7 @@ interface CardRequestRepository {
 }
 
 export class CosmosDbCardRequestRepository implements CardRequestRepository {
-  static containerName = "card-requests-test";
+  static containerName = "card-requests";
 
   #cardRequestContainer: Container;
 
