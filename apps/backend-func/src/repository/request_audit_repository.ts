@@ -15,7 +15,7 @@ interface RequestAuditRepository {
 }
 
 export class CosmosDbRequestAuditRepository implements RequestAuditRepository {
-  static containerName = "requests-audit-test";
+  static containerName = "requests-audit";
 
   #RequestAuditContainer: Container;
 
