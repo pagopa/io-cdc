@@ -1,4 +1,3 @@
-import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 import { agent } from "@pagopa/ts-commons";
 import {
   AbortableFetch,
