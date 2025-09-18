@@ -29,15 +29,9 @@ const fetchApi: typeof fetchWithTimeout =
 // This function is used to ensure that the fetch API is safe to use
 // It allows us to get also chunked data
 const safeFetch: typeof fetchWithTimeout = async (...args) => {
-  emitCustomEvent("cdc.api.request.args", { args: JSON.stringify(args) })(
-    "safeFetch",
-  );
   const response = await fetchApi(...args);
   const clone = response.clone();
-  const res = await clone.text();
-  emitCustomEvent("cdc.api.request.response", { args: JSON.stringify(res) })(
-    "safeFetch",
-  );
+  await clone.text();
   return response;
 };
 
