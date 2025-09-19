@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import { APP_ROUTES, APP_ROUTES_CONFIG } from './utils/appRoutes';
+import { APP_ROUTES, getAppRoutes } from './utils/appRoutes';
 import { HomeIndex } from './pages/Authorize/routes';
 import { Authorize } from './pages/Authorize';
 import { useMixPanelSession } from './hooks';
@@ -10,6 +10,7 @@ import Home from './pages/Home';
 
 function App() {
   useMixPanelSession();
+  const APP_ROUTES_LIST = getAppRoutes();
 
   return (
     <Routes>
@@ -19,15 +20,14 @@ function App() {
           <Route index element={<Authorize />} />
         </Route>
 
-        <Route index element={featureFlags.dashboard ? <Home /> : <Navigate to="/not-found" />} />
-
-        {APP_ROUTES_CONFIG.filter(({ flag }) => flag === undefined || featureFlags[flag]).map(
-          ({ path, Element }) => (
-            <Route key={path} path={path} element={<Element />} />
-          ),
-        )}
-        <Route path="/not-found" element={<NotFound />} />
-        {/* <Route path="*" element={<Navigate to="/not-found" replace />} /> */}
+        <Route
+          index
+          element={featureFlags.dashboard ? <Home /> : <Navigate to={APP_ROUTES.NOT_FOUND} />}
+        />
+        {APP_ROUTES_LIST.map(({ path, Element }) => (
+          <Route key={path} path={path} element={<Element />} />
+        ))}
+        <Route path={APP_ROUTES.NOT_FOUND} element={<NotFound />} />
       </Route>
     </Routes>
   );

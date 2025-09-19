@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { Toast } from '../../components/Toast';
 
+type MessageType = 'success' | 'error';
+
 type Toast = {
   id: number;
   message: string;
-  messageType: 'success' | 'error';
+  messageType: MessageType;
   onOpen?: () => void;
   onClose?: () => void;
 };
