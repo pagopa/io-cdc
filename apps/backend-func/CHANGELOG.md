@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.6
+
+### Patch Changes
+
+- 025cdc2: moved to prod env
+
 ## 1.0.5
 
 ### Patch Changes
