@@ -1,0 +1,30 @@
+@startuml Sequence ProcessPendingRequest
+participant "Citizen" as cit
+participant "CdC Backend Functions" as be
+participant "Redis" as redis
+participant "Cosmos" as cosmos
+participant "Services" as services
+participant "Queue" as queue
+
+cit -> be: PostCardRequest
+activate be
+be -> redis: GET session
+alt Session found
+be -> services: Get special service activation status
+services -> be: Activation status
+opt Activation status not found
+    be -> services: Activate special service 
+    services -> be: 200 OK [Other statuses will throw]
+end
+be <-> cosmos: GET all CardRequest for CIT
+be -> be: Filter not eligible requests
+be -> be: Filter already archived requests
+be -> cosmos: PUT RequestAudit
+be -> queue: PUT PendingCardRequestMessage
+be -> cit: 201 Created
+else Session not found
+be -> cit: 401 Unauthorized
+end
+deactivate be
+
+@enduml
