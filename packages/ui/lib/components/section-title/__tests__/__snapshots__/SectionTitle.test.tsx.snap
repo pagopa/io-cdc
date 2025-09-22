@@ -14,7 +14,7 @@ exports[`Test SectionTitle Components > Should match the snapshot with default p
           FT 561 YC
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-a1kfkw-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-ace0tl-MuiTypography-root"
         >
           Test description
         </p>
@@ -31,7 +31,7 @@ exports[`Test SectionTitle Components > Should match the snapshot with default p
         FT 561 YC
       </p>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-a1kfkw-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-ace0tl-MuiTypography-root"
       >
         Test description
       </p>
