@@ -83,7 +83,14 @@ export function CheckboxList<T>({
           {title}
         </Typography>
         {multiple && !disableSelectAll && (
-          <Link fontWeight="bold" onClick={onSelectAll}>
+          <Link
+            fontSize={16}
+            fontWeight={600}
+            onClick={onSelectAll}
+            sx={{
+              textDecoration: "none",
+            }}
+          >
             {buttonLabel}
           </Link>
         )}
@@ -107,7 +114,11 @@ export function CheckboxList<T>({
                   }
                 />
               }
-              label={label}
+              label={
+                <Typography color="#17324D" fontSize={16}>
+                  {label}
+                </Typography>
+              }
             />
             {rightComponent}
           </Box>

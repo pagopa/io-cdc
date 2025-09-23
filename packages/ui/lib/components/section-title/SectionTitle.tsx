@@ -12,7 +12,7 @@ export const SectionTitle = memo(
         {title}
       </Typography>
       {description && (
-        <Typography color="text.secondary" fontSize={16}>
+        <Typography color="#17324D" fontSize={16}>
           {description}
         </Typography>
       )}
