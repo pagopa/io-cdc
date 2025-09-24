@@ -76,7 +76,7 @@ export const useLoadYears = () => {
     const isError = allRequestsDone || getYearsListIsError || getNotAvailableYearsListIsError;
     const isSuccess = getYearsListIsSuccess && getNotAvailableYearsListIsSuccess;
     const error = allRequestsDone
-      ? { status: 501, data: null }
+      ? { status: 502, data: null }
       : getYearsListError || getNotAvailableYearsListError;
 
     const yearsList = (availableYears || []).map((year) => ({
