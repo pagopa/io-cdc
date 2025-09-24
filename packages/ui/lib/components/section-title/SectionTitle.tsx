@@ -8,7 +8,7 @@ export interface SectionTitleProps {
 export const SectionTitle = memo(
   ({ description, title }: SectionTitleProps) => (
     <Stack gap={2}>
-      <Typography fontSize={28} fontWeight="bold">
+      <Typography fontSize={28} fontWeight="bold" variant="h4">
         {title}
       </Typography>
       {description && (

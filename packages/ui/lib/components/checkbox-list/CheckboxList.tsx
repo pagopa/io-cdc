@@ -102,6 +102,7 @@ export function CheckboxList<T>({
             columnGap="8px"
             display="flex"
             key={label}
+            px="9px"
             py={0.5}
           >
             <FormControlLabel

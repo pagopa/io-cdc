@@ -68,14 +68,14 @@
     "extends": []
   },
   "peerDependencies": {
-    "@emotion/react": "*",
-    "@emotion/styled": "*",
-    "@mui/icons-material": "*",
-    "@mui/lab": "*",
-    "@mui/material": "*",
-    "@mui/system": "*",
-    "@pagopa/mui-italia": "*",
-    "react": "*",
-    "react-dom": "*"
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/lab": "^5.0.0-alpha.140",
+    "@mui/material": "^5.14.5",
+    "@mui/system": "^5.14.5",
+    "@pagopa/mui-italia": "^1.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }
