@@ -5,6 +5,8 @@ import { Location, useLocation, useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { useRequestBonusMutation } from '../../features/app/services';
 import { Year } from '../../features/app/model';
+import toast from 'react-hot-toast';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const SelectYear = () => {
   const { state: years = [] } = useLocation() as Location<Year[]>;
@@ -45,6 +47,23 @@ const SelectYear = () => {
   );
 
   const onConfirm = useCallback(async () => {
+    if (selectedItems.length <= notAvailableYears.length) {
+      toast.error('Scegli un’opzione per continuare', {
+        style: {
+          height: '53px',
+          borderRadius: '4px',
+          borderLeft: '4px solid #FE6666',
+          fontSize: '16px',
+          fontWeight: 400,
+          color: '#17324D',
+        },
+        icon: <InfoOutlinedIcon sx={{ color: '#FE6666' }} />,
+        duration: 5000,
+        id: 'unique',
+      });
+      return;
+    }
+    toast.dismiss();
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
 
     try {
@@ -99,12 +118,7 @@ const SelectYear = () => {
           }
         />
       </Stack>
-      <Button
-        onClick={onConfirm}
-        disabled={selectedItems.length <= notAvailableYears.length}
-        size="small"
-        variant="contained"
-      >
+      <Button onClick={onConfirm} size="small" variant="contained">
         Continua
       </Button>
     </Stack>

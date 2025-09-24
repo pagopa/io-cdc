@@ -143,7 +143,7 @@ export const theme = createTheme(
       },
       body1: {
         color: colorTextPrimary,
-        lineHeight: 1.35 /* ~24px */,
+        lineHeight: "21px",
       },
       body2: {
         color: colorTextPrimary,
@@ -173,6 +173,7 @@ export const theme = createTheme(
       },
       h4: {
         color: colorTextPrimary,
+        lineHeight: "37px",
       },
       h5: {
         color: colorTextPrimary,

@@ -6,7 +6,7 @@ const allRoutes = ['/scelta-anno', '/iniziativa-scaduta', '/esito'];
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({ jsxImportSource: '@emotion/react' }),
     typescript(),
     {
       name: 'rewrite',
@@ -22,4 +22,14 @@ export default defineConfig({
       },
     },
   ],
+  resolve: {
+    dedupe: [
+      'react',
+      'react-dom',
+      '@mui/material',
+      '@mui/system',
+      '@emotion/react',
+      '@emotion/styled',
+    ],
+  },
 });
