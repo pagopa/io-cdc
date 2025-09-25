@@ -32,8 +32,9 @@ export const Toast = ({ open, onClose, message, messageType = 'default' }: Toast
         <Box
           sx={{
             display: 'flex',
-            gap: '1rem',
-            p: 1.5,
+            gap: '1.2rem',
+            px: 1.5,
+            py: 2,
           }}
         >
           <Icon name={icon} sx={{ color }} />

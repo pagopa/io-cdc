@@ -1,3 +1,5 @@
+export type YearsList = string[];
+
 export enum CARD_STATUS {
   ACTIVE = 'ACTIVE',
   EXPIRED = 'EXPIRED',

@@ -1,7 +1,7 @@
 import { Card } from '../Card';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
-import { Button, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Card as CardType } from '../../features/app/model';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { Icon } from '@io-cdc/ui';

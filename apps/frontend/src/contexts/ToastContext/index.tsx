@@ -1,10 +1,10 @@
+import { Toast } from '@io-cdc/ui';
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { Toast } from '../../components/Toast';
 
 type MessageType = 'success' | 'error';
 
 type Toast = {
-  id: number;
+  id: string;
   message: string;
   messageType: MessageType;
   onOpen?: () => void;
@@ -18,28 +18,37 @@ type ToastContextType = {
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
-  const [toasts, setToasts] = useState<Toast[]>([]);
-
+  const [toast, setToast] = useState<Toast | null>(null);
+  const [open, setOpen] = useState(false);
   const showToast = ({ message, messageType, onOpen, onClose }: Omit<Toast, 'id'>) => {
-    const id = Date.now() + Math.random();
+    const id = String(Date.now() + Math.random());
     const newToast: Toast = { id, message, messageType, onOpen, onClose };
 
-    setToasts((prev) => [...prev, newToast]);
+    setToast(newToast);
+    setOpen(true);
 
     newToast.onOpen?.();
 
     setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
+      setToast((prev) => (prev?.id === id ? null : prev));
       newToast.onClose?.();
     }, 3000);
+  };
+
+  const handleExited = () => {
+    toast?.onClose?.();
+    setToast(null);
   };
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      {toasts.map(({ id, ...toast }) => (
-        <Toast {...toast} open={true} key={id} />
-      ))}
+      <Toast
+        {...toast}
+        open={open}
+        onClose={() => setOpen(false)}
+        TransitionProps={{ onExited: handleExited }}
+      />
     </ToastContext.Provider>
   );
 };

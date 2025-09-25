@@ -1,4 +1,4 @@
-import { Chip, ChipProps, Stack, Typography } from '@mui/material';
+import { Chip, Stack, Typography } from '@mui/material';
 
 import { Icon } from '@io-cdc/ui';
 import { useNavigate } from 'react-router-dom';

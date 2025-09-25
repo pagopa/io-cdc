@@ -12,13 +12,13 @@ import { ToastProvider } from './contexts/index.ts';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <ToastProvider>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <ToastProvider>
         <CssBaseline />
         <BrowserRouter>
           <App />
         </BrowserRouter>
-      </ThemeProvider>
-    </ToastProvider>
+      </ToastProvider>
+    </ThemeProvider>
   </Provider>,
 );
