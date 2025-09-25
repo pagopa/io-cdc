@@ -100,7 +100,12 @@ const getAlreadyRequestedYearsCdcTE =
               ),
             )(response),
           ),
-          TE.map((successResponse) => successResponse.value),
+          TE.map((successResponse) => {
+            emitCustomEvent("cdc.api.request.status.response", {
+              args: JSON.stringify(successResponse.value),
+            })("getAlreadyRequestedYearsCdcTE");
+            return successResponse.value;
+          }),
           TE.map((res) =>
             (
               res.listaStatoPerAnno
@@ -162,7 +167,12 @@ const requestCdcTE =
           ),
         ),
       ),
-      TE.map((successResponse) => successResponse.value),
+      TE.map((successResponse) => {
+        emitCustomEvent("cdc.api.request.register.response", {
+          args: JSON.stringify(successResponse.value),
+        })("requestCdcTE");
+        return successResponse.value;
+      }),
       TE.map(
         (res) =>
           res.listaEsitoRichiestaPerAnno
