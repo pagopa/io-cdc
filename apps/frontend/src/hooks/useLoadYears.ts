@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectFirstSessionData } from '../features/app/selectors';
 import { Year } from '../features/app/model';
+import { isEnvConfigEnabled } from '../utils/isEnvConfigEnabled';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
 
@@ -34,7 +35,7 @@ export const useLoadYears = () => {
   });
 
   const loadData = useCallback(async () => {
-    if (!redirectToken) {
+    if (!isEnvConfigEnabled(import.meta.env.VITE_MOCK_API) && !redirectToken) {
       setResponse((response) => ({
         ...response,
         isError: true,

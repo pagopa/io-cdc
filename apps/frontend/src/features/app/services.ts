@@ -4,6 +4,7 @@ import { RequestBonusDto } from './dto';
 import { RootState } from '../store';
 import { retrieveSessionQueryCached } from './utils';
 import { API } from './api';
+import { isEnvConfigEnabled } from '../../utils/isEnvConfigEnabled';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -12,7 +13,7 @@ enum API_ENV_OPTIONS {
   PROD = 'PROD',
 }
 
-const API_ENV = API_ENV_OPTIONS.PROD;
+const API_ENV = API_ENV_OPTIONS[isEnvConfigEnabled(import.meta.env.VITE_MOCK_API) ? 'DEV' : 'PROD'];
 
 export const appApi = createApi({
   reducerPath: 'app',
