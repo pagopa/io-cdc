@@ -1,11 +1,12 @@
 import { IconType } from '@io-cdc/ui';
+import { ReactNode } from 'react';
 
 type ExpiredInitiativeConfig = Record<
   number,
   {
     image: IconType;
     title: string;
-    description: string | null;
+    description: ReactNode | null;
     trackProperties: {
       webview: true;
       already_requested: 'yes' | 'no';
@@ -30,19 +31,26 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
   501: {
     image: 'hourglass',
     title: 'Il periodo per richiedere la Carta è terminato',
-    description:
-      "La valutazione della tua richiesta è in corso, attendi un messaggio su IO con l'esito entro il <gg> <mese>.",
+    description: (
+      <span>
+        La valutazione della tua richiesta è in corso, <strong>attendi un messaggio su IO</strong>{' '}
+        con l&apos;esito entro il &lt;gg&gt; &lt;mese&gt;
+      </span>
+    ),
     trackProperties: {
       webview: true,
       already_requested: 'yes',
       event_category: 'KO',
     },
   },
-  //TODO sentire michael per un potenziale errore da mappare nuovo
   502: {
     image: 'allYearsRequested',
     title: "Hai già richiesto Carta della Cultura, attenti l'esito",
-    description: 'Riceverai un messaggio su IO entro il <gg> <mese>.',
+    description: (
+      <span>
+        <strong>Riceverai un messaggio su IO</strong> entro il &lt;gg&gt; &lt;mese&gt;
+      </span>
+    ),
     trackProperties: {
       webview: true,
       already_requested: 'yes',

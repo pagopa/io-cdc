@@ -78,7 +78,12 @@ export function CheckboxList<T>({
 
   return (
     <Box display="flex" flex={1} flexDirection="column">
-      <Box alignItems="center" display="flex" justifyContent="space-between">
+      <Box
+        alignItems="center"
+        display="flex"
+        height="24px"
+        justifyContent="space-between"
+      >
         <Typography fontSize={14} fontWeight="bold">
           {title}
         </Typography>
@@ -86,6 +91,7 @@ export function CheckboxList<T>({
           <Link
             fontSize={16}
             fontWeight={600}
+            margin={0}
             onClick={onSelectAll}
             sx={{
               textDecoration: "none",
