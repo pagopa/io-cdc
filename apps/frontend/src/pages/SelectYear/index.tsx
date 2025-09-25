@@ -7,8 +7,10 @@ import { useRequestBonusMutation } from '../../features/app/services';
 import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { RequestLoader } from '../../components/RequestLoader';
+import { useToast } from '../../contexts';
 
 const SelectYear = () => {
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [requestBonus] = useRequestBonusMutation();
   const { yearsList, notAvailableYears, isError, error, isSuccess } = useLoadYears();
@@ -52,11 +54,6 @@ const SelectYear = () => {
     [mappedYearsList, selectedItems],
   );
 
-  const buttonDisabled = useMemo(
-    () => selectedItems.length <= notAvailableYears.length,
-    [notAvailableYears.length, selectedItems.length],
-  );
-
   const onSelectYear = useCallback(
     (value: string[]) => {
       setSelectedItems(value.length ? value : notAvailableYears);
@@ -66,22 +63,13 @@ const SelectYear = () => {
 
   const onConfirm = useCallback(async () => {
     if (selectedItems.length <= notAvailableYears.length) {
-      toast.error('Scegli un’opzione per continuare', {
-        style: {
-          height: '53px',
-          borderRadius: '4px',
-          borderLeft: '4px solid #FE6666',
-          fontSize: '16px',
-          fontWeight: 400,
-          color: '#17324D',
-        },
-        icon: <InfoOutlinedIcon sx={{ color: '#FE6666' }} />,
-        duration: 5000,
-        id: 'unique',
+      showToast({
+        messageType: 'error',
+        message: "Scegli un'opzione per continuare",
       });
       return;
     }
-    toast.dismiss();
+
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
 
     try {
@@ -104,7 +92,7 @@ const SelectYear = () => {
         },
       });
     }
-  }, [selectedItems, notAvailableYears, requestBonus, navigate]);
+  }, [selectedItems, notAvailableYears, showToast, requestBonus, navigate]);
 
   if (!hasCompleted) return <RequestLoader />;
 
@@ -138,7 +126,7 @@ const SelectYear = () => {
           }
         />
       </Stack>
-      <Button onClick={onConfirm} disabled={buttonDisabled} size="small" variant="contained">
+      <Button onClick={onConfirm} size="small" variant="contained">
         Continua
       </Button>
     </Stack>

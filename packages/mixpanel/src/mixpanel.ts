@@ -105,8 +105,6 @@ const trackEventThroughAnalyticTool = (
   } catch (reason) {
     // eslint-disable-next-line no-console
     console.error('Something gone wrong while sending data to mixpanel:', reason);
-    // eslint-disable-next-line no-console
-    console.log(event_name, properties);
 
     if (wrappedCallback && !called) {
       wrappedCallback();

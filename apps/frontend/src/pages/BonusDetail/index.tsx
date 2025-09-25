@@ -16,7 +16,6 @@ const BonusDetail = () => {
   const navigate = useNavigate();
   const { id = '' } = useParams();
   const { data: bonusDetail, isLoading, error, isError } = useGetVoucherByIdQuery(id);
-  console.log('🚀 ~ BonusDetail ~ bonusDetail:', bonusDetail);
 
   const spent =
     bonusDetail?.status === VOUCHER_STATUS.USED || bonusDetail?.status === VOUCHER_STATUS.REFUNDED;
