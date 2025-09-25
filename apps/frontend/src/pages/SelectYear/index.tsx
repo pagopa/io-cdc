@@ -65,6 +65,23 @@ const SelectYear = () => {
   );
 
   const onConfirm = useCallback(async () => {
+    if (selectedItems.length <= notAvailableYears.length) {
+      toast.error('Scegli un’opzione per continuare', {
+        style: {
+          height: '53px',
+          borderRadius: '4px',
+          borderLeft: '4px solid #FE6666',
+          fontSize: '16px',
+          fontWeight: 400,
+          color: '#17324D',
+        },
+        icon: <InfoOutlinedIcon sx={{ color: '#FE6666' }} />,
+        duration: 5000,
+        id: 'unique',
+      });
+      return;
+    }
+    toast.dismiss();
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
 
     try {

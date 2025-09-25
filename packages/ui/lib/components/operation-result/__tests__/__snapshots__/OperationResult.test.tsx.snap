@@ -40,7 +40,7 @@ exports[`Test OperationResult Component > Should match the snapshot with all pro
             sample-title
           </h5>
           <p
-            class="MuiTypography-root MuiTypography-body2 css-e784if-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 css-1kwti05-MuiTypography-root"
           >
             sample-description
           </p>
@@ -109,7 +109,7 @@ exports[`Test OperationResult Component > Should match the snapshot with all pro
           sample-title
         </h5>
         <p
-          class="MuiTypography-root MuiTypography-body2 css-e784if-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1kwti05-MuiTypography-root"
         >
           sample-description
         </p>

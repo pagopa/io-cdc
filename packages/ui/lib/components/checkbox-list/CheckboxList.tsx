@@ -78,12 +78,25 @@ export function CheckboxList<T>({
 
   return (
     <Box display="flex" flex={1} flexDirection="column">
-      <Box alignItems="center" display="flex" justifyContent="space-between">
+      <Box
+        alignItems="center"
+        display="flex"
+        height="24px"
+        justifyContent="space-between"
+      >
         <Typography fontSize={14} fontWeight="bold">
           {title}
         </Typography>
         {multiple && !disableSelectAll && (
-          <Link fontWeight="bold" onClick={onSelectAll}>
+          <Link
+            fontSize={16}
+            fontWeight={600}
+            margin={0}
+            onClick={onSelectAll}
+            sx={{
+              textDecoration: "none",
+            }}
+          >
             {buttonLabel}
           </Link>
         )}
@@ -95,6 +108,7 @@ export function CheckboxList<T>({
             columnGap="8px"
             display="flex"
             key={label}
+            px="9px"
             py={0.5}
           >
             <FormControlLabel
@@ -107,7 +121,11 @@ export function CheckboxList<T>({
                   }
                 />
               }
-              label={label}
+              label={
+                <Typography color="#17324D" fontSize={16}>
+                  {label}
+                </Typography>
+              }
             />
             {rightComponent}
           </Box>

@@ -8,13 +8,13 @@ exports[`Test SectionTitle Components > Should match the snapshot with default p
       <div
         class="MuiStack-root css-1ucnu3w-MuiStack-root"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-l6pxfq-MuiTypography-root"
+        <h4
+          class="MuiTypography-root MuiTypography-h4 css-o1e3vr-MuiTypography-root"
         >
           FT 561 YC
-        </p>
+        </h4>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-a1kfkw-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-ace0tl-MuiTypography-root"
         >
           Test description
         </p>
@@ -25,13 +25,13 @@ exports[`Test SectionTitle Components > Should match the snapshot with default p
     <div
       class="MuiStack-root css-1ucnu3w-MuiStack-root"
     >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-l6pxfq-MuiTypography-root"
+      <h4
+        class="MuiTypography-root MuiTypography-h4 css-o1e3vr-MuiTypography-root"
       >
         FT 561 YC
-      </p>
+      </h4>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-a1kfkw-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-ace0tl-MuiTypography-root"
       >
         Test description
       </p>
@@ -99,11 +99,11 @@ exports[`Test SectionTitle Components > Should match the snapshot with default p
       <div
         class="MuiStack-root css-1ucnu3w-MuiStack-root"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-l6pxfq-MuiTypography-root"
+        <h4
+          class="MuiTypography-root MuiTypography-h4 css-o1e3vr-MuiTypography-root"
         >
           FT 561 YC
-        </p>
+        </h4>
       </div>
     </div>
   </body>,
@@ -111,11 +111,11 @@ exports[`Test SectionTitle Components > Should match the snapshot with default p
     <div
       class="MuiStack-root css-1ucnu3w-MuiStack-root"
     >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-l6pxfq-MuiTypography-root"
+      <h4
+        class="MuiTypography-root MuiTypography-h4 css-o1e3vr-MuiTypography-root"
       >
         FT 561 YC
-      </p>
+      </h4>
     </div>
   </div>,
   "debug": [Function],

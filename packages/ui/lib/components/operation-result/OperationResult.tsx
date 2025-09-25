@@ -38,8 +38,16 @@ export const OperationResult = ({
       <Typography fontSize={24} fontWeight={700} lineHeight="32px" variant="h5">
         {title}
       </Typography>
-      {subTitle && <Typography variant="body2">{subTitle}</Typography>}
-      {description && <Typography variant="body2">{description}</Typography>}
+      {subTitle && (
+        <Typography color="#17324D" variant="body1">
+          {subTitle}
+        </Typography>
+      )}
+      {description && (
+        <Typography color="#17324D" variant="body1">
+          {description}
+        </Typography>
+      )}
     </Stack>
     {action && (
       <Button

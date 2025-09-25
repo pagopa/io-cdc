@@ -41,7 +41,7 @@ module "func_autoscaler" {
   scheduler = {
     normal_load = {
       default = 3,
-      minimum = 2,
+      minimum = 3,
 
     },
     maximum = 30,

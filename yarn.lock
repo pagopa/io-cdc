@@ -2211,15 +2211,15 @@ __metadata:
     vite-plugin-externalize-deps: "npm:^0.8.0"
     vitest: "npm:^2.1.2"
   peerDependencies:
-    "@emotion/react": "*"
-    "@emotion/styled": "*"
-    "@mui/icons-material": "*"
-    "@mui/lab": "*"
-    "@mui/material": "*"
-    "@mui/system": "*"
-    "@pagopa/mui-italia": "*"
-    react: "*"
-    react-dom: "*"
+    "@emotion/react": ^11.11.1
+    "@emotion/styled": ^11.11.0
+    "@mui/icons-material": ^5.14.3
+    "@mui/lab": ^5.0.0-alpha.140
+    "@mui/material": ^5.14.5
+    "@mui/system": ^5.14.5
+    "@pagopa/mui-italia": ^1.5.0
+    react: ^18.3.1
+    react-dom: ^18.3.1
   languageName: unknown
   linkType: soft
 
@@ -8162,9 +8162,13 @@ __metadata:
     react: "npm:^18.3.1"
     react-barcode: "npm:^1.6.1"
     react-dom: "npm:^18.3.1"
+<<<<<<< HEAD
     react-hook-form: "npm:^7.60.0"
     react-modal-sheet: "npm:^4.4.0"
     react-qr-code: "npm:^2.0.18"
+=======
+    react-hot-toast: "npm:^2.6.0"
+>>>>>>> main
     react-redux: "npm:^9.2.0"
     react-router-dom: "npm:^7.5.0"
     tslib: "npm:^2.8.1"
@@ -8510,6 +8514,15 @@ __metadata:
   version: 0.1.2
   resolution: "globrex@npm:0.1.2"
   checksum: 10c0/a54c029520cf58bda1d8884f72bd49b4cd74e977883268d931fd83bcbd1a9eb96d57c7dbd4ad80148fb9247467ebfb9b215630b2ed7563b2a8de02e1ff7f89d1
+  languageName: node
+  linkType: hard
+
+"goober@npm:^2.1.16":
+  version: 2.1.16
+  resolution: "goober@npm:2.1.16"
+  peerDependencies:
+    csstype: ^3.0.10
+  checksum: 10c0/f4c8256bf9c27873d47c1443f348779ac7f322516cb80a5dc647a6ebe790ce6bb9d3f487a0fb8be0b583fb96b9b2f6b7463f7fea3cd680306f95fa6fc9db1f6a
   languageName: node
   linkType: hard
 
@@ -11246,12 +11259,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "react-hook-form@npm:^7.60.0":
   version: 7.60.0
   resolution: "react-hook-form@npm:7.60.0"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18 || ^19
   checksum: 10c0/eb8518d42a074d9e115d4b414bac18ae72708b2d047a9453dcc7588b00df300b32cebf6ecb7f2c8aa534808b3dc54bde4124af95c1e432b6691f9aba07c93b11
+=======
+"react-hot-toast@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "react-hot-toast@npm:2.6.0"
+  dependencies:
+    csstype: "npm:^3.1.3"
+    goober: "npm:^2.1.16"
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 10c0/c25652e0a477ab501b365a6a2d20b314275a1d9963dd56a9803972d602845f0d44ade2c3345cd66ccd251d62e2e5a10001a55fd80fa183c0e41343f3780ffa9f
+>>>>>>> main
   languageName: node
   linkType: hard
 
@@ -12470,6 +12496,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"support-func@workspace:apps/support-func":
+  version: 0.0.0-use.local
+  resolution: "support-func@workspace:apps/support-func"
+  dependencies:
+    "@azure/cosmos": "npm:4.2.0"
+    "@azure/functions": "npm:^4.0.1"
+    "@mattrglobal/http-signatures": "npm:^4.0.1"
+    "@pagopa/azure-tracing": "npm:^0.4.0"
+    "@pagopa/eslint-config": "npm:^4.0.1"
+    "@pagopa/handler-kit": "npm:^1.1.0"
+    "@pagopa/handler-kit-azure-func": "npm:^2.0.7"
+    "@pagopa/openapi-codegen-ts": "npm:^14.0.0"
+    "@pagopa/ts-commons": "npm:^13.1.2"
+    "@pagopa/typescript-config-node": "npm:*"
+    "@types/express": "npm:^4.17.12"
+    "@types/node": "npm:~20.10.0"
+    "@vitest/coverage-v8": "npm:^2.1.3"
+    "@xmldom/xmldom": "npm:^0.8.10"
+    dependency-check: "npm:^4.1.0"
+    eslint: "npm:^8.57.0"
+    fp-ts: "npm:^2.16.10"
+    io-ts: "npm:^2.2.22"
+    jose: "npm:5.9.6"
+    node-fetch: "npm:^3.3.2"
+    prettier: "npm:^3.2.5"
+    redis: "npm:^4.6.15"
+    shx: "npm:^0.3.2"
+    swagger-cli: "npm:^4.0.4"
+    ts2esm: "npm:^2.2.7"
+    typescript: "npm:^5.8.3"
+    ulid: "npm:^3.0.1"
+    vitest: "npm:^2.1.3"
+    xml-crypto: "npm:^6.1.2"
+    xpath: "npm:^0.0.34"
+  languageName: unknown
+  linkType: soft
+
 "supports-color@npm:^7.1.0":
   version: 7.2.0
   resolution: "supports-color@npm:7.2.0"
@@ -13492,8 +13555,8 @@ __metadata:
   linkType: hard
 
 "vite@npm:^5.0.0, vite@npm:^5.4.1, vite@npm:^5.4.4":
-  version: 5.4.19
-  resolution: "vite@npm:5.4.19"
+  version: 5.4.20
+  resolution: "vite@npm:5.4.20"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -13530,7 +13593,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/c97601234dba482cea5290f2a2ea0fcd65e1fab3df06718ea48adc8ceb14bc3129508216c4989329c618f6a0470b42f439677a207aef62b0c76f445091c2d89e
+  checksum: 10c0/391a1fdd7e05445d60aa3b15d6c1cffcdd92c5d154da375bf06b9cd5633c2387ebee0e8f2fceed3226a63dff36c8ef18fb497662dde8c135133c46670996c7a1
   languageName: node
   linkType: hard
 
