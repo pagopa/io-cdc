@@ -15,6 +15,7 @@ import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiest
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 
 export const CdcApiUserData = t.type({
   first_name: NonEmptyString,
@@ -113,6 +114,12 @@ const getAlreadyRequestedYearsCdcTE =
           ),
         ),
       ),
+      TE.mapLeft((err) => {
+        emitCustomEvent("cdc.api.request.status.error", {
+          args: JSON.stringify(err),
+        })("getAlreadyRequestedYearsCdcTE");
+        return err;
+      }),
     );
 
 const requestSuccessfulCodes = [
@@ -172,6 +179,12 @@ const requestCdcTE =
           () => new Error("Card request CDC failure."),
         ),
       ),
+      TE.mapLeft((err) => {
+        emitCustomEvent("cdc.api.request.register.error", {
+          args: JSON.stringify(err),
+        })("requestCdcTE");
+        return err;
+      }),
     );
 
 export const CdcUtils = (config: Config) => ({
