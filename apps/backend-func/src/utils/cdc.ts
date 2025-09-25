@@ -13,7 +13,7 @@ import { EsitoRichiestaEnum } from "../generated/cdc-api/EsitoRichiestaBean.js";
 import { InputBeneficiarioBean } from "../generated/cdc-api/InputBeneficiarioBean.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
-import { Year } from "../models/card_request.js";
+import { Year, years } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 
@@ -121,7 +121,7 @@ const getAlreadyRequestedYearsCdcTE =
       ),
       TE.mapLeft((err) => {
         emitCustomEvent("cdc.api.request.status.error", {
-          args: JSON.stringify(err),
+          args: err.message,
         })("getAlreadyRequestedYearsCdcTE");
         return err;
       }),
@@ -186,12 +186,12 @@ const requestCdcTE =
       TE.chain(
         TE.fromPredicate(
           identity,
-          () => new Error("Card request CDC failure."),
+          () => new Error("Card request CDC failure. | Invalid response."),
         ),
       ),
       TE.mapLeft((err) => {
         emitCustomEvent("cdc.api.request.register.error", {
-          args: JSON.stringify(err),
+          args: err.message,
         })("requestCdcTE");
         return err;
       }),
