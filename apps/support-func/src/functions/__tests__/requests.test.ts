@@ -1,7 +1,6 @@
 import * as E from "fp-ts/lib/Either.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { CdcUtilsMock } from "../../__mocks__/cdc.mock.js";
 import {
   CosmosOperation,
   getCosmosDbClientInstanceMock,
@@ -83,9 +82,9 @@ describe("status | getCitizenRequests", () => {
           {
             request_date: aRequestAudit.requestDate,
             years: [
-              { year: aRequestAudit.years[0], processed: true },
-              { year: aRequestAudit.years[1], processed: false },
-              { year: aRequestAudit.years[2], processed: false },
+              { processed: true, year: aRequestAudit.years[0] },
+              { processed: false, year: aRequestAudit.years[1] },
+              { processed: false, year: aRequestAudit.years[2] },
             ],
           },
         ]),

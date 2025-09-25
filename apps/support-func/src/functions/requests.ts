@@ -3,24 +3,22 @@ import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
-import * as TE from "fp-ts/lib/TaskEither.js";
 import * as RA from "fp-ts/lib/ReadonlyArray.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
-import { CitizenStatus } from "../generated/cdc-api/CitizenStatus.js";
+import { Requests } from "../generated/definitions/internal/Requests.js";
 import { withParams } from "../middlewares/withParams.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
+import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import {
   errorToInternalError,
   errorToNotFoundError,
   errorToValidationError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
-import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
-import { request } from "http";
-import { Requests } from "../generated/definitions/internal/Requests.js";
 
 interface Dependencies {
   config: Config;
@@ -64,11 +62,11 @@ export const getCitizenRequests =
                 pipe(
                   audits,
                   RA.map((a) => ({
-                    years: a.years.map((y) => ({
-                      year: y,
-                      processed: requests.some((r) => r.year === y),
-                    })),
                     request_date: a.requestDate,
+                    years: a.years.map((y) => ({
+                      processed: requests.some((r) => r.year === y),
+                      year: y,
+                    })),
                   })),
                 ),
               )
@@ -80,8 +78,8 @@ export const getCitizenRequests =
 
 export const makeRequestsHandler: H.Handler<
   H.HttpRequest,
-  | H.HttpResponse<Requests, 200>
-  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>
+  | H.HttpResponse<Requests, 200>,
   Dependencies
 > = H.of((req) =>
   pipe(
