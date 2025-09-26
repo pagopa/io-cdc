@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.7
+
+### Patch Changes
+
+- 33565a5: fixed logic to be more error proof
+
 ## 1.0.6
 
 ### Patch Changes
