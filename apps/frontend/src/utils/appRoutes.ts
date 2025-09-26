@@ -6,7 +6,8 @@ const Feedback = React.lazy(() => import('../pages/Feedback'));
 const SelectYear = React.lazy(() => import('../pages/SelectYear'));
 
 export enum APP_ROUTES {
-  HOME = '/authorize',
+  AUTHORIZE = '/authorize',
+  // HOME = '/authorize',
   SELECT_YEAR = '/scelta-anno',
   FEEDBACK = '/esito',
   EXPIRED = '/iniziativa-scaduta',
