@@ -35,7 +35,7 @@ export const CONFIG_BY_STATUS: Record<
   200: {
     title: 'La tua richiesta è stata inviata!',
     icon: 'party',
-    subTitle: "Riceverai un messaggio su IO con l'esito della tua richiesta entro il <gg> <mese>.",
+    subTitle: "Riceverai un messaggio su IO con l'esito della tua richiesta.",
     description:
       'Per non perderti i messaggi in app, attiva le notifiche push dalle impostazioni del tuo dispositivo.',
     trackProperties: {
