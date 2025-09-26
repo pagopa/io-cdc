@@ -16,6 +16,7 @@ import { CosmosDbCardRequestRepository } from "../repository/card_request_reposi
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
 import { CdcApiRequestData, CdcUtils } from "../utils/cdc.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   cdcUtils: CdcUtils;
@@ -148,6 +149,16 @@ export const archiveCardRequests =
           ),
         ),
       ),
+      TE.map((yearsToArchive) =>
+        traceEvent(yearsToArchive)(
+          "archiveCardRequests",
+          "cdc.process.requests.archiving",
+          {
+            request_id: pendingCardRequestMessage.request_id,
+            years: yearsToArchive,
+          },
+        ),
+      ),
       // we save requests singularly on our end
       TE.chain((yearsToArchive) =>
         pipe(
@@ -172,6 +183,16 @@ export const archiveCardRequests =
                     requestId: pendingCardRequestMessage.request_id,
                     year: request.year,
                   }),
+                  TE.mapLeft((err) =>
+                    traceEvent(err)(
+                      "archiveCardRequests",
+                      "cdc.process.requests.archiving.error",
+                      {
+                        request_id: pendingCardRequestMessage.request_id,
+                        years: request.year,
+                      },
+                    ),
+                  ),
                 ),
               ),
               A.sequence(TE.ApplicativePar),
