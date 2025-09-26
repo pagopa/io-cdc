@@ -18,6 +18,14 @@ export const aRequestAudit: RequestAudit = {
   years: ["2020", "2021", "2023"],
 };
 
+export const anotherRequestAudit: RequestAudit = {
+  fiscalCode: aValidFiscalCode,
+  id: "anystringedid" as NonEmptyString,
+  requestDate: new Date("2025-07-11T14:16:49.633Z"),
+  requestId: "anystringedid" as NonEmptyString,
+  years: ["2020", "2021", "2022", "2024"],
+};
+
 export const aCardRequest: CardRequest = {
   createdAt: new Date(),
   fiscalCode: aValidFiscalCode,

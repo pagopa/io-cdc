@@ -15,6 +15,7 @@ import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiest
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
+import { traceEvent } from "./tracing.js";
 
 export const CdcApiUserData = t.type({
   first_name: NonEmptyString,
@@ -100,6 +101,13 @@ const getAlreadyRequestedYearsCdcTE =
             )(response),
           ),
           TE.map((successResponse) => successResponse.value),
+          TE.map((responseValue) =>
+            traceEvent(responseValue)(
+              "getAlreadyRequestedYearsCdcTE",
+              "cdc.api.request.status.response",
+              responseValue,
+            ),
+          ),
           TE.map((res) =>
             (
               res.listaStatoPerAnno
@@ -113,6 +121,13 @@ const getAlreadyRequestedYearsCdcTE =
           ),
         ),
       ),
+      TE.mapLeft((err) =>
+        traceEvent(err)(
+          "getAlreadyRequestedYearsCdcTE",
+          "cdc.api.request.status.error",
+          err,
+        ),
+      ),
     );
 
 const requestSuccessfulCodes = [
@@ -122,57 +137,87 @@ const requestSuccessfulCodes = [
 
 const requestCdcTE =
   (config: Config) => (user: CdcApiUserData, request: CdcApiRequestData) =>
-    pipe(
-      getJwtTE(config, user),
-      TE.map(getCdcClient(config)),
-      TE.chain((client) =>
-        TE.tryCatch(
-          async () =>
-            await client.registrazione({
-              body: {
-                anniRif: request.map((i) => ({
-                  anno: i.year,
-                  tsRichiestaEffettuata: i.request_date,
-                })),
-              } as InputBeneficiarioBean,
-            }),
-          E.toError,
-        ),
-      ),
-      TE.chainW(
-        flow(
-          TE.fromEither,
-          TE.mapLeft(
-            (errors) => new Error(errorsToReadableMessages(errors).join(" / ")),
+    request.length > 0
+      ? pipe(
+          TE.Do,
+          TE.bind("client", () =>
+            pipe(getJwtTE(config, user), TE.map(getCdcClient(config))),
           ),
-        ),
-      ),
-      TE.chainW(
-        TE.fromPredicate(
-          isCdcApiRequestCallSuccess,
-          mapCdcApiCallFailure(
-            "Card request CDC failure | API result not success.",
+          TE.bindW("payload", () =>
+            pipe(
+              TE.of({
+                body: {
+                  anniRif: request.map((i) => ({
+                    anno: i.year,
+                    tsRichiestaEffettuata: i.request_date,
+                  })),
+                } as InputBeneficiarioBean,
+              }),
+              TE.map((payload) =>
+                traceEvent(payload)(
+                  "requestCdcTE",
+                  "cdc.api.request.register.payload",
+                  payload,
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-      TE.map((successResponse) => successResponse.value),
-      TE.map(
-        (res) =>
-          res.listaEsitoRichiestaPerAnno
-            ?.map((req) =>
-              req?.esitoRichiesta
-                ? requestSuccessfulCodes.includes(req.esitoRichiesta)
-                : false,
-            )
-            .every(identity) || false,
-      ),
-      TE.chain(
-        TE.fromPredicate(
-          identity,
-          () => new Error("Card request CDC failure."),
-        ),
-      ),
-    );
+          TE.chain(({ client, payload }) =>
+            TE.tryCatch(
+              async () => pipe(await client.registrazione(payload)),
+              E.toError,
+            ),
+          ),
+          TE.chainW(
+            flow(
+              TE.fromEither,
+              TE.mapLeft(
+                (errors) =>
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
+              ),
+            ),
+          ),
+          TE.chainW(
+            TE.fromPredicate(
+              isCdcApiRequestCallSuccess,
+              mapCdcApiCallFailure(
+                "Card request CDC failure | API result not success.",
+              ),
+            ),
+          ),
+          TE.map((successResponse) => successResponse.value),
+          TE.map((responseValue) =>
+            traceEvent(responseValue)(
+              "requestCdcTE",
+              "cdc.api.request.register.response",
+              responseValue,
+            ),
+          ),
+          TE.map(
+            (res) =>
+              res.listaEsitoRichiestaPerAnno
+                ?.map((req) =>
+                  req?.esitoRichiesta
+                    ? requestSuccessfulCodes.includes(req.esitoRichiesta)
+                    : false,
+                )
+                .every(identity) || false,
+          ),
+          TE.chain(
+            TE.fromPredicate(
+              identity,
+              () => new Error("Card request CDC failure. | Invalid response."),
+            ),
+          ),
+          TE.mapLeft((err) =>
+            traceEvent(err)(
+              "requestCdcTE",
+              "cdc.api.request.register.error",
+              err,
+            ),
+          ),
+        )
+      : pipe(TE.of(true));
 
 export const CdcUtils = (config: Config) => ({
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config),

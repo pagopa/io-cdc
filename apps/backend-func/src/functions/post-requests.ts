@@ -104,14 +104,16 @@ export const saveNewRequestAudit =
                 years: years,
               }),
               TE.chain(() =>
-                deps.queueStorage.enqueuePendingCardRequestMessage({
-                  first_name: user.given_name,
-                  fiscal_code: user.fiscal_code,
-                  last_name: user.family_name,
-                  request_date: requestDate,
-                  request_id: requestId,
-                  years: years,
-                } as PendingCardRequestMessage),
+                years.length > 0
+                  ? deps.queueStorage.enqueuePendingCardRequestMessage({
+                      first_name: user.given_name,
+                      fiscal_code: user.fiscal_code,
+                      last_name: user.family_name,
+                      request_date: requestDate,
+                      request_id: requestId,
+                      years: years,
+                    } as PendingCardRequestMessage)
+                  : TE.of(true),
               ),
             ),
           ),

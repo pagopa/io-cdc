@@ -12,12 +12,13 @@ import {
   redisGetMock,
 } from "../../__mocks__/redis_client_factory.mock.js";
 import {
-  aCardRequest,
+  aRequestAudit,
   aValidFiscalCode,
   aValidSession,
+  anotherRequestAudit,
 } from "../../__mocks__/types.mock.js";
 import { Config } from "../../config.js";
-import { CosmosDbCardRequestRepository } from "../../repository/card_request_repository.js";
+import { CosmosDbRequestAuditRepository } from "../../repository/request_audit_repository.js";
 import { getCardRequests, getSession } from "../get-requests.js";
 
 const redisClientFactoryMock = getRedisClientFactoryMock();
@@ -32,7 +33,7 @@ describe("get-requests | getSession", () => {
 
   it("should return aValidSession if redis GET succeeds", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     const deps = {
       config,
@@ -47,7 +48,7 @@ describe("get-requests | getSession", () => {
 
   it("should return 401 if redis GET succeeds but no session found", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     const deps = {
       config,
@@ -67,7 +68,7 @@ describe("get-requests | getSession", () => {
 
   it("should return 401 if redis GET succeeds but invalid session found", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     const deps = {
       config,
@@ -89,7 +90,7 @@ describe("get-requests | getSession", () => {
 
   it("should return 401 if redis GET fails", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     const deps = {
       config,
@@ -111,7 +112,7 @@ describe("get-requests | getSession", () => {
 describe("get-requests | getCardRequests", () => {
   it("should return empty array of CardRequests if cosmos succeeds with no items", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     const deps = {
       config,
@@ -125,26 +126,57 @@ describe("get-requests | getCardRequests", () => {
 
   it("should return an array of CardRequests' years if cosmos succeeds with items", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     const deps = {
       config,
       cosmosDbClient: cosmosClientMock,
       redisClientFactory: redisClientFactoryMock,
     };
-    setMockedItems(CosmosDbCardRequestRepository.containerName)([aCardRequest]);
+    setMockedItems(CosmosDbRequestAuditRepository.containerName)([
+      aRequestAudit,
+    ]);
     const res = await getCardRequests(aValidFiscalCode)(deps)();
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res))
-      expect(res.right).toEqual([{ year: aCardRequest.year }]);
+      expect(res.right).toEqual([
+        { year: "2020" },
+        { year: "2021" },
+        { year: "2023" },
+      ]);
+  });
+
+  it("should return an array of CardRequests' years if cosmos succeeds with items and collpase duplicate", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    const deps = {
+      config,
+      cosmosDbClient: cosmosClientMock,
+      redisClientFactory: redisClientFactoryMock,
+    };
+    setMockedItems(CosmosDbRequestAuditRepository.containerName)([
+      aRequestAudit,
+      anotherRequestAudit,
+    ]);
+    const res = await getCardRequests(aValidFiscalCode)(deps)();
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res))
+      expect(res.right).toEqual([
+        { year: "2020" },
+        { year: "2021" },
+        { year: "2022" },
+        { year: "2023" },
+        { year: "2024" },
+      ]);
   });
 
   it("should return InternalServerError if cosmos fails", async () => {
     const cosmosClientMock = getCosmosDbClientInstanceMock([
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
     ]);
     setCosmosErrorMock(
-      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
       CosmosOperation.fetchAll,
     );
     const deps = {

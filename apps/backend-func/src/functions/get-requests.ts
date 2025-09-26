@@ -5,13 +5,13 @@ import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as A from "fp-ts/lib/Array.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { pipe } from "fp-ts/lib/function.js";
+import { flow, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
 import { CardRequests } from "../generated/definitions/internal/CardRequests.js";
 import { withParams } from "../middlewares/withParams.js";
-import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
+import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import {
   errorToInternalError,
   errorToValidationError,
@@ -42,12 +42,19 @@ export const getCardRequests =
   (fiscalCode: FiscalCode) => (deps: Dependencies) =>
     pipe(
       TE.of(
-        new CosmosDbCardRequestRepository(
+        new CosmosDbRequestAuditRepository(
           deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
         ),
       ),
       TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
-      TE.map(A.map((cardRequest) => ({ year: cardRequest.year }))),
+      TE.map(
+        flow(
+          A.map((requestAudit) => requestAudit.years),
+          A.flatten,
+        ),
+      ),
+      TE.map((years) => [...new Set(years)].sort()),
+      TE.map(A.map((y) => ({ year: y }))),
       TE.mapLeft(errorToInternalError),
     );
 
