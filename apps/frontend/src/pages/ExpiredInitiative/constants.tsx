@@ -45,7 +45,7 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
   },
   502: {
     image: 'allYearsRequested',
-    title: "Hai già richiesto Carta della Cultura, attenti l'esito",
+    title: "Hai già richiesto Carta della Cultura, attendi l'esito",
     description: (
       <span>
         <strong>Riceverai un messaggio su IO</strong> entro il &lt;gg&gt; &lt;mese&gt;

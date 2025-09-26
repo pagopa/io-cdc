@@ -118,7 +118,7 @@ const SelectYear = () => {
           }
         />
       </Stack>
-      <Button onClick={onConfirm} size="small" variant="contained">
+      <Button onClick={onConfirm} size="medium" variant="contained">
         Continua
       </Button>
     </Stack>
