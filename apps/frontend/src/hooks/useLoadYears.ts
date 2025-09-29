@@ -36,7 +36,7 @@ export const useLoadYears = () => {
       isSuccess: getYearsListIsSuccess,
       error: getYearsListError,
     } = await getYearsList();
-    console.log('start useloadyears -> called getYearsList');
+    console.log('start useloadyears -> called getYearsList', { availableYears });
 
     const {
       data: notAvailableYears,
@@ -45,7 +45,7 @@ export const useLoadYears = () => {
       error: getNotAvailableYearsListError,
     } = await getNotAvailableYearsList();
 
-    console.log('start useloadyears -> called getNotAvailableYearsList');
+    console.log('start useloadyears -> called getNotAvailableYearsList', { notAvailableYears });
 
     const allRequestsDone = availableYears?.every((y) =>
       Boolean(notAvailableYears?.find(({ year }) => year === y)),
@@ -59,6 +59,12 @@ export const useLoadYears = () => {
     const isError = getYearsListIsError || getNotAvailableYearsListIsError;
     const isSuccess = getYearsListIsSuccess && getNotAvailableYearsListIsSuccess;
     const error = getYearsListError || getNotAvailableYearsListError;
+
+    console.log('start useloadyears -> called getNotAvailableYearsList', {
+      isError,
+      isSuccess,
+      error,
+    });
 
     if (isError && isFetchBaseQueryError(error)) {
       navigate(APP_ROUTES.EXPIRED, { state: { status: error.status } });

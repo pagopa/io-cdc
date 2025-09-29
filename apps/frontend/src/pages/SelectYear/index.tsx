@@ -19,6 +19,15 @@ const SelectYear = () => {
 
   const hasCompleted = isSuccess || isError;
 
+  console.log('🚀 ~ SelectYear ~ hasCompleted:', {
+    hasCompleted,
+    yearsList,
+    notAvailableYears,
+    isError,
+    error,
+    isSuccess,
+  });
+
   useEffect(() => {
     if (isError && isFetchBaseQueryError(error)) {
       navigate(APP_ROUTES.EXPIRED, {

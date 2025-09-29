@@ -21,12 +21,16 @@ export const appApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
     prepareHeaders: (headers, { getState }) => {
+      console.log('🚀 ~ prepareHeaders -> headers before:', headers);
       const state = getState() as RootState;
       const data = retrieveSessionQueryCached(state);
+      console.log('🚀 ~ prepareHeaders -> state:', { state, data });
 
       if (data && data.token) {
         headers.set('token', data.token);
       }
+      console.log('🚀 ~ prepareHeaders -> headers after:', headers);
+
       return headers;
     },
   }),
