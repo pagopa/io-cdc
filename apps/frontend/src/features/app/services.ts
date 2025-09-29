@@ -27,6 +27,7 @@ export const appApi = createApi({
       if (data && data.token) {
         headers.set('token', data.token);
       }
+
       return headers;
     },
   }),

@@ -9,7 +9,6 @@ import { APP_ROUTES } from '../utils/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 
 export const useLoadYears = () => {
-  console.log('start useloadyears');
   const navigate = useNavigate();
   const [getYearsList] = useLazyGetYearsListQuery();
   const [getNotAvailableYearsList] = useLazyGetNotAvailableYearsListQuery();
@@ -28,15 +27,12 @@ export const useLoadYears = () => {
   });
 
   const loadData = useCallback(async () => {
-    console.log('start useloadyears -> start loadData');
-
     const {
       data: availableYears,
       isError: getYearsListIsError,
       isSuccess: getYearsListIsSuccess,
       error: getYearsListError,
     } = await getYearsList();
-    console.log('start useloadyears -> called getYearsList');
 
     const {
       data: notAvailableYears,
@@ -44,8 +40,6 @@ export const useLoadYears = () => {
       isSuccess: getNotAvailableYearsListIsSuccess,
       error: getNotAvailableYearsListError,
     } = await getNotAvailableYearsList();
-
-    console.log('start useloadyears -> called getNotAvailableYearsList');
 
     const allRequestsDone = availableYears?.every((y) =>
       Boolean(notAvailableYears?.find(({ year }) => year === y)),
