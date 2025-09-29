@@ -7,9 +7,7 @@ No requirements.
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
+No providers.
 
 ## Modules
 
@@ -20,9 +18,7 @@ No requirements.
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [azurerm_subnet_nat_gateway_association.cdc_support_func_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_nat_gateway_association) | resource |
+No resources.
 
 ## Inputs
 
