@@ -32,6 +32,7 @@ export const Config = t.type({
   CDC_API_BASE_URL_TEST: NonEmptyString,
 
   CDC_BASE_URL: NonEmptyString,
+  CDC_REGISTRATION_END_DATE: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
   COSMOSDB_CDC_KEY: NonEmptyString,
