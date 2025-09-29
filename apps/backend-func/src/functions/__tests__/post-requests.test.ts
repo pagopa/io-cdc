@@ -278,4 +278,25 @@ describe("post-requests | postCardRequests", () => {
     ).toBeCalledTimes(1);
     expect(enqueueMessageMock).toBeCalledTimes(1);
   });
+
+  it("3. postCardRquests | should not call sogei if all the request audit years has already been processed", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    clearContainersItems(CosmosDbCardRequestRepository.containerName);
+    setMockedItems(CosmosDbCardRequestRepository.containerName)([aCardRequest]);
+    const res = await postCardRequests(aValidSession, ["2020"])({
+      config,
+      cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
+      redisClientFactory: redisClientFactoryMock,
+      servicesClient,
+    })();
+    if (E.isRight(res)) expect(res.right).toEqual([]);
+    expect(
+      createMocks[CosmosDbRequestAuditRepository.containerName],
+    ).toBeCalledTimes(1);
+    expect(enqueueMessageMock).toBeCalledTimes(0);
+  });
 });

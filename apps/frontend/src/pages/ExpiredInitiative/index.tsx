@@ -22,7 +22,7 @@ const ExpiredInitiative = () => {
   return (
     <Stack justifyContent="center" alignItems="center" height="100%" gap={4} padding={2}>
       <Icon name={image} sx={{ width: 60, height: 60 }} />
-      <Stack gap={4} justifyContent="center" alignItems="center">
+      <Stack gap={1} justifyContent="center" alignItems="center">
         <Typography variant="h4" textAlign="center">
           {title}
         </Typography>

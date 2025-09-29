@@ -3,6 +3,7 @@ import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-function
 
 import { getConfigOrThrow } from "./config.js";
 import { InfoFn } from "./functions/info.js";
+import { RequestsFn } from "./functions/requests.js";
 import { StatusFn } from "./functions/status.js";
 import { CdcUtils } from "./utils/cdc.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
@@ -39,4 +40,15 @@ app.http("Status", {
   handler: Status,
   methods: ["POST"],
   route: "api/v1/status",
+});
+
+const Requests = RequestsFn({
+  config,
+  cosmosDbClient,
+});
+app.http("Requests", {
+  authLevel: "function",
+  handler: Requests,
+  methods: ["POST"],
+  route: "api/v1/requests",
 });

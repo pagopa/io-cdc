@@ -44,7 +44,7 @@ module "func_autoscaler" {
       minimum = 3,
 
     },
-    maximum = 30,
+    maximum = 21, # 21 is the maximum supported by external partner
   }
 
   tags = var.tags

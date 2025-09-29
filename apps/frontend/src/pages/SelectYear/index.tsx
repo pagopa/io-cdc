@@ -88,7 +88,7 @@ const SelectYear = () => {
     } catch (e) {
       navigate(APP_ROUTES.FEEDBACK, {
         state: {
-          status: 500,
+          status: 503,
         },
       });
     }
@@ -126,7 +126,7 @@ const SelectYear = () => {
           }
         />
       </Stack>
-      <Button onClick={onConfirm} size="small" variant="contained">
+      <Button onClick={onConfirm} size="medium" variant="contained">
         Continua
       </Button>
     </Stack>

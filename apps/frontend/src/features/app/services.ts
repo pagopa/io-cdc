@@ -45,12 +45,15 @@ export const appApi = createApi({
     getSession: builder.query<SessionResponseDTO, GetSessionParamsRequestDTO>({
       ...API_REQUEST[API_ENV].getSession,
       providesTags: (_, __, { id }, ___) => [{ type: 'getSession' as const, id }],
+      keepUnusedDataFor: 1800,
     }),
     getYearsList: builder.query<GetYearsListResponseDTO, void>({
       ...API_REQUEST[API_ENV].getYearsList,
+      keepUnusedDataFor: 3600,
     }),
     getNotAvailableYearsList: builder.query<GetNotAvailableYearsListResponseDTO, void>({
       ...API_REQUEST[API_ENV].getNotAvailableYearsList,
+      keepUnusedDataFor: 3600,
     }),
     requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({
       ...API_REQUEST[API_ENV].requestBonus,

@@ -32,7 +32,7 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
     description: (
       <span>
         La valutazione della tua richiesta è in corso, <strong>attendi un messaggio su IO</strong>{' '}
-        con l&apos;esito entro il &lt;gg&gt; &lt;mese&gt;
+        con l&apos;esito
       </span>
     ),
     trackProperties: {
@@ -42,12 +42,8 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
   },
   502: {
     image: 'allYearsRequested',
-    title: "Hai già richiesto Carta della Cultura, attenti l'esito",
-    description: (
-      <span>
-        <strong>Riceverai un messaggio su IO</strong> entro il &lt;gg&gt; &lt;mese&gt;
-      </span>
-    ),
+    title: "Hai già richiesto Carta della Cultura, attendi l'esito",
+    description: 'Riceverai un messaggio su IO quando l’esito sarà pronto.',
     trackProperties: {
       already_requested: 'yes',
       event_category: 'KO',
