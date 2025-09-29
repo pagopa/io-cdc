@@ -13,17 +13,13 @@ export const useGetSession = () => {
   const navigate = useNavigate();
 
   const session = useSelector(selectFirstSessionData);
-  console.log('🚀 ~ useGetSession ~ session:', { session });
 
   const redirectToken = useMemo(() => new URLSearchParams(search).get('id'), [search]);
-  console.log('🚀 ~ useGetSession ~ session:', { redirectToken });
 
   const [getSession] = useLazyGetSessionQuery();
 
   const retrieveSession = useCallback(async () => {
     if (!redirectToken) {
-      console.log('🚀 ~ useGetSession -> retrieveSession ~ redirect token not found:');
-
       navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
           status: redirectTokenError.status,
@@ -33,8 +29,6 @@ export const useGetSession = () => {
     }
 
     if (session && session.token) {
-      console.log('🚀 ~ useGetSession -> retrieveSession ~ session already exist:');
-
       navigate(APP_ROUTES.SELECT_YEAR);
       return;
     }
@@ -44,7 +38,6 @@ export const useGetSession = () => {
     });
 
     if (sessionError && isFetchBaseQueryError(sessionErrorMsg)) {
-      console.log('🚀 ~ useGetSession -> retrieveSession ~ error fetching session:');
       navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
           status: sessionErrorMsg.status,

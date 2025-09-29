@@ -9,7 +9,6 @@ const ExpiredInitiative = () => {
   const {
     state: { status },
   } = useLocation();
-  console.log('🚀 ~ ExpiredInitiative ~ status:', status);
 
   const { image, description, title, trackProperties } =
     EXPIRED_INITIATIVE_CONFIG_MAP?.[status] ?? DEFAULT_CONFIG;
