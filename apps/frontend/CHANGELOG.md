@@ -1,5 +1,11 @@
 # frontend
 
+## 1.0.3
+
+### Patch Changes
+
+- b63a9dd: Handle rehydrate persist store with suspense
+
 ## 1.0.2
 
 ### Patch Changes
