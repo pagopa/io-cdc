@@ -41,6 +41,12 @@ export const useLoadYears = () => {
       error: getNotAvailableYearsListError,
     } = await getNotAvailableYearsList();
 
+    if (availableYears?.length === 0) {
+      const statusExpired = notAvailableYears && notAvailableYears?.length > 0 ? 501 : 500;
+      navigate(APP_ROUTES.EXPIRED, { state: { status: statusExpired } });
+      return;
+    }
+
     const allRequestsDone = availableYears?.every((y) =>
       Boolean(notAvailableYears?.find(({ year }) => year === y)),
     );
@@ -55,7 +61,7 @@ export const useLoadYears = () => {
     const error = getYearsListError || getNotAvailableYearsListError;
 
     if (isError && isFetchBaseQueryError(error)) {
-      navigate(APP_ROUTES.EXPIRED, { state: { status: error.status } });
+      navigate(APP_ROUTES.FEEDBACK, { state: { status: 500 } });
       return;
     }
 
