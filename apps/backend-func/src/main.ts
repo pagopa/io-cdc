@@ -88,7 +88,7 @@ app.http("Authorize", {
   route: "api/v1/authorize",
 });
 
-const GetYears = GetYearsFn({});
+const GetYears = GetYearsFn({ config });
 app.http("GetYears", {
   authLevel: "function",
   handler: GetYears,

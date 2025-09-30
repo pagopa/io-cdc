@@ -10,7 +10,8 @@ locals {
       AUDIT_LOG_CONTAINER         = var.audit_log_container
 
       // CDC
-      CDC_BASE_URL = var.cdc_base_url
+      CDC_BASE_URL              = var.cdc_base_url
+      CDC_REGISTRATION_END_DATE = "2025-11-01"
 
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri
