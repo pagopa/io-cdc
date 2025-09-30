@@ -1,5 +1,11 @@
 # frontend
 
+## 1.0.1
+
+### Patch Changes
+
+- 122417c: Handle expired config when years list is empty
+
 ## 1.0.0
 
 ### Major Changes
