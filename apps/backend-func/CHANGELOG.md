@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.8
+
+### Patch Changes
+
+- 428d568: Ending of registration
+
 ## 1.0.7
 
 ### Patch Changes
