@@ -9,9 +9,7 @@ const Unauthorized = () => {
         <Typography variant="h4" textAlign="center">
           Non sei autorizzato
         </Typography>
-        <Typography textAlign="center">
-          La tua sessione potrebbe essere invalida o scaduta
-        </Typography>
+        {/* {config.description && <Typography textAlign="center">{config.description}</Typography>} */}
       </Stack>
       <Button
         onClick={() => window.location.replace('iossoapi://cancel')}

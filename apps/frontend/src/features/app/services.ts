@@ -23,11 +23,6 @@ export const appApi = createApi({
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState;
       const data = retrieveSessionQueryCached(state);
-      const cachedSession = state.auth.token;
-
-      if (!data && cachedSession) {
-        headers.set('token', cachedSession);
-      }
 
       if (data && data.token) {
         headers.set('token', data.token);
