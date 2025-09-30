@@ -10,7 +10,6 @@ import { FimsCallbackFn } from "./functions/fcb.js";
 import { GetCardRequestsFn } from "./functions/get-requests.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
-import { LoadTestFn } from "./functions/load-test.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
@@ -132,16 +131,4 @@ app.storageQueue("ProcessPendingRequest", {
   connection: "STORAGE_ACCOUNT",
   handler: ProcessPendingRequest,
   queueName: config.CARD_REQUEST_QUEUE_NAME,
-});
-
-const LoadTest = LoadTestFn({
-  config,
-  cosmosDbClient,
-  queueStorage,
-});
-app.http("LoadTest", {
-  authLevel: "function",
-  handler: LoadTest,
-  methods: ["POST"],
-  route: "api/v1/load-test",
 });
