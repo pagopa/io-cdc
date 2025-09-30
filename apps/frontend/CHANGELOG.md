@@ -1,5 +1,11 @@
 # frontend
 
+## 1.0.2
+
+### Patch Changes
+
+- 856a67d: added session cache
+
 ## 1.0.1
 
 ### Patch Changes
