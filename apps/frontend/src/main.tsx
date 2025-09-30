@@ -1,7 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { CssBaseline } from '@mui/material';
-import { Loader, theme } from '@io-cdc/ui';
-
+import { theme } from '@io-cdc/ui';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App.tsx';
@@ -11,10 +10,11 @@ import { persistor, store } from './features/store.ts';
 import { Toaster } from 'react-hot-toast';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Suspense } from 'react';
+import { RequestLoader } from './components/RequestLoader/index.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<RequestLoader />}>
       <PersistGate persistor={persistor}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
