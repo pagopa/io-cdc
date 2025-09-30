@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.9
+
+### Patch Changes
+
+- 9d4df16: removed load tests
+
 ## 1.0.8
 
 ### Patch Changes
