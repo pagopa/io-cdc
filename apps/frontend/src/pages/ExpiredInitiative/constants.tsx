@@ -7,7 +7,7 @@ type ExpiredInitiativeConfig = Record<
     image: IconType;
     title: string;
     description: ReactNode | null;
-    trackName: 'CDC_REQUEST_EXPIRED' | 'CDC_REQUEST_ALREADY_APPLIED';
+    trackName: 'CDC_REQUEST_EXPIRED' | 'CDC_INITIATIVE_EXPIRED';
     trackProperties: {
       webview: true;
       already_requested?: 'yes' | 'no';
@@ -20,7 +20,7 @@ export const DEFAULT_CONFIG: ExpiredInitiativeConfig[number] = {
   image: 'timeout',
   title: 'Il periodo per richiedere la Carta della Cultura è terminato',
   description: null,
-  trackName: 'CDC_REQUEST_ALREADY_APPLIED',
+  trackName: 'CDC_INITIATIVE_EXPIRED',
   trackProperties: {
     webview: true,
     already_requested: 'no',
@@ -39,7 +39,7 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
         con l&apos;esito
       </span>
     ),
-    trackName: 'CDC_REQUEST_ALREADY_APPLIED',
+    trackName: 'CDC_INITIATIVE_EXPIRED',
     trackProperties: {
       webview: true,
       already_requested: 'yes',
