@@ -1,5 +1,11 @@
 # frontend
 
+## 1.0.4
+
+### Patch Changes
+
+- 7c01691: Change ExpiredInitiative events name and params
+
 ## 1.0.3
 
 ### Patch Changes

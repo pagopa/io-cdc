@@ -10,12 +10,12 @@ const ExpiredInitiative = () => {
     state: { status },
   } = useLocation();
 
-  const { image, description, title, trackProperties } =
+  const { image, description, title, trackProperties, trackName } =
     EXPIRED_INITIATIVE_CONFIG_MAP?.[status] ?? DEFAULT_CONFIG;
 
   useEffect(() => {
     if (trackProperties) {
-      trackWebviewEvent('CDC_REQUEST_EXPIRED', trackProperties);
+      trackWebviewEvent(trackName, trackProperties);
     }
   }, []);
 
