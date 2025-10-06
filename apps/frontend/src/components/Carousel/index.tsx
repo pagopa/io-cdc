@@ -43,7 +43,12 @@ export const Carousel = ({ list }: CarouselProps) => {
     item?.scrollIntoView({ behavior: 'smooth', inline: 'start' });
   }, []);
 
-  if (list.length === 1) return <Card {...list[0]} />;
+  if (list.length === 1)
+    return (
+      <CarouselContainer>
+        <Card {...list[0]} />
+      </CarouselContainer>
+    );
 
   return (
     <CarouselContainer>

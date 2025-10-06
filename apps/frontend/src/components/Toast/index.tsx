@@ -1,13 +1,19 @@
 import { Icon } from '@io-cdc/ui';
-import { Box, Snackbar, SnackbarProps, Typography } from '@mui/material';
+import { Box, Button, Snackbar, SnackbarProps, Typography } from '@mui/material';
 import { ICON_COLOR_CONFIG } from './constants';
 
 type ToastProps = SnackbarProps & {
-  messageType?: 'success' | 'error' | 'default';
+  messageType?: 'reminder' | 'success' | 'error' | 'default';
   message?: string;
 };
 
-export const Toast = ({ open, onClose, message, messageType = 'default' }: ToastProps) => {
+export const Toast = ({
+  open,
+  onClose,
+  message,
+  messageType = 'default',
+  children,
+}: ToastProps) => {
   const { icon, color } = ICON_COLOR_CONFIG?.[messageType];
   return (
     <Snackbar
@@ -38,7 +44,23 @@ export const Toast = ({ open, onClose, message, messageType = 'default' }: Toast
           }}
         >
           <Icon name={icon} sx={{ color }} />
+          {children}
           <Typography>{message}</Typography>
+          {messageType === 'reminder' && (
+            <Button
+              variant="text"
+              onClick={() => localStorage.setItem('reminder', 'true')}
+              sx={{
+                color: '#0070f3',
+                fontWeight: 'bold',
+                fontSize: 16,
+                textTransform: 'none',
+                alignSelf: 'flex-start',
+              }}
+            >
+              Ho capito
+            </Button>
+          )}
         </Box>
       </Box>
     </Snackbar>

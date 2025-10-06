@@ -80,6 +80,7 @@ const APP_ROUTES_CONFIG = {
 
 export const getAppRoutes = () => {
   const { dashboard, request } = featureFlags;
-  if (request) return APP_ROUTES_CONFIG.REQUEST;
-  return dashboard ? APP_ROUTES_CONFIG.DASHBOARD : [];
+  if (request && !dashboard) return APP_ROUTES_CONFIG.REQUEST;
+  if (!request) return APP_ROUTES_CONFIG.DASHBOARD;
+  return [...APP_ROUTES_CONFIG.DASHBOARD, ...APP_ROUTES_CONFIG.REQUEST];
 };

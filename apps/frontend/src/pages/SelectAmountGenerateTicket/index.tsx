@@ -12,10 +12,12 @@ import { APP_ROUTES } from '../../utils/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/app/reducers';
+import { useToast } from '../../contexts';
 
 const TEXT_COLOR = '#5C6F82';
 
 const SelectAmountGenerateTicket = () => {
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -47,11 +49,19 @@ const SelectAmountGenerateTicket = () => {
 
   const onClickBottom = useCallback(async () => {
     if (required || selectedCard?.residual_amount! < Number(amount)) {
+      const helperText =
+        selectedCard?.residual_amount < Number(amount)
+          ? 'L’ importo è superiore al credito disponibile'
+          : 'Inserisci un importo';
+      showToast({
+        message: helperText,
+        messageType: 'error',
+      });
       setError(true);
       return;
     }
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
-    await createBonus({ year: selectedCard?.year!, amount: Number(amount) });
+    await createBonus({ card_year: selectedCard?.year!, amount: Number(amount) });
     dispatch(ticketsActions.resetForm());
     navigate(APP_ROUTES.HOME);
   }, [
@@ -62,6 +72,7 @@ const SelectAmountGenerateTicket = () => {
     required,
     selectedCard?.residual_amount,
     selectedCard?.year,
+    showToast,
   ]);
 
   useEffect(() => {
@@ -81,9 +92,9 @@ const SelectAmountGenerateTicket = () => {
     );
   }
 
-  if (isBonusCreationCompleted && newBonus) {
+  if (isBonusCreationCompleted && newBonus?.id) {
     trackWebviewEvent('CDC_BONUS_GENERATION_SUCCESS', { event_category: 'TECH' });
-    return <Navigate to={`/dettaglio-buono/${newBonus}`} />;
+    return <Navigate to={`/dettaglio-buono/${newBonus.id}`} />;
   }
 
   if (isCreatingBonus) return <BonusCreationLoader />;
@@ -102,10 +113,10 @@ const SelectAmountGenerateTicket = () => {
           <Stack>
             <SetAmount
               amount={amount}
-              balance={selectedCard?.residual_amount}
               error={error}
               reset={() => setError(false)}
-              required={required}
+              // balance={selectedCard?.residual_amount}
+              // required={required}
             />
           </Stack>
         </Stack>

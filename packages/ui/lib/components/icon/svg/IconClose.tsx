@@ -1,11 +1,10 @@
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 
 const IconClose = (props: SvgIconProps) => (
-  <SvgIcon viewBox="0 0 12 11" {...props}>
+  <SvgIcon viewBox="0 0 24 24" {...props}>
     <path
-      d="M11.25 1.28602L10.1925 0.228516L6 4.42102L1.8075 0.228516L0.75 1.28602L4.9425 5.47852L0.75 9.67102L1.8075 10.7285L6 6.53602L10.1925 10.7285L11.25 9.67102L7.0575 5.47852L11.25 1.28602Z"
+      d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
       fill="currentColor"
-      stroke="currentColor"
     />
   </SvgIcon>
 );

@@ -10,7 +10,7 @@ export const getVoucherConfig = (voucher: VoucherItem) => {
     case 'SELF':
     default:
       return {
-        itemLabel: voucher.id,
+        itemLabel: 'Il tuo buono',
         mainColor: '#17324D',
       };
   }

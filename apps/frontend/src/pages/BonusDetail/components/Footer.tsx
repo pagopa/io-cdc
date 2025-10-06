@@ -1,5 +1,5 @@
 import { Icon } from '@io-cdc/ui';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { PopConfirm } from '../../../components/PopConfirm';
 import { useCallback, useState } from 'react';
@@ -52,14 +52,16 @@ export const Footer = ({ bonusId, code }: FooterProps) => {
       <Button
         variant="text"
         onClick={onClickDeleteBonus}
-        startIcon={<Icon name="close" sx={{ width: 11, height: 11 }} />}
+        startIcon={<Icon name="close" sx={{ width: 18, height: 18 }} />}
         color="error"
         sx={{
           padding: 0,
           justifyContent: 'start',
         }}
       >
-        Annulla il buono
+        <Typography variant="body1" fontWeight={700} color="inherit">
+          Annulla il buono
+        </Typography>
       </Button>
       <PopConfirm
         isOpen={isDialogOpen}

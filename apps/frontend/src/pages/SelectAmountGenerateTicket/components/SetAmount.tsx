@@ -1,17 +1,17 @@
 import { CdcInput } from '../../../components/Input';
 import { useDispatch } from 'react-redux';
-import { useCallback, useMemo } from 'react';
+import { useCallback /*, useMemo */ } from 'react';
 import { ticketsActions } from '../../../features/app/reducers';
 
 type SetAmountProps = {
   amount: string;
-  balance: number;
-  required: boolean;
   error: boolean;
   reset: () => void;
+  // balance: number;
+  // required: boolean;
 };
 
-export const SetAmount = ({ amount, balance, error, required, reset }: SetAmountProps) => {
+export const SetAmount = ({ amount, error, reset /*, required, balance, */ }: SetAmountProps) => {
   const dispatch = useDispatch();
 
   const onChange = useCallback(
@@ -22,12 +22,12 @@ export const SetAmount = ({ amount, balance, error, required, reset }: SetAmount
     [dispatch, reset],
   );
 
-  const helperText = useMemo(() => {
-    if (!error) return null;
-    if (balance < Number(amount)) return 'L’ importo è superiore al credito disponibile';
-    if (required) return 'Inserisci un importo';
-    return null;
-  }, [error, balance, amount, required]);
+  // const helperText = useMemo(() => {
+  //   if (!error) return null;
+  //   if (balance < Number(amount)) return 'L’ importo è superiore al credito disponibile';
+  //   if (required) return 'Inserisci un importo';
+  //   return null;
+  // }, [error, balance, amount, required]);
 
   return (
     <CdcInput
@@ -37,7 +37,7 @@ export const SetAmount = ({ amount, balance, error, required, reset }: SetAmount
       label="Importo"
       margin="normal"
       error={error}
-      helperText={helperText}
+      // helperText={helperText}
     />
   );
 };

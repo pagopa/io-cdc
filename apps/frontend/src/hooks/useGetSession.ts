@@ -35,7 +35,7 @@ export const useGetSession = () => {
     }
 
     if ((session && session.token) || isChachedSessionValid) {
-      navigate(APP_ROUTES.SELECT_YEAR);
+      navigate(getPathFromEvironment());
       return;
     }
 

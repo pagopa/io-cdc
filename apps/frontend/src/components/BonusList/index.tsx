@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Divider, Stack } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import { VoucherCard } from '../../pages/BonusList/components/BonusItem';
-import { EmptyState, SectionTitle } from '@io-cdc/ui';
+import { EmptyState, SectionTitle, theme } from '@io-cdc/ui';
 import { VoucherItem } from '../../features/app/model';
 import { OthersBonusSheet } from '../OthersBonusSheet';
 
@@ -39,12 +39,16 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
   }, []);
 
   return (
-    <Stack gap={8}>
-      <Stack>
-        <SectionTitle
-          title="Buoni da spendere"
-          description={`Saldo aggiornato al ${lastUpdateLabel}`}
-        />
+    <Stack>
+      <Stack mb={4}>
+        <Stack gap={1}>
+          <Typography fontSize={28} fontWeight="bold" variant="h4">
+            Buoni da spendere
+          </Typography>
+          <Typography color={theme.palette.text.secondary} fontSize={12}>
+            {lastUpdateLabel}
+          </Typography>
+        </Stack>
         {toSpend.length ? (
           toSpend.map((voucher, index, array) => (
             <Stack gap={3} key={voucher.id} paddingTop={3}>

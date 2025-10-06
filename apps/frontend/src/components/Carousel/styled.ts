@@ -24,9 +24,8 @@ export const StyledDots = styled(Box)`
 export const CarouselContainer = styled(Stack)({
   width: '100%',
   overflow: 'hidden',
-  paddingTop: 16,
-  paddingBottom: 16,
-  rowGap: 8,
+  paddingTop: 8,
+  paddingBottom: 8,
 });
 
 export const ScrollArea = styled(Box)({
@@ -49,5 +48,5 @@ export const SlideBox = styled(Box)({
   width: '100%',
   minWidth: '100%',
   scrollSnapAlign: 'start',
-  height: 376,
+  height: 360,
 });

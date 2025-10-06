@@ -59,7 +59,7 @@ export const Toast = ({
           overflow: "hidden",
         }}
       >
-        <Box sx={{ bgcolor: color, height: "3.5rem", width: 6 }} />
+        <Box sx={{ alignSelf: "stretch", bgcolor: color, width: 6 }} />
         <Box
           sx={{
             alignItems: "center",

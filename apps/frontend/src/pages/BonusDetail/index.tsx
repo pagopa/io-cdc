@@ -2,7 +2,7 @@ import { Chip, ChipProps, Divider, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
-import { Icon, Loader } from '@io-cdc/ui';
+import { Icon, Loader, theme } from '@io-cdc/ui';
 import { useEffect } from 'react';
 import { BonusDescription } from './components/BonusDescription';
 import { Footer } from './components/Footer';
@@ -68,10 +68,10 @@ const BonusDetail = () => {
     );
 
   return bonusDetail ? (
-    <Stack p={4} gap={3}>
+    <Stack py={4} px={3} gap={3}>
       <Header onBack={() => navigate(-1)} />
-      <Stack gap={8}>
-        <Stack gap={2}>
+      <Stack>
+        <Stack gap={2} mb={1}>
           <Typography variant="h2">Il tuo buono</Typography>
           <BonusDescription pending={pending} />
         </Stack>
@@ -82,7 +82,7 @@ const BonusDetail = () => {
       </Stack>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack>
-          <Typography color="#5C6F82">Importo</Typography>
+          <Typography color={theme.palette.text.secondary}>Importo</Typography>
           <Typography fontWeight={600} fontSize={18}>
             {bonusDetail.amount.toFixed(2)} €
           </Typography>
@@ -95,7 +95,7 @@ const BonusDetail = () => {
         <>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Stack>
-              <Typography color="#5C6F82">Da riaccreditare</Typography>
+              <Typography color={theme.palette.text.secondary}>Da riaccreditare</Typography>
               <Typography fontWeight={600} fontSize={18}>
                 {bonusDetail.refund.amount.toFixed(2)} €
               </Typography>
@@ -113,8 +113,8 @@ const BonusDetail = () => {
         </Typography>
       </Stack>
       <Divider />
-      <Stack>
-        <Typography color="#5C6F82">Carta della cultura usata</Typography>
+      <Stack mb={3}>
+        <Typography color={theme.palette.text.secondary}>Carta della cultura usata</Typography>
         <Typography fontWeight={600} fontSize={18}>
           {bonusDetail.card_year}
         </Typography>
@@ -131,7 +131,7 @@ const BonusDetail = () => {
           {bonusDetail.merchant}
         </Typography>
         {/** TODO placeholder!!! this must be the date voucher was spent */}
-        <Typography>{bonusDetail.expiration_date}</Typography>
+        <Typography color={theme.palette.text.secondary}>{bonusDetail.expiration_date}</Typography>
       </Stack>
       {pending && <Footer bonusId={id} code={bonusDetail.id} />}
     </Stack>

@@ -19,7 +19,7 @@ const BonusList = () => {
   if (error) return <>Errore</>;
 
   return voucherList ? (
-    <Stack p={4} gap={3}>
+    <Stack p={3} gap={3}>
       <Header onBack={() => navigate(APP_ROUTES.HOME)} />
       <VoucherList vouchersList={voucherList} />
     </Stack>

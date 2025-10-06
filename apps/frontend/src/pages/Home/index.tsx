@@ -12,6 +12,7 @@ import { selectTicketDeleted } from '../../features/app/selectors';
 import { ticketsActions } from '../../features/app/reducers';
 import { OthersBonusSheet } from '../../components/OthersBonusSheet';
 import { useToast } from '../../contexts';
+import { Reminder } from './components/Reminder';
 
 const TEXT_COLOR = '#5C6F82';
 
@@ -91,17 +92,29 @@ const Home = () => {
   return (
     <Stack justifyContent="center" alignItems="center" paddingInline={2}>
       <Carousel list={data} />
-      <Typography sx={{ fontSize: 12 }} color={TEXT_COLOR}>
+      <Typography sx={{ fontSize: 12, marginBottom: 2 }} color={TEXT_COLOR}>
         {lastUpdateLabel}
       </Typography>
+      <Reminder />
       <Stack width="100%" paddingInline={2} gap={4}>
         {bonusList && bonusList.length > 0 ? (
           <Stack width="100%" gap={2} paddingTop={3}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography fontWeight={700}>BUONI DA SPENDERE</Typography>
-              <Button sx={{ padding: 0 }} onClick={onClickShowAll}>
+              <Typography fontWeight={700} fontSize={14}>
+                BUONI DA SPENDERE
+              </Typography>
+              <Typography
+                fontSize={16}
+                fontWeight={600}
+                margin={0}
+                onClick={onClickShowAll}
+                sx={{
+                  color: '#0073E6',
+                  textDecoration: 'none',
+                }}
+              >
                 Mostra tutti
-              </Button>
+              </Typography>
             </Stack>
             {toSpend.length ? (
               toSpend.map((voucher, index, array) => (
@@ -120,10 +133,21 @@ const Home = () => {
               </Stack>
             )}
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography fontWeight={700}>BUONI SPESI</Typography>
-              <Button sx={{ padding: 0 }} onClick={onClickShowAll}>
+              <Typography fontWeight={700} fontSize={14}>
+                BUONI SPESI
+              </Typography>
+              <Typography
+                fontSize={16}
+                fontWeight={600}
+                margin={0}
+                onClick={onClickShowAll}
+                sx={{
+                  color: '#0073E6',
+                  textDecoration: 'none',
+                }}
+              >
                 Mostra tutti
-              </Button>
+              </Typography>
             </Stack>
             {spent.length ? (
               spent.map((voucher, index, array) => (
