@@ -102,12 +102,6 @@ variable "cosmosdb_cdc_database_name" {
   sensitive   = true
 }
 
-variable "jwt_public_key" {
-  type        = string
-  description = "JWT public key"
-  sensitive   = true
-}
-
 variable "jwt_private_key" {
   type        = string
   description = "JWT private key"
@@ -135,12 +129,6 @@ variable "jwt_expiration" {
 variable "encryption_public_key" {
   type        = string
   description = "Encryption public key"
-  sensitive   = true
-}
-
-variable "encryption_private_key" {
-  type        = string
-  description = "Encryption private key"
   sensitive   = true
 }
 
