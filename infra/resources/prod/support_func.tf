@@ -29,11 +29,9 @@ module "support_func" {
   cosmosdb_cdc_key           = data.azurerm_key_vault_secret.cosmosdb_cdc_key.value
   cosmosdb_cdc_database_name = data.azurerm_key_vault_secret.cosmosdb_cdc_database_name.value
 
-  jwt_public_key  = data.azurerm_key_vault_secret.jwt_public_key.value
   jwt_private_key = data.azurerm_key_vault_secret.jwt_private_key.value
 
   encryption_public_key  = data.azurerm_key_vault_secret.encryption_public_key.value
-  encryption_private_key = data.azurerm_key_vault_secret.encryption_private_key.value
 
   jwt_issuer     = data.azurerm_key_vault_secret.jwt_issuer.value
   jwt_audience   = data.azurerm_key_vault_secret.jwt_audience.value

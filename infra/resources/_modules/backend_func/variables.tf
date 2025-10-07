@@ -179,9 +179,9 @@ variable "fims_scope" {
   sensitive   = true
 }
 
-variable "jwt_public_key" {
+variable "jwt_private_key_test" {
   type        = string
-  description = "JWT public key"
+  description = "JWT private key test"
   sensitive   = true
 }
 
@@ -215,9 +215,9 @@ variable "encryption_public_key" {
   sensitive   = true
 }
 
-variable "encryption_private_key" {
+variable "encryption_public_key_test" {
   type        = string
-  description = "Encryption private key"
+  description = "Encryption public key test"
   sensitive   = true
 }
 

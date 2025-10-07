@@ -7,7 +7,7 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, identity, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
-import { CdcAPIClient } from "../clients/cdc.js";
+import { CdcAPIClient, CdcAPIClientTest } from "../clients/cdc.js";
 import { Config } from "../config.js";
 import { EsitoRichiestaEnum } from "../generated/cdc-api/EsitoRichiestaBean.js";
 import { InputBeneficiarioBean } from "../generated/cdc-api/InputBeneficiarioBean.js";
@@ -32,9 +32,16 @@ export const CdcApiRequestData = t.array(
 );
 export type CdcApiRequestData = t.TypeOf<typeof CdcApiRequestData>;
 
-const getCdcClient = (config: Config) => CdcAPIClient(config);
+const getCdcClient = (config: Config, env: CdcEnvironmentT) =>
+  env === CdcEnvironment.PRODUCTION
+    ? CdcAPIClient(config)
+    : CdcAPIClientTest(config);
 
-const getJwtTE = (config: Config, user: CdcApiUserData) => {
+const getJwtTE = (
+  config: Config,
+  env: CdcEnvironmentT,
+  user: CdcApiUserData,
+) => {
   const jwtGenerator = new JwtGenerator({
     algEncription: config.ALGORITHM_ENCRYPTION,
     algKeys: config.ALGORITHM_KEYS,
@@ -45,8 +52,12 @@ const getJwtTE = (config: Config, user: CdcApiUserData) => {
     issuer: config.JWT_ISSUER,
   });
   return jwtGenerator.signThenEncryptJwtTE(
-    config.ENCRYPTION_PUBLIC_KEY,
-    config.JWT_PRIVATE_KEY,
+    env === CdcEnvironment.PRODUCTION
+      ? config.ENCRYPTION_PUBLIC_KEY
+      : config.ENCRYPTION_PUBLIC_KEY_TEST,
+    env === CdcEnvironment.PRODUCTION
+      ? config.JWT_PRIVATE_KEY
+      : config.JWT_PRIVATE_KEY_TEST,
     user,
   );
 };
@@ -73,12 +84,12 @@ const statusSuccessfulCodes = [
 ];
 
 const getAlreadyRequestedYearsCdcTE =
-  (config: Config) => (user: CdcApiUserData) =>
+  (config: Config, env: CdcEnvironmentT) => (user: CdcApiUserData) =>
     pipe(
-      getJwtTE(config, user),
+      getJwtTE(config, env, user),
       TE.chain((jwt) =>
         pipe(
-          TE.of(getCdcClient(config)(jwt)),
+          TE.of(getCdcClient(config, env)(jwt)),
           TE.chain((client) =>
             TE.tryCatch(async () => await client.stato({}), E.toError),
           ),
@@ -104,7 +115,7 @@ const getAlreadyRequestedYearsCdcTE =
           TE.map((responseValue) =>
             traceEvent(responseValue)(
               "getAlreadyRequestedYearsCdcTE",
-              "cdc.api.request.status.response",
+              `cdc.api.${env}.request.status.response`,
               responseValue,
             ),
           ),
@@ -124,7 +135,7 @@ const getAlreadyRequestedYearsCdcTE =
       TE.mapLeft((err) =>
         traceEvent(err)(
           "getAlreadyRequestedYearsCdcTE",
-          "cdc.api.request.status.error",
+          `cdc.api.${env}.request.status.error`,
           err,
         ),
       ),
@@ -136,12 +147,16 @@ const requestSuccessfulCodes = [
 ];
 
 const requestCdcTE =
-  (config: Config) => (user: CdcApiUserData, request: CdcApiRequestData) =>
+  (config: Config, env: CdcEnvironmentT) =>
+  (user: CdcApiUserData, request: CdcApiRequestData) =>
     request.length > 0
       ? pipe(
           TE.Do,
           TE.bind("client", () =>
-            pipe(getJwtTE(config, user), TE.map(getCdcClient(config))),
+            pipe(
+              getJwtTE(config, env, user),
+              TE.map(getCdcClient(config, env)),
+            ),
           ),
           TE.bindW("payload", () =>
             pipe(
@@ -156,7 +171,7 @@ const requestCdcTE =
               TE.map((payload) =>
                 traceEvent(payload)(
                   "requestCdcTE",
-                  "cdc.api.request.register.payload",
+                  `cdc.api.${env}.request.register.payload`,
                   payload,
                 ),
               ),
@@ -189,7 +204,7 @@ const requestCdcTE =
           TE.map((responseValue) =>
             traceEvent(responseValue)(
               "requestCdcTE",
-              "cdc.api.request.register.response",
+              `cdc.api.${env}.request.register.response`,
               responseValue,
             ),
           ),
@@ -212,15 +227,21 @@ const requestCdcTE =
           TE.mapLeft((err) =>
             traceEvent(err)(
               "requestCdcTE",
-              "cdc.api.request.register.error",
+              `cdc.api.${env}.request.register.error`,
               err,
             ),
           ),
         )
       : pipe(TE.of(true));
 
-export const CdcUtils = (config: Config) => ({
-  getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config),
-  requestCdcTE: requestCdcTE(config),
+export enum CdcEnvironment {
+  PRODUCTION = "PRODUCTION",
+  TEST = "TEST",
+}
+export type CdcEnvironmentT = keyof typeof CdcEnvironment;
+
+export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
+  getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
+  requestCdcTE: requestCdcTE(config, env),
 });
 export type CdcUtils = ReturnType<typeof CdcUtils>;

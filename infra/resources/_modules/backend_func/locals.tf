@@ -38,12 +38,14 @@ locals {
       FIMS_SCOPE         = var.fims_scope
 
       // JWT
-      JWT_PUBLIC_KEY  = var.jwt_public_key
-      JWT_PRIVATE_KEY = var.jwt_private_key
+      JWT_PUBLIC_KEY       = "unused"
+      JWT_PRIVATE_KEY      = var.jwt_private_key
+      JWT_PRIVATE_KEY_TEST = var.jwt_private_key_test
 
       // ENCRYPTION
-      ENCRYPTION_PUBLIC_KEY  = var.encryption_public_key
-      ENCRYPTION_PRIVATE_KEY = var.encryption_private_key
+      ENCRYPTION_PUBLIC_KEY      = var.encryption_public_key
+      ENCRYPTION_PUBLIC_KEY_TEST = var.encryption_public_key_test
+      ENCRYPTION_PRIVATE_KEY     = "unused"
 
       // JWT AND ENCRYPTION CONFIG
       JWT_ISSUER           = var.jwt_issuer
