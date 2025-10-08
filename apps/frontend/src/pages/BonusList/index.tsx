@@ -12,7 +12,7 @@ const BonusList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    trackWebviewEvent('CDC_SHOW_BONUS_LIST');
+    trackWebviewEvent('CDC_BONUS_LIST');
   }, []);
 
   if (isLoading) return <>Loading...</>;

@@ -30,8 +30,9 @@ const GenerateTicket = () => {
 
   const stopCreation = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_GENERATION_EXIT_CONFIRM');
+    dispatch(ticketsActions.resetForm());
     navigate(APP_ROUTES.HOME);
-  }, [navigate]);
+  }, [dispatch, navigate]);
 
   const backToCreation = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_GENERATION_EXIT_BACK');
@@ -44,9 +45,6 @@ const GenerateTicket = () => {
 
   useEffect(() => {
     trackWebviewEvent('CDC_CARD_SELECTION');
-    return () => {
-      dispatch(ticketsActions.resetForm());
-    };
   }, [dispatch]);
 
   return (
