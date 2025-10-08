@@ -1,0 +1,66 @@
+import * as H from "@pagopa/handler-kit";
+import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
+import { pipe } from "fp-ts/lib/function.js";
+import * as t from "io-ts";
+
+import { Config } from "../config.js";
+import { CardsList } from "../generated/definitions/internal/CardsList.js";
+import { withParams } from "../middlewares/withParams.js";
+import { Session } from "../models/session.js";
+import { CdcUtils } from "../utils/cdc.js";
+import {
+  errorToInternalError,
+  errorToValidationError,
+  responseError,
+  responseErrorToHttpError,
+} from "../utils/errors.js";
+import { RedisClientFactory } from "../utils/redis.js";
+import { getSessionTE } from "../utils/session.js";
+
+interface Dependencies {
+  cdcUtils: CdcUtils;
+  config: Config;
+  redisClientFactory: RedisClientFactory;
+}
+
+const Headers = t.type({
+  token: NonEmptyString,
+});
+type Headers = t.TypeOf<typeof Headers>;
+
+export const getSession = (sessionToken: string) => (deps: Dependencies) =>
+  pipe(
+    getSessionTE(deps.redisClientFactory, sessionToken),
+    TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
+  );
+
+export const getCards = (user: Session) => (deps: Dependencies) =>
+  pipe(
+    deps.cdcUtils.getCdcCardsTE({
+      first_name: user.given_name,
+      fiscal_code: user.fiscal_code,
+      last_name: user.family_name,
+    }),
+    TE.mapLeft(errorToInternalError),
+  );
+
+export const makeGetCardsHandler: H.Handler<
+  H.HttpRequest,
+  | H.HttpResponse<CardsList, 200>
+  | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>,
+  Dependencies
+> = H.of((req) =>
+  pipe(
+    withParams(Headers, req.headers),
+    RTE.mapLeft(errorToValidationError),
+    RTE.chain(({ token }) => getSession(token)),
+    RTE.chain((user) => getCards(user)),
+    RTE.map(H.successJson),
+    responseErrorToHttpError,
+  ),
+);
+
+export const GetCardsFn = httpAzureFunction(makeGetCardsHandler);

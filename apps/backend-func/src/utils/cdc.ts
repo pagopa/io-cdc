@@ -11,8 +11,10 @@ import { CdcAPIClient, CdcAPIClientTest } from "../clients/cdc.js";
 import { Config } from "../config.js";
 import { EsitoRichiestaEnum } from "../generated/cdc-api/EsitoRichiestaBean.js";
 import { InputBeneficiarioBean } from "../generated/cdc-api/InputBeneficiarioBean.js";
+import { ListBorsellinoDetails } from "../generated/cdc-api/ListBorsellinoDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
+import { Card_statusEnum } from "../generated/definitions/internal/Card.js";
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 import { traceEvent } from "./tracing.js";
@@ -23,14 +25,6 @@ export const CdcApiUserData = t.type({
   last_name: NonEmptyString,
 });
 export type CdcApiUserData = t.TypeOf<typeof CdcApiUserData>;
-
-export const CdcApiRequestData = t.array(
-  t.type({
-    request_date: IsoDateFromString,
-    year: Year,
-  }),
-);
-export type CdcApiRequestData = t.TypeOf<typeof CdcApiRequestData>;
 
 const getCdcClient = (config: Config, env: CdcEnvironmentT) =>
   env === CdcEnvironment.PRODUCTION
@@ -67,14 +61,10 @@ const mapCdcApiCallFailure =
   (res: IResponseType<number, unknown, never>): Error =>
     new Error(`${message} | ${res.status} | ${JSON.stringify(res.value)}`);
 
+// CDC STATUS API
 const isCdcApiStatusCallSuccess = (
   res: IResponseType<number, unknown, never>,
 ): res is IResponseType<200, ListaRegistratoBean, never> => res.status === 200;
-
-const isCdcApiRequestCallSuccess = (
-  res: IResponseType<number, unknown, never>,
-): res is IResponseType<200, ListaEsitoRichiestaBean, never> =>
-  res.status === 200;
 
 const statusSuccessfulCodes = [
   "RICHIESTA INSERITA",
@@ -141,6 +131,20 @@ const getAlreadyRequestedYearsCdcTE =
       ),
     );
 
+// CDC REGISTRATION API
+export const CdcApiRequestData = t.array(
+  t.type({
+    request_date: IsoDateFromString,
+    year: Year,
+  }),
+);
+export type CdcApiRequestData = t.TypeOf<typeof CdcApiRequestData>;
+
+const isCdcApiRequestCallSuccess = (
+  res: IResponseType<number, unknown, never>,
+): res is IResponseType<200, ListaEsitoRichiestaBean, never> =>
+  res.status === 200;
+
 const requestSuccessfulCodes = [
   EsitoRichiestaEnum.CIT_REGISTRATO,
   EsitoRichiestaEnum.OK,
@@ -179,7 +183,7 @@ const requestCdcTE =
           ),
           TE.chain(({ client, payload }) =>
             TE.tryCatch(
-              async () => pipe(await client.registrazione(payload)),
+              async () => await client.registrazione(payload),
               E.toError,
             ),
           ),
@@ -234,6 +238,79 @@ const requestCdcTE =
         )
       : pipe(TE.of(true));
 
+// CDC LIST CARDS API
+const isCdcApiGetCardsCallSuccess = (
+  res: IResponseType<number, unknown, never>,
+): res is IResponseType<200, ListBorsellinoDetails, never> =>
+  res.status === 200;
+
+const getCdcCardsTE =
+  (config: Config, env: CdcEnvironmentT) => (user: CdcApiUserData) =>
+    pipe(
+      getJwtTE(config, env, user),
+      TE.chain((jwt) =>
+        pipe(
+          TE.of(getCdcClient(config, env)(jwt)),
+          TE.chain((client) =>
+            TE.tryCatch(
+              async () => await client.getListaBorsellino({}),
+              E.toError,
+            ),
+          ),
+          TE.chain((response) =>
+            pipe(
+              response,
+              TE.fromEither,
+              TE.mapLeft(
+                (errors) =>
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
+              ),
+            ),
+          ),
+          TE.chain((response) =>
+            TE.fromPredicate(
+              isCdcApiGetCardsCallSuccess,
+              mapCdcApiCallFailure(
+                `Get cards CDC failure | API result not success.`,
+              ),
+            )(response),
+          ),
+          TE.map((successResponse) => successResponse.value),
+          TE.chain(({ listaRisultati, ...error }) =>
+            pipe(
+              listaRisultati,
+              TE.fromPredicate(
+                (cards) => !!cards,
+                () => new Error(JSON.stringify(error)),
+              ),
+              TE.chain(
+                TE.fromPredicate(
+                  (cards) => cards.length > 0,
+                  () => new Error("Empty cdc cards list"),
+                ),
+              ),
+              TE.map((cards) =>
+                cards.map((c) => ({
+                  card_name: `Carta della Cultura ${c.annoRif}`,
+                  card_status: Card_statusEnum.ACTIVE,
+                  expiration_date: new Date("2026-12-31 00:00:00"),
+                  residual_amount: c.importoResiduo || 0.0,
+                  year: c.annoRif || "",
+                })),
+              ),
+            ),
+          ),
+        ),
+      ),
+      TE.mapLeft((err) =>
+        traceEvent(err)(
+          "getCdcCardsTE",
+          `cdc.api.${env}.request.cards.error`,
+          err,
+        ),
+      ),
+    );
+
 export enum CdcEnvironment {
   PRODUCTION = "PRODUCTION",
   TEST = "TEST",
@@ -242,6 +319,7 @@ export type CdcEnvironmentT = keyof typeof CdcEnvironment;
 
 export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
+  getCdcCardsTE: getCdcCardsTE(config, env),
   requestCdcTE: requestCdcTE(config, env),
 });
 export type CdcUtils = ReturnType<typeof CdcUtils>;

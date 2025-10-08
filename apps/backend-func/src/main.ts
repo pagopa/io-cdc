@@ -18,6 +18,7 @@ import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 import { getFimsClient } from "./utils/fims.js";
 import { QueueStorage } from "./utils/queue.js";
 import { getRedisClientFactory } from "./utils/redis.js";
+import { GetCardsFn } from "./functions/get-cards.js";
 
 registerAzureFunctionHooks(app);
 
@@ -48,7 +49,8 @@ const redisClientFactory = getRedisClientFactory(config);
 const servicesClient = ServicesAPIClient(config);
 
 // CdC utils
-const cdcUtils = CdcUtils(config, CdcEnvironment.PRODUCTION);
+const cdcUtilsProd = CdcUtils(config, CdcEnvironment.PRODUCTION);
+const cdcUtilsTest = CdcUtils(config, CdcEnvironment.TEST);
 
 const Info = InfoFn({ config, redisClientFactory });
 app.http("Info", {
@@ -122,7 +124,7 @@ app.http("PostCardRequests", {
 });
 
 const ProcessPendingRequest = ProcessPendingRequestFn({
-  cdcUtils,
+  cdcUtils: cdcUtilsProd,
   config,
   cosmosDbClient,
   inputDecoder: PendingCardRequestMessage,
@@ -131,4 +133,16 @@ app.storageQueue("ProcessPendingRequest", {
   connection: "STORAGE_ACCOUNT",
   handler: ProcessPendingRequest,
   queueName: config.CARD_REQUEST_QUEUE_NAME,
+});
+
+const GetCards = GetCardsFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetCards", {
+  authLevel: "function",
+  handler: GetCards,
+  methods: ["GET"],
+  route: "api/v1/cards",
 });
