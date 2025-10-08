@@ -1,9 +1,9 @@
-import { Chip, ChipProps, Typography } from '@mui/material';
+import { Button, Chip, ChipProps, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { Icon, Loader, theme } from '@io-cdc/ui';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BonusDescription } from './components/BonusDescription';
 import { Footer } from './components/Footer';
 import { trackWebviewEvent } from '../../utils/trackEvent';
@@ -11,11 +11,30 @@ import { REFUND_STATUS, VOUCHER_STATUS } from '../../features/app/model';
 import { DetailItemWrapper } from './components/DetailItems';
 import { MerchantDetail } from './components/MerchantDetail';
 import { useGetVoucherDetail } from '../../hooks/useGetVoucherDetail';
+import { useDeleteVoucherMutation } from '../../features/app/services';
+import { PopConfirm } from '../../components/PopConfirm';
+import { useDispatch } from 'react-redux';
+import { ticketsActions } from '../../features/app/reducers';
+import { APP_ROUTES } from '../../utils/appRoutes';
 
 const BonusDetail = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id = '' } = useParams();
-  const { voucherDetail, isLoading, error, isError, isSuccess } = useGetVoucherDetail({ id });
+  const { state } = useLocation();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const {
+    voucherDetail,
+    isLoading: detailLoading,
+    error,
+    isError,
+    isSuccess,
+  } = useGetVoucherDetail({ id });
+
+  const [deleteBonus, { isSuccess: isBonusDeleteSuccess, isLoading: deleteLoading }] =
+    useDeleteVoucherMutation();
 
   const spent = useMemo(
     () =>
@@ -60,15 +79,39 @@ const BonusDetail = () => {
     [refund, refundCompleted, spent],
   );
 
+  const onClickDeleteBonus = useCallback(() => {
+    trackWebviewEvent('CDC_BONUS_CANCEL');
+    setIsDialogOpen(true);
+  }, []);
+
+  const onDeleteBonus = useCallback(() => {
+    deleteBonus(id);
+  }, [id, deleteBonus]);
+
+  const onStopDeleteBonus = useCallback(() => {
+    trackWebviewEvent('CDC_BONUS_CANCELLATION_BACK');
+    setIsDialogOpen(false);
+  }, []);
+
   useEffect(() => {
     if (isSuccess) {
+      if (state?.generating) {
+        trackWebviewEvent('CDC_BONUS_GENERATION_SUCCESS', { event_category: 'TECH' });
+      }
+
       trackWebviewEvent('CDC_BONUS_DETAIL', {
         bonus_status: spent ? 'spent' : 'to spend',
       });
     }
-  }, [error, isError, isSuccess, spent]);
+  }, [error, isError, isSuccess, spent, state?.generating]);
 
-  if (isLoading)
+  if (isBonusDeleteSuccess) {
+    dispatch(ticketsActions.setDeleted(true));
+    trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
+    return <Navigate to={APP_ROUTES.HOME} />;
+  }
+
+  if (detailLoading || deleteLoading)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
         <Loader />
@@ -132,7 +175,35 @@ const BonusDetail = () => {
         merchant={voucherDetail.merchant}
         usage_date={voucherDetail.expiration_date}
       />
-      {pending && <Footer bonusId={id} code={voucherDetail.id} />}
+      <Button
+        variant="text"
+        onClick={onClickDeleteBonus}
+        startIcon={<Icon name="close" sx={{ width: 18, height: 18 }} />}
+        color="error"
+        sx={{
+          padding: 0,
+          justifyContent: 'start',
+        }}
+      >
+        <Typography variant="body1" fontWeight={700} color="inherit">
+          Annulla il buono
+        </Typography>
+      </Button>
+      <PopConfirm
+        isOpen={isDialogOpen}
+        onOpen={() => trackWebviewEvent('CDC_BONUS_CANCELLATION')}
+        description="Se prosegui, l’importo del buono tornerà disponibile"
+        title="Vuoi davvero annullare il buono?"
+        buttonConfirm={{
+          title: 'ANNULLA BUONO',
+          onClick: onDeleteBonus,
+        }}
+        buttonClose={{
+          title: 'TORNA INDIETRO',
+          onClick: onStopDeleteBonus,
+        }}
+      />
+      {pending && <Footer code={voucherDetail.id} />}
     </Stack>
   );
 };

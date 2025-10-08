@@ -83,6 +83,7 @@ const Home = () => {
         onClose: () => {
           dispatch(ticketsActions.setDeleted(false));
         },
+        onOpen: () => trackWebviewEvent('CDC_BONUS_CANCELLATION_SUCCESS'),
       });
     }
   }, []);

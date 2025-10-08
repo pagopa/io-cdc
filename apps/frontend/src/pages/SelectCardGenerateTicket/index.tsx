@@ -7,8 +7,11 @@ import { APP_ROUTES } from '../../utils/appRoutes';
 import { useGetCardsQuery } from '../../features/app/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { RadioList } from './components/RadioList';
+import { ticketsActions } from '../../features/app/reducers';
+import { useDispatch } from 'react-redux';
 
 const GenerateTicket = () => {
+  const dispatch = useDispatch();
   const { data: cards } = useGetCardsQuery();
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,7 +44,10 @@ const GenerateTicket = () => {
 
   useEffect(() => {
     trackWebviewEvent('CDC_CARD_SELECTION');
-  }, []);
+    return () => {
+      dispatch(ticketsActions.resetForm());
+    };
+  }, [dispatch]);
 
   return (
     <Stack p={3} gap={3}>

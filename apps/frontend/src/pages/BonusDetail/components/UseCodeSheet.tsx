@@ -22,7 +22,11 @@ export const UseCodeSheet = ({ isOpen, onClose, code }: UseCodeSheetProps) => {
   const copyBonusCode = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_COPY_CODE', { code_type: 'barcode' });
     copy(code);
-    showToast({ message: 'Il codice è stato copiato', messageType: 'success' });
+    showToast({
+      message: 'Il codice è stato copiato',
+      messageType: 'success',
+      onOpen: () => trackWebviewEvent('CDC_BONUS_COPY_CODE_SUCCESS'),
+    });
   }, [code, showToast]);
 
   const SheetContentChild = useMemo(
