@@ -1,4 +1,6 @@
 import { IconType } from '@io-cdc/ui';
+import { Typography } from '@mui/material';
+import { Stack } from '@mui/system';
 import { ReactNode } from 'react';
 
 type ExpiredInitiativeConfig = Record<
@@ -48,8 +50,18 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
   },
   502: {
     image: 'allYearsRequested',
-    title: "Hai già richiesto Carta della Cultura, attendi l'esito",
-    description: 'Riceverai un messaggio su IO quando l’esito sarà pronto.',
+    title: 'Hai già richiesto Carta della Cultura',
+    description: (
+      <Stack direction="column" gap={2}>
+        <Typography>
+          Hai richiesto il contributo <strong>per tutti gli anni disponibili.</strong> Riceverai un
+          messaggio su IO quando l’esito sarà pronto.
+        </Typography>
+        <Typography>
+          Un pò di pazienza: la verifica dei requisiti potrebbe richiedere fino a qualche settimana.
+        </Typography>
+      </Stack>
+    ),
     trackName: 'CDC_REQUEST_EXPIRED',
     trackProperties: {
       webview: true,
