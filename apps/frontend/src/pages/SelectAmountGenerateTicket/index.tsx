@@ -13,8 +13,7 @@ import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/app/reducers';
 import { useToast } from '../../contexts';
-
-const TEXT_COLOR = '#5C6F82';
+import { theme } from '@io-cdc/ui';
 
 const SelectAmountGenerateTicket = () => {
   const { showToast } = useToast();
@@ -28,7 +27,7 @@ const SelectAmountGenerateTicket = () => {
     {
       isLoading: isCreatingBonus,
       isSuccess: isBonusCreationCompleted,
-      data: newBonus,
+      data: newVoucher,
       isError,
       error: creationError,
     },
@@ -85,28 +84,28 @@ const SelectAmountGenerateTicket = () => {
   if (isError && isFetchBaseQueryError(creationError)) {
     return (
       <Navigate
-        to={APP_ROUTES.TICKET_FEEDBACK}
+        to={APP_ROUTES.FEEDBACK_VOUCHERS}
         state={{ status: creationError.status, name: 'CDC_BONUS_GENERATION_ERROR' }}
         replace
       />
     );
   }
 
-  if (isBonusCreationCompleted && newBonus?.id) {
+  if (isBonusCreationCompleted && newVoucher?.id) {
     trackWebviewEvent('CDC_BONUS_GENERATION_SUCCESS', { event_category: 'TECH' });
-    return <Navigate to={`/dettaglio-buono/${newBonus.id}`} />;
+    return <Navigate to={`/dettaglio-buono/${newVoucher.id}`} />;
   }
 
   if (isCreatingBonus) return <BonusCreationLoader />;
 
   return (
-    <Stack p={4} height="100dvh">
+    <Stack p={3} gap={3}>
       <Header onBack={onBackHeader} />
       <Box display="flex" flexDirection="column" justifyContent="space-between" flex={1}>
         <Stack gap={2}>
           <Stack gap={2}>
             <Typography variant="h2">{"Inserisci l'importo"}</Typography>
-            <Typography color={TEXT_COLOR} fontSize={16}>
+            <Typography color={theme.palette.text.secondary} fontSize={16}>
               {`Puoi generare un buono con un valore massimo di ${selectedCard?.residual_amount} €`}
             </Typography>
           </Stack>

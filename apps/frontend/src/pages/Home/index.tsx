@@ -1,20 +1,18 @@
 import { Button, Divider, Stack, Typography } from '@mui/material';
 import { Carousel } from '../../components/Carousel';
 import { useNavigate } from 'react-router-dom';
-import { useGetVoucherQuery, useGetCardsQuery } from '../../features/app/services';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { VoucherCard } from '../BonusList/components/BonusItem';
-import { EmptyState } from '@io-cdc/ui';
+import { EmptyState, Loader, theme } from '@io-cdc/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTicketDeleted } from '../../features/app/selectors';
 import { ticketsActions } from '../../features/app/reducers';
 import { OthersBonusSheet } from '../../components/OthersBonusSheet';
 import { useToast } from '../../contexts';
 import { Reminder } from './components/Reminder';
-
-const TEXT_COLOR = '#5C6F82';
+import { useGetCardsAndVouchers } from '../../hooks';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -22,8 +20,10 @@ const Home = () => {
   const navigate = useNavigate();
 
   const deleted = useSelector(selectTicketDeleted);
-  const { data } = useGetCardsQuery();
-  const { data: bonusList } = useGetVoucherQuery();
+
+  const { cards, vouchers, isSuccess, isError } = useGetCardsAndVouchers();
+
+  const isFulfilled = isSuccess || isError;
 
   const [openSheet, setOpenSheet] = useState<[boolean, boolean]>([false, false]);
 
@@ -56,9 +56,9 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (!data) return;
+    if (!cards) return;
     trackWebviewEvent('CDC_CARD_DETAIL');
-  }, [data]);
+  }, [cards]);
 
   const onClickShowAll = useCallback(() => {
     trackWebviewEvent('CDC_SHOW_BONUS_LIST');
@@ -66,14 +66,14 @@ const Home = () => {
   }, [navigate]);
 
   const toSpend = useMemo(() => {
-    const tbs = bonusList?.filter(({ amount }) => amount > 0) ?? [];
+    const tbs = vouchers?.filter(({ amount }) => amount > 0) ?? [];
     return tbs.slice(0, 4);
-  }, [bonusList]);
+  }, [vouchers]);
 
   const spent = useMemo(() => {
-    const tbs = bonusList?.filter(({ amount }) => amount < 0) ?? [];
+    const tbs = vouchers?.filter(({ amount }) => amount < 0) ?? [];
     return tbs.slice(0, 4);
-  }, [bonusList]);
+  }, [vouchers]);
 
   useEffect(() => {
     if (deleted) {
@@ -87,17 +87,24 @@ const Home = () => {
     }
   }, []);
 
-  if (!data) return <div>no data</div>;
+  if (!isFulfilled)
+    return (
+      <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+        <Loader />
+      </Stack>
+    );
+
+  if (!cards) return <div>no data</div>;
 
   return (
     <Stack justifyContent="center" alignItems="center" paddingInline={2}>
-      <Carousel list={data} />
-      <Typography sx={{ fontSize: 12, marginBottom: 2 }} color={TEXT_COLOR}>
+      <Carousel list={cards} />
+      <Typography sx={{ fontSize: 12, marginBottom: 2 }} color={theme.palette.text.secondary}>
         {lastUpdateLabel}
       </Typography>
       <Reminder />
       <Stack width="100%" paddingInline={2} gap={4}>
-        {bonusList && bonusList.length > 0 ? (
+        {vouchers && vouchers.length > 0 ? (
           <Stack width="100%" gap={2} paddingTop={3}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography fontWeight={700} fontSize={14}>
@@ -185,7 +192,7 @@ const Home = () => {
         </Stack>
       </Stack>
 
-      <OthersBonusSheet status={openSheet} onClose={() => setOpenSheet([false, false])} />
+      <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />
     </Stack>
   );
 };

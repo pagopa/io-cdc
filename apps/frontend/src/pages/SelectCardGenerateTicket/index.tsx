@@ -44,7 +44,7 @@ const GenerateTicket = () => {
   }, []);
 
   return (
-    <Stack p={4} height="100dvh">
+    <Stack p={3} gap={3}>
       <Header onBack={onBackHeader} />
       <RadioList cards={cardOptions} />
       <PopConfirm

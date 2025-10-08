@@ -3,8 +3,8 @@ import { featureFlags } from './featureFlags';
 
 const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'));
 const Unauthorized = React.lazy(() => import('../pages/Unauthorized'));
-const Feedback = React.lazy(() => import('../pages/Feedback'));
-const TicketFeedback = React.lazy(() => import('../pages/TicketFeedback'));
+const FeedbackRequest = React.lazy(() => import('../pages/FeedbackRequest'));
+const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
 const SelectYear = React.lazy(() => import('../pages/SelectYear'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
@@ -19,10 +19,10 @@ export enum APP_ROUTES {
   BONUS_DETAIL = '/dettaglio-buono/:id',
   BONUS_LIST = '/lista-buoni',
   SELECT_YEAR = '/scelta-anno',
-  FEEDBACK = '/esito',
+  FEEDBACK_REQUEST = '/esito',
   EXPIRED = '/iniziativa-scaduta',
   UNAUTHORIZED = '/unauthorized',
-  TICKET_FEEDBACK = '/ticket-feedback',
+  FEEDBACK_VOUCHERS = '/voucher-feedback',
   NOT_FOUND = '/not-found',
 }
 
@@ -37,8 +37,8 @@ const APP_ROUTES_REQUEST: APP_ROUTES_CONFIG_TYPE[] = [
     Element: SelectYear,
   },
   {
-    path: APP_ROUTES.FEEDBACK,
-    Element: Feedback,
+    path: APP_ROUTES.FEEDBACK_REQUEST,
+    Element: FeedbackRequest,
   },
   {
     path: APP_ROUTES.EXPIRED,
@@ -68,8 +68,8 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
     Element: BonusList,
   },
   {
-    path: APP_ROUTES.TICKET_FEEDBACK,
-    Element: TicketFeedback,
+    path: APP_ROUTES.FEEDBACK_VOUCHERS,
+    Element: FeedbackVouchers,
   },
 ];
 

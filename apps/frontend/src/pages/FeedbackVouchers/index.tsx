@@ -31,7 +31,7 @@ const TicketFeedback = () => {
     CONFIG_BY_STATUS[name as CONFIG_KEYS][status] ?? defaultStatus;
 
   useEffect(() => {
-    const { properties } = trackProperties;
+    const { name, properties } = trackProperties;
     trackWebviewEvent(name, properties);
   }, [name, trackProperties]);
 

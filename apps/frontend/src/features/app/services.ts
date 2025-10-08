@@ -10,6 +10,7 @@ import {
   GetYearsListResponseDTO,
   GetNotAvailableYearsListResponseDTO,
   GetSessionParamsRequestDTO,
+  CreateVoucherResponseDTO,
 } from './dto';
 import { RootState } from '../store';
 import { retrieveSessionQueryCached } from './utils';
@@ -73,11 +74,18 @@ export const appApi = createApi({
     getVoucher: builder.query<GetVouchersResponseDTO, void>({
       ...API_DASHBOARD[API_ENV].getVouchers,
     }),
-    createVoucher: builder.mutation<string, CreateVoucherRequestDTO>({
-      ...API_DASHBOARD[API_ENV].createVoucher,
+    createVoucher: builder.mutation<CreateVoucherResponseDTO, CreateVoucherRequestDTO>({
+      query: (voucher: CreateVoucherRequestDTO) => ({
+        url: '/vouchers',
+        method: 'POST',
+        body: voucher,
+      }),
     }),
     deleteVoucher: builder.mutation<DeleteVoucherResponseDTO, string>({
-      ...API_DASHBOARD[API_ENV].deleteVoucher,
+      query: (id: string) => ({
+        url: `/vouchers/${id}`,
+        method: 'DELETE',
+      }),
     }),
   }),
 });
@@ -92,7 +100,10 @@ export const {
   useGetNotAvailableYearsListQuery,
   useLazyGetNotAvailableYearsListQuery,
   useGetVoucherByIdQuery,
+  useLazyGetVoucherByIdQuery,
   useGetCardsQuery,
+  useLazyGetCardsQuery,
+  useLazyGetVoucherQuery,
   useGetVoucherQuery,
   useCreateVoucherMutation,
   useDeleteVoucherMutation,

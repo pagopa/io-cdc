@@ -32,4 +32,4 @@ export const selectSelectedCardBonus = createSelector(selectTickets, (state) => 
 
 export const selectAmountBonus = createSelector(selectTickets, (state) => state.amount);
 
-export const selectTicketDeleted = createSelector(selectTickets, (state) => state.deleted);
+export const selectTicketDeleted = createSelector(selectTickets, (state) => state?.deleted);

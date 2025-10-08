@@ -1,12 +1,13 @@
-import { Icon, SectionTitle } from '@io-cdc/ui';
-import { Stack, IconButton, Button } from '@mui/material';
-import { Sheet } from 'react-modal-sheet';
+import { SectionTitle } from '@io-cdc/ui';
+import { Stack, Button } from '@mui/material';
 import { CodesTabs } from '../../../components/CodesTabs';
 import { useCallback, useMemo, useState } from 'react';
 import { QrCode } from '../../../components/QrCode';
 import { BarCode } from '../../../components/BarCode';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { useToast } from '../../../contexts';
+import copy from 'copy-to-clipboard';
+import { BottomSheet } from '../../../components/BottomSheet';
 
 type UseCodeSheetProps = {
   isOpen: boolean;
@@ -19,14 +20,9 @@ export const UseCodeSheet = ({ isOpen, onClose, code }: UseCodeSheetProps) => {
   const { showToast } = useToast();
 
   const copyBonusCode = useCallback(() => {
-    trackWebviewEvent('CDC_BONUS_COPY_CODE', {
-      code_type: 'barcode',
-    });
-    navigator.clipboard.writeText(code);
-    showToast({
-      message: 'Il codice è stato copiato',
-      messageType: 'success',
-    });
+    trackWebviewEvent('CDC_BONUS_COPY_CODE', { code_type: 'barcode' });
+    copy(code);
+    showToast({ message: 'Il codice è stato copiato', messageType: 'success' });
   }, [code, showToast]);
 
   const SheetContentChild = useMemo(
@@ -45,66 +41,21 @@ export const UseCodeSheet = ({ isOpen, onClose, code }: UseCodeSheetProps) => {
   );
 
   return (
-    <Sheet
-      isOpen={isOpen}
-      onClose={onClose}
-      disableDrag
-      snapPoints={[0.75, 0.5]}
-      initialSnap={0}
-      detent="full-height"
-    >
-      <Sheet.Container
-        style={{
-          height: '100dvh',
-          borderRadius: 16,
-          transitionDuration: isOpen ? '0ms' : '500ms',
-        }}
-      >
-        <Sheet.Header>
-          <Stack
-            alignItems="end"
-            paddingX={3}
-            sx={{
-              borderTopLeftRadius: '16px',
-              borderTopRightRadius: '16px',
-              overflow: 'hidden',
-            }}
-          >
-            <IconButton
-              onClick={onClose}
-              sx={{
-                color: 'unset',
-                fontSize: '14px',
-                minHeight: '56px',
-              }}
-            >
-              <Icon name="close" color="disabled" />
-            </IconButton>
-          </Stack>
-        </Sheet.Header>
-        <Sheet.Content
-          style={{
-            display: 'flex',
-            height: '75dvh',
-            flexGrow: 0,
-          }}
-        >
-          {/** //TODO adjust style  */}
-          <Stack display="flex" flexDirection="column" flexGrow={1}>
-            <Stack paddingInline={4}>
-              <SectionTitle
-                title="Usa il buono"
-                description="Puoi usare il buono in tre modi: codice a barre, codice numerico o codice QR. Segui le istruzioni del negozio fisico o online"
-              />
-            </Stack>
-            <CodesTabs tabIndex={tabIndex} onChangeTab={setTabIndex} />
-            <Stack padding={2} alignItems="center" marginTop={4} flexGrow={1}>
-              {SheetContentChild}
-            </Stack>
-          </Stack>
-        </Sheet.Content>
-      </Sheet.Container>
-      <Sheet.Backdrop />
-    </Sheet>
+    <BottomSheet isOpen={isOpen} onClose={onClose} snapPoint={0.9}>
+      <>
+        <Stack paddingInline={4}>
+          <SectionTitle
+            title="Usa il buono"
+            description="Puoi usare il buono in tre modi: codice a barre, codice numerico o codice QR. Segui le istruzioni del negozio fisico o online"
+          />
+        </Stack>
+
+        <CodesTabs tabIndex={tabIndex} onChangeTab={setTabIndex} />
+
+        <Stack padding={2} alignItems="center" marginTop={4} flexGrow={1}>
+          {SheetContentChild}
+        </Stack>
+      </>
+    </BottomSheet>
   );
 };

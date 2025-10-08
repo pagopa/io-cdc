@@ -105,7 +105,7 @@ export const apiMocks = {
     amount: Number(faker.commerce.price()),
     expiration_date: faker.date.future({ years: 1 }).toLocaleDateString('it-IT'),
     status: faker.helpers.arrayElement(Object.values(VOUCHER_STATUS)),
-    card_year: newVoucher.year,
+    card_year: newVoucher.card_year,
     applicant: faker.helpers.arrayElement(Object.values(APPLICANTS)),
     merchant: faker.company.name(),
   }),

@@ -166,7 +166,7 @@ export const API_DASHBOARD = {
           };
         }
         await delay(2500);
-        return { data: apiMocks.createVoucher(newBonus).id };
+        return { id: apiMocks.createVoucher(newBonus).id };
       },
     },
     deleteVoucher: {

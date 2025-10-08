@@ -14,8 +14,12 @@ export type DeleteVoucherResponseDTO = {
 };
 
 export type CreateVoucherRequestDTO = {
-  year: string;
+  card_year: string;
   amount: number;
+};
+
+export type CreateVoucherResponseDTO = {
+  id: string;
 };
 
 export type SessionResponseDTO = {

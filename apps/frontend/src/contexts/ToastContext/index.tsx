@@ -45,6 +45,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
       {children}
       <Toast
         {...toast}
+        sx={{ zIndex: 99999999 }}
         open={open}
         onClose={() => setOpen(false)}
         TransitionProps={{ onExited: handleExited }}

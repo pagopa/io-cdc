@@ -1,4 +1,4 @@
-import { Icon } from '@io-cdc/ui';
+import { Icon, Loader } from '@io-cdc/ui';
 import { Button, Typography } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { PopConfirm } from '../../../components/PopConfirm';
@@ -9,6 +9,7 @@ import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { useDispatch } from 'react-redux';
 import { ticketsActions } from '../../../features/app/reducers';
 import { UseCodeSheet } from './UseCodeSheet';
+import { Stack } from '@mui/system';
 
 type FooterProps = {
   bonusId: string;
@@ -18,15 +19,16 @@ type FooterProps = {
 export const Footer = ({ bonusId, code }: FooterProps) => {
   const dispatch = useDispatch();
 
-  const [deleteBonus, { isSuccess: isBonusDeleteSuccess }] = useDeleteVoucherMutation();
+  const [deleteBonus, { isSuccess: isBonusDeleteSuccess, isLoading }] = useDeleteVoucherMutation();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const onClickUseBonus = useCallback(() => {
+    if (isOpen) return;
     trackWebviewEvent('CDC_BONUS_SHOW_CODE');
     setIsOpen(true);
-  }, []);
+  }, [isOpen]);
 
   const onClickDeleteBonus = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_CANCEL');
@@ -47,6 +49,14 @@ export const Footer = ({ bonusId, code }: FooterProps) => {
     trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
     return <Navigate to={APP_ROUTES.HOME} />;
   }
+
+  if (isLoading)
+    return (
+      <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+        <Loader />
+      </Stack>
+    );
+
   return (
     <>
       <Button

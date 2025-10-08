@@ -61,7 +61,7 @@ export const useLoadYears = () => {
     const error = getYearsListError || getNotAvailableYearsListError;
 
     if (isError && isFetchBaseQueryError(error)) {
-      navigate(APP_ROUTES.FEEDBACK, { state: { status: 500 } });
+      navigate(APP_ROUTES.FEEDBACK_REQUEST, { state: { status: 500 } });
       return;
     }
 

@@ -79,14 +79,14 @@ const SelectYear = () => {
         throw new Error('Something went wrong');
       }
       if (data)
-        navigate(APP_ROUTES.FEEDBACK, {
+        navigate(APP_ROUTES.FEEDBACK_REQUEST, {
           state: {
             status: 200,
             years: newYears.length,
           },
         });
     } catch (e) {
-      navigate(APP_ROUTES.FEEDBACK, {
+      navigate(APP_ROUTES.FEEDBACK_REQUEST, {
         state: {
           status: 503,
         },

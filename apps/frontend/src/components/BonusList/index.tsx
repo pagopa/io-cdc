@@ -9,7 +9,7 @@ type VoucherListProps = {
   vouchersList: VoucherItem[];
 };
 export const VoucherList = ({ vouchersList }: VoucherListProps) => {
-  const [openSheet, setOpenSheet] = useState<[boolean, boolean]>([false, false]);
+  const [openSheet, setOpenSheet] = useState<[isOpen: boolean, spent: boolean]>([false, false]);
 
   const toSpend = useMemo(
     () => vouchersList.filter(({ status }) => status === 'PENDING'),
@@ -85,7 +85,7 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
           </Stack>
         )}
       </Stack>
-      <OthersBonusSheet status={openSheet} onClose={() => setOpenSheet([false, false])} />
+      <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />
     </Stack>
   );
 };

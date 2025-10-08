@@ -46,7 +46,7 @@ export const Toast = ({
       autoHideDuration={2000}
       onClose={onClose}
       open={open}
-      sx={{ mt: 4, zIndex: 9999 }}
+      sx={{ mt: 4, zIndex: 99999999 }}
     >
       <Box
         sx={{

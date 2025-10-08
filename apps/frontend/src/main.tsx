@@ -11,6 +11,7 @@ import { ToastProvider } from './contexts/index.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Suspense } from 'react';
 import { RequestLoader } from './components/RequestLoader/index.tsx';
+import { ScrollToTop } from './components/ScrollToTop/index.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
           <ToastProvider>
             <CssBaseline />
             <BrowserRouter>
+              <ScrollToTop />
               <App />
             </BrowserRouter>
           </ToastProvider>
