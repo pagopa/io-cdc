@@ -144,7 +144,6 @@ app.storageQueue("ProcessPendingRequest", {
   queueName: config.CARD_REQUEST_QUEUE_NAME,
 });
 
-
 /*
  * CDC Usage Functions
  */
