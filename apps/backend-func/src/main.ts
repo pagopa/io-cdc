@@ -52,6 +52,9 @@ const servicesClient = ServicesAPIClient(config);
 const cdcUtilsProd = CdcUtils(config, CdcEnvironment.PRODUCTION);
 const cdcUtilsTest = CdcUtils(config, CdcEnvironment.TEST);
 
+/*
+ * CDC Utility Functions
+ */
 const Info = InfoFn({ config, redisClientFactory });
 app.http("Info", {
   authLevel: "anonymous",
@@ -60,6 +63,9 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
+/*
+ * CDC Authentication Functions
+ */
 const FimsAuth = FimsAuthFn({ fimsClient, redisClientFactory });
 app.http("FimsAuth", {
   authLevel: "function",
@@ -89,6 +95,9 @@ app.http("Authorize", {
   route: "api/v1/authorize",
 });
 
+/*
+ * CDC Registration Functions
+ */
 const GetYears = GetYearsFn({ config });
 app.http("GetYears", {
   authLevel: "function",
@@ -135,6 +144,10 @@ app.storageQueue("ProcessPendingRequest", {
   queueName: config.CARD_REQUEST_QUEUE_NAME,
 });
 
+
+/*
+ * CDC Usage Functions
+ */
 const GetCards = GetCardsFn({
   cdcUtils: cdcUtilsTest,
   config,
