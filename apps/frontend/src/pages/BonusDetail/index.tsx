@@ -121,7 +121,7 @@ const BonusDetail = () => {
   if (!voucherDetail) return <></>;
 
   return (
-    <Stack py={4} px={3} gap={3}>
+    <Stack p={3} gap={3}>
       <Header onBack={() => navigate(-1)} />
 
       <Stack>
@@ -175,20 +175,27 @@ const BonusDetail = () => {
         merchant={voucherDetail.merchant}
         usage_date={voucherDetail.expiration_date}
       />
-      <Button
-        variant="text"
-        onClick={onClickDeleteBonus}
-        startIcon={<Icon name="close" sx={{ width: 18, height: 18 }} />}
-        color="error"
-        sx={{
-          padding: 0,
-          justifyContent: 'start',
-        }}
-      >
-        <Typography variant="body1" fontWeight={700} color="inherit">
-          Annulla il buono
-        </Typography>
-      </Button>
+
+      {pending && (
+        <>
+          <Button
+            variant="text"
+            onClick={onClickDeleteBonus}
+            startIcon={<Icon name="close" sx={{ width: 18, height: 18 }} />}
+            color="error"
+            sx={{
+              padding: 0,
+              justifyContent: 'start',
+            }}
+          >
+            <Typography variant="body1" fontWeight={700} color="inherit">
+              Annulla il buono
+            </Typography>
+          </Button>
+          <Footer code={voucherDetail.id} />
+        </>
+      )}
+
       <PopConfirm
         isOpen={isDialogOpen}
         onOpen={() => trackWebviewEvent('CDC_BONUS_CANCELLATION')}
@@ -203,7 +210,6 @@ const BonusDetail = () => {
           onClick: onStopDeleteBonus,
         }}
       />
-      {pending && <Footer code={voucherDetail.id} />}
     </Stack>
   );
 };

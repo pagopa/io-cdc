@@ -99,7 +99,7 @@ const SelectAmountGenerateTicket = () => {
   if (isCreatingBonus) return <BonusCreationLoader />;
 
   return (
-    <Stack p={3} gap={3}>
+    <Stack p={3} gap={3} flex={1}>
       <Header onBack={onBackHeader} />
       <Box display="flex" flexDirection="column" justifyContent="space-between" flex={1}>
         <Stack gap={2}>

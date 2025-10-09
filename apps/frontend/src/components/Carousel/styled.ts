@@ -24,7 +24,6 @@ export const StyledDots = styled(Box)`
 export const CarouselContainer = styled(Stack)({
   width: '100%',
   overflow: 'hidden',
-  paddingTop: 8,
   paddingBottom: 8,
 });
 

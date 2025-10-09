@@ -144,18 +144,20 @@ const Home = () => {
               <Typography fontWeight={700} fontSize={14}>
                 BUONI SPESI
               </Typography>
-              <Typography
-                fontSize={16}
-                fontWeight={600}
-                margin={0}
-                onClick={onClickShowAll}
-                sx={{
-                  color: '#0073E6',
-                  textDecoration: 'none',
-                }}
-              >
-                Mostra tutti
-              </Typography>
+              {spent.length ? (
+                <Typography
+                  fontSize={16}
+                  fontWeight={600}
+                  margin={0}
+                  onClick={onClickShowAll}
+                  sx={{
+                    color: '#0073E6',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Mostra tutti
+                </Typography>
+              ) : null}
             </Stack>
             {spent.length ? (
               spent.map((voucher, index, array) => (
