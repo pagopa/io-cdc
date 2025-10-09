@@ -290,6 +290,7 @@ const getCdcCardsTE =
                 ),
               ),
               TE.map((cards) =>
+                // TODO: Fix values when the API will be exposed
                 cards.map((c) => ({
                   card_name: `Carta della Cultura ${c.annoRif}`,
                   card_status: Card_statusEnum.ACTIVE,
