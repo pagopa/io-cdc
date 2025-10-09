@@ -1,20 +1,20 @@
 openapi: 3.0.0
 info:
   title: Liberty REST APIs
-  description: Discover REST APIs available within Liberty
-  version: 1.0.0
+  description: Discover REST APIs available within Liberty by Sogei
+  version: 1.1.0
 servers:
-- url: https://ssotest.cartadellacultura.it
+  - url: https://ssotest.cartadellacultura.it
 tags:
-- name: unsecured
-  description: metodi di utilità
-- name: /secured/utente
-  description: metodi inerenti all'utente
+  - name: registrazione
+    description: metodi inerenti all'utente
+  - name: utilizzo
+    description: metodi inerenti all'utilizzo della cdc
 paths:
   /CDCUtenteWS/rest/secured/beneficiario/stato:
     get:
       tags:
-      - /secured/utente
+        - registrazione
       summary: controllo anno registrazione per il beneficiario
       operationId: stato
       security:
@@ -25,13 +25,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListaRegistratoBean'
+                $ref: "#/components/schemas/ListaRegistratoBean"
         "400":
           description: Validazioni non superate
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemBean'
+                $ref: "#/components/schemas/ProblemBean"
         "401":
           description: Utente non autorizzato
         "403":
@@ -41,29 +41,190 @@ paths:
   /CDCUtenteWS/rest/secured/beneficiario/registrazione:
     post:
       tags:
-      - /secured/utente
-      summary: 'Prima registrazione del beneficiario sul db '
+        - registrazione
+      summary: "Prima registrazione del beneficiario sul db "
       operationId: registrazione
+      security:
+        - JwtAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InputBeneficiarioBean'
-      security:
-        - JwtAuth: [] 
+              $ref: "#/components/schemas/InputBeneficiarioBean"
       responses:
         "200":
           description: Tutto OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListaEsitoRichiestaBean'
+                $ref: "#/components/schemas/ListaEsitoRichiestaBean"
         "400":
           description: Validazioni non superate
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemBean'
+                $ref: "#/components/schemas/ProblemBean"
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
+  /CDCUtenteWS/rest/secured/beneficiario/getListaBorsellino:
+    get:
+      tags:
+        - utilizzo
+      summary:
+        Restituisce la lista di tutti i borsellini presenti per Carta della
+        Cultura
+      operationId: getListaBorsellino
+      security:
+        - JwtAuth: []
+      responses:
+        "200":
+          description: Tutto OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListBorsellinoDetails"
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
+  /CDCUtenteWS/rest/secured/beneficiario/generaVoucher:
+    post:
+      tags:
+        - utilizzo
+      summary: Crea un nuovo voucher di Carta della Cultura
+      operationId: generaVoucher
+      security:
+        - JwtAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoucherBeanRequest"
+      responses:
+        "200":
+          description: Tutto OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoucherBeanDetails"
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
+  /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher:
+    post:
+      tags:
+        - utilizzo
+      summary: Annulla il Voucher di Carta della Cultura
+      operationId: annullaVoucher
+      security:
+        - JwtAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoucherBeanRequest"
+      responses:
+        "200":
+          description: Tutto OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleResponseBean"
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
+  /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/{annoRif}:
+    get:
+      tags:
+        - utilizzo
+      summary:
+        Restituisce la Lista dei Voucher per nucleo di Carta della Cultura
+        per Anno
+      operationId: getListaVoucher
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: annoRif
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tutto OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListVoucherDetails"
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
+  /CDCUtenteWS/rest/secured/beneficiario/getDettaglioVoucher/{codVoucher}:
+    get:
+      tags:
+        - utilizzo
+      summary: Restituisce il dettaglio del singolo Voucher di Carta della Cultura
+      operationId: getDettaglioVoucher
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: codVoucher
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tutto OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoucherBeanDetails"
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
         "401":
           description: Utente non autorizzato
         "403":
@@ -90,17 +251,17 @@ components:
         anniRif:
           type: array
           items:
-            $ref: '#/components/schemas/AnniBeneficiario'
+            $ref: "#/components/schemas/AnniBeneficiario"
     EsitoRichiestaBean:
       type: object
       properties:
         esitoRichiesta:
           type: string
           enum:
-          - INIZIATIVA_TERMINATA
-          - ANNO_NON_AMMISSIBILE
-          - CIT_REGISTRATO
-          - OK
+            - INIZIATIVA_TERMINATA
+            - ANNO_NON_AMMISSIBILE
+            - CIT_REGISTRATO
+            - OK
         annoRiferimento:
           type: string
     ListaEsitoRichiestaBean:
@@ -109,7 +270,7 @@ components:
         listaEsitoRichiestaPerAnno:
           type: array
           items:
-            $ref: '#/components/schemas/EsitoRichiestaBean'
+            $ref: "#/components/schemas/EsitoRichiestaBean"
     ProblemBean:
       type: object
       properties:
@@ -120,11 +281,11 @@ components:
         status:
           type: string
           enum:
-          - NO_INPUT
-          - ANNI_RIFERIMENTO_NON_FORNITI
-          - LISTA_ANNI_VUOTA
-          - FORMATO_ANNI_ERRATO
-          - INPUT_SUPERIORE_AL_CONSENTITO
+            - NO_INPUT
+            - ANNI_RIFERIMENTO_NON_FORNITI
+            - LISTA_ANNI_VUOTA
+            - FORMATO_ANNI_ERRATO
+            - INPUT_SUPERIORE_AL_CONSENTITO
         detail:
           type: string
         instance:
@@ -137,7 +298,7 @@ components:
         listaStatoPerAnno:
           type: array
           items:
-            $ref: '#/components/schemas/RegistratoBean'
+            $ref: "#/components/schemas/RegistratoBean"
     AnniBeneficiario:
       type: object
       properties:
@@ -146,3 +307,184 @@ components:
         tsRichiestaEffettuata:
           type: string
           format: date-time
+    ListBorsellinoDetails:
+      type: object
+      properties:
+        codErrore:
+          type: string
+        descrErrore:
+          type: string
+        status:
+          type: string
+          enum:
+            - NO_INPUT
+            - ANNI_RIFERIMENTO_NON_FORNITI
+            - LISTA_ANNI_VUOTA
+            - FORMATO_ANNI_ERRATO
+            - INPUT_SUPERIORE_AL_CONSENTITO
+        msgERRProcedura:
+          type: string
+        codErrProcedura:
+          type: integer
+          format: int32
+        listaRisultati:
+          type: array
+          items:
+            $ref: "#/components/schemas/BorsellinoDTO"
+    BorsellinoDTO:
+      type: object
+      properties:
+        idBorsellino:
+          type: integer
+          format: int64
+        idBeneficiario:
+          type: integer
+          format: int64
+        idNucleo:
+          type: integer
+          format: int64
+        annoRif:
+          type: string
+        importoTot:
+          type: number
+        importoRichNonValid:
+          type: number
+        importoValidato:
+          type: number
+        importoResiduo:
+          type: number
+        idStato:
+          type: integer
+          format: int64
+        dataInserimento:
+          type: string
+          format: date-time
+        datAggiornamento:
+          type: string
+          format: date-time
+        codiceFiscale:
+          type: string
+        descStatoBorsellino:
+          type: string
+    VoucherBeanRequest:
+      type: object
+      properties:
+        anno:
+          type: string
+        importo:
+          type: number
+        idBene:
+          type: integer
+          format: int64
+    VoucherBeanDetails:
+      type: object
+      properties:
+        codErrore:
+          type: string
+        descrErrore:
+          type: string
+        status:
+          type: string
+          enum:
+            - NO_INPUT
+            - ANNI_RIFERIMENTO_NON_FORNITI
+            - LISTA_ANNI_VUOTA
+            - FORMATO_ANNI_ERRATO
+            - INPUT_SUPERIORE_AL_CONSENTITO
+        msgERRProcedura:
+          type: string
+        codErrProcedura:
+          type: integer
+          format: int32
+        annoRif:
+          type: string
+        codVoucher:
+          type: string
+        cfBeneficiario:
+          type: string
+        importoRichiesto:
+          type: number
+        stato:
+          type: string
+        richiedente:
+          type: string
+        esercente:
+          type: string
+        rimborso:
+          $ref: "#/components/schemas/RimborsoBean"
+        importoValidato:
+          type: number
+        numFattura:
+          type: string
+        descrizioneBene:
+          type: string
+        dataScadenza:
+          type: string
+          format: date-time
+        dataConferma:
+          type: string
+          format: date-time
+        dataAnnullamento:
+          type: string
+          format: date-time
+        dataInserimento:
+          type: string
+          format: date-time
+        dataAggiornamento:
+          type: string
+          format: date-time
+        strDataEmissione:
+          type: string
+        strDataConferma:
+          type: string
+        strDataScadenza:
+          type: string
+        strDataAggiornamento:
+          type: string
+        strDataAnnullamento:
+          type: string
+        strDataInserimento:
+          type: string
+        qr:
+          type: string
+        codeLine:
+          type: string
+    RimborsoBean:
+      type: object
+      properties:
+        importoDaRiaccreditare:
+          type: number
+        importoUsato:
+          type: number
+        stato:
+          type: string
+    SimpleResponseBean:
+      type: object
+      properties:
+        codErrore:
+          type: string
+        descrErrore:
+          type: string
+        status:
+          type: string
+          enum:
+            - NO_INPUT
+            - ANNI_RIFERIMENTO_NON_FORNITI
+            - LISTA_ANNI_VUOTA
+            - FORMATO_ANNI_ERRATO
+            - INPUT_SUPERIORE_AL_CONSENTITO
+        msgERRProcedura:
+          type: string
+        codErrProcedura:
+          type: integer
+          format: int32
+    ListVoucherDetails:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int32
+        listaRisultati:
+          type: array
+          items:
+            $ref: "#/components/schemas/VoucherBeanDetails"

@@ -7,6 +7,7 @@ import { getConfigOrThrow } from "./config.js";
 import { AuthorizeFn } from "./functions/authorize.js";
 import { FimsAuthFn } from "./functions/fauth.js";
 import { FimsCallbackFn } from "./functions/fcb.js";
+import { GetCardsFn } from "./functions/get-cards.js";
 import { GetCardRequestsFn } from "./functions/get-requests.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
@@ -48,8 +49,12 @@ const redisClientFactory = getRedisClientFactory(config);
 const servicesClient = ServicesAPIClient(config);
 
 // CdC utils
-const cdcUtils = CdcUtils(config, CdcEnvironment.PRODUCTION);
+const cdcUtilsProd = CdcUtils(config, CdcEnvironment.PRODUCTION);
+const cdcUtilsTest = CdcUtils(config, CdcEnvironment.TEST);
 
+/*
+ * CDC Utility Functions
+ */
 const Info = InfoFn({ config, redisClientFactory });
 app.http("Info", {
   authLevel: "anonymous",
@@ -58,6 +63,9 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
+/*
+ * CDC Authentication Functions
+ */
 const FimsAuth = FimsAuthFn({ fimsClient, redisClientFactory });
 app.http("FimsAuth", {
   authLevel: "function",
@@ -87,6 +95,9 @@ app.http("Authorize", {
   route: "api/v1/authorize",
 });
 
+/*
+ * CDC Registration Functions
+ */
 const GetYears = GetYearsFn({ config });
 app.http("GetYears", {
   authLevel: "function",
@@ -122,7 +133,7 @@ app.http("PostCardRequests", {
 });
 
 const ProcessPendingRequest = ProcessPendingRequestFn({
-  cdcUtils,
+  cdcUtils: cdcUtilsProd,
   config,
   cosmosDbClient,
   inputDecoder: PendingCardRequestMessage,
@@ -131,4 +142,19 @@ app.storageQueue("ProcessPendingRequest", {
   connection: "STORAGE_ACCOUNT",
   handler: ProcessPendingRequest,
   queueName: config.CARD_REQUEST_QUEUE_NAME,
+});
+
+/*
+ * CDC Usage Functions
+ */
+const GetCards = GetCardsFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetCards", {
+  authLevel: "function",
+  handler: GetCards,
+  methods: ["GET"],
+  route: "api/v1/cards",
 });
