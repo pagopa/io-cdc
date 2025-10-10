@@ -13,6 +13,7 @@ import { GetVouchersFn } from "./functions/get-vouchers.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
+import { PostVouchersFn } from "./functions/post-vouchers.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
 import { CdcEnvironment, CdcUtils } from "./utils/cdc.js";
@@ -169,5 +170,17 @@ app.http("GetVouchers", {
   authLevel: "function",
   handler: GetVouchers,
   methods: ["GET"],
+  route: "api/v1/vouchers",
+});
+
+const PostVouchers = PostVouchersFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("PostVouchers", {
+  authLevel: "function",
+  handler: PostVouchers,
+  methods: ["POST"],
   route: "api/v1/vouchers",
 });

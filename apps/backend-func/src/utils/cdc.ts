@@ -15,6 +15,7 @@ import { ListBorsellinoDetails } from "../generated/cdc-api/ListBorsellinoDetail
 import { ListVoucherDetails } from "../generated/cdc-api/ListVoucherDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
+import { VoucherBeanDetails } from "../generated/cdc-api/VoucherBeanDetails.js";
 import { Card_statusEnum } from "../generated/definitions/internal/Card.js";
 import {
   ApplicantEnum,
@@ -401,6 +402,84 @@ const getCdcVouchersTE =
       ),
     );
 
+// CDC POST VOUCHER API
+const isCdcApiPostVouchersCallSuccess = (
+  res: IResponseType<number, unknown, never>,
+): res is IResponseType<200, VoucherBeanDetails, never> => res.status === 200;
+
+const postCdcVouchersTE =
+  (config: Config, env: CdcEnvironmentT) =>
+  (user: CdcApiUserData, year: string, amount: number) =>
+    pipe(
+      getJwtTE(config, env, user),
+      TE.chain((jwt) =>
+        pipe(
+          TE.of(getCdcClient(config, env)(jwt)),
+          TE.chain((client) =>
+            TE.tryCatch(
+              async () =>
+                await client.generaVoucher({
+                  body: { anno: year, idBene: 0, importo: amount },
+                }),
+              E.toError,
+            ),
+          ),
+          TE.chain((response) =>
+            pipe(
+              response,
+              TE.fromEither,
+              TE.mapLeft(
+                (errors) =>
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
+              ),
+            ),
+          ),
+          TE.chain((response) =>
+            TE.fromPredicate(
+              isCdcApiPostVouchersCallSuccess,
+              mapCdcApiCallFailure(
+                `Post vouchers CDC failure | API result not success.`,
+              ),
+            )(response),
+          ),
+          TE.map((successResponse) => successResponse.value),
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          TE.chain((voucher) =>
+            pipe(
+              voucher,
+              TE.fromPredicate(
+                (voucher) => voucher.codErrore === undefined,
+                () => new Error("Vocher error"),
+              ),
+              TE.map((v) =>
+                // TODO: Fix values when the API will be exposed
+                ({
+                  amount: v.importoValidato || 0,
+                  applicant: ApplicantEnum.SELF,
+                  card_year: v.annoRif || "",
+                  expiration_date: v.dataScadenza || new Date(),
+                  id: v.codVoucher || "",
+                  refund: {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    amount: v.rimborso!.importoDaRiaccreditare || 0,
+                    refund_status: Refund_statusEnum.PENDING,
+                  },
+                  voucher_status: Voucher_statusEnum.PENDING,
+                }),
+              ),
+            ),
+          ),
+        ),
+      ),
+      TE.mapLeft((err) =>
+        traceEvent(err)(
+          "getCdcVouchersTE",
+          `cdc.api.${env}.request.post.voucher.error`,
+          err,
+        ),
+      ),
+    );
+
 export enum CdcEnvironment {
   PRODUCTION = "PRODUCTION",
   TEST = "TEST",
@@ -411,6 +490,7 @@ export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
   getCdcCardsTE: getCdcCardsTE(config, env),
   getCdcVouchersTE: getCdcVouchersTE(config, env),
+  postCdcVouchersTE: postCdcVouchersTE(config, env),
   requestCdcTE: requestCdcTE(config, env),
 });
 export type CdcUtils = ReturnType<typeof CdcUtils>;
