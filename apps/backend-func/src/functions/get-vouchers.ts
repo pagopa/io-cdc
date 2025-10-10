@@ -9,6 +9,7 @@ import * as t from "io-ts";
 import { Config } from "../config.js";
 import { VoucherDetails } from "../generated/definitions/internal/VoucherDetails.js";
 import { withParams } from "../middlewares/withParams.js";
+import { Year } from "../models/card_request.js";
 import { Session } from "../models/session.js";
 import { CdcUtils } from "../utils/cdc.js";
 import {
@@ -31,24 +32,30 @@ const Headers = t.type({
 });
 type Headers = t.TypeOf<typeof Headers>;
 
+const Path = t.type({
+  year: Year,
+});
+type Path = t.TypeOf<typeof Path>;
+
 export const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(
     getSessionTE(deps.redisClientFactory, sessionToken),
     TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
-export const getVouchers = (user: Session) => (deps: Dependencies) =>
-  pipe(
-    deps.cdcUtils.getCdcVouchersTE(
-      {
-        first_name: user.given_name,
-        fiscal_code: user.fiscal_code,
-        last_name: user.family_name,
-      },
-      "",
-    ),
-    TE.mapLeft(errorToInternalError),
-  );
+export const getVouchers =
+  (user: Session, year: string) => (deps: Dependencies) =>
+    pipe(
+      deps.cdcUtils.getCdcVouchersTE(
+        {
+          first_name: user.given_name,
+          fiscal_code: user.fiscal_code,
+          last_name: user.family_name,
+        },
+        year,
+      ),
+      TE.mapLeft(errorToInternalError),
+    );
 
 export const makeGetVouchersHandler: H.Handler<
   H.HttpRequest,
@@ -60,7 +67,14 @@ export const makeGetVouchersHandler: H.Handler<
     withParams(Headers, req.headers),
     RTE.mapLeft(errorToValidationError),
     RTE.chain(({ token }) => getSession(token)),
-    RTE.chain((user) => getVouchers(user)),
+    RTE.chainW((user) =>
+      pipe(
+        withParams(Path, req.path),
+        RTE.mapLeft(errorToValidationError),
+        RTE.map((path) => ({ path, user })),
+      ),
+    ),
+    RTE.chain(({ path, user }) => getVouchers(user, path.year)),
     RTE.map(H.successJson),
     responseErrorToHttpError,
   ),

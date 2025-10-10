@@ -169,5 +169,5 @@ app.http("GetVouchers", {
   authLevel: "function",
   handler: GetVouchers,
   methods: ["GET"],
-  route: "api/v1/vouchers",
+  route: "api/v1/vouchers/{year}",
 });
