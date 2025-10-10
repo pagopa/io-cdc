@@ -5,6 +5,7 @@ import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-function
 import { ServicesAPIClient } from "./clients/services.js";
 import { getConfigOrThrow } from "./config.js";
 import { AuthorizeFn } from "./functions/authorize.js";
+import { DeleteVoucherFn } from "./functions/delete-voucher.js";
 import { FimsAuthFn } from "./functions/fauth.js";
 import { FimsCallbackFn } from "./functions/fcb.js";
 import { GetCardsFn } from "./functions/get-cards.js";
@@ -195,5 +196,17 @@ app.http("GetVoucher", {
   authLevel: "function",
   handler: GetVoucher,
   methods: ["GET"],
+  route: "api/v1/vouchers/{id}",
+});
+
+const DeleteVoucher = DeleteVoucherFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("DeleteVoucher", {
+  authLevel: "function",
+  handler: DeleteVoucher,
+  methods: ["DELETE"],
   route: "api/v1/vouchers/{id}",
 });

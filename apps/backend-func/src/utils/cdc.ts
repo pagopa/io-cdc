@@ -15,6 +15,7 @@ import { ListBorsellinoDetails } from "../generated/cdc-api/ListBorsellinoDetail
 import { ListVoucherDetails } from "../generated/cdc-api/ListVoucherDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
+import { SimpleResponseBean } from "../generated/cdc-api/SimpleResponseBean.js";
 import { VoucherBeanDetails } from "../generated/cdc-api/VoucherBeanDetails.js";
 import { Card_statusEnum } from "../generated/definitions/internal/Card.js";
 import {
@@ -473,7 +474,7 @@ const postCdcVouchersTE =
       ),
       TE.mapLeft((err) =>
         traceEvent(err)(
-          "getCdcVouchersTE",
+          "postCdcVouchersTE",
           `cdc.api.${env}.request.post.voucher.error`,
           err,
         ),
@@ -551,8 +552,75 @@ const getCdcVoucherTE =
       ),
       TE.mapLeft((err) =>
         traceEvent(err)(
-          "getCdcVouchersTE",
+          "getCdcVoucherTE",
           `cdc.api.${env}.request.get.voucher.error`,
+          err,
+        ),
+      ),
+    );
+
+// CDC GET VOUCHER API
+const isCdcApiDeleteVoucherCallSuccess = (
+  res: IResponseType<number, unknown, never>,
+): res is IResponseType<200, SimpleResponseBean, never> => res.status === 200;
+
+const deleteCdcVoucherTE =
+  (config: Config, env: CdcEnvironmentT) =>
+  (user: CdcApiUserData, id: string) =>
+    pipe(
+      getJwtTE(config, env, user),
+      TE.chain((jwt) =>
+        pipe(
+          TE.of(getCdcClient(config, env)(jwt)),
+          TE.chain((client) =>
+            TE.tryCatch(
+              async () =>
+                await client.annullaVoucher({
+                  codVoucher: id,
+                }),
+              E.toError,
+            ),
+          ),
+          TE.chain((response) =>
+            pipe(
+              response,
+              TE.fromEither,
+              TE.mapLeft(
+                (errors) =>
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
+              ),
+            ),
+          ),
+          TE.chain((response) =>
+            TE.fromPredicate(
+              isCdcApiDeleteVoucherCallSuccess,
+              mapCdcApiCallFailure(
+                `Get voucher CDC failure | API result not success.`,
+              ),
+            )(response),
+          ),
+          TE.map((successResponse) => successResponse.value),
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          TE.chain((result) =>
+            pipe(
+              result,
+              TE.fromPredicate(
+                (result) => result.codErrore === undefined,
+                () => new Error("Vocher error"),
+              ),
+              TE.map(
+                () =>
+                  // TODO: Fix values when the API will be exposed
+                  true,
+              ),
+            ),
+          ),
+        ),
+      ),
+      TE.mapLeft((err) =>
+        traceEvent(err)(
+          "deleteCdcVoucherTE",
+          `cdc.api.${env}.request.delete.voucher.error`,
           err,
         ),
       ),
@@ -565,6 +633,7 @@ export enum CdcEnvironment {
 export type CdcEnvironmentT = keyof typeof CdcEnvironment;
 
 export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
+  deleteCdcVoucherTE: deleteCdcVoucherTE(config, env),
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
   getCdcCardsTE: getCdcCardsTE(config, env),
   getCdcVoucherTE: getCdcVoucherTE(config, env),
