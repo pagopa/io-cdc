@@ -32,10 +32,10 @@ const Headers = t.type({
 });
 type Headers = t.TypeOf<typeof Headers>;
 
-const Path = t.type({
+const Query = t.type({
   year: Year,
 });
-type Path = t.TypeOf<typeof Path>;
+type Query = t.TypeOf<typeof Query>;
 
 export const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(
@@ -69,12 +69,12 @@ export const makeGetVouchersHandler: H.Handler<
     RTE.chain(({ token }) => getSession(token)),
     RTE.chainW((user) =>
       pipe(
-        withParams(Path, req.path),
+        withParams(Query, req.query),
         RTE.mapLeft(errorToValidationError),
-        RTE.map((path) => ({ path, user })),
+        RTE.map((query) => ({ query, user })),
       ),
     ),
-    RTE.chain(({ path, user }) => getVouchers(user, path.year)),
+    RTE.chain(({ query, user }) => getVouchers(user, query.year)),
     RTE.map(H.successJson),
     responseErrorToHttpError,
   ),
