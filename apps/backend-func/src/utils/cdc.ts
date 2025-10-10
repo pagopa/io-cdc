@@ -12,9 +12,15 @@ import { Config } from "../config.js";
 import { EsitoRichiestaEnum } from "../generated/cdc-api/EsitoRichiestaBean.js";
 import { InputBeneficiarioBean } from "../generated/cdc-api/InputBeneficiarioBean.js";
 import { ListBorsellinoDetails } from "../generated/cdc-api/ListBorsellinoDetails.js";
+import { ListVoucherDetails } from "../generated/cdc-api/ListVoucherDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import { Card_statusEnum } from "../generated/definitions/internal/Card.js";
+import {
+  ApplicantEnum,
+  Refund_statusEnum,
+  Voucher_statusEnum,
+} from "../generated/definitions/internal/VoucherDetails.js";
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 import { traceEvent } from "./tracing.js";
@@ -312,6 +318,89 @@ const getCdcCardsTE =
       ),
     );
 
+// CDC LIST VOUCHER API
+const isCdcApiGetVouchersCallSuccess = (
+  res: IResponseType<number, unknown, never>,
+): res is IResponseType<200, ListVoucherDetails, never> => res.status === 200;
+
+const getCdcVouchersTE =
+  (config: Config, env: CdcEnvironmentT) =>
+  (user: CdcApiUserData, year: string) =>
+    pipe(
+      getJwtTE(config, env, user),
+      TE.chain((jwt) =>
+        pipe(
+          TE.of(getCdcClient(config, env)(jwt)),
+          TE.chain((client) =>
+            TE.tryCatch(
+              async () => await client.getListaVoucher({ annoRif: year }),
+              E.toError,
+            ),
+          ),
+          TE.chain((response) =>
+            pipe(
+              response,
+              TE.fromEither,
+              TE.mapLeft(
+                (errors) =>
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
+              ),
+            ),
+          ),
+          TE.chain((response) =>
+            TE.fromPredicate(
+              isCdcApiGetVouchersCallSuccess,
+              mapCdcApiCallFailure(
+                `Get vouchers CDC failure | API result not success.`,
+              ),
+            )(response),
+          ),
+          TE.map((successResponse) => successResponse.value),
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          TE.chain(({ listaRisultati, ..._ }) =>
+            pipe(
+              listaRisultati,
+              TE.fromPredicate(
+                (vouchers) => !!vouchers,
+                () => new Error("Undefined cdc vouchers list"),
+              ),
+              TE.chain(
+                TE.fromPredicate(
+                  (vouchers) => vouchers.length > 0,
+                  () => new Error("Empty cdc vouchers list"),
+                ),
+              ),
+              TE.map((vouchers) =>
+                vouchers.map((v) =>
+                  // TODO: Fix values when the API will be exposed
+                  ({
+                    amount: v.importoValidato || 0,
+                    applicant: ApplicantEnum.SELF,
+                    card_year: v.annoRif || "",
+                    expiration_date: v.dataScadenza || new Date(),
+                    id: v.codVoucher || "",
+                    refund: {
+                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                      amount: v.rimborso!.importoDaRiaccreditare || 0,
+                      refund_status: Refund_statusEnum.PENDING,
+                    },
+                    voucher_status: Voucher_statusEnum.PENDING,
+                  }),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      TE.mapLeft((err) =>
+        traceEvent(err)(
+          "getCdcVouchersTE",
+          `cdc.api.${env}.request.vouchers.error`,
+          err,
+        ),
+      ),
+    );
+
 export enum CdcEnvironment {
   PRODUCTION = "PRODUCTION",
   TEST = "TEST",
@@ -321,6 +410,7 @@ export type CdcEnvironmentT = keyof typeof CdcEnvironment;
 export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
   getCdcCardsTE: getCdcCardsTE(config, env),
+  getCdcVouchersTE: getCdcVouchersTE(config, env),
   requestCdcTE: requestCdcTE(config, env),
 });
 export type CdcUtils = ReturnType<typeof CdcUtils>;
