@@ -480,6 +480,84 @@ const postCdcVouchersTE =
       ),
     );
 
+// CDC GET VOUCHER API
+const isCdcApiGetVoucherCallSuccess = (
+  res: IResponseType<number, unknown, never>,
+): res is IResponseType<200, VoucherBeanDetails, never> => res.status === 200;
+
+const getCdcVoucherTE =
+  (config: Config, env: CdcEnvironmentT) =>
+  (user: CdcApiUserData, id: string) =>
+    pipe(
+      getJwtTE(config, env, user),
+      TE.chain((jwt) =>
+        pipe(
+          TE.of(getCdcClient(config, env)(jwt)),
+          TE.chain((client) =>
+            TE.tryCatch(
+              async () =>
+                await client.getDettaglioVoucher({
+                  codVoucher: id,
+                }),
+              E.toError,
+            ),
+          ),
+          TE.chain((response) =>
+            pipe(
+              response,
+              TE.fromEither,
+              TE.mapLeft(
+                (errors) =>
+                  new Error(errorsToReadableMessages(errors).join(" / ")),
+              ),
+            ),
+          ),
+          TE.chain((response) =>
+            TE.fromPredicate(
+              isCdcApiGetVoucherCallSuccess,
+              mapCdcApiCallFailure(
+                `Get voucher CDC failure | API result not success.`,
+              ),
+            )(response),
+          ),
+          TE.map((successResponse) => successResponse.value),
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          TE.chain((voucher) =>
+            pipe(
+              voucher,
+              TE.fromPredicate(
+                (voucher) => voucher.codErrore === undefined,
+                () => new Error("Vocher error"),
+              ),
+              TE.map((v) =>
+                // TODO: Fix values when the API will be exposed
+                ({
+                  amount: v.importoValidato || 0,
+                  applicant: ApplicantEnum.SELF,
+                  card_year: v.annoRif || "",
+                  expiration_date: v.dataScadenza || new Date(),
+                  id: v.codVoucher || "",
+                  refund: {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    amount: v.rimborso!.importoDaRiaccreditare || 0,
+                    refund_status: Refund_statusEnum.PENDING,
+                  },
+                  voucher_status: Voucher_statusEnum.PENDING,
+                }),
+              ),
+            ),
+          ),
+        ),
+      ),
+      TE.mapLeft((err) =>
+        traceEvent(err)(
+          "getCdcVouchersTE",
+          `cdc.api.${env}.request.get.voucher.error`,
+          err,
+        ),
+      ),
+    );
+
 export enum CdcEnvironment {
   PRODUCTION = "PRODUCTION",
   TEST = "TEST",
@@ -489,6 +567,7 @@ export type CdcEnvironmentT = keyof typeof CdcEnvironment;
 export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
   getCdcCardsTE: getCdcCardsTE(config, env),
+  getCdcVoucherTE: getCdcVoucherTE(config, env),
   getCdcVouchersTE: getCdcVouchersTE(config, env),
   postCdcVouchersTE: postCdcVouchersTE(config, env),
   requestCdcTE: requestCdcTE(config, env),

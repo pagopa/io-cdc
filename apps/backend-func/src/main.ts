@@ -9,6 +9,7 @@ import { FimsAuthFn } from "./functions/fauth.js";
 import { FimsCallbackFn } from "./functions/fcb.js";
 import { GetCardsFn } from "./functions/get-cards.js";
 import { GetCardRequestsFn } from "./functions/get-requests.js";
+import { GetVoucherFn } from "./functions/get-voucher.js";
 import { GetVouchersFn } from "./functions/get-vouchers.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
@@ -183,4 +184,16 @@ app.http("PostVouchers", {
   handler: PostVouchers,
   methods: ["POST"],
   route: "api/v1/vouchers",
+});
+
+const GetVoucher = GetVoucherFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetVoucher", {
+  authLevel: "function",
+  handler: GetVoucher,
+  methods: ["GET"],
+  route: "api/v1/vouchers/{id}",
 });
