@@ -5,13 +5,17 @@ import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-function
 import { ServicesAPIClient } from "./clients/services.js";
 import { getConfigOrThrow } from "./config.js";
 import { AuthorizeFn } from "./functions/authorize.js";
+import { DeleteVoucherFn } from "./functions/delete-voucher.js";
 import { FimsAuthFn } from "./functions/fauth.js";
 import { FimsCallbackFn } from "./functions/fcb.js";
 import { GetCardsFn } from "./functions/get-cards.js";
 import { GetCardRequestsFn } from "./functions/get-requests.js";
+import { GetVoucherFn } from "./functions/get-voucher.js";
+import { GetVouchersFn } from "./functions/get-vouchers.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
+import { PostVouchersFn } from "./functions/post-vouchers.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
 import { CdcEnvironment, CdcUtils } from "./utils/cdc.js";
@@ -157,4 +161,52 @@ app.http("GetCards", {
   handler: GetCards,
   methods: ["GET"],
   route: "api/v1/cards",
+});
+
+const GetVouchers = GetVouchersFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetVouchers", {
+  authLevel: "function",
+  handler: GetVouchers,
+  methods: ["GET"],
+  route: "api/v1/vouchers",
+});
+
+const PostVouchers = PostVouchersFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("PostVouchers", {
+  authLevel: "function",
+  handler: PostVouchers,
+  methods: ["POST"],
+  route: "api/v1/vouchers",
+});
+
+const GetVoucher = GetVoucherFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetVoucher", {
+  authLevel: "function",
+  handler: GetVoucher,
+  methods: ["GET"],
+  route: "api/v1/vouchers/{id}",
+});
+
+const DeleteVoucher = DeleteVoucherFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("DeleteVoucher", {
+  authLevel: "function",
+  handler: DeleteVoucher,
+  methods: ["DELETE"],
+  route: "api/v1/vouchers/{id}",
 });
