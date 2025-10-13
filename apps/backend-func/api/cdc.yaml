@@ -131,7 +131,7 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
-  /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher:
+  /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher/{codVoucher}:
     post:
       tags:
         - utilizzo
@@ -139,11 +139,12 @@ paths:
       operationId: annullaVoucher
       security:
         - JwtAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/VoucherBeanRequest"
+      parameters:
+        - name: codVoucher
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Tutto OK
