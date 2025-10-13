@@ -123,13 +123,13 @@ export class JwtGenerator {
     );
 
   public readonly signThenEncryptJwtTE = (
-    publicKey: string,
-    privateKey: string,
+    encryptionKey: string,
+    signingKey: string,
     claims: Record<string, string>,
   ) =>
     pipe(
-      this.signJwtTE(privateKey, claims),
-      TE.chain((jwt) => this.encrypTokenTE(publicKey, jwt)),
+      this.signJwtTE(signingKey, claims),
+      TE.chain((jwt) => this.encrypTokenTE(encryptionKey, jwt)),
     );
 
   constructor(config: JwtConfig) {

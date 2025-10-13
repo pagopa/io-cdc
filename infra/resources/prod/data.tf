@@ -119,8 +119,8 @@ data "azurerm_key_vault_secret" "fims_scope" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "jwt_public_key" {
-  name         = "JWT-PUBLIC-KEY"
+data "azurerm_key_vault_secret" "jwt_private_key_test" {
+  name         = "JWT-PRIVATE-KEY-TEST"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
@@ -134,8 +134,8 @@ data "azurerm_key_vault_secret" "encryption_public_key" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "encryption_private_key" {
-  name         = "ENCRYPTION-PRIVATE-KEY"
+data "azurerm_key_vault_secret" "encryption_public_key_test" {
+  name         = "ENCRYPTION-PUBLIC-KEY-TEST"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 

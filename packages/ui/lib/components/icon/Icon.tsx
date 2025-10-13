@@ -18,6 +18,7 @@ import IconHourglass from "./svg/IconHourglass";
 import IconInfoOutlined from "./svg/IconInfoOutlined";
 import IconInitiativeExpired from "./svg/IconInitiativeExpired";
 import IconKey from "./svg/IconKey";
+import IconMasked from "./svg/IconMasked";
 import IconParty from "./svg/IconParty";
 import IconPeople from "./svg/IconPeople";
 import IconQuestionMarker from "./svg/IconQuestionMarker";
@@ -38,6 +39,7 @@ export const Icons = {
   close: IconClose,
   closeCircle: IconCloseCircle,
   copy: IconCopy,
+  document: IconMasked,
   ente: IconEnte,
   error: IconError,
   euro: IconEuro,

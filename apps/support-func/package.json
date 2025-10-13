@@ -1,6 +1,6 @@
 {
   "name": "support-func",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Support functions app for CdC",
   "main": "./dist/main.js",
   "license": "MIT",

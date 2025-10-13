@@ -40,8 +40,8 @@ export const Config = t.type({
   COSMOSDB_CDC_URI: NonEmptyString,
   ENCODING_ENCRYPTION: NonEmptyString,
 
-  ENCRYPTION_PRIVATE_KEY: NonEmptyString,
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
+  ENCRYPTION_PUBLIC_KEY_TEST: NonEmptyString,
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
 
   FIMS_CLIENT_ID: NonEmptyString,
@@ -55,7 +55,7 @@ export const Config = t.type({
   JWT_EXPIRATION: NonEmptyString,
   JWT_ISSUER: NonEmptyString,
   JWT_PRIVATE_KEY: NonEmptyString,
-  JWT_PUBLIC_KEY: NonEmptyString,
+  JWT_PRIVATE_KEY_TEST: NonEmptyString,
   PAGOPA_IDP_KEYS_BASE_URL: NonEmptyString,
   REDIS_CLUSTER_ENABLED: t.boolean,
 

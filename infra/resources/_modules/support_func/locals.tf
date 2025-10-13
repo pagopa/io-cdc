@@ -15,12 +15,12 @@ locals {
       CDC_API_BASE_URL_TEST = var.cdc_api_base_url_test
 
       // JWT
-      JWT_PUBLIC_KEY  = var.jwt_public_key
+      JWT_PUBLIC_KEY  = "unused"
       JWT_PRIVATE_KEY = var.jwt_private_key
 
       // ENCRYPTION
       ENCRYPTION_PUBLIC_KEY  = var.encryption_public_key
-      ENCRYPTION_PRIVATE_KEY = var.encryption_private_key
+      ENCRYPTION_PRIVATE_KEY = "unused"
 
       // JWT AND ENCRYPTION CONFIG
       JWT_ISSUER           = var.jwt_issuer

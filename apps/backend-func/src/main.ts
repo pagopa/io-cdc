@@ -13,7 +13,7 @@ import { InfoFn } from "./functions/info.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
-import { CdcUtils } from "./utils/cdc.js";
+import { CdcEnvironment, CdcUtils } from "./utils/cdc.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 import { getFimsClient } from "./utils/fims.js";
 import { QueueStorage } from "./utils/queue.js";
@@ -48,7 +48,7 @@ const redisClientFactory = getRedisClientFactory(config);
 const servicesClient = ServicesAPIClient(config);
 
 // CdC utils
-const cdcUtils = CdcUtils(config);
+const cdcUtils = CdcUtils(config, CdcEnvironment.PRODUCTION);
 
 const Info = InfoFn({ config, redisClientFactory });
 app.http("Info", {
