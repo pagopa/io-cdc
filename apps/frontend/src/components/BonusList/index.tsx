@@ -16,7 +16,7 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
     [vouchersList],
   );
   const spent = useMemo(
-    () => vouchersList.filter(({ status }) => status === 'USED'),
+    () => vouchersList.filter(({ status }) => status !== 'PENDING'),
     [vouchersList],
   );
 

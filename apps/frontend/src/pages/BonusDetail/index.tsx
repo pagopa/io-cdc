@@ -1,4 +1,4 @@
-import { Button, Chip, ChipProps, Typography } from '@mui/material';
+import { Button, Chip, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BonusDescription } from './components/BonusDescription';
 import { Footer } from './components/Footer';
 import { trackWebviewEvent } from '../../utils/trackEvent';
-import { REFUND_STATUS, VOUCHER_STATUS } from '../../features/app/model';
+import { VOUCHER_STATUS } from '../../features/app/model';
 import { DetailItemWrapper } from './components/DetailItems';
 import { MerchantDetail } from './components/MerchantDetail';
 import { useGetVoucherDetail } from '../../hooks/useGetVoucherDetail';
@@ -16,6 +16,7 @@ import { PopConfirm } from '../../components/PopConfirm';
 import { useDispatch } from 'react-redux';
 import { ticketsActions } from '../../features/app/reducers';
 import { APP_ROUTES } from '../../utils/appRoutes';
+import { getChipConfig } from './constants';
 
 const BonusDetail = () => {
   const dispatch = useDispatch();
@@ -50,34 +51,7 @@ const BonusDetail = () => {
 
   const refund = useMemo(() => voucherDetail?.refund, [voucherDetail?.refund]);
 
-  const refundCompleted = useMemo(
-    () => refund?.status === REFUND_STATUS.COMPLETED,
-    [refund?.status],
-  );
-
-  const chipConfig = useMemo(
-    () => ({
-      label: refundCompleted
-        ? 'COMPLETATO'
-        : refund?.status === REFUND_STATUS.PENDING
-          ? 'IN CORSO'
-          : refund?.status === REFUND_STATUS.FAILED
-            ? 'NEGATO'
-            : spent
-              ? 'SPESO'
-              : 'DA SPENDERE',
-      color: (refundCompleted
-        ? 'success'
-        : refund?.status === REFUND_STATUS.FAILED
-          ? 'error'
-          : refund
-            ? 'warning'
-            : spent
-              ? 'info'
-              : 'primary') as ChipProps['color'],
-    }),
-    [refund, refundCompleted, spent],
-  );
+  const chipConfig = useMemo(() => getChipConfig(refund, spent), [refund, spent]);
 
   const onClickDeleteBonus = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_CANCEL');

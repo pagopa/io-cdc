@@ -1,3 +1,4 @@
+// import { ChipProps } from '@mui/material';
 import { VoucherItem } from '../../../features/app/model';
 
 export const getVoucherConfig = (voucher: VoucherItem) => {
@@ -15,3 +16,13 @@ export const getVoucherConfig = (voucher: VoucherItem) => {
       };
   }
 };
+
+// export const getRefundChipConfig = (
+//   refund?: VoucherItem['refund'],
+// ): { label: string; color: ChipProps['color'] } | undefined => {
+//   if (!refund) return undefined;
+//   const status = refund.status;
+//   if (status === 'PENDING') return { label: 'IN CORSO', color: 'warning' };
+//   if (status === 'COMPLETED') return { label: 'COMPLETATO', color: 'success' };
+//   if (status === 'FAILED') return { label: 'NEGATO', color: 'error' };
+// };
