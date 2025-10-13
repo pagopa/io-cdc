@@ -58,6 +58,7 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
           messaggio su IO quando l’esito sarà pronto.
         </Typography>
         <Button
+          sx={{ height: 'min-content' }}
           variant="text"
           onClick={() =>
             window.location.replace(
