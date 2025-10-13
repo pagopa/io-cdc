@@ -1,5 +1,13 @@
 # frontend
 
+## 1.0.5
+
+### Patch Changes
+
+- 16e0ac8: Added an icon and change TYP for all years requested
+- Updated dependencies [16e0ac8]
+  - @io-cdc/ui@1.0.1
+
 ## 1.0.4
 
 ### Patch Changes
