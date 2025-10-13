@@ -11,9 +11,18 @@ export const getCdcCardsTEMock = vi.fn().mockReturnValue(TE.of([]));
 
 export const getCdcVouchersTEMock = vi.fn().mockReturnValue(TE.of([]));
 
+export const postCdcVouchersMock = vi.fn().mockReturnValue(TE.of({}));
+
+export const getCdcVoucherTEMock = vi.fn().mockReturnValue(TE.of({}));
+
+export const deleteCdcVoucherTEMock = vi.fn().mockReturnValue(TE.of(true));
+
 export const CdcUtilsMock = {
+  deleteCdcVoucherTE: deleteCdcVoucherTEMock,
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTEMock,
   getCdcCardsTE: getCdcCardsTEMock,
+  getCdcVoucherTE: getCdcVoucherTEMock,
   getCdcVouchersTE: getCdcVouchersTEMock,
+  postCdcVouchersTE: postCdcVouchersMock,
   requestCdcTE: requestCdcTEMock,
 };
