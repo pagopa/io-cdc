@@ -1,4 +1,6 @@
-import { IconType } from '@io-cdc/ui';
+import { Icon, IconType } from '@io-cdc/ui';
+import { Button, Typography } from '@mui/material';
+import { Stack } from '@mui/system';
 import { ReactNode } from 'react';
 
 type ExpiredInitiativeConfig = Record<
@@ -48,8 +50,31 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
   },
   502: {
     image: 'allYearsRequested',
-    title: "Hai già richiesto Carta della Cultura, attendi l'esito",
-    description: 'Riceverai un messaggio su IO quando l’esito sarà pronto.',
+    title: 'Hai già richiesto Carta della Cultura',
+    description: (
+      <Stack direction="column" gap={2}>
+        <Typography>
+          Hai richiesto il contributo <strong>per tutti gli anni disponibili.</strong> Riceverai un
+          messaggio su IO quando l’esito sarà pronto.
+        </Typography>
+        <Button
+          sx={{ height: 'min-content' }}
+          variant="text"
+          onClick={() =>
+            window.location.replace(
+              'https://assistenza.ioapp.it/hc/it/articles/39525502308497-Attivare-la-Carta-della-Cultura#h_01K6CQRKS9XGBSSC62SPB5ZX3C',
+            )
+          }
+        >
+          <Stack direction="row" alignItems="center" gap={1}>
+            <Icon sx={{ width: 18, height: 18 }} name="document" />
+            <Typography fontWeight={600} fontSize={16} color="inherit">
+              Scopri di più
+            </Typography>
+          </Stack>
+        </Button>
+      </Stack>
+    ),
     trackName: 'CDC_REQUEST_EXPIRED',
     trackProperties: {
       webview: true,
