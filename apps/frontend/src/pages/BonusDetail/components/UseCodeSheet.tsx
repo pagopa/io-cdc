@@ -34,7 +34,7 @@ export const UseCodeSheet = ({ isOpen, onClose, code }: UseCodeSheetProps) => {
       tabIndex ? (
         <QrCode code={code} />
       ) : (
-        <Stack direction="column" flexGrow={0.5} justifyContent="space-between" width="100%">
+        <Stack direction="column" flexGrow={1} justifyContent="space-between" width="100%">
           <BarCode code={code} />
           <Button variant="contained" onClick={copyBonusCode}>
             Copia codice

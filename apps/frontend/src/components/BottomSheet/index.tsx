@@ -34,7 +34,7 @@ export const BottomSheet = ({ isOpen, onClose, children, snapPoint = 0.5 }: Bott
         keepMounted: true,
       }}
     >
-      <Stack display="flex" flexDirection="column">
+      <Stack flexDirection="column" flex={1}>
         <Stack alignItems="end" paddingX={3} paddingY={2}>
           <Icon onClick={onClose} name="close" color="disabled" height={14} width={14} />
         </Stack>{' '}

@@ -111,10 +111,25 @@ const BonusDetail = () => {
     return <Navigate to={APP_ROUTES.HOME} />;
   }
 
-  if (detailLoading || deleteLoading)
+  if (detailLoading)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
         <Loader />
+        <Typography fontSize={22} fontWeight={700} textAlign="center">
+          Stiamo recuperando il tuo buono
+        </Typography>
+        <Typography textAlign="center">Attendi qualche secondo</Typography>
+      </Stack>
+    );
+
+  if (deleteLoading)
+    return (
+      <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+        <Loader />
+        <Typography fontSize={22} fontWeight={700} textAlign="center">
+          Operazione in corso
+        </Typography>
+        <Typography textAlign="center">Attendi qualche secondo</Typography>
       </Stack>
     );
 
