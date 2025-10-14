@@ -4,6 +4,7 @@ import { VoucherCard } from '../../pages/BonusList/components/BonusItem';
 import { EmptyState, SectionTitle, theme } from '@io-cdc/ui';
 import { VoucherItem } from '../../features/app/model';
 import { OthersBonusSheet } from '../OthersBonusSheet';
+import { separateVouchersByStatus } from '../../utils/separateVouchersByStatus';
 
 type VoucherListProps = {
   vouchersList: VoucherItem[];
@@ -11,14 +12,7 @@ type VoucherListProps = {
 export const VoucherList = ({ vouchersList }: VoucherListProps) => {
   const [openSheet, setOpenSheet] = useState<[isOpen: boolean, spent: boolean]>([false, false]);
 
-  const toSpend = useMemo(
-    () => vouchersList.filter(({ status }) => status === 'PENDING'),
-    [vouchersList],
-  );
-  const spent = useMemo(
-    () => vouchersList.filter(({ status }) => status !== 'PENDING'),
-    [vouchersList],
-  );
+  const { toSpend, spent } = useMemo(() => separateVouchersByStatus(vouchersList), [vouchersList]);
 
   const lastUpdateLabel = useMemo(() => {
     const date = new Date();

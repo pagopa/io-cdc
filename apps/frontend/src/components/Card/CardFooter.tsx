@@ -7,7 +7,7 @@ type FooterProps = {
   residual_amount: number;
 };
 
-export const Footer = ({ residual_amount }: FooterProps) => {
+export const CardFooter = ({ residual_amount }: FooterProps) => {
   return (
     <Stack>
       <Notches />

@@ -1,6 +1,6 @@
 import { Icon } from '@io-cdc/ui';
 import { Stack, IconButton, Typography } from '@mui/material';
-import { Footer } from './Footer';
+import { CardFooter } from './CardFooter';
 import { Card as CardType } from '../../features/app/model';
 
 const ICON_STYLE_RESET = { color: '#17324D', backgroundColor: 'unset', padding: 0 };
@@ -42,7 +42,7 @@ export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
           >{`Valida fino al ${expiration_date}`}</Typography>
         </Stack>
       </Stack>
-      <Footer residual_amount={residual_amount} />
+      <CardFooter residual_amount={residual_amount} />
     </Stack>
   );
 };

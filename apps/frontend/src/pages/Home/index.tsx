@@ -13,6 +13,7 @@ import { OthersBonusSheet } from '../../components/OthersBonusSheet';
 import { useToast } from '../../contexts';
 import { Reminder } from './components/Reminder';
 import { useGetCardsAndVouchers } from '../../hooks';
+import { separateVouchersByStatus } from '../../utils/separateVouchersByStatus';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -65,15 +66,18 @@ const Home = () => {
     navigate(APP_ROUTES.BONUS_LIST);
   }, [navigate]);
 
+  const { toSpend: tbsAll, spent: sAll } = useMemo(
+    () => separateVouchersByStatus(vouchers),
+    [vouchers],
+  );
+
   const toSpend = useMemo(() => {
-    const tbs = vouchers?.filter(({ amount }) => amount > 0) ?? [];
-    return tbs.slice(0, 4);
-  }, [vouchers]);
+    return tbsAll.slice(0, 4);
+  }, [tbsAll]);
 
   const spent = useMemo(() => {
-    const tbs = vouchers?.filter(({ amount }) => amount < 0) ?? [];
-    return tbs.slice(0, 4);
-  }, [vouchers]);
+    return sAll.slice(0, 4);
+  }, [sAll]);
 
   useEffect(() => {
     if (deleted) {
