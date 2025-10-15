@@ -22,8 +22,7 @@ describe("GetYears", () => {
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE:
-          "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -39,8 +38,7 @@ describe("GetYears", () => {
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE:
-          "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -56,8 +54,7 @@ describe("GetYears", () => {
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE:
-          "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -73,8 +70,7 @@ describe("GetYears", () => {
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE:
-          "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
