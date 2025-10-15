@@ -19,9 +19,8 @@ interface Dependencies {
 export const getYears = () => (deps: Dependencies) =>
   pipe(
     new Date(deps.config.CDC_REGISTRATION_END_DATE),
-    O.fromPredicate((date) => {
+    O.fromPredicate((endDate) => {
       const now = new Date();
-      const endDate = startOfDay(date);
       const validDate = isAfter(endDate, now);
       // eslint-disable-next-line no-console
       console.log(
