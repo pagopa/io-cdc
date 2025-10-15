@@ -1,8 +1,10 @@
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { isAfter, startOfToday } from "date-fns";
+import { isAfter, startOfDay } from "date-fns";
 import * as O from "fp-ts/lib/Option.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
+import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 
 import { Config } from "../config.js";
@@ -14,6 +16,22 @@ interface Dependencies {
   config: Config;
 }
 
+export const getYears = () => (deps: Dependencies) =>
+  pipe(
+    new Date(deps.config.CDC_REGISTRATION_END_DATE),
+    O.fromPredicate((date) => {
+      const today = startOfDay(new Date());
+      const endDate = startOfDay(date);
+      const validDate = isAfter(endDate, today);
+      emitCustomEvent("cdc.registration.closed", {
+        data: `Registration closed: ${today} has passed ${endDate}.`,
+      })("getYears");
+      return validDate;
+    }),
+    O.map(() => TE.of(years as Years)),
+    O.getOrElse(() => TE.of([] as Years)),
+  );
+
 export const makeGetYearsHandler: H.Handler<
   H.HttpRequest,
   | H.HttpResponse<H.ProblemJson, H.HttpErrorStatusCode>
@@ -21,15 +39,7 @@ export const makeGetYearsHandler: H.Handler<
   Dependencies
 > = H.of(() =>
   pipe(
-    RTE.ask<Dependencies>(),
-    RTE.chainW(({ config }) =>
-      pipe(
-        new Date(config.CDC_REGISTRATION_END_DATE),
-        O.fromPredicate((date) => isAfter(date, startOfToday())),
-        O.map(() => RTE.of(years as Years)),
-        O.getOrElse(() => RTE.of([] as Years)),
-      ),
-    ),
+    getYears(),
     RTE.map((years) => H.successJson(years)),
     responseErrorToHttpError,
   ),
