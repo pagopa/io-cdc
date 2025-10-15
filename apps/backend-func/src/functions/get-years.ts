@@ -20,11 +20,18 @@ export const getYears = () => (deps: Dependencies) =>
   pipe(
     new Date(deps.config.CDC_REGISTRATION_END_DATE),
     O.fromPredicate((date) => {
-      const today = startOfDay(new Date());
+      const now = new Date();
       const endDate = startOfDay(date);
-      const validDate = isAfter(endDate, today);
-      emitCustomEvent("cdc.registration.closed", {
-        data: `Registration closed: ${today} has passed ${endDate}.`,
+      const validDate = isAfter(endDate, now);
+      console.log(
+        `Today: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
+          validDate ? "Iniziative open" : "Initiative closed"
+        }`,
+      );
+      emitCustomEvent("cdc.iniziative.status", {
+        data: `Today: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
+          validDate ? "Iniziative open" : "Initiative closed"
+        }`,
       })("getYears");
       return validDate;
     }),
