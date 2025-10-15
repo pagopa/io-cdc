@@ -23,6 +23,7 @@ export const getYears = () => (deps: Dependencies) =>
       const now = new Date();
       const endDate = startOfDay(date);
       const validDate = isAfter(endDate, now);
+      // eslint-disable-next-line no-console
       console.log(
         `Today: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
           validDate ? "Iniziative open" : "Initiative closed"
