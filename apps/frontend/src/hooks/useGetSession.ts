@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useLazyGetSessionQuery } from '../features/app/services';
 import { APP_ROUTES } from '../utils/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
+import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 import { authActions } from '../features/auth/reducer';
 import { selectIsTokenValid } from '../features/auth/selectors';
 
@@ -34,7 +35,7 @@ export const useGetSession = () => {
     }
 
     if ((session && session.token) || isChachedSessionValid) {
-      navigate(APP_ROUTES.SELECT_YEAR);
+      navigate(getPathFromEvironment());
       return;
     }
 
@@ -58,7 +59,7 @@ export const useGetSession = () => {
     if (data?.token) {
       dispatch(authActions.setToken(data?.token));
     }
-    navigate(APP_ROUTES.SELECT_YEAR);
+    navigate(getPathFromEvironment());
     return;
   }, [dispatch, getSession, isChachedSessionValid, navigate, redirectToken, session]);
 
