@@ -22,14 +22,8 @@ export const getYears = () => (deps: Dependencies) =>
     O.fromPredicate((endDate) => {
       const now = new Date();
       const validDate = isAfter(endDate, now);
-      // eslint-disable-next-line no-console
-      console.log(
-        `Today: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
-          validDate ? "Iniziative open" : "Initiative closed"
-        }`,
-      );
       emitCustomEvent("cdc.iniziative.status", {
-        data: `Today: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
+        data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
           validDate ? "Iniziative open" : "Initiative closed"
         }`,
       })("getYears");

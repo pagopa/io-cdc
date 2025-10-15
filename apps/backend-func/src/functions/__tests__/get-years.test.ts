@@ -23,7 +23,7 @@ describe("GetYears", () => {
     const res = await getYears()({
       config: {
         CDC_REGISTRATION_END_DATE:
-          "2025-11-01T00:00:00+01:00" as NonEmptyString,
+          "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -40,7 +40,7 @@ describe("GetYears", () => {
     const res = await getYears()({
       config: {
         CDC_REGISTRATION_END_DATE:
-          "2025-11-01T00:00:00+01:00" as NonEmptyString,
+          "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -51,13 +51,13 @@ describe("GetYears", () => {
   });
 
   it("should return an empty array when called after end date CEST", async () => {
-    vi.setSystemTime(new Date("2025-11-01T00:00:00+01:00"));
+    vi.setSystemTime(new Date("2025-10-31T23:00:00Z"));
     console.log(new Date().toISOString());
 
     const res = await getYears()({
       config: {
         CDC_REGISTRATION_END_DATE:
-          "2025-11-01T00:00:00+01:00" as NonEmptyString,
+          "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -74,7 +74,7 @@ describe("GetYears", () => {
     const res = await getYears()({
       config: {
         CDC_REGISTRATION_END_DATE:
-          "2025-11-01T00:00:00+01:00" as NonEmptyString,
+          "2025-10-31T23:00:00Z" as NonEmptyString,
       } as Config,
     })();
 
