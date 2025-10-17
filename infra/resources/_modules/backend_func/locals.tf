@@ -11,7 +11,7 @@ locals {
 
       // CDC
       CDC_BASE_URL              = var.cdc_base_url
-      CDC_REGISTRATION_END_DATE = "2025-11-01"
+      CDC_REGISTRATION_END_DATE = "2025-10-31T23:00:00Z" // End of October 31st, 2025 in Italy timezone
 
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri

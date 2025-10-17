@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { configDefaults } from "vitest/config";
 
 export default defineConfig({
   test: {
@@ -10,8 +11,6 @@ export default defineConfig({
         "**/src/config.ts",
         "**/src/main.ts",
         "**/src/functions/info.ts",
-        "**/src/functions/load-test.ts",
-        "**/src/functions/get-years.ts",
       ],
       include: ["**/__tests__/*.test.ts", "**/src/**/*.ts"],
       reporter: ["text", "html"],
@@ -20,5 +19,6 @@ export default defineConfig({
     typecheck: {
       ignoreSourceErrors: true,
     },
+    exclude: [...configDefaults.exclude, "src/local_scripts/*"],
   },
 });
