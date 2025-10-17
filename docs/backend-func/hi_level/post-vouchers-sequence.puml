@@ -1,0 +1,18 @@
+@startuml Sequence POST CdC voucher
+participant "Citizen" as cit
+participant "CdC Backend Functions" as be
+participant "Redis" as redis
+participant "Sogei" as sogei
+
+cit -> be: Create CdC voucher
+activate be
+be -> redis: Check session
+alt Session found
+    be <-> sogei: Create CdC voucher
+    be -> cit: 200 CdC voucher created with details
+else Session not found
+    be -> cit: 401 Unauthorized
+end
+deactivate be
+
+@enduml
