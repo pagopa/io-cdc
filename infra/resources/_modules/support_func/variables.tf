@@ -108,6 +108,12 @@ variable "jwt_private_key" {
   sensitive   = true
 }
 
+variable "jwt_private_key_test" {
+  type        = string
+  description = "JWT private key for test"
+  sensitive   = true
+}
+
 variable "jwt_issuer" {
   type        = string
   description = "JWT issuer"
@@ -129,6 +135,12 @@ variable "jwt_expiration" {
 variable "encryption_public_key" {
   type        = string
   description = "Encryption public key"
+  sensitive   = true
+}
+
+variable "encryption_public_key_test" {
+  type        = string
+  description = "Encryption public key for test"
   sensitive   = true
 }
 

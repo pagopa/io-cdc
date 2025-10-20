@@ -25,6 +25,8 @@ export const Config = t.type({
   CDC_API_BASE_URL: NonEmptyString,
   CDC_API_BASE_URL_TEST: NonEmptyString,
 
+  CDC_CARDS_EXPIRATION_DATE: NonEmptyString,
+
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
   COSMOSDB_CDC_KEY: NonEmptyString,
 
@@ -32,6 +34,7 @@ export const Config = t.type({
   ENCODING_ENCRYPTION: NonEmptyString,
 
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
+  ENCRYPTION_PUBLIC_KEY_TEST: NonEmptyString,
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
 
   JWT_AUDIENCE: NonEmptyString,
@@ -39,6 +42,7 @@ export const Config = t.type({
   JWT_EXPIRATION: NonEmptyString,
   JWT_ISSUER: NonEmptyString,
   JWT_PRIVATE_KEY: NonEmptyString,
+  JWT_PRIVATE_KEY_TEST: NonEmptyString,
 
   isProduction: t.boolean,
 });
