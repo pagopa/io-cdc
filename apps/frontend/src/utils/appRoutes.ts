@@ -10,6 +10,8 @@ const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGen
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const BonusList = React.lazy(() => import('../pages/BonusList'));
+const Home = React.lazy(() => import('../pages/Home'));
+const NotFound = React.lazy(() => import('../pages/NotFound'));
 
 export enum APP_ROUTES {
   AUTHORIZE = '/authorize',
@@ -52,6 +54,10 @@ const APP_ROUTES_REQUEST: APP_ROUTES_CONFIG_TYPE[] = [
 
 const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
+    path: APP_ROUTES.HOME,
+    Element: Home,
+  },
+  {
     path: APP_ROUTES.SELECT_CARD,
     Element: SelectCardGenerateTicket,
   },
@@ -82,5 +88,9 @@ export const getAppRoutes = () => {
   const { dashboard, request } = featureFlags;
   if (request && !dashboard) return APP_ROUTES_CONFIG.REQUEST;
   if (!request) return APP_ROUTES_CONFIG.DASHBOARD;
-  return [...APP_ROUTES_CONFIG.DASHBOARD, ...APP_ROUTES_CONFIG.REQUEST];
+  return [
+    ...APP_ROUTES_CONFIG.DASHBOARD,
+    ...APP_ROUTES_CONFIG.REQUEST,
+    { path: APP_ROUTES.NOT_FOUND, Element: NotFound },
+  ];
 };

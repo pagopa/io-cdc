@@ -6,20 +6,6 @@ import { useEffect } from 'react';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../utils/appRoutes';
 
-// TODO dev only
-const defaultStatus = {
-  icon: 'umbrella',
-  title: 'Qualcosa non ha funzionato',
-  subTitle: 'Riprova più tardi.',
-  trackProperties: {
-    name: 'CDC_BONUS_GENERATION_ERROR',
-    properties: {
-      event_category: 'KO',
-      reason: 'generic_error',
-    },
-  },
-};
-
 const TicketFeedback = () => {
   const {
     state: { status, name },
@@ -28,7 +14,7 @@ const TicketFeedback = () => {
   const navigate = useNavigate();
 
   const { title, description, icon, subTitle, trackProperties } =
-    CONFIG_BY_STATUS[name as CONFIG_KEYS][status] ?? defaultStatus;
+    CONFIG_BY_STATUS[name as CONFIG_KEYS][status];
 
   useEffect(() => {
     const { name, properties } = trackProperties;

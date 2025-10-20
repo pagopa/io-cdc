@@ -1,7 +1,7 @@
 import { Icon, OperationResult } from '@io-cdc/ui';
 import { Box, Button, Stack } from '@mui/material';
 
-export const NotFound = () => {
+const NotFound = () => {
   return (
     <Stack flex={1} justifyContent="center" alignItems="center">
       <Icon name="error" sx={{ width: 60, height: 60 }} />
@@ -14,3 +14,5 @@ export const NotFound = () => {
     </Stack>
   );
 };
+
+export default NotFound;
