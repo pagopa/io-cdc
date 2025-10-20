@@ -1,16 +1,14 @@
-import { CosmosClient } from "@azure/cosmos";
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
-import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
+import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
-import { CitizenStatus } from "../generated/cdc-api/CitizenStatus.js";
+import { CitizenStatus } from "../generated/definitions/internal/CitizenStatus.js";
 import { withParams } from "../middlewares/withParams.js";
-import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { CdcUtils } from "../utils/cdc.js";
 import {
   errorToInternalError,
@@ -22,7 +20,6 @@ import {
 interface Dependencies {
   cdcUtils: CdcUtils;
   config: Config;
-  cosmosDbClient: CosmosClient;
 }
 
 const Body = t.interface({
@@ -33,20 +30,19 @@ type Body = t.TypeOf<typeof Body>;
 export const getCitizenStatus =
   (fiscalCode: FiscalCode) => (deps: Dependencies) =>
     pipe(
-      TE.of(
-        new CosmosDbCardRequestRepository(
-          deps.cosmosDbClient.database(deps.config.COSMOSDB_CDC_DATABASE_NAME),
-        ),
-      ),
-      TE.chain((repository) => repository.getAllByFiscalCode(fiscalCode)),
+      deps.cdcUtils.getAlreadyRequestedYearsCdcTE({
+        first_name: "anyfirstname" as NonEmptyString, // we do not know first name here, GET will still work
+        fiscal_code: fiscalCode,
+        last_name: "anylastname" as NonEmptyString, // we do not know last name here, GET will still work
+      }),
       TE.mapLeft(errorToInternalError),
       TE.chainW((cardRequests) =>
         pipe(
-          // if requests are found we return a dummy status with the number of requests found
-          // TODO: replace with actual CDC API call
           cardRequests.length > 0
             ? TE.right({
-                expiration_date: new Date(),
+                expiration_date: new Date(
+                  deps.config.CDC_CARDS_EXPIRATION_DATE,
+                ),
                 number_of_cards: cardRequests.length,
               })
             : TE.left(new Error("No cards found")),
