@@ -1,5 +1,11 @@
 # support-func
 
+## 1.1.2
+
+### Patch Changes
+
+- 72f6b8c: call sogei to get citizen status
+
 ## 1.1.1
 
 ### Patch Changes
