@@ -283,7 +283,10 @@ const getCdcCardsTE =
               ),
             )(response),
           ),
-          TE.map((successResponse) => successResponse.value),
+          TE.map((successResponse) => {
+            console.log(successResponse.value);
+            return successResponse.value;
+          }),
           TE.chain(({ listaRisultati, ...error }) =>
             pipe(
               listaRisultati,
@@ -357,7 +360,10 @@ const getCdcVouchersTE =
               ),
             )(response),
           ),
-          TE.map((successResponse) => successResponse.value),
+          TE.map((successResponse) => {
+            console.log(successResponse.value);
+            return successResponse.value;
+          }),
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           TE.chain(({ listaRisultati, ..._ }) =>
             pipe(
