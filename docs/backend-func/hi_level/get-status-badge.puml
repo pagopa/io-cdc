@@ -1,0 +1,31 @@
+@startuml Sequence GET CdC Citizen Status
+participant "Citizen" as cit
+participant "IO Backend" as io
+participant "Redis" as redis
+participant "CdC Support Functions" as be
+participant "Sogei" as sogei
+
+cit -> io: Get CdC Status Badge
+activate io
+io <-> redis: Check session
+alt Session found
+    io -> be: Get Badge Info
+    activate be
+    be -> sogei: Get CdC Status
+    activate sogei
+    sogei -> be: CdC Status Details
+    deactivate sogei
+    alt Citizen has CdC cards
+        io <- be: Badge Info
+        io -> cit: 200 Badge Info
+    else Citizen has no CdC
+        io <- be: 404 Not Found
+        deactivate be
+        io -> cit: 404 Not Found
+    end
+else Session not found
+    io -> cit: 401 Unauthorized
+deactivate io
+end
+
+@enduml
