@@ -14,13 +14,16 @@ locals {
       CDC_API_BASE_URL      = var.cdc_api_base_url
       CDC_API_BASE_URL_TEST = var.cdc_api_base_url_test
 
+      // CDC CARDS EXPIRATION DATE
+      CDC_CARDS_EXPIRATION_DATE = "2026-12-31T23:00:00Z"
+
       // JWT
-      JWT_PUBLIC_KEY  = "unused"
       JWT_PRIVATE_KEY = var.jwt_private_key
+      JWT_PRIVATE_KEY_TEST = var.jwt_private_key_test
 
       // ENCRYPTION
       ENCRYPTION_PUBLIC_KEY  = var.encryption_public_key
-      ENCRYPTION_PRIVATE_KEY = "unused"
+      ENCRYPTION_PUBLIC_KEY_TEST  = var.encryption_public_key_test
 
       // JWT AND ENCRYPTION CONFIG
       JWT_ISSUER           = var.jwt_issuer

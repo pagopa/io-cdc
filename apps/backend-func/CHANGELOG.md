@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.11
+
+### Patch Changes
+
+- 11f5891: Fixed time logic to close registrations
+
 ## 1.0.10
 
 ### Patch Changes

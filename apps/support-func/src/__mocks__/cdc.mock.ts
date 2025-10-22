@@ -3,13 +3,10 @@ import { vi } from "vitest";
 
 import { CdcUtils } from "../utils/cdc.js";
 
-export const getStatusTEMock = vi.fn().mockReturnValue(
-  TE.of({
-    expiration_date: new Date(),
-    number_of_cards: 1,
-  }),
-);
+export const getAlreadyRequestedYearsCdcTEMock = vi
+  .fn()
+  .mockReturnValue(TE.of([]));
 
 export const CdcUtilsMock = {
-  getStatusTE: getStatusTEMock,
+  getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTEMock,
 } as CdcUtils;
