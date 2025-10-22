@@ -6,10 +6,10 @@
     "source": "https://registry.terraform.io/modules/pagopa-dx/azure-function-app/azurerm/0.2.9"
   },
   "cdn_fe.cdc_fe_cdn": {
-    "hash": "9c3d12439f8f6da55c91daf38080b25e8af660aea7a8e818da142bf34804e0bd",
-    "version": "0.2.0",
+    "hash": "427ed0f251d29f1599fabadb981c168c0ec3fe9e4fcdd909c1ef78c3eeb803d9",
+    "version": "0.3.2",
     "name": "azure_cdn",
-    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-cdn/azurerm/0.2.0"
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-cdn/azurerm/0.3.2"
   },
   "cosmos_db.cdc_cosmos_account": {
     "hash": "1e6e66245084310310d36106509c99ee0eed25e98640680c4acc8cff426ff321",
