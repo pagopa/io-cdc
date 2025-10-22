@@ -5,7 +5,7 @@ import { getConfigOrThrow } from "./config.js";
 import { InfoFn } from "./functions/info.js";
 import { RequestsFn } from "./functions/requests.js";
 import { StatusFn } from "./functions/status.js";
-import { CdcUtils } from "./utils/cdc.js";
+import { CdcEnvironment, CdcUtils } from "./utils/cdc.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 
 registerAzureFunctionHooks(app);
@@ -20,7 +20,7 @@ const cosmosDbClient = getCosmosDbClientInstance(
 );
 
 // CdC utils
-const cdcUtils = CdcUtils(config);
+const cdcUtils = CdcUtils(config, CdcEnvironment.TEST);
 
 const Info = InfoFn({ config });
 app.http("Info", {
@@ -33,7 +33,6 @@ app.http("Info", {
 const Status = StatusFn({
   cdcUtils,
   config,
-  cosmosDbClient,
 });
 app.http("Status", {
   authLevel: "function",

@@ -1,39 +1,41 @@
 openapi: 3.0.0
 info:
-  title: Carta della Cultura Status APIs
-  description: These APIs App IO to known citizen status about Carta della Cultura.
+  title: Liberty REST APIs by Sogei
+  description: Discover REST APIs available within Liberty
   version: 1.0.0
 servers:
-- url: https://ssotest.cartadellacultura.it/cdc/v1
+- url: https://ssotest.cartadellacultura.it
 tags:
-- name: secured
-  description: Citizen facing APIs
-security:
-  - JwtAuth: []
+- name: /secured/utente
+  description: metodi inerenti all'utente
 paths:
-  /status:
+  /CDCUtenteWS/rest/secured/beneficiario/stato:
     get:
       tags:
-      - secured
-      summary: Get the citizen's status about the Carta della Cultura
-      operationId: getStatus
+      - /secured/utente
+      summary: controllo anno registrazione per il beneficiario
+      operationId: stato
+      security:
+        - JwtAuth: []
       responses:
-        '200':
-          description: Successful response
+        "200":
+          description: Tutto OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CitizenStatus"
-        '400':
-          description: Bad Request
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-        '429':
-          description: Too Many Requests
-        '500':
-          description: Internal Server Error
+                $ref: '#/components/schemas/ListaRegistratoBean'
+        "400":
+          description: Validazioni non superate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemBean'
+        "401":
+          description: Utente non autorizzato
+        "403":
+          description: Utente non loggato
+        "500":
+          description: Errore interno.
 components:
   securitySchemes:
     JwtAuth:
@@ -41,18 +43,38 @@ components:
       in: header
       name: Authorization
   schemas:
-    CitizenStatus:
+    ListaRegistratoBean:
       type: object
       properties:
-        number_of_cards:
-          type: integer
-          description: The number of active Carta della Cultura cards
-          example: 2
-        expiration_date:
+        listaStatoPerAnno:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegistratoBean'
+    RegistratoBean:
+      type: object
+      properties:
+        statoBeneficiario:
           type: string
-          format: date-time
-          description: The expiration date of the Carta della Cultura
-          example: "2026-12-31T23:59:59Z"
-      required:
-        - number_of_cards
-        - expiration_date
+        annoRiferimento:
+          type: string
+    ProblemBean:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+          - NO_INPUT
+          - ANNI_RIFERIMENTO_NON_FORNITI
+          - LISTA_ANNI_VUOTA
+          - FORMATO_ANNI_ERRATO
+          - INPUT_SUPERIORE_AL_CONSENTITO
+        detail:
+          type: string
+        instance:
+          type: string
+        errorCode:
+          type: string
