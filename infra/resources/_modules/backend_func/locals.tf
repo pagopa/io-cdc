@@ -66,6 +66,9 @@ locals {
       REDIS_CLUSTER_ENABLED = "false"
       REDIS_TLS_ENABLED     = "true"
 
+      // TESTING
+      TEST_USERS = var.test_users
+
       // Keepalive fields are all optionals
       FETCH_KEEPALIVE_ENABLED             = "true"
       FETCH_KEEPALIVE_SOCKET_ACTIVE_TTL   = "110000"

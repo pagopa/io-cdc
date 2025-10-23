@@ -19,6 +19,6 @@ export default defineConfig({
     typecheck: {
       ignoreSourceErrors: true,
     },
-    exclude: [...configDefaults.exclude, "src/local_scripts/*"],
+    exclude: [...configDefaults.exclude],
   },
 });

@@ -292,3 +292,9 @@ variable "audit_log_container" {
   description = "The container name for audit logs"
   sensitive   = true
 }
+
+variable "test_users" {
+  type        = string
+  description = "List of test users"
+  sensitive   = true
+}
