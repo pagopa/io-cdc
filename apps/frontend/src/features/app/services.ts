@@ -1,9 +1,20 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RequestedYearsList, SessionParams, SessionResponseDTO, YearsList } from './model';
-import { RequestBonusDto } from './dto';
+import {
+  CreateVoucherRequestDTO,
+  DeleteVoucherResponseDTO,
+  GetBonusByIdResponseDTO,
+  GetVouchersResponseDTO,
+  GetCardsResponseDTO,
+  RequestBonusDto,
+  SessionResponseDTO,
+  GetYearsListResponseDTO,
+  GetNotAvailableYearsListResponseDTO,
+  GetSessionParamsRequestDTO,
+  CreateVoucherResponseDTO,
+} from './dto';
 import { RootState } from '../store';
 import { retrieveSessionQueryCached } from './utils';
-import { API } from './api';
+import { API_DASHBOARD, API_REQUEST } from './api';
 import { isEnvConfigEnabled } from '../../utils/isEnvConfigEnabled';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -32,26 +43,49 @@ export const appApi = createApi({
       if (data && data.token) {
         headers.set('token', data.token);
       }
-
       return headers;
     },
   }),
   endpoints: (builder) => ({
-    getSession: builder.query<SessionResponseDTO, SessionParams>({
-      ...API[API_ENV].getSession,
+    //REQUEST APP APIS
+    getSession: builder.query<SessionResponseDTO, GetSessionParamsRequestDTO>({
+      ...API_REQUEST[API_ENV].getSession,
       providesTags: (_, __, { id }, ___) => [{ type: 'getSession' as const, id }],
       keepUnusedDataFor: 1800,
     }),
-    getYearsList: builder.query<YearsList, void>({
-      ...API[API_ENV].getYearsList,
+    getYearsList: builder.query<GetYearsListResponseDTO, void>({
+      ...API_REQUEST[API_ENV].getYearsList,
       keepUnusedDataFor: 3600,
     }),
-    getNotAvailableYearsList: builder.query<RequestedYearsList, void>({
-      ...API[API_ENV].getNotAvailableYearsList,
+    getNotAvailableYearsList: builder.query<GetNotAvailableYearsListResponseDTO, void>({
+      ...API_REQUEST[API_ENV].getNotAvailableYearsList,
       keepUnusedDataFor: 3600,
     }),
     requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({
-      ...API[API_ENV].requestBonus,
+      ...API_REQUEST[API_ENV].requestBonus,
+    }),
+    // DASHBOARD APP APIS
+    getVoucherById: builder.query<GetBonusByIdResponseDTO, string>({
+      ...API_DASHBOARD.getVoucherById,
+    }),
+    getCards: builder.query<GetCardsResponseDTO, void>({
+      ...API_DASHBOARD.getCards,
+    }),
+    getVoucher: builder.query<GetVouchersResponseDTO, void>({
+      ...API_DASHBOARD.getVouchers,
+    }),
+    createVoucher: builder.mutation<CreateVoucherResponseDTO, CreateVoucherRequestDTO>({
+      query: (voucher: CreateVoucherRequestDTO) => ({
+        url: '/vouchers',
+        method: 'POST',
+        body: voucher,
+      }),
+    }),
+    deleteVoucher: builder.mutation<DeleteVoucherResponseDTO, string>({
+      query: (id: string) => ({
+        url: `/vouchers/${id}`,
+        method: 'DELETE',
+      }),
     }),
   }),
 });
@@ -65,4 +99,12 @@ export const {
   useRequestBonusMutation,
   useGetNotAvailableYearsListQuery,
   useLazyGetNotAvailableYearsListQuery,
+  useGetVoucherByIdQuery,
+  useLazyGetVoucherByIdQuery,
+  useGetCardsQuery,
+  useLazyGetCardsQuery,
+  useLazyGetVoucherQuery,
+  useGetVoucherQuery,
+  useCreateVoucherMutation,
+  useDeleteVoucherMutation,
 } = appApi;

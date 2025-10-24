@@ -1,0 +1,12 @@
+import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
+
+const IconKey = (props: SvgIconProps) => (
+  <SvgIcon viewBox="0 0 22 12" {...props}>
+    <path
+      d="M11.65 4C10.83 1.67 8.61 0 6 0C2.69 0 0 2.69 0 6C0 9.31 2.69 12 6 12C8.61 12 10.83 10.33 11.65 8H16V12H20V8H22V4H11.65ZM6 8C4.9 8 4 7.1 4 6C4 4.9 4.9 4 6 4C7.1 4 8 4.9 8 6C8 7.1 7.1 8 6 8Z"
+      fill="#5C6F82"
+    />
+  </SvgIcon>
+);
+
+export default IconKey;

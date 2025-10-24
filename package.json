@@ -11,7 +11,12 @@
     "typecheck": "turbo run typecheck",
     "version": "changeset version && yarn install",
     "release": "changeset tag",
-    "generate": "turbo run generate"
+    "generate": "turbo run generate",
+    "frontend:dev": "yarn workspace frontend dev",
+    "frontend:build": "yarn workspace frontend build",
+    "frontend:preview": "yarn workspace frontend preview --host",
+    "ui:build": "yarn workspace @io-cdc/ui build",
+    "mixpanel:build": "yarn workspace @io-cdc/mixpanel build"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",

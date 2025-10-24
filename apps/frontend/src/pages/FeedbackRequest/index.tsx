@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
 import { CONFIG_BY_STATUS } from './constants';
 import { useEffect } from 'react';
-import { trackEvent } from '../../utils/trackEvent';
+import { trackWebviewEvent } from '../../utils/trackEvent';
 
 const Feedback = () => {
   const {
@@ -16,10 +16,10 @@ const Feedback = () => {
     const { name, properties } = trackProperties;
 
     if (status === 200) {
-      trackEvent(name, { ...properties, years });
+      trackWebviewEvent(name, { ...properties, years });
       return;
     }
-    trackEvent(name, properties);
+    trackWebviewEvent(name, properties);
   }, []);
 
   return (
