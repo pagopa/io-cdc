@@ -6,7 +6,11 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { flow, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
-import { SessionToken } from "../generated/definitions/internal/SessionToken.js";
+import { Config } from "../config.js";
+import {
+  RouteEnum,
+  SessionToken,
+} from "../generated/definitions/internal/SessionToken.js";
 import { withParams } from "../middlewares/withParams.js";
 import {
   ResponseError,
@@ -15,10 +19,13 @@ import {
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
+import { toHash } from "../utils/hash.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { deleteTask, getTask } from "../utils/redis_storage.js";
+import { getSessionTE } from "../utils/session.js";
 
 interface Dependencies {
+  config: Config;
   redisClientFactory: RedisClientFactory;
 }
 
@@ -39,13 +46,27 @@ export const getSessionToken =
           TE.fromOption(() =>
             responseError(401, "Session not found", "Unauthorized"),
           ),
-          TE.map((sessionToken) => ({ token: sessionToken })),
         ),
       ),
       TE.chainFirst(() =>
         pipe(
           deleteTask(deps.redisClientFactory, params.id),
           TE.mapLeft(errorToInternalError),
+        ),
+      ),
+      TE.chain((sessionToken) =>
+        pipe(
+          getSessionTE(deps.redisClientFactory, sessionToken),
+          TE.mapLeft(() =>
+            responseError(401, "Session not found", "Unauthorized"),
+          ),
+          TE.map((session) =>
+            pipe(toHash(session.fiscal_code), (cfHash) =>
+              deps.config.TEST_USERS.includes(cfHash)
+                ? { route: RouteEnum.USAGE, token: sessionToken }
+                : { route: RouteEnum.REGISTRATION, token: sessionToken },
+            ),
+          ),
         ),
       ),
     );
