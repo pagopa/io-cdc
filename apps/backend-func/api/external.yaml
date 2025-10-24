@@ -371,6 +371,9 @@ components:
       properties:
         token:
           type: string
+        route:
+          type: string
+          enum: ["REGISTRATION", "USAGE"]
       required:
         - token
     Years:

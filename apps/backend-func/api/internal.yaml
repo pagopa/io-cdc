@@ -387,6 +387,9 @@ components:
       properties:
         token:
           type: string
+        route:
+          type: string
+          enum: ["REGISTRATION", "USAGE"]
       required:
         - token
     Years:
@@ -490,6 +493,11 @@ components:
           type: string
           description: The merchant where the voucher was used
           example: "Cultural Store"
+        spending_date:
+          type: string
+          format: date-time
+          description: Date when the voucher was spent
+          example: "2026-12-31T23:59:59Z"
         refund:
           type: object
           properties:

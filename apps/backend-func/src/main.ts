@@ -91,7 +91,7 @@ app.http("FimsCallback", {
   route: "api/v1/fcb",
 });
 
-const Authorize = AuthorizeFn({ redisClientFactory });
+const Authorize = AuthorizeFn({ config, redisClientFactory });
 app.http("Authorize", {
   authLevel: "function",
   handler: Authorize,

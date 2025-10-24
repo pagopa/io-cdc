@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { errorsToReadableMessages } from "@pagopa/ts-commons/lib/reporters.js";
 import { IResponseType } from "@pagopa/ts-commons/lib/requests.js";
@@ -305,7 +307,7 @@ const getCdcCardsTE =
                 cards.map((c) => ({
                   card_name: `Carta della Cultura ${c.annoRif}`,
                   card_status: Card_statusEnum.ACTIVE,
-                  expiration_date: new Date("2026-12-31 00:00:00"),
+                  expiration_date: new Date(config.CDC_CARDS_EXPIRATION_DATE),
                   residual_amount: c.importoResiduo || 0.0,
                   year: c.annoRif || "",
                 })),
@@ -327,6 +329,33 @@ const getCdcCardsTE =
 const isCdcApiGetVouchersCallSuccess = (
   res: IResponseType<number, unknown, never>,
 ): res is IResponseType<200, ListVoucherDetails, never> => res.status === 200;
+
+const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
+  amount: v.importoRichiesto || 0,
+  applicant:
+    v.richiedente === "richiedente"
+      ? ApplicantEnum.SELF
+      : ApplicantEnum.FAMILY_MEMBER,
+  card_year: v.annoRif || "",
+  expiration_date: v.dataScadenza
+    ? new Date(v.dataScadenza)
+    : new Date(config.CDC_CARDS_EXPIRATION_DATE),
+  id: v.codVoucher || "",
+  refund:
+    v.rimborso!.importoDaRiaccreditare! > 0
+      ? {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          amount: v.rimborso!.importoDaRiaccreditare || 0,
+          refund_status: v.rimborso!.stato
+            ? Refund_statusEnum.COMPLETED
+            : Refund_statusEnum.PENDING,
+        }
+      : undefined,
+  voucher_status:
+    v.stato === "INSERITO"
+      ? Voucher_statusEnum.PENDING
+      : Voucher_statusEnum.USED,
+});
 
 const getCdcVouchersTE =
   (config: Config, env: CdcEnvironmentT) =>
@@ -361,7 +390,7 @@ const getCdcVouchersTE =
             )(response),
           ),
           TE.map((successResponse) => {
-            console.log(successResponse.value);
+            console.log(JSON.stringify(successResponse.value));
             return successResponse.value;
           }),
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -378,24 +407,7 @@ const getCdcVouchersTE =
                   () => new Error("Empty cdc vouchers list"),
                 ),
               ),
-              TE.map((vouchers) =>
-                vouchers.map((v) =>
-                  // TODO: Fix values when the API will be exposed
-                  ({
-                    amount: v.importoValidato || 0,
-                    applicant: ApplicantEnum.SELF,
-                    card_year: v.annoRif || "",
-                    expiration_date: v.dataScadenza || new Date(),
-                    id: v.codVoucher || "",
-                    refund: {
-                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                      amount: v.rimborso!.importoDaRiaccreditare || 0,
-                      refund_status: Refund_statusEnum.PENDING,
-                    },
-                    voucher_status: Voucher_statusEnum.PENDING,
-                  }),
-                ),
-              ),
+              TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
             ),
           ),
         ),
@@ -456,24 +468,9 @@ const postCdcVouchersTE =
               voucher,
               TE.fromPredicate(
                 (voucher) => voucher.codErrore === undefined,
-                () => new Error("Vocher error"),
+                () => new Error("Voucher error"),
               ),
-              TE.map((v) =>
-                // TODO: Fix values when the API will be exposed
-                ({
-                  amount: v.importoValidato || 0,
-                  applicant: ApplicantEnum.SELF,
-                  card_year: v.annoRif || "",
-                  expiration_date: v.dataScadenza || new Date(),
-                  id: v.codVoucher || "",
-                  refund: {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    amount: v.rimborso!.importoDaRiaccreditare || 0,
-                    refund_status: Refund_statusEnum.PENDING,
-                  },
-                  voucher_status: Voucher_statusEnum.PENDING,
-                }),
-              ),
+              TE.map((v) => mapVoucher(config, v)),
             ),
           ),
         ),
@@ -534,24 +531,9 @@ const getCdcVoucherTE =
               voucher,
               TE.fromPredicate(
                 (voucher) => voucher.codErrore === undefined,
-                () => new Error("Vocher error"),
+                () => new Error("Voucher error"),
               ),
-              TE.map((v) =>
-                // TODO: Fix values when the API will be exposed
-                ({
-                  amount: v.importoValidato || 0,
-                  applicant: ApplicantEnum.SELF,
-                  card_year: v.annoRif || "",
-                  expiration_date: v.dataScadenza || new Date(),
-                  id: v.codVoucher || "",
-                  refund: {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    amount: v.rimborso!.importoDaRiaccreditare || 0,
-                    refund_status: Refund_statusEnum.PENDING,
-                  },
-                  voucher_status: Voucher_statusEnum.PENDING,
-                }),
-              ),
+              TE.map((v) => mapVoucher(config, v)),
             ),
           ),
         ),
@@ -565,7 +547,7 @@ const getCdcVoucherTE =
       ),
     );
 
-// CDC GET VOUCHER API
+// CDC DELETE VOUCHER API
 const isCdcApiDeleteVoucherCallSuccess = (
   res: IResponseType<number, unknown, never>,
 ): res is IResponseType<200, SimpleResponseBean, never> => res.status === 200;
@@ -612,7 +594,7 @@ const deleteCdcVoucherTE =
               result,
               TE.fromPredicate(
                 (result) => result.codErrore === undefined,
-                () => new Error("Vocher error"),
+                () => new Error("Voucher error"),
               ),
               TE.map(
                 () =>
