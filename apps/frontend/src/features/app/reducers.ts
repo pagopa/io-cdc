@@ -3,12 +3,12 @@ import { Card } from './model';
 
 type TicketsState = {
   selectedCard: Pick<Card, 'residual_amount' | 'year'>;
-  amount: string;
+  amount: number;
   deleted: boolean;
 };
 
 const initialState: TicketsState = {
-  amount: '',
+  amount: 0,
   selectedCard: {
     residual_amount: 0,
     year: '',

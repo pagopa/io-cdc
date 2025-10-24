@@ -1,5 +1,10 @@
 import React from 'react';
-import { featureFlags } from './featureFlags';
+
+/**
+ * TODO
+ * For testing purposes, we need to load all routes in app. We could return back to previous logic when production environment is working
+ */
+// import { featureFlags } from './featureFlags';
 
 const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'));
 const Unauthorized = React.lazy(() => import('../pages/Unauthorized'));
@@ -85,9 +90,9 @@ const APP_ROUTES_CONFIG = {
 };
 
 export const getAppRoutes = () => {
-  const { dashboard, request } = featureFlags;
-  if (request && !dashboard) return APP_ROUTES_CONFIG.REQUEST;
-  if (!request) return APP_ROUTES_CONFIG.DASHBOARD;
+  // const { dashboard, request } = featureFlags;
+  // if (request && !dashboard) return APP_ROUTES_CONFIG.REQUEST;
+  // if (!request) return APP_ROUTES_CONFIG.DASHBOARD;
   return [
     ...APP_ROUTES_CONFIG.DASHBOARD,
     ...APP_ROUTES_CONFIG.REQUEST,

@@ -66,13 +66,13 @@ export const appApi = createApi({
     }),
     // DASHBOARD APP APIS
     getVoucherById: builder.query<GetBonusByIdResponseDTO, string>({
-      ...API_DASHBOARD[API_ENV].getVoucherById,
+      ...API_DASHBOARD.getVoucherById,
     }),
     getCards: builder.query<GetCardsResponseDTO, void>({
-      ...API_DASHBOARD[API_ENV].getCards,
+      ...API_DASHBOARD.getCards,
     }),
     getVoucher: builder.query<GetVouchersResponseDTO, void>({
-      ...API_DASHBOARD[API_ENV].getVouchers,
+      ...API_DASHBOARD.getVouchers,
     }),
     createVoucher: builder.mutation<CreateVoucherResponseDTO, CreateVoucherRequestDTO>({
       query: (voucher: CreateVoucherRequestDTO) => ({

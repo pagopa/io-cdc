@@ -6,9 +6,14 @@ type CdcInputProps = TextFieldProps;
 export const CdcInput = ({ ...props }: CdcInputProps) => {
   return (
     <TextField
-      type="number"
       {...props}
-      inputProps={{ inputMode: 'decimal', pattern: '[0-9.,]*' }}
+      type="number"
+      onChange={(e) => {
+        if (/^\d*[.,]?\d{0,2}$/.test(e.target.value)) {
+          props.onChange?.(e);
+        }
+      }}
+      inputProps={{ inputMode: 'decimal', step: '0.1', lang: 'it-IT' }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

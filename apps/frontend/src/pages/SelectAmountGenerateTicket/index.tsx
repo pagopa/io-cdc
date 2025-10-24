@@ -37,7 +37,7 @@ const SelectAmountGenerateTicket = () => {
 
   const amount = useSelector(selectAmountBonus);
 
-  const required = useMemo(() => !amount || amount === '0', [amount]);
+  const required = useMemo(() => !amount || amount === 0, [amount]);
 
   const onBackHeader = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_GENERATION_BACK', {
@@ -60,7 +60,7 @@ const SelectAmountGenerateTicket = () => {
       return;
     }
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
-    await createBonus({ card_year: selectedCard?.year!, amount: Number(amount) });
+    await createBonus({ year: selectedCard?.year!, amount: amount });
     dispatch(ticketsActions.resetForm());
     navigate(APP_ROUTES.HOME);
   }, [
@@ -77,7 +77,7 @@ const SelectAmountGenerateTicket = () => {
   useEffect(() => {
     trackWebviewEvent('CDC_BONUS_AMOUNT_INSERT');
     return () => {
-      dispatch(ticketsActions.setAmount(''));
+      dispatch(ticketsActions.setAmount(0));
     };
   }, [dispatch]);
 

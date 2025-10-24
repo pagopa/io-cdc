@@ -21,7 +21,7 @@ export const CardFooter = ({ residual_amount }: FooterProps) => {
       >
         <Stack direction="row" justifyContent="center" alignItems="baseline" gap={1}>
           <Typography fontWeight={700} fontSize={22}>
-            {residual_amount}
+            {residual_amount?.toFixed(2)}
           </Typography>
           <Typography>{`di ${MAX_AMOUNT}€`}</Typography>
         </Stack>

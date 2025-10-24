@@ -8,6 +8,7 @@ import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 import { authActions } from '../features/auth/reducer';
 import { selectIsTokenValid } from '../features/auth/selectors';
+import { TEST_USERS } from '../features/app/model';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
 
@@ -35,6 +36,11 @@ export const useGetSession = () => {
     }
 
     if ((session && session.token) || isChachedSessionValid) {
+      console.log('session cached found', session);
+      if (session?.route === TEST_USERS.USAGE) {
+        navigate(APP_ROUTES.HOME);
+        return;
+      }
       navigate(getPathFromEvironment());
       return;
     }
@@ -57,7 +63,12 @@ export const useGetSession = () => {
       return;
     }
     if (data?.token) {
-      dispatch(authActions.setToken(data?.token));
+      dispatch(authActions.setToken(data));
+      //THIS LOGIC IS IN USE FOR TESTING ONLY - ROUTE MUST BE PASSED ONLY FOR TESTER USERS
+      if (data?.route === TEST_USERS.USAGE) {
+        navigate(APP_ROUTES.HOME);
+        return;
+      }
     }
     navigate(getPathFromEvironment());
     return;

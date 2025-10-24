@@ -4,7 +4,7 @@ import { useCallback /*, useMemo */ } from 'react';
 import { ticketsActions } from '../../../features/app/reducers';
 
 type SetAmountProps = {
-  amount: string;
+  amount: number;
   error: boolean;
   reset: () => void;
   // balance: number;
@@ -15,7 +15,7 @@ export const SetAmount = ({ amount, error, reset /*, required, balance, */ }: Se
   const dispatch = useDispatch();
 
   const onChange = useCallback(
-    (amount: string) => {
+    (amount: number) => {
       reset();
       dispatch(ticketsActions.setAmount(amount));
     },
@@ -32,7 +32,7 @@ export const SetAmount = ({ amount, error, reset /*, required, balance, */ }: Se
   return (
     <CdcInput
       value={amount}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => onChange(Number(parseFloat(e.target.value).toFixed(2)))}
       fullWidth
       label="Importo"
       margin="normal"

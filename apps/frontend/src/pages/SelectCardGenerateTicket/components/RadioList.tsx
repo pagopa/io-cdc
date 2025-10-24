@@ -68,7 +68,7 @@ export const RadioList = ({ cards }: RadioListProps) => {
                       <Typography
                         fontSize={14}
                         color={TEXT_COLOR}
-                      >{`Credito disponibile ${residual_amount}€`}</Typography>
+                      >{`Credito disponibile ${residual_amount?.toFixed(2)}€`}</Typography>
                     </Stack>
                   </Stack>
                   <Divider />

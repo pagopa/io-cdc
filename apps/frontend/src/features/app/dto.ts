@@ -1,4 +1,4 @@
-import { VoucherItem, Card } from './model';
+import { VoucherItem, Card, TEST_USERS } from './model';
 
 export type RequestBonusDto = string[];
 
@@ -14,7 +14,7 @@ export type DeleteVoucherResponseDTO = {
 };
 
 export type CreateVoucherRequestDTO = {
-  card_year: string;
+  year: string;
   amount: number;
 };
 
@@ -24,6 +24,7 @@ export type CreateVoucherResponseDTO = {
 
 export type SessionResponseDTO = {
   token: string;
+  route: TEST_USERS;
 };
 
 export type GetYearsListResponseDTO = string[];

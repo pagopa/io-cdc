@@ -1,5 +1,11 @@
 export type YearsList = string[];
 
+//TODO Test only
+export enum TEST_USERS {
+  REGISTRATION = 'REGISTRATION',
+  USAGE = 'USAGE',
+}
+
 export enum CARD_STATUS {
   ACTIVE = 'ACTIVE',
   EXPIRED = 'EXPIRED',
