@@ -47,11 +47,10 @@ describe("getSessionToken", () => {
   });
 
   it("Should retrieve the session token and delete session id if redis client succeed with route USAGE if test user", async () => {
-    config.TEST_USERS.concat(
-      toHash(aValidFiscalCode),
-      ",",
-      toHash(anotherValidFiscalCode),
-    ); // add user as test user
+    config.TEST_USERS = `${toHash(aValidFiscalCode)},${toHash(
+      anotherValidFiscalCode,
+    )}` as NonEmptyString; // replace TEST_USERS with two hashed fiscal codes separated by comma
+
     redisGetMock.mockResolvedValueOnce("sessiontokenvalue"); // first return sessiontoken
     redisGetMock.mockResolvedValueOnce(JSON.stringify(aValidSession)); // second return session
 
@@ -62,7 +61,7 @@ describe("getSessionToken", () => {
     expect(E.isRight(res)).toBe(true);
     if (E.isRight(res)) {
       expect(res.right).toEqual({
-        route: "REGISTRATION" as const,
+        route: "USAGE" as const,
         token: "sessiontokenvalue",
       });
     }
