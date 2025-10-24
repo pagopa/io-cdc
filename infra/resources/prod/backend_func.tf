@@ -48,11 +48,11 @@ module "backend_func" {
   fims_issuer_url    = data.azurerm_key_vault_secret.fims_issuer_url.value
   fims_scope         = data.azurerm_key_vault_secret.fims_scope.value
 
-  jwt_private_key_test  = data.azurerm_key_vault_secret.jwt_private_key_test.value
-  jwt_private_key = data.azurerm_key_vault_secret.jwt_private_key.value
+  jwt_private_key_test = data.azurerm_key_vault_secret.jwt_private_key_test.value
+  jwt_private_key      = data.azurerm_key_vault_secret.jwt_private_key.value
 
   encryption_public_key_test = data.azurerm_key_vault_secret.encryption_public_key_test.value
-  encryption_public_key  = data.azurerm_key_vault_secret.encryption_public_key.value
+  encryption_public_key      = data.azurerm_key_vault_secret.encryption_public_key.value
 
   jwt_issuer     = data.azurerm_key_vault_secret.jwt_issuer.value
   jwt_audience   = data.azurerm_key_vault_secret.jwt_audience.value
@@ -71,6 +71,8 @@ module "backend_func" {
 
   cdc_backend_func_url = data.azurerm_key_vault_secret.cdc_backend_func_url.value
   cdc_backend_func_key = data.azurerm_key_vault_secret.cdc_backend_func_key.value
+
+  test_users = data.azurerm_key_vault_secret.test_users.value
 
   action_group_id = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
 
