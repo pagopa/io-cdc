@@ -14,8 +14,6 @@ import { useToast } from '../../contexts';
 import { Reminder } from './components/Reminder';
 import { useGetCardsAndVouchers, useRouteGuard } from '../../hooks';
 import { separateVouchersByStatus } from '../../utils/separateVouchersByStatus';
-// import { TEST_USERS } from '../../features/app/model';
-// import { featureFlags } from '../../utils/featureFlags';
 
 const Home = () => {
   //TODO test only

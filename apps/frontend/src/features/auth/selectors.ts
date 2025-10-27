@@ -7,3 +7,5 @@ export const selectToken = (state: RootState) => state.auth.token;
 
 export const selectIsTokenValid = ({ auth }: RootState) =>
   Boolean(auth.token && auth.savedAt && Date.now() - auth.savedAt < EXPIRE_TIME);
+
+export const selectSessionRoute = ({ auth }: RootState) => auth?.route;
