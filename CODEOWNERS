@@ -1,6 +1,5 @@
 # see https://help.github.com/en/articles/about-code-owners#example-of-a-codeowners-file
 
 * @pagopa/io-bonus-n-payments-contributors
+/infra/bootstrapper/ @pagopa/io-bonus-n-payments-contributors @pagopa/engineering-team-devex
 
-/infra/ @pagopa/engineering-team-cloud-eng @pagopa/io-bonus-n-payments-contributors
-/.github/ @pagopa/engineering-team-cloud-eng @pagopa/io-bonus-n-payments-contributors
