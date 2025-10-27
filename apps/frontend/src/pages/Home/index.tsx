@@ -7,15 +7,19 @@ import { trackWebviewEvent } from '../../utils/trackEvent';
 import { VoucherCard } from '../BonusList/components/BonusItem';
 import { EmptyState, Loader, theme } from '@io-cdc/ui';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTicketDeleted } from '../../features/app/selectors';
+import { selectFirstSessionData, selectTicketDeleted } from '../../features/app/selectors';
 import { ticketsActions } from '../../features/app/reducers';
 import { OthersBonusSheet } from '../../components/OthersBonusSheet';
 import { useToast } from '../../contexts';
 import { Reminder } from './components/Reminder';
 import { useGetCardsAndVouchers } from '../../hooks';
 import { separateVouchersByStatus } from '../../utils/separateVouchersByStatus';
+import { TEST_USERS } from '../../features/app/model';
+import { featureFlags } from '../../utils/featureFlags';
 
 const Home = () => {
+  const session = useSelector(selectFirstSessionData);
+
   const dispatch = useDispatch();
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -78,6 +82,13 @@ const Home = () => {
   const spent = useMemo(() => {
     return sAll.slice(0, 4);
   }, [sAll]);
+
+  useEffect(() => {
+    if (session && (session.route === TEST_USERS.REGISTRATION || !featureFlags.dashboard)) {
+      navigate(APP_ROUTES.SELECT_YEAR);
+      return;
+    }
+  }, [navigate, session]);
 
   useEffect(() => {
     if (deleted) {
