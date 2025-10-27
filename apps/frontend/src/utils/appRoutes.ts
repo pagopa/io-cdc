@@ -19,6 +19,7 @@ const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmoun
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const BonusList = React.lazy(() => import('../pages/BonusList'));
 const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
+const CardsEmptyState = React.lazy(() => import('../pages/CardsEmptyState'));
 
 // global route
 const NotFound = React.lazy(() => import('../pages/NotFound'));
@@ -35,6 +36,7 @@ export enum APP_ROUTES {
   EXPIRED = '/iniziativa-scaduta',
   UNAUTHORIZED = '/unauthorized',
   FEEDBACK_VOUCHERS = '/voucher-feedback',
+  CARDS_EMPTY = '/no-cards',
   NOT_FOUND = '/not-found',
 }
 
@@ -86,6 +88,10 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.FEEDBACK_VOUCHERS,
     Element: FeedbackVouchers,
+  },
+  {
+    path: APP_ROUTES.CARDS_EMPTY,
+    Element: CardsEmptyState,
   },
 ];
 

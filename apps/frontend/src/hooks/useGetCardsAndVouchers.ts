@@ -32,6 +32,11 @@ export const useGetCardsAndVouchers = () => {
       error: getCardsError,
     } = await getCards();
 
+    if (!cards || !cards?.length) {
+      navigate(APP_ROUTES.CARDS_EMPTY);
+      return;
+    }
+
     const {
       data: vouchers,
       isError: getVouchersListIsError,
@@ -45,7 +50,7 @@ export const useGetCardsAndVouchers = () => {
 
     if (isError && isFetchBaseQueryError(error)) {
       /**/ /TODO remove this  */;
-      navigate(APP_ROUTES.FEEDBACK_REQUEST, { state: { status: 500 } });
+      navigate(APP_ROUTES.FEEDBACK_VOUCHERS, { state: { status: 500 } });
       return;
     }
 
