@@ -17,8 +17,12 @@ import { useDispatch } from 'react-redux';
 import { ticketsActions } from '../../features/app/reducers';
 import { APP_ROUTES } from '../../utils/appRoutes';
 import { getChipConfig } from './constants';
+import { useRouteGuard } from '../../hooks';
 
 const BonusDetail = () => {
+  //TODO test only
+  useRouteGuard();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id = '' } = useParams();

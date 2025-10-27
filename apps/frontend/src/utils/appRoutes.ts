@@ -6,16 +6,21 @@ import React from 'react';
  */
 // import { featureFlags } from './featureFlags';
 
+// Request routes
+const SelectYear = React.lazy(() => import('../pages/SelectYear'));
+const FeedbackRequest = React.lazy(() => import('../pages/FeedbackRequest'));
 const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'));
 const Unauthorized = React.lazy(() => import('../pages/Unauthorized'));
-const FeedbackRequest = React.lazy(() => import('../pages/FeedbackRequest'));
-const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
-const SelectYear = React.lazy(() => import('../pages/SelectYear'));
+
+// Usage routes
+const Home = React.lazy(() => import('../pages/Home'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const BonusList = React.lazy(() => import('../pages/BonusList'));
-const Home = React.lazy(() => import('../pages/Home'));
+const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
+
+// global route
 const NotFound = React.lazy(() => import('../pages/NotFound'));
 
 export enum APP_ROUTES {

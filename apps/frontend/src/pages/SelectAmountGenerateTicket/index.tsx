@@ -14,8 +14,12 @@ import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/app/reducers';
 import { useToast } from '../../contexts';
 import { theme } from '@io-cdc/ui';
+import { useRouteGuard } from '../../hooks';
 
 const SelectAmountGenerateTicket = () => {
+  //TODO test only
+  useRouteGuard();
+
   const { showToast } = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
