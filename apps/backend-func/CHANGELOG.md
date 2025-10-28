@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.12
+
+### Patch Changes
+
+- 1244316: retry every minute
+
 ## 1.0.11
 
 ### Patch Changes
