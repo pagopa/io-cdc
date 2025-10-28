@@ -333,7 +333,7 @@ const isCdcApiGetVouchersCallSuccess = (
 const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
   amount: v.importoRichiesto || 0,
   applicant:
-    v.richiedente === "richiedente"
+    v.richiedente === "SELF"
       ? ApplicantEnum.SELF
       : ApplicantEnum.FAMILY_MEMBER,
   card_year: v.annoRif || "",
