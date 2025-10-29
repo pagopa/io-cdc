@@ -7,6 +7,7 @@ import { useRequestBonusMutation } from '../../features/app/services';
 import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { RequestLoader } from '../../components/RequestLoader';
+import { checkExpirationDate } from './utils';
 import { useToast } from '../../contexts';
 
 const SelectYear = () => {
@@ -70,6 +71,13 @@ const SelectYear = () => {
       return;
     }
 
+    const canPost = checkExpirationDate();
+
+    if (!canPost) {
+      navigate(APP_ROUTES.EXPIRED, { state: { status: notAvailableYears.length ? 501 : 500 } });
+      return;
+    }
+
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
 
     try {
@@ -92,7 +100,7 @@ const SelectYear = () => {
         },
       });
     }
-  }, [selectedItems, notAvailableYears, showToast, requestBonus, navigate]);
+  }, [selectedItems, notAvailableYears, showToast, navigate, requestBonus]);
 
   if (!hasCompleted) return <RequestLoader />;
 
