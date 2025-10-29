@@ -1,8 +1,10 @@
 import { CosmosClient } from "@azure/cosmos";
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { isAfter } from "date-fns";
 import * as A from "fp-ts/lib/Array.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
@@ -52,14 +54,31 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
     TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
-export const activateSpecialService = (
-  fiscalCode: FiscalCode,
-  deps: Dependencies,
-) =>
+export const checkDatetime = (deps: Dependencies) =>
   pipe(
-    activateSpecialServiceIfNotActive(deps.servicesClient, fiscalCode),
-    TE.mapLeft(errorToInternalError),
+    new Date(deps.config.CDC_REGISTRATION_END_DATE),
+    TE.fromPredicate(
+      (endDate) => {
+        const now = new Date();
+        const validDate = isAfter(endDate, now);
+        emitCustomEvent("cdc.post.request.iniziative.status", {
+          data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
+            validDate ? "Iniziative open" : "Initiative closed"
+          }`,
+        })("getYears");
+        return validDate;
+      },
+      () => new Error("CDC registration period is over"),
+    ),
+    TE.mapLeft(errorToValidationError),
   );
+
+export const activateSpecialService =
+  (fiscalCode: FiscalCode, deps: Dependencies) => () =>
+    pipe(
+      activateSpecialServiceIfNotActive(deps.servicesClient, fiscalCode),
+      TE.mapLeft(errorToInternalError),
+    );
 
 export const getExistingCardRequests =
   (fiscalCode: FiscalCode, deps: Dependencies) => () =>
@@ -131,7 +150,8 @@ export const saveNewRequestAudit =
 export const postCardRequests =
   (user: Session, years: Year[]) => (deps: Dependencies) =>
     pipe(
-      activateSpecialService(user.fiscal_code, deps),
+      checkDatetime(deps),
+      TE.chain(activateSpecialService(user.fiscal_code, deps)),
       TE.chain(getExistingCardRequests(user.fiscal_code, deps)),
       TE.map(filterNotEligibleYears),
       TE.map(filterAlreadyRequestedYears(years)),

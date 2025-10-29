@@ -11,7 +11,7 @@ locals {
 
       // CDC
       CDC_BASE_URL              = var.cdc_base_url
-      CDC_REGISTRATION_END_DATE = "2025-10-31T11:00:00Z" // 12:00:00 CET of October 31st, 2025
+      CDC_REGISTRATION_END_DATE = "2025-10-31T10:59:59.999Z" // 12:00:00 CET of October 31st, 2025
 
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri
