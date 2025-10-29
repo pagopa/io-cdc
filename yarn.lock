@@ -8049,6 +8049,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8.32.1"
     "@typescript-eslint/parser": "npm:^8.32.1"
     "@vitejs/plugin-react": "npm:^4.3.1"
+    date-fns: "npm:^4.1.0"
     eslint: "npm:^8.57.0"
     eslint-config-next: "npm:14.2.5"
     eslint-config-prettier: "npm:^10.1.5"

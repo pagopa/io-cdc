@@ -1,5 +1,11 @@
 # frontend
 
+## 1.0.6
+
+### Patch Changes
+
+- 150d746: Add check for time limit request
+
 ## 1.0.5
 
 ### Patch Changes

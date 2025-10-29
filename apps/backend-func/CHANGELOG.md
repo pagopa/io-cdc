@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.0.13
+
+### Patch Changes
+
+- 7e7b2a3: strict check on period ending on post requests
+
 ## 1.0.12
 
 ### Patch Changes

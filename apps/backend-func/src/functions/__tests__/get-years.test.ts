@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as E from "fp-ts/lib/Either.js";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
@@ -17,12 +16,11 @@ describe("GetYears", () => {
   });
 
   it("should return an array of years when called before end date CEST", async () => {
-    vi.setSystemTime(new Date("2025-10-31T23:59:59+01:00"));
-    console.log(new Date().toISOString());
+    vi.setSystemTime(new Date("2025-10-31T11:59:59.998+01:00"));
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -33,12 +31,11 @@ describe("GetYears", () => {
   });
 
   it("should return an array of years when called before end date UTC", async () => {
-    vi.setSystemTime(new Date("2025-10-31T22:59:59Z"));
-    console.log(new Date().toISOString());
+    vi.setSystemTime(new Date("2025-10-31T10:59:59.998Z"));
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -49,12 +46,11 @@ describe("GetYears", () => {
   });
 
   it("should return an empty array when called after end date CEST", async () => {
-    vi.setSystemTime(new Date("2025-10-31T23:00:00Z"));
-    console.log(new Date().toISOString());
+    vi.setSystemTime(new Date("2025-10-31T12:00:00.000+01:00"));
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
       } as Config,
     })();
 
@@ -65,12 +61,11 @@ describe("GetYears", () => {
   });
 
   it("should return an empty array when called after end date UTC", async () => {
-    vi.setSystemTime(new Date("2025-10-31T23:00:00Z"));
-    console.log(new Date().toISOString());
+    vi.setSystemTime(new Date("2025-10-31T11:00:00.000Z"));
 
     const res = await getYears()({
       config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T23:00:00Z" as NonEmptyString,
+        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
       } as Config,
     })();
 

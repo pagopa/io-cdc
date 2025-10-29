@@ -22,7 +22,7 @@ export const getYears = () => (deps: Dependencies) =>
     O.fromPredicate((endDate) => {
       const now = new Date();
       const validDate = isAfter(endDate, now);
-      emitCustomEvent("cdc.iniziative.status", {
+      emitCustomEvent("cdc.get.years.iniziative.status", {
         data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
           validDate ? "Iniziative open" : "Initiative closed"
         }`,
