@@ -1,6 +1,15 @@
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import {
   CosmosOperation,
@@ -28,6 +37,7 @@ import { Config } from "../../config.js";
 import { CosmosDbCardRequestRepository } from "../../repository/card_request_repository.js";
 import { CosmosDbRequestAuditRepository } from "../../repository/request_audit_repository.js";
 import {
+  checkDatetime,
   filterAlreadyRequestedYears,
   filterNotEligibleYears,
   getExistingCardRequests,
@@ -38,6 +48,7 @@ import {
 
 const redisClientFactoryMock = getRedisClientFactoryMock();
 const config = {
+  CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
   COSMOSDB_CDC_DATABASE_NAME: "database",
 } as unknown as Config;
 const servicesClient = servicesClientMock;
@@ -83,6 +94,104 @@ describe("post-requests | getSession", () => {
         code: 401,
         message: "Session not found",
         title: "Unauthorized",
+      });
+  });
+});
+
+describe("post-requests | checkDatetime", () => {
+  beforeAll(() => {
+    vi.useFakeTimers();
+  });
+
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
+  it("should return right when called before end date CEST", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+
+    vi.setSystemTime(new Date("2025-10-31T11:59:59.998+01:00"));
+
+    const res = await checkDatetime({
+      config,
+      cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
+      redisClientFactory: redisClientFactoryMock,
+      servicesClient,
+    })();
+
+    expect(E.isRight(res)).toBe(true);
+  });
+
+  it("should return right when called before end date UTC", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+
+    vi.setSystemTime(new Date("2025-10-31T10:59:59.998Z"));
+
+    const res = await checkDatetime({
+      config,
+      cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
+      redisClientFactory: redisClientFactoryMock,
+      servicesClient,
+    })();
+
+    expect(E.isRight(res)).toBe(true);
+  });
+
+  it("should return left when called after end date CEST", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+
+    vi.setSystemTime(new Date("2025-10-31T12:00:00.000+01:00"));
+
+    const res = await checkDatetime({
+      config,
+      cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
+      redisClientFactory: redisClientFactoryMock,
+      servicesClient,
+    })();
+
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 400,
+        message: "CDC registration period is over",
+        title: "Bad Request",
+      });
+  });
+
+  it("should return left when called after end date UTC", async () => {
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+
+    vi.setSystemTime(new Date("2025-10-31T11:00:00.000Z"));
+
+    const res = await checkDatetime({
+      config,
+      cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
+      redisClientFactory: redisClientFactoryMock,
+      servicesClient,
+    })();
+
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 400,
+        message: "CDC registration period is over",
+        title: "Bad Request",
       });
   });
 });
@@ -254,11 +363,20 @@ describe("post-requests | saveNewCardRequests", () => {
 });
 
 describe("post-requests | postCardRequests", () => {
+  beforeAll(() => {
+    vi.useFakeTimers();
+  });
+
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
   afterEach(() => {
     vi.clearAllMocks();
   });
 
   it("3. postCardRquests | should return an array of CardRequests' years if cosmos succeeds", async () => {
+    vi.setSystemTime(new Date("2025-10-31T10:59:59.998Z"));
     const cosmosClientMock = getCosmosDbClientInstanceMock([
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
@@ -279,7 +397,31 @@ describe("post-requests | postCardRequests", () => {
     expect(enqueueMessageMock).toBeCalledTimes(1);
   });
 
+  it("3. postCardRquests | should return left when request period is over", async () => {
+    vi.setSystemTime(new Date("2025-10-31T11:00:00.000Z"));
+    const cosmosClientMock = getCosmosDbClientInstanceMock([
+      CosmosDbCardRequestRepository.containerName,
+      CosmosDbRequestAuditRepository.containerName,
+    ]);
+    const res = await postCardRequests(aValidSession, ["2020"])({
+      config,
+      cosmosDbClient: cosmosClientMock,
+      queueStorage: queueStorageMock,
+      redisClientFactory: redisClientFactoryMock,
+      servicesClient,
+    })();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 400,
+        message: "CDC registration period is over",
+        title: "Bad Request",
+      });
+    expect(enqueueMessageMock).toBeCalledTimes(0);
+  });
+
   it("3. postCardRquests | should not call sogei if all the request audit years has already been processed", async () => {
+    vi.setSystemTime(new Date("2025-10-31T10:59:59.998Z"));
     const cosmosClientMock = getCosmosDbClientInstanceMock([
       CosmosDbCardRequestRepository.containerName,
       CosmosDbRequestAuditRepository.containerName,
