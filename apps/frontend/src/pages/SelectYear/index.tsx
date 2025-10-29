@@ -96,14 +96,6 @@ const SelectYear = () => {
       setIsLoading(true);
       const { error, data } = await requestBonus(newYears);
       if (error) {
-        if (isFetchBaseQueryError(error)) {
-          navigate(APP_ROUTES.FEEDBACK, {
-            state: {
-              status: 400,
-            },
-          });
-          return;
-        }
         throw new Error('Something went wrong');
       }
       if (data)
