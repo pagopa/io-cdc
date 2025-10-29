@@ -8,7 +8,6 @@ type TrackEventProperties =
   | {
       name: 'CDC_REQUEST_FAILURE';
       properties: {
-        webview: true;
         reason: 'service_not_available' | 'generic_error';
         event_category: 'KO';
       };
@@ -16,8 +15,6 @@ type TrackEventProperties =
   | {
       name: 'CDC_REQUEST_UX_SUCCESS';
       properties: {
-        webview: true;
-        event_category: 'UX';
         event_type: 'screen_view';
       };
     };
@@ -41,8 +38,6 @@ export const CONFIG_BY_STATUS: Record<
     trackProperties: {
       name: 'CDC_REQUEST_UX_SUCCESS',
       properties: {
-        webview: true,
-        event_category: 'UX',
         event_type: 'screen_view',
       },
     },
@@ -55,7 +50,6 @@ export const CONFIG_BY_STATUS: Record<
       name: 'CDC_REQUEST_FAILURE',
       properties: {
         event_category: 'KO',
-        webview: true,
         reason: 'service_not_available',
       },
     },
@@ -68,7 +62,6 @@ export const CONFIG_BY_STATUS: Record<
       name: 'CDC_REQUEST_FAILURE',
       properties: {
         event_category: 'KO',
-        webview: true,
         reason: 'generic_error',
       },
     },
