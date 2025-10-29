@@ -13,6 +13,7 @@ const Feedback = () => {
   const { title, description, icon, subTitle, trackProperties } = CONFIG_BY_STATUS[status];
 
   useEffect(() => {
+    if (!trackProperties) return;
     const { name, properties } = trackProperties;
 
     if (status === 200) {

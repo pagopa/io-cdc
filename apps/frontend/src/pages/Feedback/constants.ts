@@ -28,7 +28,7 @@ export const CONFIG_BY_STATUS: Record<
     title: string;
     subTitle: string;
     icon: IconType;
-    trackProperties: TrackEventProperties;
+    trackProperties?: TrackEventProperties;
     description?: string;
   }
 > = {
@@ -46,6 +46,11 @@ export const CONFIG_BY_STATUS: Record<
         event_type: 'screen_view',
       },
     },
+  },
+  400: {
+    icon: 'timeout',
+    title: "La richiesta non è stata inviata, l'iniziativa è scaduta",
+    subTitle: '',
   },
   503: {
     icon: 'umbrella',

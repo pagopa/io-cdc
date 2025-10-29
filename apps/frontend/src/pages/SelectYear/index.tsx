@@ -9,6 +9,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { RequestLoader } from '../../components/RequestLoader';
+import { checkExpirationDate } from './utils';
 
 const SelectYear = () => {
   const navigate = useNavigate();
@@ -81,12 +82,28 @@ const SelectYear = () => {
       return;
     }
     toast.dismiss();
+
+    const canPost = checkExpirationDate();
+
+    if (!canPost) {
+      navigate(APP_ROUTES.EXPIRED, { state: { status: notAvailableYears.length ? 501 : 500 } });
+      return;
+    }
+
     const newYears = selectedItems.filter((year) => !notAvailableYears.includes(year));
 
     try {
       setIsLoading(true);
       const { error, data } = await requestBonus(newYears);
       if (error) {
+        if (isFetchBaseQueryError(error)) {
+          navigate(APP_ROUTES.FEEDBACK, {
+            state: {
+              status: 400,
+            },
+          });
+          return;
+        }
         throw new Error('Something went wrong');
       }
       if (data)
@@ -103,7 +120,7 @@ const SelectYear = () => {
         },
       });
     }
-  }, [selectedItems, notAvailableYears, requestBonus, navigate]);
+  }, [selectedItems, notAvailableYears, navigate, requestBonus]);
 
   if (!hasCompleted) return <RequestLoader />;
 
