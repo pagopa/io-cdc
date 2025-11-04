@@ -311,23 +311,6 @@ components:
     ListBorsellinoDetails:
       type: object
       properties:
-        codErrore:
-          type: string
-        descrErrore:
-          type: string
-        status:
-          type: string
-          enum:
-            - NO_INPUT
-            - ANNI_RIFERIMENTO_NON_FORNITI
-            - LISTA_ANNI_VUOTA
-            - FORMATO_ANNI_ERRATO
-            - INPUT_SUPERIORE_AL_CONSENTITO
-        msgERRProcedura:
-          type: string
-        codErrProcedura:
-          type: integer
-          format: int32
         listaRisultati:
           type: array
           items:
@@ -367,6 +350,12 @@ components:
           type: string
         descStatoBorsellino:
           type: string
+      required:
+        - annoRif
+        - importoResiduo
+        - importoRichNonValid
+        - importoTot
+        - importoValidato
     VoucherBeanRequest:
       type: object
       properties:

@@ -1,6 +1,8 @@
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { isAfter } from "date-fns";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
@@ -17,6 +19,7 @@ import {
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
+import { toHash } from "../utils/hash.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
 
@@ -37,14 +40,65 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
     TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
+export const checkStartDatetime = (user: Session) => (deps: Dependencies) =>
+  pipe(
+    new Date(deps.config.CDC_USAGE_START_DATE),
+    TE.fromPredicate(
+      (startDate) => {
+        const cfHash = toHash(user.fiscal_code);
+        const isTestUser = deps.config.TEST_USERS.includes(cfHash);
+        const now = new Date();
+        const validDate = isAfter(now, startDate) || isTestUser;
+        emitCustomEvent("cdc.get.cards.iniziative.status", {
+          data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${
+            validDate ? "Iniziative open" : "Initiative closed"
+          }`,
+        })("getCards");
+        if (isTestUser) {
+          emitCustomEvent("cdc.get.cards.iniziative.status.test", {
+            data: `Test user connected`,
+          })("getCards");
+        }
+        return validDate;
+      },
+      () => new Error("CDC usage period is not started yet"),
+    ),
+    TE.mapLeft(errorToValidationError),
+  );
+
+export const checkEndDatetime = (deps: Dependencies) =>
+  pipe(
+    new Date(deps.config.CDC_USAGE_END_DATE),
+    TE.fromPredicate(
+      (endDate) => {
+        const now = new Date();
+        const validDate = isAfter(endDate, now);
+        emitCustomEvent("cdc.get.cards.iniziative.status", {
+          data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
+            validDate ? "Iniziative open" : "Initiative closed"
+          }`,
+        })("getCards");
+        return validDate;
+      },
+      () => new Error("CDC usage period is over"),
+    ),
+    TE.mapLeft(errorToValidationError),
+  );
+
 export const getCards = (user: Session) => (deps: Dependencies) =>
   pipe(
-    deps.cdcUtils.getCdcCardsTE({
-      first_name: user.given_name,
-      fiscal_code: user.fiscal_code,
-      last_name: user.family_name,
-    }),
-    TE.mapLeft(errorToInternalError),
+    checkStartDatetime(user)(deps),
+    TE.chain(() => checkEndDatetime(deps)),
+    TE.chain(() =>
+      pipe(
+        deps.cdcUtils.getCdcCardsTE({
+          first_name: user.given_name,
+          fiscal_code: user.fiscal_code,
+          last_name: user.family_name,
+        }),
+        TE.mapLeft(errorToInternalError),
+      ),
+    ),
   );
 
 export const makeGetCardsHandler: H.Handler<

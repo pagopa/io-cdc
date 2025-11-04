@@ -289,12 +289,12 @@ const getCdcCardsTE =
             console.log(successResponse.value);
             return successResponse.value;
           }),
-          TE.chain(({ listaRisultati, ...error }) =>
+          TE.chain(({ listaRisultati }) =>
             pipe(
               listaRisultati,
               TE.fromPredicate(
                 (cards) => !!cards,
-                () => new Error(JSON.stringify(error)),
+                () => new Error("Invalid cdc cards list"),
               ),
               TE.chain(
                 TE.fromPredicate(
@@ -303,13 +303,12 @@ const getCdcCardsTE =
                 ),
               ),
               TE.map((cards) =>
-                // TODO: Fix values when the API will be exposed
                 cards.map((c) => ({
                   card_name: `Carta della Cultura ${c.annoRif}`,
                   card_status: Card_statusEnum.ACTIVE,
                   expiration_date: new Date(config.CDC_CARDS_EXPIRATION_DATE),
-                  residual_amount: c.importoResiduo || 0.0,
-                  year: c.annoRif || "",
+                  residual_amount: c.importoResiduo,
+                  year: c.annoRif,
                 })),
               ),
             ),

@@ -45,7 +45,8 @@ resource "azurerm_cosmosdb_sql_container" "card_requests" {
   database_name       = azurerm_cosmosdb_sql_database.cdc_cosmos_db.name
   partition_key_paths = ["/fiscalCode"]
   autoscale_settings {
-    max_throughput = 12000
+    // TODO: Increase RU before next registration phase
+    max_throughput = 2000
   }
 }
 
@@ -57,6 +58,7 @@ resource "azurerm_cosmosdb_sql_container" "requests-audit" {
   database_name       = azurerm_cosmosdb_sql_database.cdc_cosmos_db.name
   partition_key_paths = ["/fiscalCode"]
   autoscale_settings {
-    max_throughput = 12000
+    // TODO: Increase RU before next registration phase
+    max_throughput = 2000
   }
 }

@@ -34,7 +34,12 @@ export const Config = t.type({
   CDC_BASE_URL: NonEmptyString,
 
   CDC_CARDS_EXPIRATION_DATE: NonEmptyString,
+
   CDC_REGISTRATION_END_DATE: NonEmptyString,
+  CDC_REGISTRATION_START_DATE: NonEmptyString,
+
+  CDC_USAGE_END_DATE: NonEmptyString,
+  CDC_USAGE_START_DATE: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
   COSMOSDB_CDC_KEY: NonEmptyString,
