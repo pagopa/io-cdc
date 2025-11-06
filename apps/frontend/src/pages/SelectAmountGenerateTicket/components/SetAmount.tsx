@@ -1,4 +1,4 @@
-import { CdcInput } from '../../../components/Input';
+import { CdcInput } from '../../../components';
 import { useDispatch } from 'react-redux';
 import { useCallback /*, useMemo */ } from 'react';
 import { ticketsActions } from '../../../features/app/reducers';

@@ -1,8 +1,7 @@
 import { Stack } from '@mui/system';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Header } from '../../components/Header';
+import { Header, PopConfirm } from '../../components';
 import { useNavigate } from 'react-router-dom';
-import { PopConfirm } from '../../components/PopConfirm';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { useGetCardsQuery } from '../../features/app/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';

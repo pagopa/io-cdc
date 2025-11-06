@@ -1,13 +1,10 @@
 import { SectionTitle } from '@io-cdc/ui';
 import { Stack, Button } from '@mui/material';
-import { CodesTabs } from '../../../components/CodesTabs';
+import { CodesTabs, QrCode, BarCode, BottomSheet } from '../../../components';
 import { useCallback, useMemo, useState } from 'react';
-import { QrCode } from '../../../components/QrCode';
-import { BarCode } from '../../../components/BarCode';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { useToast } from '../../../contexts';
 import copy from 'copy-to-clipboard';
-import { BottomSheet } from '../../../components/BottomSheet';
 
 type UseCodeSheetProps = {
   isOpen: boolean;

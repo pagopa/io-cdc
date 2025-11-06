@@ -1,5 +1,5 @@
 import { useGetSession } from '../../hooks';
-import { RequestLoader } from '../../components/RequestLoader';
+import { RequestLoader } from '../../components';
 
 const Authorize = () => {
   useGetSession();

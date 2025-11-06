@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { Layout } from './components/Layout';
+import { Layout } from './components';
 import { APP_ROUTES_CONFIG_TYPE, getAppRoutes } from './routes/appRoutes';
 import { useMixPanelSession } from './hooks';
 import { ProtectedRoute } from './routes/ProtectedRoute';

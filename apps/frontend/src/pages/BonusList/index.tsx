@@ -1,6 +1,5 @@
 import { Stack } from '@mui/system';
-import { Header } from '../../components/Header';
-import { VoucherList } from '../../components/BonusList';
+import { Header, VoucherList } from '../../components';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetVoucherQuery } from '../../features/app/services';

@@ -20,11 +20,9 @@ export const OthersBonusSheet = ({ openSheet, onClose }: OthersBonusSheetProps) 
             Per questioni di riservatezza, non puoi accedere al dettaglio dei buoni creati dagli
             altri membri del nucleo familiare.
           </Typography>
-          {spent ? null : (
-            <Typography variant="body1">
-              Se un buono viene annullato, i soldi tornano nel credito disponibile.
-            </Typography>
-          )}
+          <Typography variant="body1">
+            Se un buono viene annullato, i soldi tornano nel credito disponibile.
+          </Typography>
         </Stack>
       </Stack>
     </BottomSheet>

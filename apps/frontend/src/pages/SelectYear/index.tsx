@@ -6,7 +6,7 @@ import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRequestBonusMutation } from '../../features/app/services';
 import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
-import { RequestLoader } from '../../components/RequestLoader';
+import { RequestLoader } from '../../components';
 import { checkExpirationDate } from './utils';
 import { useToast } from '../../contexts';
 

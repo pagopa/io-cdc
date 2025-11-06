@@ -1,7 +1,7 @@
 import { Button, Chip, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../../components/Header';
+import { Header, PopConfirm } from '../../components';
 import { Icon, Loader, theme } from '@io-cdc/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BonusDescription } from './components/BonusDescription';
@@ -12,7 +12,6 @@ import { DetailItemWrapper } from './components/DetailItems';
 import { MerchantDetail } from './components/MerchantDetail';
 import { useGetVoucherDetail } from '../../hooks/useGetVoucherDetail';
 import { useDeleteVoucherMutation } from '../../features/app/services';
-import { PopConfirm } from '../../components/PopConfirm';
 import { useDispatch } from 'react-redux';
 import { ticketsActions } from '../../features/app/reducers';
 import { APP_ROUTES } from '../../routes/appRoutes';

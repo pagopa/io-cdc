@@ -1,6 +1,6 @@
 import { Stack } from '@mui/system';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Header } from '../../components/Header';
+import { Header } from '../../components';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { SetAmount } from './components/SetAmount';
 import { Navigate, useNavigate } from 'react-router-dom';

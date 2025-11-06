@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material';
-import { BottomSheet } from '../../../components/BottomSheet';
+import { BottomSheet } from '../../../components';
 
 type HelpSheetProps = {
   isOpen: boolean;

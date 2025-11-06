@@ -1,6 +1,5 @@
 import { Divider, Stack, Typography } from '@mui/material';
-import { BarCode } from '../../../components/BarCode';
-import { QrCode } from '../../../components/QrCode';
+import { QrCode, BarCode } from '../../../components';
 
 type CodesSectionProps = {
   code: string;
