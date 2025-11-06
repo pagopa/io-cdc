@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { selectFirstSessionData } from '../features/app/selectors';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useLazyGetSessionQuery } from '../features/app/services';
-import { APP_ROUTES } from '../utils/appRoutes';
+import { APP_ROUTES } from '../routes/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 import { authActions } from '../features/auth/reducer';

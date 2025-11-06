@@ -2,7 +2,7 @@ import { Button, Divider, Stack, Typography } from '@mui/material';
 import { Carousel } from '../../components/Carousel';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { VoucherCard } from '../BonusList/components/BonusItem';
 import { EmptyState, Loader, theme } from '@io-cdc/ui';

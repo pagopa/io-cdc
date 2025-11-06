@@ -5,7 +5,7 @@ import {
 } from '../features/app/services';
 import { Year } from '../features/app/model';
 import { useNavigate } from 'react-router-dom';
-import { APP_ROUTES } from '../utils/appRoutes';
+import { APP_ROUTES } from '../routes/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 
 export const useLoadYears = () => {

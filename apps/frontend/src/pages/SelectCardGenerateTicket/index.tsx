@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Header } from '../../components/Header';
 import { useNavigate } from 'react-router-dom';
 import { PopConfirm } from '../../components/PopConfirm';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { useGetCardsQuery } from '../../features/app/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { RadioList } from './components/RadioList';

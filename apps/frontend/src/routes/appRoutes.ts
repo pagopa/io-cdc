@@ -10,37 +10,38 @@ import React from 'react';
 const SelectYear = React.lazy(() => import('../pages/SelectYear'));
 const FeedbackRequest = React.lazy(() => import('../pages/FeedbackRequest'));
 const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'));
-const Unauthorized = React.lazy(() => import('../pages/Unauthorized'));
 
 // Usage routes
 const Home = React.lazy(() => import('../pages/Home'));
+const BonusList = React.lazy(() => import('../pages/BonusList'));
+const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
+const CardsEmptyState = React.lazy(() => import('../pages/CardsEmptyState'));
+const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
-const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
-const BonusList = React.lazy(() => import('../pages/BonusList'));
-const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
-const CardsEmptyState = React.lazy(() => import('../pages/CardsEmptyState'));
 
 // global route
 const NotFound = React.lazy(() => import('../pages/NotFound'));
+const Authorize = React.lazy(() => import('../pages/Authorize'));
+const Unauthorized = React.lazy(() => import('../pages/Unauthorized'));
 
 export enum APP_ROUTES {
-  AUTHORIZE = '/authorize',
   HOME = '/',
+  AUTHORIZE = '/authorize',
+  NOT_FOUND = '/not-found',
+  CARDS_EMPTY = '/no-cards',
+  BONUS_LIST = '/lista-buoni',
+  FEEDBACK_REQUEST = '/esito',
+  SELECT_YEAR = '/scelta-anno',
+  UNAUTHORIZED = '/unauthorized',
+  EXPIRED = '/iniziativa-scaduta',
+  BONUS_DETAIL = '/dettaglio-buono/:id',
+  FEEDBACK_VOUCHERS = '/voucher-feedback',
   SELECT_CARD = '/genera-buono/seleziona-carta',
   SELECT_AMOUNT = '/genera-buono/seleziona-importo',
-  BONUS_DETAIL = '/dettaglio-buono/:id',
-  BONUS_LIST = '/lista-buoni',
-  SELECT_YEAR = '/scelta-anno',
-  FEEDBACK_REQUEST = '/esito',
-  EXPIRED = '/iniziativa-scaduta',
-  UNAUTHORIZED = '/unauthorized',
-  FEEDBACK_VOUCHERS = '/voucher-feedback',
-  CARDS_EMPTY = '/no-cards',
-  NOT_FOUND = '/not-found',
 }
 
-type APP_ROUTES_CONFIG_TYPE = {
+export type APP_ROUTES_CONFIG_TYPE = {
   path: APP_ROUTES;
   Element: React.LazyExoticComponent<() => JSX.Element>;
 };
@@ -57,10 +58,6 @@ const APP_ROUTES_REQUEST: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.EXPIRED,
     Element: ExpiredInitiative,
-  },
-  {
-    path: APP_ROUTES.UNAUTHORIZED,
-    Element: Unauthorized,
   },
 ];
 
@@ -95,6 +92,15 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   },
 ];
 
+const GLOBAL_ROUTES: APP_ROUTES_CONFIG_TYPE[] = [
+  { path: APP_ROUTES.AUTHORIZE, Element: Authorize },
+  { path: APP_ROUTES.NOT_FOUND, Element: NotFound },
+  {
+    path: APP_ROUTES.UNAUTHORIZED,
+    Element: Unauthorized,
+  },
+];
+
 const APP_ROUTES_CONFIG = {
   REQUEST: APP_ROUTES_REQUEST,
   DASHBOARD: APP_ROUTES_DASHBOARD,
@@ -102,11 +108,10 @@ const APP_ROUTES_CONFIG = {
 
 export const getAppRoutes = () => {
   // const { dashboard, request } = featureFlags;
-  // if (request && !dashboard) return APP_ROUTES_CONFIG.REQUEST;
-  // if (!request) return APP_ROUTES_CONFIG.DASHBOARD;
-  return [
-    ...APP_ROUTES_CONFIG.DASHBOARD,
-    ...APP_ROUTES_CONFIG.REQUEST,
-    { path: APP_ROUTES.NOT_FOUND, Element: NotFound },
-  ];
+  // if (request && !dashboard) return [...APP_ROUTES_CONFIG.REQUEST, ...GLOBAL_ROUTES];
+  // if (!request) return [...APP_ROUTES_CONFIG.DASHBOARD, ...GLOBAL_ROUTES];
+  return {
+    protectedRoutes: [...APP_ROUTES_CONFIG.DASHBOARD, ...APP_ROUTES_CONFIG.REQUEST],
+    global: GLOBAL_ROUTES,
+  };
 };

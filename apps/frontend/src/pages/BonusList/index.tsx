@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetVoucherQuery } from '../../features/app/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRouteGuard } from '../../hooks';
 
 const BonusList = () => {

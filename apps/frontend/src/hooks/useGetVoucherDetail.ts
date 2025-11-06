@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useLazyGetVoucherByIdQuery } from '../features/app/services';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
-import { APP_ROUTES } from '../utils/appRoutes';
+import { APP_ROUTES } from '../routes/appRoutes';
 import { useCallback, useEffect, useState } from 'react';
 import { VoucherItem } from '../features/app/model';
 

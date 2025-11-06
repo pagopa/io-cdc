@@ -2,7 +2,7 @@ import { CheckboxList, Loader, SectionTitle } from '@io-cdc/ui';
 import { Button, Chip, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRequestBonusMutation } from '../../features/app/services';
 import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';

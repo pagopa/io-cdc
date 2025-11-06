@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { selectSelectedCardBonus } from '../../../features/app/selectors';
 import { Card } from '../../../features/app/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
-import { APP_ROUTES } from '../../../utils/appRoutes';
+import { APP_ROUTES } from '../../../routes/appRoutes';
 import { ticketsActions } from '../../../features/app/reducers';
 import { useToast } from '../../../contexts';
 

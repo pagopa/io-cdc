@@ -4,7 +4,7 @@ import { Box, Button, Stack } from '@mui/material';
 import { CONFIG_BY_STATUS, CONFIG_KEYS } from './constants';
 import { useEffect } from 'react';
 import { trackWebviewEvent } from '../../utils/trackEvent';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRouteGuard } from '../../hooks';
 
 const TicketFeedback = () => {

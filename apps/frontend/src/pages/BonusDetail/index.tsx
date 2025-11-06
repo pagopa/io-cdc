@@ -15,7 +15,7 @@ import { useDeleteVoucherMutation } from '../../features/app/services';
 import { PopConfirm } from '../../components/PopConfirm';
 import { useDispatch } from 'react-redux';
 import { ticketsActions } from '../../features/app/reducers';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { getChipConfig } from './constants';
 import { useRouteGuard } from '../../hooks';
 

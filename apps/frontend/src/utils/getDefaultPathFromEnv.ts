@@ -1,4 +1,4 @@
-import { APP_ROUTES } from './appRoutes';
+import { APP_ROUTES } from '../routes/appRoutes';
 import { featureFlags } from './featureFlags';
 
 export const getPathFromEvironment = () => {

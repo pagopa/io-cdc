@@ -8,7 +8,7 @@ import { Box, Button, Typography } from '@mui/material';
 import { useCreateVoucherMutation } from '../../features/app/services';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAmountBonus, selectSelectedCardBonus } from '../../features/app/selectors';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/app/reducers';

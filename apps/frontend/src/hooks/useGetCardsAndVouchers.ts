@@ -3,7 +3,7 @@ import { useLazyGetCardsQuery, useLazyGetVoucherQuery } from '../features/app/se
 import { Card, VoucherItem } from '../features/app/model';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { useNavigate } from 'react-router-dom';
-import { APP_ROUTES } from '../utils/appRoutes';
+import { APP_ROUTES } from '../routes/appRoutes';
 
 export const useGetCardsAndVouchers = () => {
   const navigate = useNavigate();
@@ -50,7 +50,9 @@ export const useGetCardsAndVouchers = () => {
 
     if (isError && isFetchBaseQueryError(error)) {
       /**/ /TODO remove this  */;
-      navigate(APP_ROUTES.FEEDBACK_VOUCHERS, { state: { status: 500 } });
+      navigate(APP_ROUTES.FEEDBACK_VOUCHERS, {
+        state: { name: 'CDC_BONUS_SHOW_DETAIL_ERROR', status: 500 },
+      });
       return;
     }
 

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { TEST_USERS } from '../features/app/model';
-import { APP_ROUTES } from '../utils/appRoutes';
+import { APP_ROUTES } from '../routes/appRoutes';
 import { selectSessionRoute } from '../features/auth/selectors';
 
 /**
