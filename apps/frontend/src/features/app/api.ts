@@ -1,13 +1,13 @@
 import { FetchArgs } from '@reduxjs/toolkit/query';
-import { SessionParams } from './model';
 import { delay, getRandomError, getRandomResponse } from './utils';
 import { mockYears, mockYearsList } from './mock';
-import { RequestBonusDto } from './dto';
+import { CreateVoucherRequestDTO, GetSessionParamsRequestDTO, RequestBonusDto } from './dto';
+import { TEST_USERS } from './model';
 
-export const API = {
+export const API_REQUEST = {
   PROD: {
     getSession: {
-      query: ({ id }: SessionParams): string | FetchArgs => ({
+      query: ({ id }: GetSessionParamsRequestDTO): string | FetchArgs => ({
         url: '/authorize',
         params: { id },
       }),
@@ -42,6 +42,7 @@ export const API = {
         return {
           data: {
             token: 'aiij182980wfyh3brfyw',
+            route: 'USAGE' as TEST_USERS,
           },
         };
       },
@@ -93,5 +94,30 @@ export const API = {
         };
       },
     },
+  },
+};
+
+export const API_DASHBOARD = {
+  getCards: {
+    query: () => 'cards',
+  },
+  getVouchers: {
+    query: () => 'vouchers',
+  },
+  getVoucherById: {
+    query: (id: string) => `/vouchers/${id}`,
+  },
+  createVoucher: {
+    query: (voucher: CreateVoucherRequestDTO) => ({
+      url: '/vouchers',
+      method: 'POST',
+      body: voucher,
+    }),
+  },
+  deleteVoucher: {
+    query: (id: string) => ({
+      url: `/vouchers/${id}`,
+      method: 'DELETE',
+    }),
   },
 };

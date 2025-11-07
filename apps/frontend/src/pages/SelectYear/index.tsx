@@ -2,20 +2,18 @@ import { CheckboxList, Loader, SectionTitle } from '@io-cdc/ui';
 import { Button, Chip, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { APP_ROUTES } from '../../utils/appRoutes';
+import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRequestBonusMutation } from '../../features/app/services';
-import toast from 'react-hot-toast';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
-import { RequestLoader } from '../../components/RequestLoader';
+import { RequestLoader } from '../../components';
 import { checkExpirationDate } from './utils';
+import { useToast } from '../../contexts';
 
 const SelectYear = () => {
+  const { showToast } = useToast();
   const navigate = useNavigate();
-
   const [requestBonus] = useRequestBonusMutation();
-
   const { yearsList, notAvailableYears, isError, error, isSuccess } = useLoadYears();
 
   const hasCompleted = isSuccess || isError;
@@ -66,22 +64,12 @@ const SelectYear = () => {
 
   const onConfirm = useCallback(async () => {
     if (selectedItems.length <= notAvailableYears.length) {
-      toast.error('Scegli un’opzione per continuare', {
-        style: {
-          height: '53px',
-          borderRadius: '4px',
-          borderLeft: '4px solid #FE6666',
-          fontSize: '16px',
-          fontWeight: 400,
-          color: '#17324D',
-        },
-        icon: <InfoOutlinedIcon sx={{ color: '#FE6666' }} />,
-        duration: 5000,
-        id: 'unique',
+      showToast({
+        messageType: 'error',
+        message: "Scegli un'opzione per continuare",
       });
       return;
     }
-    toast.dismiss();
 
     const canPost = checkExpirationDate();
 
@@ -99,20 +87,20 @@ const SelectYear = () => {
         throw new Error('Something went wrong');
       }
       if (data)
-        navigate(APP_ROUTES.FEEDBACK, {
+        navigate(APP_ROUTES.FEEDBACK_REQUEST, {
           state: {
             status: 200,
             years: newYears.length,
           },
         });
     } catch (e) {
-      navigate(APP_ROUTES.FEEDBACK, {
+      navigate(APP_ROUTES.FEEDBACK_REQUEST, {
         state: {
           status: 503,
         },
       });
     }
-  }, [selectedItems, notAvailableYears, navigate, requestBonus]);
+  }, [selectedItems, notAvailableYears, showToast, navigate, requestBonus]);
 
   if (!hasCompleted) return <RequestLoader />;
 

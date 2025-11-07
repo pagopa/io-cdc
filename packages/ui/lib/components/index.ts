@@ -14,4 +14,5 @@ export * from "./progress-bar";
 export * from "./scroll-to-top-button";
 export * from "./section-title";
 export * from "./table";
+export * from "./toast";
 export * from "./top-bar";
