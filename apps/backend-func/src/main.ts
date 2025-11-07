@@ -5,12 +5,17 @@ import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-function
 import { ServicesAPIClient } from "./clients/services.js";
 import { getConfigOrThrow } from "./config.js";
 import { AuthorizeFn } from "./functions/authorize.js";
+import { DeleteVoucherFn } from "./functions/delete-voucher.js";
 import { FimsAuthFn } from "./functions/fauth.js";
 import { FimsCallbackFn } from "./functions/fcb.js";
+import { GetCardsFn } from "./functions/get-cards.js";
 import { GetCardRequestsFn } from "./functions/get-requests.js";
+import { GetVoucherFn } from "./functions/get-voucher.js";
+import { GetVouchersFn } from "./functions/get-vouchers.js";
 import { GetYearsFn } from "./functions/get-years.js";
 import { InfoFn } from "./functions/info.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
+import { PostVouchersFn } from "./functions/post-vouchers.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
 import { CdcEnvironment, CdcUtils } from "./utils/cdc.js";
@@ -48,8 +53,12 @@ const redisClientFactory = getRedisClientFactory(config);
 const servicesClient = ServicesAPIClient(config);
 
 // CdC utils
-const cdcUtils = CdcUtils(config, CdcEnvironment.PRODUCTION);
+const cdcUtilsProd = CdcUtils(config, CdcEnvironment.PRODUCTION);
+const cdcUtilsTest = CdcUtils(config, CdcEnvironment.TEST);
 
+/*
+ * CDC Utility Functions
+ */
 const Info = InfoFn({ config, redisClientFactory });
 app.http("Info", {
   authLevel: "anonymous",
@@ -58,6 +67,9 @@ app.http("Info", {
   route: "api/v1/info",
 });
 
+/*
+ * CDC Authentication Functions
+ */
 const FimsAuth = FimsAuthFn({ fimsClient, redisClientFactory });
 app.http("FimsAuth", {
   authLevel: "function",
@@ -79,7 +91,7 @@ app.http("FimsCallback", {
   route: "api/v1/fcb",
 });
 
-const Authorize = AuthorizeFn({ redisClientFactory });
+const Authorize = AuthorizeFn({ config, redisClientFactory });
 app.http("Authorize", {
   authLevel: "function",
   handler: Authorize,
@@ -87,6 +99,9 @@ app.http("Authorize", {
   route: "api/v1/authorize",
 });
 
+/*
+ * CDC Registration Functions
+ */
 const GetYears = GetYearsFn({ config });
 app.http("GetYears", {
   authLevel: "function",
@@ -122,7 +137,7 @@ app.http("PostCardRequests", {
 });
 
 const ProcessPendingRequest = ProcessPendingRequestFn({
-  cdcUtils,
+  cdcUtils: cdcUtilsProd,
   config,
   cosmosDbClient,
   inputDecoder: PendingCardRequestMessage,
@@ -131,4 +146,67 @@ app.storageQueue("ProcessPendingRequest", {
   connection: "STORAGE_ACCOUNT",
   handler: ProcessPendingRequest,
   queueName: config.CARD_REQUEST_QUEUE_NAME,
+});
+
+/*
+ * CDC Usage Functions
+ */
+const GetCards = GetCardsFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetCards", {
+  authLevel: "function",
+  handler: GetCards,
+  methods: ["GET"],
+  route: "api/v1/cards",
+});
+
+const GetVouchers = GetVouchersFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetVouchers", {
+  authLevel: "function",
+  handler: GetVouchers,
+  methods: ["GET"],
+  route: "api/v1/vouchers",
+});
+
+const PostVouchers = PostVouchersFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("PostVouchers", {
+  authLevel: "function",
+  handler: PostVouchers,
+  methods: ["POST"],
+  route: "api/v1/vouchers",
+});
+
+const GetVoucher = GetVoucherFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("GetVoucher", {
+  authLevel: "function",
+  handler: GetVoucher,
+  methods: ["GET"],
+  route: "api/v1/vouchers/{id}",
+});
+
+const DeleteVoucher = DeleteVoucherFn({
+  cdcUtils: cdcUtilsTest,
+  config,
+  redisClientFactory,
+});
+app.http("DeleteVoucher", {
+  authLevel: "function",
+  handler: DeleteVoucher,
+  methods: ["DELETE"],
+  route: "api/v1/vouchers/{id}",
 });

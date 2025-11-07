@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  version: 0.0.1
+  version: 1.1.0
   title: CdC Backend API
   x-logo:
     url: https://io.italia.it/assets/img/io-logo-blue.svg
@@ -8,11 +8,20 @@ info:
     These APIs serve the microfrontend related to Carta della Cultura
 servers:
   - url: /api/cdc/v1
+tags:
+  - name: access
+    description: these endpoints are related to access control
+  - name: registration
+    description: these endpoints are related to the registration process of the cdc
+  - name: usage
+    description: these endpoints are related to the usage of the cdc
 security:
   - ApiKeyAuth: []
 paths:
   /fauth:
     get:
+      tags:
+        - access
       operationId: fimsAuth
       parameters:
         - in: query
@@ -27,6 +36,8 @@ paths:
           description: Internal Server error
   /fcb:
     get:
+      tags:
+        - access
       operationId: fimsCallback
       parameters:
         - in: query
@@ -60,6 +71,8 @@ paths:
           description: Internal Server error
   /authorize:
     get:
+      tags:
+        - access
       operationId: authorize
       parameters:
         - in: query
@@ -80,6 +93,8 @@ paths:
           description: Internal Server error
   /years:
     get:
+      tags:
+        - registration
       operationId: getYears
       responses:
         "200":
@@ -92,6 +107,8 @@ paths:
           description: Internal Server error
   /card-requests:
     get:
+      tags:
+        - registration
       operationId: getCardRequests
       parameters:
         - in: header
@@ -111,6 +128,8 @@ paths:
         "500":
           description: Internal Server error
     post:
+      tags:
+        - registration
       operationId: insertCardRequest
       parameters:
         - in: header
@@ -136,6 +155,148 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server error
+  /cards:
+    get:
+      tags:
+        - usage
+      summary: Get the list of Carta della Cultura cards
+      operationId: getCardsList
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CardsList"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+  /vouchers:
+    get:
+      tags:
+        - usage
+      summary: Get the list of vouchers for the Carta della Cultura
+      operationId: getVouchersList
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The year of the Carta della Cultura card to filter vouchers
+      responses:
+        '200':
+          description: Successful response with a list of vouchers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VoucherDetails"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - usage
+      summary: Generate a voucher for the Carta della Cultura
+      operationId: generateVoucher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoucherRequest"
+      responses:
+        '200':
+          description: Voucher generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoucherDetails"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+  /vouchers/{id}:
+    get:
+      tags:
+        - usage
+      summary: Get details of a specific voucher
+      operationId: getVoucherDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the voucher
+      responses:
+        '200':
+          description: Successful response with voucher details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoucherDetails"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+    delete:
+      tags:
+        - usage
+      summary: Delete a voucher for the Carta della Cultura
+      operationId: deleteVoucher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the voucher to be deleted
+      responses:
+        '204':
+          description: Voucher deleted successfully
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -210,6 +371,9 @@ components:
       properties:
         token:
           type: string
+        route:
+          type: string
+          enum: ["REGISTRATION", "USAGE"]
       required:
         - token
     Years:
@@ -227,6 +391,115 @@ components:
           type: string
       required:
         - year
+    CardsList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Card"
+    Card:
+      type: object
+      properties:
+        card_name:
+          type: string
+          description: Name of the Carta della Cultura card
+          example: "Cultura Card 2023"
+        year:
+          type: string
+          description: Year of the card
+          example: "2023"
+        card_status:
+          type: string
+          description: Status of the card (e.g., active, expired)
+          enum: ["ACTIVE", "EXPIRED", "REVOKED"]
+          example: "ACTIVE"
+        expiration_date:
+          type: string
+          format: date-time
+          description: Expiration date of the card
+          example: "2026-12-31T23:59:59Z"
+        residual_amount:
+          type: number
+          format: float
+          description: Remaining balance on the card
+          example: 50.01
+      required:
+        - card_name
+        - year
+        - card_status
+        - expiration_date
+        - residual_amount
+    VoucherRequest:
+      type: object
+      properties:
+        year:
+          type: string
+          description: The ID of the Carta della Cultura card
+          example: "2023"
+        amount:
+          type: number
+          format: float
+          description: The amount to be loaded onto the voucher
+          example: 20.00
+      required:
+        - year
+        - amount
+    VoucherDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the generated voucher
+          example: "1234-5678-90"
+        amount:
+          type: number
+          format: float
+          description: Amount loaded onto the voucher
+          example: 20.00
+        expiration_date:
+          type: string
+          format: date-time
+          description: Expiration date of the voucher
+          example: "2026-12-31T23:59:59Z"
+        voucher_status:
+          type: string
+          description: Status of the voucher (e.g., active, used, expired)
+          enum: ["PENDING", "USED", "EXPIRED", "REFUNDED"]
+          example: "PENDING"
+        card_year:
+          type: string
+          description: The year of the Carta della Cultura card associated with the voucher
+          example: "2023"
+        applicant:
+          type: string
+          description: The applicant who generated the voucher
+          example: "SELF"
+          enum: ["SELF", "FAMILY_MEMBER"]
+        merchant:
+          type: string
+          description: The merchant where the voucher was used
+          example: "Cultural Store"
+        refund:
+          type: object
+          properties:
+            amount:
+              type: number
+              format: float
+              description: Amount refunded for the voucher
+              example: 5.00
+            refund_status:
+              type: string
+              description: Status of the refund (e.g., pending, completed)
+              enum: ["PENDING", "COMPLETED", "FAILED"]
+              example: "COMPLETED"
+          required:
+            - amount
+            - refund_status
+      required:
+        - id
+        - amount
+        - expiration_date
+        - voucher_status
+        - card_year
+        - applicant
     ProblemJson:
       type: object
       properties:

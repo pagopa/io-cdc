@@ -6,6 +6,11 @@ import { Config } from "../../config.js";
 import { years } from "../../models/card_request.js";
 import { getYears } from "../get-years.js";
 
+const config = {
+  CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
+  CDC_REGISTRATION_START_DATE: "2025-10-01T11:00:00.000Z" as NonEmptyString,
+} as Config;
+
 describe("GetYears", () => {
   beforeAll(() => {
     vi.useFakeTimers();
@@ -15,13 +20,63 @@ describe("GetYears", () => {
     vi.useRealTimers();
   });
 
+  it("should return an array of years when called after start date CEST", async () => {
+    vi.setSystemTime(new Date("2025-10-01T12:00:00.001+01:00"));
+
+    const res = await getYears()({
+      config,
+    })();
+
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) {
+      expect(res.right).toEqual(years);
+    }
+  });
+
+  it("should return an array of years when called after start date UTC", async () => {
+    vi.setSystemTime(new Date("2025-10-01T11:00:00.001Z"));
+
+    const res = await getYears()({
+      config,
+    })();
+
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) {
+      expect(res.right).toEqual(years);
+    }
+  });
+
+  it("should return an empty array when called before start date CEST", async () => {
+    vi.setSystemTime(new Date("2025-10-01T11:59:59.999+01:00"));
+
+    const res = await getYears()({
+      config,
+    })();
+
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) {
+      expect(res.right).toEqual([]);
+    }
+  });
+
+  it("should return an empty array when called before start date UTC", async () => {
+    vi.setSystemTime(new Date("2025-10-01T10:59:59.999Z"));
+
+    const res = await getYears()({
+      config,
+    })();
+
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) {
+      expect(res.right).toEqual([]);
+    }
+  });
+
   it("should return an array of years when called before end date CEST", async () => {
     vi.setSystemTime(new Date("2025-10-31T11:59:59.998+01:00"));
 
     const res = await getYears()({
-      config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
-      } as Config,
+      config,
     })();
 
     expect(E.isRight(res)).toBe(true);
@@ -34,9 +89,7 @@ describe("GetYears", () => {
     vi.setSystemTime(new Date("2025-10-31T10:59:59.998Z"));
 
     const res = await getYears()({
-      config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
-      } as Config,
+      config,
     })();
 
     expect(E.isRight(res)).toBe(true);
@@ -49,9 +102,7 @@ describe("GetYears", () => {
     vi.setSystemTime(new Date("2025-10-31T12:00:00.000+01:00"));
 
     const res = await getYears()({
-      config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
-      } as Config,
+      config,
     })();
 
     expect(E.isRight(res)).toBe(true);
@@ -64,9 +115,7 @@ describe("GetYears", () => {
     vi.setSystemTime(new Date("2025-10-31T11:00:00.000Z"));
 
     const res = await getYears()({
-      config: {
-        CDC_REGISTRATION_END_DATE: "2025-10-31T10:59:59.999Z" as NonEmptyString,
-      } as Config,
+      config,
     })();
 
     expect(E.isRight(res)).toBe(true);
