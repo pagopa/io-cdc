@@ -1,0 +1,18 @@
+@startuml Sequence GET CdC cards list
+participant "Citizen" as cit
+participant "CdC Backend Functions" as be
+participant "Redis" as redis
+participant "Sogei" as sogei
+
+cit -> be: List owned CdC cards
+activate be
+be -> redis: Check session
+alt Session found
+    be <-> sogei: Get CdC cards
+    be -> cit: 200 CdC cards list
+else Session not found
+    be -> cit: 401 Unauthorized
+end
+deactivate be
+
+@enduml

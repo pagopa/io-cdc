@@ -65,7 +65,7 @@ export const checkDatetime = (deps: Dependencies) =>
           data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
             validDate ? "Iniziative open" : "Initiative closed"
           }`,
-        })("getYears");
+        })("postCardRequests");
         return validDate;
       },
       () => new Error("CDC registration period is over"),
