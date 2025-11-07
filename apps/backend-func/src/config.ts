@@ -32,7 +32,14 @@ export const Config = t.type({
   CDC_API_BASE_URL_TEST: NonEmptyString,
 
   CDC_BASE_URL: NonEmptyString,
+
+  CDC_CARDS_EXPIRATION_DATE: NonEmptyString,
+
   CDC_REGISTRATION_END_DATE: NonEmptyString,
+  CDC_REGISTRATION_START_DATE: NonEmptyString,
+
+  CDC_USAGE_END_DATE: NonEmptyString,
+  CDC_USAGE_START_DATE: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
   COSMOSDB_CDC_KEY: NonEmptyString,
@@ -67,6 +74,8 @@ export const Config = t.type({
 
   SERVICES_API_URL: NonEmptyString,
   STORAGE_ACCOUNT__queueServiceUri: NonEmptyString,
+
+  TEST_USERS: NonEmptyString,
 
   isProduction: t.boolean,
 });

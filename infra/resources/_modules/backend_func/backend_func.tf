@@ -27,7 +27,11 @@ module "cdc_backend_func" {
   application_insights_connection_string   = var.ai_connection_string
   application_insights_sampling_percentage = var.ai_sampling_percentage
 
-  app_settings = local.cdc_backend.app_settings
+  app_settings = merge(
+    local.cdc_backend.app_settings, {
+      // disable posting card requests until next registration phase
+      "AzureWebJobs.PostCardRequests.Disabled" = "1"
+  })
 
   slot_app_settings = merge(
     local.cdc_backend.app_settings, {
@@ -36,6 +40,7 @@ module "cdc_backend_func" {
   })
 
   sticky_app_setting_names = [
+    "AzureWebJobs.PostCardRequests.Disabled",
     "AzureWebJobs.ProcessPendingRequest.Disabled"
   ]
 

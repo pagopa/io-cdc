@@ -1,0 +1,22 @@
+@startuml Sequence FIMS auth
+participant "App IO" as io
+participant "in-app Browser" as iab
+participant "CdC Backend Functions" as be
+participant "Redis" as redis
+
+activate io
+io -> iab: /authorize con session id
+activate iab
+iab -> be: /api/v1/authorize con session id
+activate be
+be -> redis: recupera session token
+be -> redis: elimina session id
+be -> be: controlla se utente di test
+alt test user
+    be -> iab: session token + route
+else normal user
+    be -> iab: session token
+    deactivate be
+end
+
+@enduml

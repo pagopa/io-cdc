@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.2
+
+### Patch Changes
+
+- 2027c19: Added usage functionalities
+
 ## 1.0.1
 
 ### Patch Changes

@@ -7,21 +7,23 @@ import App from './App.tsx';
 import { ThemeProvider } from '@mui/material/styles';
 import { Provider } from 'react-redux';
 import { persistor, store } from './features/store.ts';
-import { Toaster } from 'react-hot-toast';
+import { ToastProvider } from './contexts/index.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Suspense } from 'react';
-import { RequestLoader } from './components/RequestLoader/index.tsx';
+import { RequestLoader, ScrollToTop } from './components';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <Suspense fallback={<RequestLoader />}>
       <PersistGate persistor={persistor}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Toaster />
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <ToastProvider>
+            <CssBaseline />
+            <BrowserRouter>
+              <ScrollToTop />
+              <App />
+            </BrowserRouter>
+          </ToastProvider>
         </ThemeProvider>
       </PersistGate>
     </Suspense>

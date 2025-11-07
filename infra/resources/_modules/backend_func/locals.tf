@@ -10,8 +10,11 @@ locals {
       AUDIT_LOG_CONTAINER         = var.audit_log_container
 
       // CDC
-      CDC_BASE_URL              = var.cdc_base_url
-      CDC_REGISTRATION_END_DATE = "2025-10-31T10:59:59.999Z" // 12:00:00 CET of October 31st, 2025
+      CDC_BASE_URL                = var.cdc_base_url
+      CDC_REGISTRATION_START_DATE = "2025-10-01T11:00:00.000Z" // 12:00:00 CET of October 1st, 2025
+      CDC_REGISTRATION_END_DATE   = "2025-10-31T10:59:59.999Z" // 11:59:59 CET of October 31st, 2025
+      CDC_USAGE_START_DATE        = "2025-12-16T11:00:00.000Z" // 12:00:00 CET of December 16th, 2025
+      CDC_USAGE_END_DATE          = "2026-12-31T22:59:59.999Z" // 23:59:59 CET of December 31st, 2026
 
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri
@@ -29,6 +32,9 @@ locals {
       // CDC API
       CDC_API_BASE_URL      = var.cdc_api_base_url
       CDC_API_BASE_URL_TEST = var.cdc_api_base_url_test
+
+      // CDC CARDS EXPIRATION DATE
+      CDC_CARDS_EXPIRATION_DATE = "2026-12-31T23:00:00Z"
 
       // FIMS
       FIMS_REDIRECT_URL  = var.fims_redirect_url
@@ -65,6 +71,9 @@ locals {
       REDIS_PASSWORD        = var.redis_password
       REDIS_CLUSTER_ENABLED = "false"
       REDIS_TLS_ENABLED     = "true"
+
+      // TESTING
+      TEST_USERS = var.test_users
 
       // Keepalive fields are all optionals
       FETCH_KEEPALIVE_ENABLED             = "true"

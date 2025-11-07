@@ -11,8 +11,7 @@ type ExpiredInitiativeConfig = Record<
     description: ReactNode | null;
     trackName: 'CDC_REQUEST_EXPIRED' | 'CDC_INITIATIVE_EXPIRED';
     trackProperties: {
-      webview: true;
-      already_requested?: 'yes' | 'no';
+      already_requested: 'yes' | 'no';
       event_category: 'KO';
     };
   }
@@ -24,7 +23,6 @@ export const DEFAULT_CONFIG: ExpiredInitiativeConfig[number] = {
   description: null,
   trackName: 'CDC_INITIATIVE_EXPIRED',
   trackProperties: {
-    webview: true,
     already_requested: 'no',
     event_category: 'KO',
   },
@@ -43,7 +41,6 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
     ),
     trackName: 'CDC_INITIATIVE_EXPIRED',
     trackProperties: {
-      webview: true,
       already_requested: 'yes',
       event_category: 'KO',
     },
@@ -77,7 +74,7 @@ export const EXPIRED_INITIATIVE_CONFIG_MAP: ExpiredInitiativeConfig = {
     ),
     trackName: 'CDC_REQUEST_EXPIRED',
     trackProperties: {
-      webview: true,
+      already_requested: 'yes',
       event_category: 'KO',
     },
   },
