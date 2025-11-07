@@ -55,7 +55,7 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
             {voucher.amount.toFixed(2)} €
           </Typography>
         )}
-        {voucher?.refund && voucher?.refund?.status === 'PENDING' && (
+        {voucher?.refund && voucher?.refund?.refund_status === 'PENDING' && (
           <Chip label="IN CORSO" color="warning" size="small" sx={{ fontSize: 14 }} />
         )}
       </Stack>

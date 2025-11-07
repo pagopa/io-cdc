@@ -47,8 +47,9 @@ const SelectAmountGenerateTicket = () => {
     trackWebviewEvent('CDC_BONUS_GENERATION_BACK', {
       screen: 'CDC_BONUS_AMOUNT_INSERT',
     });
+    dispatch(ticketsActions.setAmount(undefined));
     navigate(-1);
-  }, [navigate]);
+  }, [dispatch, navigate]);
 
   const onClickBottom = useCallback(async () => {
     if (required || selectedCard?.residual_amount! < Number(amount)) {
@@ -64,7 +65,7 @@ const SelectAmountGenerateTicket = () => {
       return;
     }
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
-    await createBonus({ year: selectedCard?.year!, amount: amount });
+    await createBonus({ year: selectedCard?.year!, amount: amount ?? 0 });
     dispatch(ticketsActions.resetForm());
     navigate(APP_ROUTES.HOME);
   }, [
@@ -80,9 +81,6 @@ const SelectAmountGenerateTicket = () => {
 
   useEffect(() => {
     trackWebviewEvent('CDC_BONUS_AMOUNT_INSERT');
-    return () => {
-      dispatch(ticketsActions.setAmount(0));
-    };
   }, [dispatch]);
 
   if (isError && isFetchBaseQueryError(creationError)) {
@@ -114,13 +112,7 @@ const SelectAmountGenerateTicket = () => {
             </Typography>
           </Stack>
           <Stack>
-            <SetAmount
-              amount={amount}
-              error={error}
-              reset={() => setError(false)}
-              // balance={selectedCard?.residual_amount}
-              // required={required}
-            />
+            <SetAmount amount={amount} error={error} reset={() => setError(false)} />
           </Stack>
         </Stack>
         <Stack width="100%" justifySelf="end">

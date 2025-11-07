@@ -16,7 +16,6 @@ export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
           >
             <Icon name="help" />
           </IconButton>
-          {/* <HelpSheet isOpen={isHelpSheetOpen} onClose={() => setIsHelpSheetOpen(false)} /> */}
         </Stack>
         <Stack padding={1} alignItems="center" gap={2}>
           <Stack

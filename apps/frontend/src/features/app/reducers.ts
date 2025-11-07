@@ -3,12 +3,11 @@ import { Card } from './model';
 
 type TicketsState = {
   selectedCard: Pick<Card, 'residual_amount' | 'year'>;
-  amount: number;
+  amount?: number;
   deleted: boolean;
 };
 
 const initialState: TicketsState = {
-  amount: 0,
   selectedCard: {
     residual_amount: 0,
     year: '',
@@ -31,7 +30,7 @@ const ticketsSlice = createSlice({
     },
     resetForm: (state) => {
       state.selectedCard = initialState.selectedCard;
-      state.amount = initialState.amount;
+      state.amount = undefined;
     },
   },
 });

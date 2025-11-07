@@ -39,22 +39,21 @@ export type Year = {
 export type Card = {
   card_name: string;
   year: string;
-  status: CARD_STATUS;
   expiration_date: string;
   residual_amount: number;
 };
 
-// manca la data di spesa - mancano i codici (codice a barre e codice QR)
 export type VoucherItem = {
   id: string;
   amount: number;
   expiration_date: string;
-  status: VOUCHER_STATUS;
+  voucher_status: VOUCHER_STATUS;
   card_year: string;
   applicant: APPLICANTS;
-  merchant: string;
+  spending_date?: string;
+  merchant?: string;
   refund?: {
     amount: number;
-    status: REFUND_STATUS;
+    refund_status: REFUND_STATUS;
   };
 };

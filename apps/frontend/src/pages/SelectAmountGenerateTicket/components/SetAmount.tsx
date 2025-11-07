@@ -4,7 +4,7 @@ import { useCallback /*, useMemo */ } from 'react';
 import { ticketsActions } from '../../../features/app/reducers';
 
 type SetAmountProps = {
-  amount: number;
+  amount?: number;
   error: boolean;
   reset: () => void;
   // balance: number;

@@ -42,14 +42,14 @@ const BonusDetail = () => {
 
   const spent = useMemo(
     () =>
-      voucherDetail?.status === VOUCHER_STATUS.USED ||
-      voucherDetail?.status === VOUCHER_STATUS.REFUNDED,
-    [voucherDetail?.status],
+      voucherDetail?.voucher_status === VOUCHER_STATUS.USED ||
+      voucherDetail?.voucher_status === VOUCHER_STATUS.REFUNDED,
+    [voucherDetail?.voucher_status],
   );
 
   const pending = useMemo(
-    () => voucherDetail?.status === VOUCHER_STATUS.PENDING,
-    [voucherDetail?.status],
+    () => voucherDetail?.voucher_status === VOUCHER_STATUS.PENDING,
+    [voucherDetail?.voucher_status],
   );
 
   const refund = useMemo(() => voucherDetail?.refund, [voucherDetail?.refund]);
@@ -151,7 +151,7 @@ const BonusDetail = () => {
       <DetailItemWrapper>
         <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
         <Typography fontWeight={600} fontSize={18}>
-          {voucherDetail.expiration_date}
+          {spent ? voucherDetail.spending_date : voucherDetail.expiration_date}
         </Typography>
       </DetailItemWrapper>
 
