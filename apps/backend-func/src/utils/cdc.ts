@@ -437,7 +437,7 @@ const postCdcVouchersTE =
             TE.tryCatch(
               async () =>
                 await client.generaVoucher({
-                  body: { anno: year, idBene: 0, importo: amount },
+                  body: { anno: year, idBene: 0, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO 
                 }),
               E.toError,
             ),
