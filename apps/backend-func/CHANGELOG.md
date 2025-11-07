@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.0
+
+### Minor Changes
+
+- 58e9a4b: usage functions
+
 ## 1.0.13
 
 ### Patch Changes
