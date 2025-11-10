@@ -36,7 +36,6 @@ export const useGetSession = () => {
     }
 
     if ((session && session.token) || isChachedSessionValid) {
-      console.log('session cached found', session);
       if (session?.route === TEST_USERS.USAGE) {
         navigate(APP_ROUTES.HOME);
         return;

@@ -10,7 +10,7 @@ import { selectTicketDeleted } from '../../features/app/selectors';
 import { ticketsActions } from '../../features/app/reducers';
 import { useToast } from '../../contexts';
 import { Reminder } from './components/Reminder';
-import { useGetCardsAndVouchers, useRouteGuard } from '../../hooks';
+import { useGetCards, useRouteGuard } from '../../hooks';
 import { VoucherListHome } from './components/VoucherListHome';
 
 const Home = () => {
@@ -23,7 +23,7 @@ const Home = () => {
 
   const deleted = useSelector(selectTicketDeleted);
 
-  const { cards, vouchers, isSuccess, isError } = useGetCardsAndVouchers();
+  const { cards, isSuccess, isError } = useGetCards();
 
   const isFulfilled = isSuccess || isError;
 
@@ -97,11 +97,7 @@ const Home = () => {
       </Typography>
       <Reminder />
       <Stack width="100%" paddingInline={2} gap={4}>
-        <VoucherListHome
-          vouchers={vouchers}
-          onClickShowAll={onClickShowAll}
-          setOpenSheet={setOpenSheet}
-        />
+        <VoucherListHome onClickShowAll={onClickShowAll} setOpenSheet={setOpenSheet} />
 
         <Stack gap={2}>
           <Button variant="contained" onClick={onClickBonus}>

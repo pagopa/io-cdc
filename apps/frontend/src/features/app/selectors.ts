@@ -28,6 +28,8 @@ export const selectAnnualitiesWithStatus = createSelector(
     available.map((year) => ({ label: year, value: year, disabled: notAvailable.includes(year) })),
 );
 
+export const selectActiveCard = createSelector(selectTickets, (state) => state.activeCard);
+
 export const selectSelectedCardBonus = createSelector(selectTickets, (state) => state.selectedCard);
 
 export const selectAmountBonus = createSelector(selectTickets, (state) => state.amount);

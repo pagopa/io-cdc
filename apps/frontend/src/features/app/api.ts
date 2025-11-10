@@ -102,7 +102,7 @@ export const API_DASHBOARD = {
     query: () => 'cards',
   },
   getVouchers: {
-    query: () => 'vouchers',
+    query: (year: string) => ({ url: 'vouchers', method: 'GET', params: { year } }),
   },
   getVoucherById: {
     query: (id: string) => `/vouchers/${id}`,
