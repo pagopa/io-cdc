@@ -51,24 +51,17 @@ paths:
                   type: string
                 fiscal_code:
                   type: string
-                route:
-                  type: string
-                  enum:
-                    - REGISTRATION
-                    - USAGE
-                  default: USAGE
               required:
                 - family_name
                 - given_name
                 - fiscal_code
-                - route
       responses:
         "200":
-          description: Session Token successfully retrieved
+          description: Session Id successfully retrieved
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: "#/components/schemas/SessionToken"
+                type: string
         "401":
           description: Unauthorized
         "500":
