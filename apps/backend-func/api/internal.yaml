@@ -34,6 +34,45 @@ paths:
                 $ref: "#/components/schemas/ApplicationInfo"
         "500":
           description: Internal Server error
+  /test-session:
+    post:
+      tags:
+        - access
+      operationId: testSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                family_name:
+                  type: string
+                given_name:
+                  type: string
+                fiscal_code:
+                  type: string
+                route:
+                  type: string
+                  enum:
+                    - REGISTRATION
+                    - USAGE
+                  default: USAGE
+              required:
+                - family_name
+                - given_name
+                - fiscal_code
+                - route
+      responses:
+        "200":
+          description: Session Token successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionToken"
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server error
   /fauth:
     get:
       tags:
