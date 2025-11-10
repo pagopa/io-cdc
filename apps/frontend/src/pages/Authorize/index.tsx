@@ -1,8 +1,10 @@
-import { RequestLoader } from '../../components/RequestLoader';
 import { useGetSession } from '../../hooks';
+import { RequestLoader } from '../../components';
 
-export const Authorize = () => {
+const Authorize = () => {
   useGetSession();
 
   return <RequestLoader />;
 };
+
+export default Authorize;

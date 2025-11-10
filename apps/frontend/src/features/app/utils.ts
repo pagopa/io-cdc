@@ -1,5 +1,5 @@
 import { RootState } from '../store';
-import { SessionResponseDTO } from './model';
+import { SessionResponseDTO } from './dto';
 
 export const getRandomResponse = () => {
   return Math.random() < 0.2;
