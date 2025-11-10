@@ -286,7 +286,11 @@ const getCdcCardsTE =
             )(response),
           ),
           TE.map((successResponse) => {
-            console.log(successResponse.value);
+            traceEvent(successResponse.value)(
+              "getCdcCardsTE",
+              `cdc.api.${env}.request.cards.response`,
+              successResponse.value,
+            );
             return successResponse.value;
           }),
           TE.chain(({ listaRisultati }) =>
@@ -389,7 +393,11 @@ const getCdcVouchersTE =
             )(response),
           ),
           TE.map((successResponse) => {
-            console.log(JSON.stringify(successResponse.value));
+            traceEvent(successResponse.value)(
+              "getCdcVouchersTE",
+              `cdc.api.${env}.request.vouchers.response`,
+              successResponse.value,
+            );
             return successResponse.value;
           }),
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -399,12 +407,6 @@ const getCdcVouchersTE =
               TE.fromPredicate(
                 (vouchers) => !!vouchers,
                 () => new Error("Undefined cdc vouchers list"),
-              ),
-              TE.chain(
-                TE.fromPredicate(
-                  (vouchers) => vouchers.length > 0,
-                  () => new Error("Empty cdc vouchers list"),
-                ),
               ),
               TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
             ),
