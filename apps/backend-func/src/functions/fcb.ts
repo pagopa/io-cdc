@@ -17,11 +17,13 @@ import { withParams } from "../middlewares/withParams.js";
 import { OperationTypes, storeAuditLog } from "../utils/audit_logs.js";
 import { fromBase64 } from "../utils/base64.js";
 import {
+  ResponseError,
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
+import { toHash } from "../utils/hash.js";
 import {
   verifyHttpSignatures,
   verifyState,
@@ -35,6 +37,7 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   auditContainerClient: ContainerClient;
@@ -187,7 +190,30 @@ export const checkLollipop =
       ),
     );
 
-// we create a fake session until FIMS is not integrated
+/**
+ * Perform necessary checks for non-test users
+ */
+const doSSOChecks =
+  (user: OidcUser, headers: Headers, state: string) => (deps: Dependencies) =>
+    pipe(
+      deps.config.TEST_USERS.includes(toHash(user.fiscal_code)),
+      O.fromPredicate((isTestUser) => !isTestUser),
+      O.map(() =>
+        pipe(
+          TE.of(user),
+          TE.chain((user) => checkAssertion(user)(deps)),
+          TE.chain((user) => checkLollipop(user, headers, state)(deps)),
+        ),
+      ),
+      O.getOrElse(() =>
+        traceEvent(TE.of<ResponseError, OidcUser>(user))(
+          "doSSOChecks",
+          `cdc.sso.check.bypass`,
+          "Lollipop and assertion checks bypassed by test user",
+        ),
+      ),
+    );
+
 export const createSessionAndRedirect =
   (user: OidcUser, state: string) => (deps: Dependencies) =>
     pipe(
@@ -248,8 +274,7 @@ export const makeFimsCallbackHandler: H.Handler<
       pipe(
         checkIssuer(query.iss),
         RTE.chain((issuer) => getFimsData(query.code, query.state, issuer)),
-        RTE.chain((user) => checkAssertion(user)),
-        RTE.chain((user) => checkLollipop(user, headers, query.state)),
+        RTE.chain((user) => doSSOChecks(user, headers, query.state)),
         RTE.chain((user) =>
           createSessionAndRedirect(user as OidcUser, query.state),
         ),
