@@ -30,6 +30,11 @@
     "vite-plugin-dts": "^4.2.3",
     "vite-plugin-externalize-deps": "^0.8.0"
   },
+  "resolutions": {
+    "@azure/core-client": "1.9.0",
+    "@azure/core-http-compat": "2.3.0",
+    "@azure/storage-common": "12.1.0"
+  },
   "engines": {
     "node": ">=20"
   },
