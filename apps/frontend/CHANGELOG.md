@@ -1,5 +1,17 @@
 # frontend
 
+## 1.1.0
+
+### Minor Changes
+
+- 2027c19: Added usage functionalities
+
+### Patch Changes
+
+- Updated dependencies [2027c19]
+  - @io-cdc/mixpanel@1.0.1
+  - @io-cdc/ui@1.0.2
+
 ## 1.0.6
 
 ### Patch Changes
