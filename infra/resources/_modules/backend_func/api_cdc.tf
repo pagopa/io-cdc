@@ -39,8 +39,8 @@ resource "azurerm_api_management_api" "cdc_v1" {
   version        = "v1"
   revision       = "1"
 
-  description  = "IO CDC PUBLIC API"
-  display_name = "IO CDC PUBLIC API"
+  description  = "These APIs serve the microfrontend related to Carta della Cultura"
+  display_name = "CdC Backend API"
   path         = "api/cdc"
   protocols    = ["https"]
 
