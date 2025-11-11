@@ -81,19 +81,17 @@ export const getFimsData =
         ),
       ),
       TE.chainFirst((fimsUser) =>
-        pipe(
-          storeAuditLog(
-            deps.auditContainerClient,
-            {
-              authCode: code,
-              fiscalCode: fimsUser.fiscal_code,
-            },
-            {
-              DateTime: fimsUser.auth_time || new Date().toISOString(),
-              FiscalCode: fimsUser.fiscal_code,
-              Type: OperationTypes.FIMS,
-            },
-          ),
+        storeAuditLog(
+          deps.auditContainerClient,
+          {
+            authCode: code,
+            fiscalCode: fimsUser.fiscal_code,
+          },
+          {
+            DateTime: fimsUser.auth_time || new Date().toISOString(),
+            FiscalCode: fimsUser.fiscal_code,
+            Type: OperationTypes.FIMS,
+          },
         ),
       ),
       TE.mapLeft((e) =>
@@ -168,21 +166,19 @@ export const checkLollipop =
       ),
       TE.map(() => user),
       TE.chainFirst((user) =>
-        pipe(
-          storeAuditLog(
-            deps.auditContainerClient,
-            {
-              assertion: user.assertion,
-              assertionRef: user.assertion_ref,
-              fiscalCode: user.fiscal_code,
-              publicKey: user.public_key,
-            },
-            {
-              DateTime: user.auth_time || new Date().toISOString(),
-              FiscalCode: user.fiscal_code,
-              Type: OperationTypes.LOLLIPOP,
-            },
-          ),
+        storeAuditLog(
+          deps.auditContainerClient,
+          {
+            assertion: user.assertion,
+            assertionRef: user.assertion_ref,
+            fiscalCode: user.fiscal_code,
+            publicKey: user.public_key,
+          },
+          {
+            DateTime: user.auth_time || new Date().toISOString(),
+            FiscalCode: user.fiscal_code,
+            Type: OperationTypes.LOLLIPOP,
+          },
         ),
       ),
       TE.mapLeft((e) =>
