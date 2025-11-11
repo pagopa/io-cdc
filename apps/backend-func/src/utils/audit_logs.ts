@@ -85,5 +85,12 @@ export const storeAuditLog = (
           ? new Error(err.message)
           : new Error(String(err)),
     ),
-    TE.map(() => true),
+    TE.chain((blobResponse) => {
+      if (blobResponse._response.status >= 300) {
+        return TE.left(
+          new Error(`Cannot store audit log | ${blobResponse.errorCode}`),
+        );
+      }
+      return TE.right(true);
+    }),
   );
