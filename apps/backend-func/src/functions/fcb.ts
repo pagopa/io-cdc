@@ -37,7 +37,7 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getTask, setWithExpirationTask } from "../utils/redis_storage.js";
 import { checkAssertionSignatures, parseAssertion } from "../utils/saml.js";
 import { storeSessionTe } from "../utils/session.js";
-import { traceEvent } from "../utils/tracing.js";
+//import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   auditContainerClient: ContainerClient;
@@ -202,11 +202,12 @@ const doSSOChecks =
         ),
       ),
       O.getOrElse(() =>
-        traceEvent(TE.of<ResponseError, OidcUser>(user))(
-          "doSSOChecks",
-          `cdc.sso.check.bypass`,
-          "Lollipop and assertion checks bypassed by test user",
-        ),
+        // traceEvent(TE.of<ResponseError, OidcUser>(user))(
+        //   "doSSOChecks",
+        //   `cdc.sso.check.bypass`,
+        //   "Lollipop and assertion checks bypassed by test user",
+        // ),
+        TE.of<ResponseError, OidcUser>(user),
       ),
     );
 
