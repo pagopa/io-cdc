@@ -65,5 +65,8 @@
     "ulid": "^3.0.1",
     "xml-crypto": "^6.1.2",
     "xpath": "^0.0.34"
+  },
+  "resolutions": {
+    "@azure/storage-common": "12.0.1"
   }
 }
