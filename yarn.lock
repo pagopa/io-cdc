@@ -500,7 +500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/storage-common@npm:^12.0.0":
+"@azure/storage-common@npm:^12.0.0, @azure/storage-common@npm:^12.0.0-beta.2":
   version: 12.0.1
   resolution: "@azure/storage-common@npm:12.0.1"
   dependencies:
@@ -514,23 +514,6 @@ __metadata:
     events: "npm:^3.3.0"
     tslib: "npm:^2.8.1"
   checksum: 10c0/4f08134b8bdcda45d69107eb3897877b1689db445cd92d6c00f1dcb9490287b00cacd316fda5009f8a78d939643fe5422a9e33a809d72a2d38d8bc2c24f6d8ec
-  languageName: node
-  linkType: hard
-
-"@azure/storage-common@npm:^12.0.0-beta.2":
-  version: 12.1.1
-  resolution: "@azure/storage-common@npm:12.1.1"
-  dependencies:
-    "@azure/abort-controller": "npm:^2.1.2"
-    "@azure/core-auth": "npm:^1.9.0"
-    "@azure/core-http-compat": "npm:^2.2.0"
-    "@azure/core-rest-pipeline": "npm:^1.19.1"
-    "@azure/core-tracing": "npm:^1.2.0"
-    "@azure/core-util": "npm:^1.11.0"
-    "@azure/logger": "npm:^1.1.4"
-    events: "npm:^3.3.0"
-    tslib: "npm:^2.8.1"
-  checksum: 10c0/6ccbdd95305592876b65cc76d114c076ad3b8289d2df1f5ccff6cb29283b572c560eb1e1b12a19158d26675df4ef58e51bd5890e44e59c3e45e2276fee6498b0
   languageName: node
   linkType: hard
 
