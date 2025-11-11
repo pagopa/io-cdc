@@ -81,19 +81,17 @@ export const getFimsData =
         ),
       ),
       TE.chainFirst((fimsUser) =>
-        pipe(
-          storeAuditLog(
-            deps.auditContainerClient,
-            {
-              authCode: code,
-              fiscalCode: fimsUser.fiscal_code,
-            },
-            {
-              DateTime: fimsUser.auth_time || new Date().toISOString(),
-              FiscalCode: fimsUser.fiscal_code,
-              Type: OperationTypes.FIMS,
-            },
-          ),
+        storeAuditLog(
+          deps.auditContainerClient,
+          {
+            authCode: code,
+            fiscalCode: fimsUser.fiscal_code,
+          },
+          {
+            DateTime: fimsUser.auth_time || new Date().toISOString(),
+            FiscalCode: fimsUser.fiscal_code,
+            Type: OperationTypes.FIMS,
+          },
         ),
       ),
       TE.mapLeft((e) =>
