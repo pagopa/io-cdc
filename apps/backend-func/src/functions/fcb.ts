@@ -17,13 +17,13 @@ import { withParams } from "../middlewares/withParams.js";
 import { OperationTypes, storeAuditLog } from "../utils/audit_logs.js";
 import { fromBase64 } from "../utils/base64.js";
 import {
-  //  ResponseError,
+  ResponseError,
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
-//import { toHash } from "../utils/hash.js";
+import { toHash } from "../utils/hash.js";
 import {
   verifyHttpSignatures,
   verifyState,
@@ -81,17 +81,19 @@ export const getFimsData =
         ),
       ),
       TE.chainFirst((fimsUser) =>
-        storeAuditLog(
-          deps.auditContainerClient,
-          {
-            authCode: code,
-            fiscalCode: fimsUser.fiscal_code,
-          },
-          {
-            DateTime: fimsUser.auth_time || new Date().toISOString(),
-            FiscalCode: fimsUser.fiscal_code,
-            Type: OperationTypes.FIMS,
-          },
+        pipe(
+          storeAuditLog(
+            deps.auditContainerClient,
+            {
+              authCode: code,
+              fiscalCode: fimsUser.fiscal_code,
+            },
+            {
+              DateTime: fimsUser.auth_time || new Date().toISOString(),
+              FiscalCode: fimsUser.fiscal_code,
+              Type: OperationTypes.FIMS,
+            },
+          ),
         ),
       ),
       TE.mapLeft((e) =>
@@ -191,24 +193,24 @@ export const checkLollipop =
  */
 const doSSOChecks =
   (user: OidcUser, headers: Headers, state: string) => (deps: Dependencies) =>
-    // pipe(
-    //   deps.config.TEST_USERS.includes(toHash(user.fiscal_code)),
-    //   O.fromPredicate((isTestUser) => !isTestUser),
-    //   O.map(() =>
     pipe(
-      TE.of(user),
-      TE.chain((user) => checkAssertion(user)(deps)),
-      TE.chain((user) => checkLollipop(user, headers, state)(deps)),
+      deps.config.TEST_USERS.includes(toHash(user.fiscal_code)),
+      O.fromPredicate((isTestUser) => !isTestUser),
+      O.map(() =>
+        pipe(
+          TE.of(user),
+          TE.chain((user) => checkAssertion(user)(deps)),
+          TE.chain((user) => checkLollipop(user, headers, state)(deps)),
+        ),
+      ),
+      O.getOrElse(() =>
+        traceEvent(TE.of<ResponseError, OidcUser>(user))(
+          "doSSOChecks",
+          `cdc.sso.check.bypass`,
+          "Lollipop and assertion checks bypassed by test user",
+        ),
+      ),
     );
-// ),
-// O.getOrElse(() =>
-//   traceEvent(TE.of<ResponseError, OidcUser>(user))(
-//     "doSSOChecks",
-//     `cdc.sso.check.bypass`,
-//     "Lollipop and assertion checks bypassed by test user",
-//   ),
-// ),
-//);
 
 export const createSessionAndRedirect =
   (user: OidcUser, state: string) => (deps: Dependencies) =>
