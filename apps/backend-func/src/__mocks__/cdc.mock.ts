@@ -7,7 +7,16 @@ export const getAlreadyRequestedYearsCdcTEMock = vi
 
 export const requestCdcTEMock = vi.fn().mockReturnValue(TE.of(true));
 
-export const getCdcCardsTEMock = vi.fn().mockReturnValue(TE.of([]));
+export const getCdcCardsTEMock = vi.fn().mockReturnValue(
+  TE.of([
+    {
+      card_name: `Carta della Cultura 2020`,
+      expiration_date: "2026-12-31T22:59:59.999Z",
+      residual_amount: 100,
+      year: 2020,
+    },
+  ]),
+);
 
 export const getCdcVouchersTEMock = vi.fn().mockReturnValue(TE.of([]));
 

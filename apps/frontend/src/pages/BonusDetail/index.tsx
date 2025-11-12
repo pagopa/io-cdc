@@ -162,11 +162,7 @@ const BonusDetail = () => {
         </Typography>
       </DetailItemWrapper>
 
-      {/** expiration_date its a placeholder  */}
-      <MerchantDetail
-        merchant={voucherDetail.merchant}
-        usage_date={voucherDetail.expiration_date}
-      />
+      <MerchantDetail merchant={voucherDetail.merchant} usage_date={voucherDetail.spending_date} />
 
       {pending && (
         <>

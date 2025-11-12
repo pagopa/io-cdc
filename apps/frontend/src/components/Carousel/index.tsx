@@ -5,13 +5,23 @@ import { Stack } from '@mui/material';
 import { Card as CardType } from '../../features/app/model';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { Icon } from '@io-cdc/ui';
+import { useDispatch } from 'react-redux';
+import { ticketsActions } from '../../features/app/reducers';
 
 type CarouselProps = {
   list: Array<CardType>;
 };
 export const Carousel = ({ list }: CarouselProps) => {
+  const dispatch = useDispatch();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState<number>(0);
+
+  useEffect(() => {
+    const activeYear = list?.[activeIdx]?.year;
+    if (!activeYear) return;
+    dispatch(ticketsActions.setActiveCard(activeYear));
+  }, [activeIdx, dispatch, list]);
 
   useEffect(() => {
     const container = containerRef.current;

@@ -6,6 +6,8 @@ export type GetBonusByIdResponseDTO = VoucherItem;
 
 export type GetCardsResponseDTO = Card[];
 
+export type GetVouchersRequestQuery = string;
+
 export type GetVouchersResponseDTO = VoucherItem[];
 
 export type DeleteVoucherResponseDTO = {

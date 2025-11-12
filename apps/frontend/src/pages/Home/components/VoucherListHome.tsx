@@ -1,22 +1,39 @@
-import { EmptyState } from '@io-cdc/ui';
-import { Typography, Divider } from '@mui/material';
+import { EmptyState, Loader } from '@io-cdc/ui';
+import { Typography, Divider, Button } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { VoucherCard } from '../../BonusList/components/BonusItem';
-import { VoucherItem } from '../../../features/app/model';
 import { separateVouchersByStatus } from '../../../utils/separateVouchersByStatus';
+import { useGetVoucherQuery } from '../../../features/app/services';
+import { useSelector } from 'react-redux';
+import { selectActiveCard } from '../../../features/app/selectors';
 
 type VoucherListHome = {
-  vouchers: VoucherItem[];
   onClickShowAll: () => void;
   setOpenSheet: (arg: [boolean, boolean]) => void;
 };
 
-export const VoucherListHome = ({ vouchers, setOpenSheet, onClickShowAll }: VoucherListHome) => {
+export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHome) => {
+  const activeCard = useSelector(selectActiveCard);
+
+  const {
+    data: vouchers,
+    isError,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetVoucherQuery(activeCard);
+
+  const loading = useMemo(() => isLoading || isFetching, [isFetching, isLoading]);
+
   const { toSpend: tbsAll, spent: sAll } = useMemo(
-    () => separateVouchersByStatus(vouchers),
+    () => separateVouchersByStatus(vouchers ?? []),
     [vouchers],
   );
+
+  const forceReload = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   const toSpend = useMemo(() => {
     return tbsAll.slice(0, 4);
@@ -25,6 +42,25 @@ export const VoucherListHome = ({ vouchers, setOpenSheet, onClickShowAll }: Vouc
   const spent = useMemo(() => {
     return sAll.slice(0, 4);
   }, [sAll]);
+
+  if (isError) {
+    return (
+      <Stack minHeight={100} justifyContent="center">
+        <EmptyState icon="info" title="Errore nel caricamento dei buoni" />
+        <Button variant="text" onClick={forceReload}>
+          Ricarica Buoni
+        </Button>
+      </Stack>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+        <Loader />
+      </Stack>
+    );
+  }
 
   return (
     <>

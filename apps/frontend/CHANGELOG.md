@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.1
+
+### Patch Changes
+
+- 9b3ed61: Some fixes for testing purpose to make cards and vouchers visible in home
+
 ## 1.1.0
 
 ### Minor Changes
