@@ -1,7 +1,7 @@
 import { EmptyState, Loader } from '@io-cdc/ui';
 import { Typography, Divider, Button } from '@mui/material';
 import { Stack } from '@mui/system';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { VoucherCard } from '../../BonusList/components/BonusItem';
 import { separateVouchersByStatus } from '../../../utils/separateVouchersByStatus';
 import { useGetVoucherQuery } from '../../../features/app/services';
@@ -19,14 +19,12 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
   const {
     data: vouchers,
     isError,
-    isSuccess,
-  } = useGetVoucherQuery(activeCard, {
-    skip: !activeCard,
-  });
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetVoucherQuery(activeCard);
 
-  const loading = !isSuccess && !isError;
-
-  const [reload, setReload] = useState(0);
+  const loading = useMemo(() => isLoading || isFetching, [isFetching, isLoading]);
 
   const { toSpend: tbsAll, spent: sAll } = useMemo(
     () => separateVouchersByStatus(vouchers ?? []),
@@ -34,8 +32,8 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
   );
 
   const forceReload = useCallback(() => {
-    setReload(reload + 1);
-  }, [reload]);
+    refetch();
+  }, [refetch]);
 
   const toSpend = useMemo(() => {
     return tbsAll.slice(0, 4);

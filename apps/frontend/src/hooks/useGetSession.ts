@@ -7,7 +7,7 @@ import { APP_ROUTES } from '../routes/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 import { authActions } from '../features/auth/reducer';
-import { selectIsTokenValid } from '../features/auth/selectors';
+import { selectCachedSession, selectIsTokenValid } from '../features/auth/selectors';
 import { TEST_USERS } from '../features/app/model';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
@@ -17,7 +17,7 @@ export const useGetSession = () => {
   const { search } = useLocation();
   const navigate = useNavigate();
 
-  const session = useSelector(selectFirstSessionData);
+  const session = useSelector(selectCachedSession);
 
   const isChachedSessionValid = useSelector(selectIsTokenValid);
 
