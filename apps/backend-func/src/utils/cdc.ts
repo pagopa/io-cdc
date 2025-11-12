@@ -19,7 +19,6 @@ import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiest
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import { SimpleResponseBean } from "../generated/cdc-api/SimpleResponseBean.js";
 import { VoucherBeanDetails } from "../generated/cdc-api/VoucherBeanDetails.js";
-import { Card_statusEnum } from "../generated/definitions/internal/Card.js";
 import {
   ApplicantEnum,
   Refund_statusEnum,
@@ -309,7 +308,6 @@ const getCdcCardsTE =
               TE.map((cards) =>
                 cards.map((c) => ({
                   card_name: `Carta della Cultura ${c.annoRif}`,
-                  card_status: Card_statusEnum.ACTIVE,
                   expiration_date: new Date(config.CDC_CARDS_EXPIRATION_DATE),
                   residual_amount: c.importoResiduo,
                   year: c.annoRif,
