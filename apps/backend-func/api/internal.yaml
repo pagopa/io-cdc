@@ -422,11 +422,6 @@ components:
           type: string
           description: Year of the card
           example: "2023"
-        card_status:
-          type: string
-          description: Status of the card (e.g., active, expired)
-          enum: ["ACTIVE", "EXPIRED", "REVOKED"]
-          example: "ACTIVE"
         expiration_date:
           type: string
           format: date-time
