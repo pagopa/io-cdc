@@ -33,7 +33,7 @@ const DEFAULT_GENERIC_ERROR: TrackConfig = {
   },
 };
 
-const generateGenericError = (
+export const generateGenericError = (
   name: 'CDC_BONUS_GENERATION_ERROR' | 'CDC_BONUS_SHOW_DETAIL_ERROR',
 ) => ({
   ...DEFAULT_GENERIC_ERROR,
@@ -44,6 +44,7 @@ const generateGenericError = (
 });
 
 const CONFIG_GENERATE: Record<number, TrackConfig> = {
+  400: generateGenericError('CDC_BONUS_GENERATION_ERROR'),
   500: generateGenericError('CDC_BONUS_GENERATION_ERROR'),
   503: {
     icon: 'umbrella',
@@ -60,6 +61,7 @@ const CONFIG_GENERATE: Record<number, TrackConfig> = {
 };
 
 const CONFIG_RETRIEVE: Record<number, TrackConfig> = {
+  400: generateGenericError('CDC_BONUS_GENERATION_ERROR'),
   500: generateGenericError('CDC_BONUS_SHOW_DETAIL_ERROR'),
   503: {
     icon: 'umbrella',

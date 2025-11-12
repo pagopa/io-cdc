@@ -1,7 +1,7 @@
 import { Icon, OperationResult } from '@io-cdc/ui';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, Stack } from '@mui/material';
-import { CONFIG_BY_STATUS, CONFIG_KEYS } from './constants';
+import { CONFIG_BY_STATUS, CONFIG_KEYS, generateGenericError } from './constants';
 import { useEffect } from 'react';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../routes/appRoutes';
@@ -17,8 +17,9 @@ const TicketFeedback = () => {
 
   const navigate = useNavigate();
 
-  const { title, description, icon, subTitle, trackProperties } =
-    CONFIG_BY_STATUS[name as CONFIG_KEYS][status];
+  const config = CONFIG_BY_STATUS[name as CONFIG_KEYS][status] ?? generateGenericError(name);
+
+  const { title, description, icon, subTitle, trackProperties } = config;
 
   useEffect(() => {
     const { name, properties } = trackProperties;

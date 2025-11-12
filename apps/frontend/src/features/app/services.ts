@@ -11,6 +11,7 @@ import {
   GetNotAvailableYearsListResponseDTO,
   GetSessionParamsRequestDTO,
   CreateVoucherResponseDTO,
+  GetVouchersRequestQuery,
 } from './dto';
 import { RootState } from '../store';
 import { retrieveSessionQueryCached } from './utils';
@@ -71,8 +72,8 @@ export const appApi = createApi({
     getCards: builder.query<GetCardsResponseDTO, void>({
       ...API_DASHBOARD.getCards,
     }),
-    getVoucher: builder.query<GetVouchersResponseDTO, void>({
-      ...API_DASHBOARD.getVouchers,
+    getVoucher: builder.query<GetVouchersResponseDTO, GetVouchersRequestQuery>({
+      query: (year: string) => ({ url: 'vouchers', method: 'GET', params: { year } }),
     }),
     createVoucher: builder.mutation<CreateVoucherResponseDTO, CreateVoucherRequestDTO>({
       query: (voucher: CreateVoucherRequestDTO) => ({

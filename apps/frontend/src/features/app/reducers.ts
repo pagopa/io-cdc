@@ -2,12 +2,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Card } from './model';
 
 type TicketsState = {
+  activeCard: string;
   selectedCard: Pick<Card, 'residual_amount' | 'year'>;
   amount?: number;
   deleted: boolean;
 };
 
 const initialState: TicketsState = {
+  activeCard: '',
   selectedCard: {
     residual_amount: 0,
     year: '',
@@ -19,6 +21,9 @@ const ticketsSlice = createSlice({
   name: 'tickets',
   initialState,
   reducers: {
+    setActiveCard: (state, { payload }: PayloadAction<string>) => {
+      state.activeCard = payload;
+    },
     setSelectedCard: (state, { payload }: PayloadAction<TicketsState['selectedCard']>) => {
       state.selectedCard = payload;
     },

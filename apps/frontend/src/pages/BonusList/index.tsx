@@ -11,7 +11,8 @@ const BonusList = () => {
   //TODO test only
   useRouteGuard();
 
-  const { data: voucherList, isLoading, error } = useGetVoucherQuery();
+  // TODO placeholder to not let build crash
+  const { data: voucherList, isLoading, error } = useGetVoucherQuery('2020');
   const navigate = useNavigate();
 
   useEffect(() => {
