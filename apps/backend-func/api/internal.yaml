@@ -34,38 +34,6 @@ paths:
                 $ref: "#/components/schemas/ApplicationInfo"
         "500":
           description: Internal Server error
-  /test-session:
-    post:
-      tags:
-        - access
-      operationId: testSession
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                family_name:
-                  type: string
-                given_name:
-                  type: string
-                fiscal_code:
-                  type: string
-              required:
-                - family_name
-                - given_name
-                - fiscal_code
-      responses:
-        "200":
-          description: Session Id successfully retrieved
-          content:
-            text/plain:
-              schema:
-                type: string
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server error
   /fauth:
     get:
       tags:
