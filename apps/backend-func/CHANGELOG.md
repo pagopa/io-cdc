@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.1
+
+### Patch Changes
+
+- bbc9e15: fixes to show cards
+
 ## 1.1.0
 
 ### Minor Changes

@@ -1,9 +1,9 @@
 import { BlockBlobUploadResponse, ContainerClient } from "@azure/storage-blob";
 import { vi } from "vitest";
 
-export const uploadMock = vi
-  .fn()
-  .mockResolvedValue({} as unknown as BlockBlobUploadResponse);
+export const uploadMock = vi.fn().mockResolvedValue({
+  _response: { status: 200 },
+} as unknown as BlockBlobUploadResponse);
 
 const blockBlobClientMock = {
   upload: uploadMock,
