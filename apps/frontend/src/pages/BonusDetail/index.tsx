@@ -112,6 +112,16 @@ const BonusDetail = () => {
 
   if (!voucherDetail) return <></>;
 
+  const detailDate = new Date(voucherDetail.spending_date ?? voucherDetail.expiration_date);
+
+  const formattedDetailDate = detailDate.toLocaleDateString('it-IT', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
     <Stack p={3} gap={3}>
       <Header onBack={() => navigate(-1)} />
@@ -151,7 +161,7 @@ const BonusDetail = () => {
       <DetailItemWrapper>
         <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
         <Typography fontWeight={600} fontSize={18}>
-          {spent ? voucherDetail.spending_date : voucherDetail.expiration_date}
+          {formattedDetailDate}
         </Typography>
       </DetailItemWrapper>
 
@@ -162,7 +172,7 @@ const BonusDetail = () => {
         </Typography>
       </DetailItemWrapper>
 
-      <MerchantDetail merchant={voucherDetail.merchant} usage_date={voucherDetail.spending_date} />
+      <MerchantDetail merchant={voucherDetail.merchant} usage_date={formattedDetailDate} />
 
       {pending && (
         <>

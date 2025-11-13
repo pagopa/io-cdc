@@ -6,6 +6,12 @@ import { Card as CardType } from '../../features/app/model';
 const ICON_STYLE_RESET = { color: '#17324D', backgroundColor: 'unset', padding: 0 };
 
 export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
+  const formattedDate = new Date(expiration_date).toLocaleDateString('it-IT', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
   return (
     <Stack direction="column" width="100%" height="100%">
       <Stack sx={{ bgcolor: '#F1ECE6' }}>
@@ -38,7 +44,7 @@ export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
             color="#5C6F82"
             fontSize="12px"
             fontWeight={400}
-          >{`Valida fino al ${expiration_date}`}</Typography>
+          >{`Valida fino al ${formattedDate}`}</Typography>
         </Stack>
       </Stack>
       <CardFooter residual_amount={residual_amount} />

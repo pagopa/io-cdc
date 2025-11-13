@@ -1,7 +1,7 @@
 import { Chip, Stack, Typography } from '@mui/material';
 import { Icon } from '@io-cdc/ui';
 import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { VoucherItem } from '../../../features/app/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { getVoucherConfig } from './constants';
@@ -18,12 +18,28 @@ type VoucherCardProps =
       openSheet?: () => void;
     };
 
+const formatDate = (d: string | Date) => {
+  const date = typeof d !== 'string' ? d : new Date(d);
+  return date.toLocaleDateString('it-IT', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => {
   const navigate = useNavigate();
 
   const others = voucher.applicant === 'FAMILY_MEMBER';
 
   const { itemLabel, mainColor } = getVoucherConfig(voucher);
+
+  const date = useMemo(() => {
+    if (voucher.voucher_status === 'PENDING') return formatDate(voucher.expiration_date);
+    return formatDate(voucher.spending_date ?? voucher.expiration_date);
+  }, [voucher]);
 
   const goToDetail = useCallback(() => {
     if (others) {
@@ -44,9 +60,7 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
               {itemLabel}
             </Typography>
             <Typography fontSize={16} color="#5C6F82">
-              {`${voucher.expiration_date}${
-                spent ? ` \u00B7 ${(voucher.amount * -1).toFixed(2)} €` : ''
-              }`}
+              {`${date}${spent ? ` \u00B7 ${(voucher.amount * -1).toFixed(2)} €` : ''}`}
             </Typography>
           </Stack>
         </Stack>
