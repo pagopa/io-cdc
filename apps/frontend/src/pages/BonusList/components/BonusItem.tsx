@@ -38,7 +38,7 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
 
   const date = useMemo(() => {
     if (voucher.voucher_status === 'PENDING') return formatDate(voucher.expiration_date);
-    return formatDate(voucher.spending_date!);
+    return formatDate(voucher.spending_date ?? voucher.expiration_date);
   }, [voucher]);
 
   const goToDetail = useCallback(() => {

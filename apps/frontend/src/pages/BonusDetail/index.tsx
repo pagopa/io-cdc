@@ -112,7 +112,7 @@ const BonusDetail = () => {
 
   if (!voucherDetail) return <></>;
 
-  const detailDate = new Date(spent ? voucherDetail.spending_date! : voucherDetail.expiration_date);
+  const detailDate = new Date(voucherDetail.spending_date ?? voucherDetail.expiration_date);
 
   const formattedDetailDate = detailDate.toLocaleDateString('it-IT', {
     day: 'numeric',
