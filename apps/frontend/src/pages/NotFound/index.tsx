@@ -7,7 +7,10 @@ const NotFound = () => {
       <Icon name="error" sx={{ width: 60, height: 60 }} />
       <OperationResult title="Page not found" />
       <Box>
-        <Button onClick={() => window.location.replace('iossoapi://cancel')} variant="contained">
+        <Button
+          onClick={() => window.location.replace(import.meta.env.VITE_CLOSE_DEEPLINK)}
+          variant="contained"
+        >
           Chiudi
         </Button>
       </Box>
