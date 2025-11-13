@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useLazyGetSessionQuery } from '../features/app/services';
@@ -6,7 +6,6 @@ import { APP_ROUTES } from '../routes/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 import { authActions } from '../features/auth/reducer';
-import { selectCachedSession, selectIsTokenValid } from '../features/auth/selectors';
 import { TEST_USERS } from '../features/app/model';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
@@ -16,31 +15,17 @@ export const useGetSession = () => {
   const { search } = useLocation();
   const navigate = useNavigate();
 
-  const session = useSelector(selectCachedSession);
-
-  const isChachedSessionValid = useSelector(selectIsTokenValid);
-
   const redirectToken = useMemo(() => new URLSearchParams(search).get('id'), [search]);
 
   const [getSession] = useLazyGetSessionQuery();
 
   const retrieveSession = useCallback(async () => {
-    if (!redirectToken && !isChachedSessionValid) {
-      navigate(APP_ROUTES.UNAUTHORIZED, {
+    if (!redirectToken) {
+      return navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
           status: redirectTokenError.status,
         },
       });
-      return;
-    }
-
-    if ((session && session.token) || isChachedSessionValid) {
-      if (session?.route === TEST_USERS.USAGE) {
-        navigate(APP_ROUTES.HOME);
-        return;
-      }
-      navigate(getPathFromEvironment());
-      return;
     }
 
     const {
@@ -70,7 +55,7 @@ export const useGetSession = () => {
     }
     navigate(getPathFromEvironment());
     return;
-  }, [dispatch, getSession, isChachedSessionValid, navigate, redirectToken, session]);
+  }, [dispatch, getSession, navigate, redirectToken]);
 
   useEffect(() => {
     retrieveSession();
