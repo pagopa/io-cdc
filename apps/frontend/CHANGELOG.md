@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.2
+
+### Patch Changes
+
+- 87a758c: fixed date format
+
 ## 1.1.1
 
 ### Patch Changes
