@@ -34,7 +34,7 @@ locals {
       CDC_API_BASE_URL_TEST = var.cdc_api_base_url_test
 
       // CDC CARDS EXPIRATION DATE
-      CDC_CARDS_EXPIRATION_DATE = "2026-12-31T23:00:00.000Z"
+      CDC_CARDS_EXPIRATION_DATE = "2026-12-31T22:59:59.000Z"
 
       // FIMS
       FIMS_REDIRECT_URL  = var.fims_redirect_url

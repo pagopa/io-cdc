@@ -45,6 +45,12 @@ paths:
           required: false
           schema:
             type: string
+        - in: query
+          name: route
+          required: false
+          schema:
+            type: string
+            enum: ["REGISTRATION", "USAGE"]
       responses:
         "302":
           description: Redirect to openid provider
