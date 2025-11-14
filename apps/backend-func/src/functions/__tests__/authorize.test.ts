@@ -19,8 +19,8 @@ import { getSessionToken } from "../authorize.js";
 const redisClientFactoryMock = getRedisClientFactoryMock();
 
 const config = {
-  TEST_USERS: "",
   DEFAULT_ROUTE: "REGISTRATION",
+  TEST_USERS: "",
 } as unknown as Config;
 
 describe("getSessionToken", () => {
