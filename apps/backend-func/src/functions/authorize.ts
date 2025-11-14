@@ -63,7 +63,7 @@ export const getSessionToken =
         pipe(
           getTask(deps.redisClientFactory, `route-${params.id}`),
           TE.mapLeft(errorToInternalError),
-          TE.map(flow(O.fold(() => RouteEnum.REGISTRATION, identity))),
+          TE.map(flow(O.fold(() => deps.config.ROUTE, identity))),
           TE.chain(
             flow(
               TE.fromPredicate(

@@ -11,7 +11,7 @@ import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import { withDefault } from "@pagopa/ts-commons/lib/types.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as O from "fp-ts/lib/Option.js";
-import { pipe } from "fp-ts/lib/function.js";
+import { identity, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 export type Config = t.TypeOf<typeof Config>;
@@ -70,6 +70,9 @@ export const Config = t.type({
   REDIS_PORT: NonEmptyString,
   REDIS_TLS_ENABLED: t.boolean,
   REDIS_URL: NonEmptyString,
+
+  ROUTE: NonEmptyString,
+
   SERVICES_API_KEY: NonEmptyString,
 
   SERVICES_API_URL: NonEmptyString,
@@ -91,6 +94,10 @@ export const envConfig = {
     O.fromNullable(process.env.REDIS_TLS_ENABLED),
     O.map((value: string) => value.toLowerCase() === "true"),
     O.toUndefined,
+  ),
+  ROUTE: pipe(
+    O.fromNullable(process.env.ROUTE),
+    O.fold(() => "REGISTRATION", identity),
   ),
   isProduction: process.env.NODE_ENV === "production",
 };
