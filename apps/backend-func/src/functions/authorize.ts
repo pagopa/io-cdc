@@ -1,9 +1,11 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { enumType } from "@pagopa/ts-commons/lib/types.js";
+import * as O from "fp-ts/lib/Option.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { flow, pipe } from "fp-ts/lib/function.js";
+import { flow, identity, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
@@ -38,23 +40,48 @@ export const getSessionToken =
   (params: QueryParams) =>
   (deps: Dependencies): TE.TaskEither<ResponseError, SessionToken> =>
     pipe(
-      getTask(deps.redisClientFactory, params.id),
-      TE.mapLeft(errorToInternalError),
-      TE.chain((reply) =>
+      TE.Do,
+      TE.bind("sessionToken", () =>
         pipe(
-          reply,
-          TE.fromOption(() =>
-            responseError(401, "Session not found", "Unauthorized"),
+          getTask(deps.redisClientFactory, `session-${params.id}`),
+          TE.mapLeft(errorToInternalError),
+          TE.chain(
+            TE.fromOption(() =>
+              responseError(401, "Session not found", "Unauthorized"),
+            ),
+          ),
+          TE.chainFirst(() =>
+            pipe(
+              // delete one time session id to session token association
+              deleteTask(deps.redisClientFactory, `session-${params.id}`),
+              TE.mapLeft(errorToInternalError),
+            ),
           ),
         ),
       ),
-      TE.chainFirst(() =>
+      TE.bind("route", () =>
         pipe(
-          deleteTask(deps.redisClientFactory, params.id),
+          getTask(deps.redisClientFactory, `route-${params.id}`),
           TE.mapLeft(errorToInternalError),
+          TE.map(flow(O.fold(() => RouteEnum.REGISTRATION, identity))),
+          TE.chain(
+            flow(
+              TE.fromPredicate(
+                (route) => enumType<RouteEnum>(RouteEnum, "route").is(route),
+                () => responseError(401, "Invalid route", "Unauthorized"),
+              ),
+            ),
+          ),
+          TE.chainFirst(() =>
+            pipe(
+              // delete one time session id to route association
+              deleteTask(deps.redisClientFactory, `route-${params.id}`),
+              TE.mapLeft(errorToInternalError),
+            ),
+          ),
         ),
       ),
-      TE.chain((sessionToken) =>
+      TE.chain(({ route, sessionToken }) =>
         pipe(
           getSessionTE(deps.redisClientFactory, sessionToken),
           TE.mapLeft(() =>
@@ -64,7 +91,7 @@ export const getSessionToken =
             pipe(toHash(session.fiscal_code), (cfHash) =>
               deps.config.TEST_USERS.includes(cfHash)
                 ? { route: RouteEnum.USAGE, token: sessionToken }
-                : { route: RouteEnum.REGISTRATION, token: sessionToken },
+                : { route, token: sessionToken },
             ),
           ),
         ),
