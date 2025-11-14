@@ -27,7 +27,10 @@ const Feedback = () => {
       {icon && <Icon name={icon} sx={{ width: 60, height: 60 }} />}
       <OperationResult title={title} subTitle={subTitle} description={description} />
       <Box>
-        <Button onClick={() => window.location.replace('iossoapi://cancel')} variant="contained">
+        <Button
+          onClick={() => window.location.replace(import.meta.env.VITE_CLOSE_DEEPLINK)}
+          variant="contained"
+        >
           Chiudi
         </Button>
       </Box>

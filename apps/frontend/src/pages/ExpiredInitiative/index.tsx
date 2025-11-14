@@ -29,7 +29,7 @@ const ExpiredInitiative = () => {
         {description && <Typography textAlign="center">{description}</Typography>}
       </Stack>
       <Button
-        onClick={() => window.location.replace('iossoapi://cancel')}
+        onClick={() => window.location.replace(import.meta.env.VITE_CLOSE_DEEPLINK)}
         size="small"
         variant="contained"
       >

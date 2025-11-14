@@ -59,7 +59,7 @@ const Home = () => {
 
   const onClickBRetailers = useCallback(() => {
     trackWebviewEvent('CDC_CARD_SHOW_RETAILERS');
-    //TODO add retailers redirect
+    window.location.replace(import.meta.env.VITE_LINK_RETAILERS);
   }, []);
 
   useEffect(() => {

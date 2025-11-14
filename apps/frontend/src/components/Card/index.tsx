@@ -8,7 +8,7 @@ const ICON_STYLE_RESET = { color: '#17324D', backgroundColor: 'unset', padding: 
 export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
   const formattedDate = new Date(expiration_date).toLocaleDateString('it-IT', {
     day: 'numeric',
-    month: 'short',
+    month: 'numeric',
     year: 'numeric',
   });
 
@@ -17,7 +17,7 @@ export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
       <Stack sx={{ bgcolor: '#F1ECE6' }}>
         <Stack direction="row" justifyContent="flex-end" gap={2} padding={'16px'}>
           <IconButton
-            onClick={() => window.location.replace(import.meta.env.VITE_HELP_BONUS_INIZIATIVE)}
+            onClick={() => window.location.replace(import.meta.env.VITE_HELP_CARTA_DELLA_CULTURA)}
             sx={ICON_STYLE_RESET}
           >
             <Icon name="help" />
