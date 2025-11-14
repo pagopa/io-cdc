@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.3
+
+### Patch Changes
+
+- e863e44: Add retailers and assistance links
+
 ## 1.1.2
 
 ### Patch Changes
