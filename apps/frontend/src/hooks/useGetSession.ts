@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useLazyGetSessionQuery } from '../features/app/services';
@@ -7,6 +7,7 @@ import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 import { authActions } from '../features/auth/reducer';
 import { TEST_USERS } from '../features/app/model';
+import { selectCachedSession, selectIsTokenValid } from '../features/auth/selectors';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
 
@@ -18,6 +19,10 @@ export const useGetSession = () => {
   const redirectToken = useMemo(() => new URLSearchParams(search).get('id'), [search]);
 
   const [getSession] = useLazyGetSessionQuery();
+
+  const cachedSession = useSelector(selectCachedSession);
+
+  const isChachedSessionValid = useSelector(selectIsTokenValid);
 
   const retrieveSession = useCallback(async () => {
     if (!redirectToken) {
@@ -37,6 +42,11 @@ export const useGetSession = () => {
     });
 
     if (sessionError && isFetchBaseQueryError(sessionErrorMsg)) {
+      if (isChachedSessionValid && cachedSession) {
+        return navigate(
+          cachedSession.route === TEST_USERS.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
+        );
+      }
       dispatch(authActions.clearToken());
       navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
@@ -55,7 +65,7 @@ export const useGetSession = () => {
     }
     navigate(getPathFromEvironment());
     return;
-  }, [dispatch, getSession, navigate, redirectToken]);
+  }, [dispatch, getSession, isChachedSessionValid, navigate, redirectToken]);
 
   useEffect(() => {
     retrieveSession();
