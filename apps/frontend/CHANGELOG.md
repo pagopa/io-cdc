@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.4
+
+### Patch Changes
+
+- 919ff2b: new login forces session to overwrites
+
 ## 1.1.3
 
 ### Patch Changes
