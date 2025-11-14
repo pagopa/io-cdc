@@ -20,11 +20,32 @@ const redisClientFactoryMock = getRedisClientFactoryMock();
 
 const config = {
   TEST_USERS: "",
+  DEFAULT_ROUTE: "REGISTRATION",
 } as unknown as Config;
 
 describe("getSessionToken", () => {
   afterEach(() => {
     vi.clearAllMocks();
+  });
+
+  it("Should retrieve the session token and delete session id if redis client succeed with DEFAULT route REGISTRATION if not test user", async () => {
+    redisGetMock.mockResolvedValueOnce("sessiontokenvalue"); // first return sessiontoken
+    redisGetMock.mockResolvedValueOnce(undefined); // second return empty route
+    redisGetMock.mockResolvedValueOnce(JSON.stringify(aValidSession)); // third return session
+
+    const res = await getSessionToken({ id: "sessionid" as NonEmptyString })({
+      config,
+      redisClientFactory: redisClientFactoryMock,
+    })();
+    expect(E.isRight(res)).toBe(true);
+    if (E.isRight(res)) {
+      expect(res.right).toEqual({
+        route: "REGISTRATION" as const,
+        token: "sessiontokenvalue",
+      });
+    }
+    expect(redisGetMock).toBeCalledTimes(3);
+    expect(redisDeleteMock).toBeCalledTimes(2);
   });
 
   it("Should retrieve the session token and delete session id if redis client succeed with route REGISTRATION if not test user", async () => {
