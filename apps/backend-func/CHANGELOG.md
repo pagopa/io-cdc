@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.2
+
+### Patch Changes
+
+- d2d5228: included optional route query param for cta and its propagation to authorize
+
 ## 1.1.1
 
 ### Patch Changes
