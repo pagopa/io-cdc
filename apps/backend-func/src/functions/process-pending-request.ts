@@ -15,11 +15,12 @@ import { Year } from "../models/card_request.js";
 import { CosmosDbCardRequestRepository } from "../repository/card_request_repository.js";
 import { CosmosDbRequestAuditRepository } from "../repository/request_audit_repository.js";
 import { PendingCardRequestMessage } from "../types/queue-message.js";
-import { CdcApiRequestData, CdcUtils } from "../utils/cdc.js";
+import { CdcApiRequestData } from "../utils/cdc.js";
+import { CdcClientEnvironmentRouter } from "../utils/env_router.js";
 import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
-  cdcUtils: CdcUtils;
+  cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
   config: Config;
   cosmosDbClient: CosmosClient;
 }
@@ -103,14 +104,18 @@ export const sendCdcCardRequests = (
     // we call CdC API with a cumulative request
     TE.chainFirst(({ requestData }) =>
       pipe(
-        deps.cdcUtils.requestCdcTE(
-          {
-            first_name: pendingCardRequestMessage.first_name,
-            fiscal_code: pendingCardRequestMessage.fiscal_code,
-            last_name: pendingCardRequestMessage.last_name,
-          },
-          requestData,
+        deps.cdcClientEnvironmentRouter.getClient(
+          pendingCardRequestMessage.fiscal_code,
         ),
+        (cdcClient) =>
+          cdcClient.requestCdcTE(
+            {
+              first_name: pendingCardRequestMessage.first_name,
+              fiscal_code: pendingCardRequestMessage.fiscal_code,
+              last_name: pendingCardRequestMessage.last_name,
+            },
+            requestData,
+          ),
         TE.chain(
           // we check that ALL requested years has been successfully requested
           TE.fromPredicate(identity, () => new Error("CdC API Call failed")),
@@ -136,12 +141,16 @@ export const archiveCardRequests =
   (input: { alreadyArchivedYears: Year[]; requestData: CdcApiRequestData }) =>
     pipe(
       pipe(
-        // we check CdC API for all user requested years
-        deps.cdcUtils.getAlreadyRequestedYearsCdcTE({
-          first_name: pendingCardRequestMessage.first_name,
-          fiscal_code: pendingCardRequestMessage.fiscal_code,
-          last_name: pendingCardRequestMessage.last_name,
-        }),
+        deps.cdcClientEnvironmentRouter.getClient(
+          pendingCardRequestMessage.fiscal_code,
+        ),
+        (cdcClient) =>
+          // we check CdC API for all user requested years
+          cdcClient.getAlreadyRequestedYearsCdcTE({
+            first_name: pendingCardRequestMessage.first_name,
+            fiscal_code: pendingCardRequestMessage.fiscal_code,
+            last_name: pendingCardRequestMessage.last_name,
+          }),
         // we filter out years that have already been archived
         TE.map((cdcRequestedYears) =>
           cdcRequestedYears.filter(

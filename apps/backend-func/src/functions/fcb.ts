@@ -16,6 +16,7 @@ import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
 import { OperationTypes, storeAuditLog } from "../utils/audit_logs.js";
 import { fromBase64 } from "../utils/base64.js";
+import { isTestUser } from "../utils/env_router.js";
 import {
   ResponseError,
   errorToValidationError,
@@ -23,7 +24,6 @@ import {
   responseErrorToHttpError,
 } from "../utils/errors.js";
 import { OidcClient, OidcUser, getFimsUserTE } from "../utils/fims.js";
-import { toHash } from "../utils/hash.js";
 import {
   verifyHttpSignatures,
   verifyState,
@@ -192,7 +192,7 @@ export const checkLollipop =
 const doSSOChecks =
   (user: OidcUser, headers: Headers, state: string) => (deps: Dependencies) =>
     pipe(
-      deps.config.TEST_USERS.includes(toHash(user.fiscal_code)),
+      isTestUser(deps.config, user.fiscal_code),
       O.fromPredicate((isTestUser) => !isTestUser),
       O.map(() =>
         pipe(

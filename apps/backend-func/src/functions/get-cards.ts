@@ -12,19 +12,18 @@ import { Config } from "../config.js";
 import { CardsList } from "../generated/definitions/internal/CardsList.js";
 import { withParams } from "../middlewares/withParams.js";
 import { Session } from "../models/session.js";
-import { CdcUtils } from "../utils/cdc.js";
+import { CdcClientEnvironmentRouter, isTestUser } from "../utils/env_router.js";
 import {
   errorToInternalError,
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
-import { toHash } from "../utils/hash.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
 
 interface Dependencies {
-  cdcUtils: CdcUtils;
+  cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
   config: Config;
   redisClientFactory: RedisClientFactory;
 }
@@ -45,16 +44,15 @@ export const checkStartDatetime = (user: Session) => (deps: Dependencies) =>
     new Date(deps.config.CDC_USAGE_START_DATE),
     TE.fromPredicate(
       (startDate) => {
-        const cfHash = toHash(user.fiscal_code);
-        const isTestUser = deps.config.TEST_USERS.includes(cfHash);
+        const testUser = isTestUser(deps.config, user.fiscal_code);
         const now = new Date();
-        const validDate = isAfter(now, startDate) || isTestUser;
+        const validDate = isAfter(now, startDate) || testUser;
         emitCustomEvent("cdc.get.cards.iniziative.status", {
           data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${
             validDate ? "Iniziative open" : "Initiative closed"
           }`,
         })("getCards");
-        if (isTestUser) {
+        if (testUser) {
           emitCustomEvent("cdc.get.cards.iniziative.status.test", {
             data: `Test user connected`,
           })("getCards");
@@ -91,11 +89,13 @@ export const getCards = (user: Session) => (deps: Dependencies) =>
     TE.chain(() => checkEndDatetime(deps)),
     TE.chain(() =>
       pipe(
-        deps.cdcUtils.getCdcCardsTE({
-          first_name: user.given_name,
-          fiscal_code: user.fiscal_code,
-          last_name: user.family_name,
-        }),
+        deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
+        (cdcClient) =>
+          cdcClient.getCdcCardsTE({
+            first_name: user.given_name,
+            fiscal_code: user.fiscal_code,
+            last_name: user.family_name,
+          }),
         TE.mapLeft(errorToInternalError),
       ),
     ),

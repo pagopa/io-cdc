@@ -10,7 +10,10 @@ import {
   vi,
 } from "vitest";
 
-import { CdcUtilsMock, getCdcCardsTEMock } from "../../__mocks__/cdc.mock.js";
+import {
+  CdcClientEnvironmentRouterMock,
+  getCdcCardsTEMock,
+} from "../../__mocks__/cdc.mock.js";
 import {
   getRedisClientFactoryMock,
   redisGetMock,
@@ -26,7 +29,7 @@ const config = {
   TEST_USERS: "",
 } as unknown as Config;
 const deps = {
-  cdcUtils: CdcUtilsMock,
+  cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
   config,
   redisClientFactory: redisClientFactoryMock,
 };

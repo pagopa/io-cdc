@@ -4,18 +4,18 @@ import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import * as crypto from "crypto";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
-import { pipe } from "fp-ts/lib/function.js";
+import { identity, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
 import { withParams } from "../middlewares/withParams.js";
 import { Session } from "../models/session.js";
+import { isTestUser } from "../utils/env_router.js";
 import {
   ResponseError,
   errorToValidationError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
-import { toHash } from "../utils/hash.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { setWithExpirationTask } from "../utils/redis_storage.js";
 import { storeSessionTe } from "../utils/session.js";
@@ -36,30 +36,32 @@ export const getSessionToken =
   (testUser: Session) =>
   (deps: Dependencies): TE.TaskEither<ResponseError, string> =>
     pipe(
-      TE.Do,
-      TE.bind("sessionId", () => TE.of(crypto.randomBytes(32).toString("hex"))),
-      TE.bind("sessionToken", () =>
-        TE.of(crypto.randomBytes(32).toString("hex")),
-      ),
-      TE.chainFirst(({ sessionId, sessionToken }) =>
+      isTestUser(deps.config, testUser.fiscal_code),
+      TE.fromPredicate(identity, () => new Error("User not allowed")),
+      TE.chain(() =>
         pipe(
-          storeSessionTe(deps.redisClientFactory, sessionToken, testUser),
-          TE.chain(() =>
-            // bind one time session id to session token
-            setWithExpirationTask(
-              deps.redisClientFactory,
-              sessionId,
-              sessionToken,
-              60,
+          TE.Do,
+          TE.bind("sessionId", () =>
+            TE.of(crypto.randomBytes(32).toString("hex")),
+          ),
+          TE.bind("sessionToken", () =>
+            TE.of(crypto.randomBytes(32).toString("hex")),
+          ),
+          TE.chainFirst(({ sessionId, sessionToken }) =>
+            pipe(
+              storeSessionTe(deps.redisClientFactory, sessionToken, testUser),
+              TE.chain(() =>
+                // bind one time session id to session token
+                setWithExpirationTask(
+                  deps.redisClientFactory,
+                  sessionId,
+                  sessionToken,
+                  60,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-      TE.chain(({ sessionId }) =>
-        pipe(toHash(testUser.fiscal_code), (cfHash) =>
-          deps.config.TEST_USERS.includes(cfHash)
-            ? TE.of(sessionId)
-            : TE.left(new Error("User not allowed")),
+          TE.map(({ sessionId }) => sessionId),
         ),
       ),
       TE.mapLeft(errorToValidationError),
