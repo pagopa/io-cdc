@@ -1,6 +1,7 @@
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { enumType } from "@pagopa/ts-commons/lib/types.js";
 import * as crypto from "crypto";
 import * as O from "fp-ts/lib/Option.js";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
@@ -8,6 +9,7 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
+import { RouteEnum } from "../generated/definitions/internal/SessionToken.js";
 import { withParams } from "../middlewares/withParams.js";
 import {
   ResponseError,
@@ -26,11 +28,12 @@ interface Dependencies {
 
 const QueryParams = t.partial({
   device: NonEmptyString,
+  route: enumType<RouteEnum>(RouteEnum, "route"),
 });
 type QueryParams = t.TypeOf<typeof QueryParams>;
 
 export const getFimsRedirect =
-  (device?: string) =>
+  (device?: string, route?: RouteEnum) =>
   (deps: Dependencies): TE.TaskEither<ResponseError, string> =>
     pipe(
       TE.Do,
@@ -56,6 +59,22 @@ export const getFimsRedirect =
               O.getOrElse(() => TE.of(true)),
             ),
           ),
+          TE.chain(() =>
+            // store route in redis if provided
+            pipe(
+              route,
+              O.fromNullable,
+              O.map((route) =>
+                setWithExpirationTask(
+                  deps.redisClientFactory,
+                  `route-${state}`,
+                  route,
+                  60,
+                ),
+              ),
+              O.getOrElse(() => TE.of(true)),
+            ),
+          ),
           // get FIMS redirect URL
           TE.chain(() => getFimsRedirectTE(deps.fimsClient, state, nonce)),
         ),
@@ -74,7 +93,7 @@ export const makeFimsAuthHandler: H.Handler<
     TE.bind("query", withParams(QueryParams, req.query)),
     TE.mapLeft(errorToValidationError),
     RTE.fromTaskEither,
-    RTE.chain(({ query }) => getFimsRedirect(query.device)),
+    RTE.chain(({ query }) => getFimsRedirect(query.device, query.route)),
     RTE.map((redirect) =>
       pipe(H.empty, H.withStatusCode(302), H.withHeader("Location", redirect)),
     ),

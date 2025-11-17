@@ -11,7 +11,7 @@ import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
 import { withDefault } from "@pagopa/ts-commons/lib/types.js";
 import * as E from "fp-ts/lib/Either.js";
 import * as O from "fp-ts/lib/Option.js";
-import { pipe } from "fp-ts/lib/function.js";
+import { identity, pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 export type Config = t.TypeOf<typeof Config>;
@@ -45,31 +45,34 @@ export const Config = t.type({
   COSMOSDB_CDC_KEY: NonEmptyString,
 
   COSMOSDB_CDC_URI: NonEmptyString,
-  ENCODING_ENCRYPTION: NonEmptyString,
+  DEFAULT_ROUTE: NonEmptyString,
 
+  ENCODING_ENCRYPTION: NonEmptyString,
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
   ENCRYPTION_PUBLIC_KEY_TEST: NonEmptyString,
+
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
 
   FIMS_CLIENT_ID: NonEmptyString,
-
   FIMS_CLIENT_SECRET: NonEmptyString,
   FIMS_ISSUER_URL: NonEmptyString,
   FIMS_REDIRECT_URL: NonEmptyString,
   FIMS_SCOPE: NonEmptyString,
-  JWT_AUDIENCE: NonEmptyString,
 
+  JWT_AUDIENCE: NonEmptyString,
   JWT_EXPIRATION: NonEmptyString,
   JWT_ISSUER: NonEmptyString,
   JWT_PRIVATE_KEY: NonEmptyString,
   JWT_PRIVATE_KEY_TEST: NonEmptyString,
   PAGOPA_IDP_KEYS_BASE_URL: NonEmptyString,
-  REDIS_CLUSTER_ENABLED: t.boolean,
 
+  REDIS_CLUSTER_ENABLED: t.boolean,
   REDIS_PASSWORD: NonEmptyString,
   REDIS_PORT: NonEmptyString,
   REDIS_TLS_ENABLED: t.boolean,
+
   REDIS_URL: NonEmptyString,
+
   SERVICES_API_KEY: NonEmptyString,
 
   SERVICES_API_URL: NonEmptyString,
@@ -82,6 +85,10 @@ export const Config = t.type({
 
 export const envConfig = {
   ...process.env,
+  DEFAULT_ROUTE: pipe(
+    O.fromNullable(process.env.DEFAULT_ROUTE),
+    O.fold(() => "REGISTRATION", identity),
+  ),
   REDIS_CLUSTER_ENABLED: pipe(
     O.fromNullable(process.env.REDIS_CLUSTER_ENABLED),
     O.map((value: string) => value.toLowerCase() === "true"),

@@ -231,23 +231,43 @@ export const createSessionAndRedirect =
           ),
         ),
       ),
-      TE.chain(({ deviceQueryParam, sessionId, sessionToken }) =>
-        pipe(
-          storeSessionTe(deps.redisClientFactory, sessionToken, user),
-          TE.chain(() =>
-            // bind one time session id to session token
-            setWithExpirationTask(
-              deps.redisClientFactory,
-              sessionId,
-              sessionToken,
-              60,
+      TE.bind("routeQueryParam", () =>
+        getTask(deps.redisClientFactory, `route-${state}`),
+      ),
+      TE.chain(
+        ({ deviceQueryParam, routeQueryParam, sessionId, sessionToken }) =>
+          pipe(
+            storeSessionTe(deps.redisClientFactory, sessionToken, user),
+            TE.chain(() =>
+              // bind one time session id to session token
+              setWithExpirationTask(
+                deps.redisClientFactory,
+                `session-${sessionId}`,
+                sessionToken,
+                60,
+              ),
+            ),
+            TE.chain(() =>
+              pipe(
+                routeQueryParam,
+                O.fold(
+                  () => TE.of<Error, boolean>(true),
+                  (route) =>
+                    // bind one time session id to route
+                    setWithExpirationTask(
+                      deps.redisClientFactory,
+                      `route-${sessionId}`,
+                      route,
+                      60,
+                    ),
+                ),
+              ),
+            ),
+            TE.map(
+              () =>
+                `${deps.config.CDC_BASE_URL}/authorize?id=${sessionId}${deviceQueryParam}`,
             ),
           ),
-          TE.map(
-            () =>
-              `${deps.config.CDC_BASE_URL}/authorize?id=${sessionId}${deviceQueryParam}`,
-          ),
-        ),
       ),
       TE.mapLeft(() =>
         responseError(401, "Cannot create session", "Unauthorized"),
