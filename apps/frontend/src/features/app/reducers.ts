@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Card } from './model';
+import { Card, VOUCHER_TYPOLOGY } from './model';
 
 type TicketsState = {
   activeCard: string;
   selectedCard: Pick<Card, 'residual_amount' | 'year'>;
+  typology?: VOUCHER_TYPOLOGY;
   amount?: number;
   deleted: boolean;
 };
@@ -33,9 +34,13 @@ const ticketsSlice = createSlice({
     setDeleted: (state, { payload }: PayloadAction<TicketsState['deleted']>) => {
       state.deleted = payload;
     },
+    setTypology: (state, { payload }: PayloadAction<TicketsState['typology']>) => {
+      state.typology = payload;
+    },
     resetForm: (state) => {
       state.selectedCard = initialState.selectedCard;
       state.amount = undefined;
+      state.typology = undefined;
     },
   },
 });

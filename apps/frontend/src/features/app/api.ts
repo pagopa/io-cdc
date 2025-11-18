@@ -101,6 +101,9 @@ export const API_DASHBOARD = {
   getCards: {
     query: () => 'cards',
   },
+  getTypologies: {
+    query: () => 'typologies',
+  },
   getVouchers: {
     query: (year: string) => ({ url: 'vouchers', method: 'GET', params: { year } }),
   },

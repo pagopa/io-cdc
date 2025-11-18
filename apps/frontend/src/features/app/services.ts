@@ -12,6 +12,7 @@ import {
   GetSessionParamsRequestDTO,
   CreateVoucherResponseDTO,
   GetVouchersRequestQuery,
+  GetTypologiesResponseDTO,
 } from './dto';
 import { RootState } from '../store';
 import { retrieveSessionQueryCached } from './utils';
@@ -72,6 +73,10 @@ export const appApi = createApi({
     getCards: builder.query<GetCardsResponseDTO, void>({
       ...API_DASHBOARD.getCards,
     }),
+    getTypologies: builder.query<GetTypologiesResponseDTO, void>({
+      ...API_DASHBOARD.getTypologies,
+      keepUnusedDataFor: 3600,
+    }),
     getVoucher: builder.query<GetVouchersResponseDTO, GetVouchersRequestQuery>({
       query: (year: string) => ({ url: 'vouchers', method: 'GET', params: { year } }),
     }),
@@ -108,4 +113,5 @@ export const {
   useGetVoucherQuery,
   useCreateVoucherMutation,
   useDeleteVoucherMutation,
+  useGetTypologiesQuery,
 } = appApi;

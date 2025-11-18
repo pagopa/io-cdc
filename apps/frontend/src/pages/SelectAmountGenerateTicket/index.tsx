@@ -7,7 +7,11 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
 import { useCreateVoucherMutation } from '../../features/app/services';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAmountBonus, selectSelectedCardBonus } from '../../features/app/selectors';
+import {
+  selectAmountBonus,
+  selectSelectedCardBonus,
+  selectTypology,
+} from '../../features/app/selectors';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
@@ -41,6 +45,8 @@ const SelectAmountGenerateTicket = () => {
 
   const amount = useSelector(selectAmountBonus);
 
+  const typology = useSelector(selectTypology);
+
   const required = useMemo(() => !amount || amount === 0, [amount]);
 
   const onBackHeader = useCallback(() => {
@@ -65,7 +71,7 @@ const SelectAmountGenerateTicket = () => {
       return;
     }
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
-    await createBonus({ year: selectedCard?.year!, amount: amount ?? 0 });
+    await createBonus({ year: selectedCard?.year!, amount: amount ?? 0, typology: typology! });
     dispatch(ticketsActions.resetForm());
     navigate(APP_ROUTES.HOME);
   }, [
@@ -77,6 +83,7 @@ const SelectAmountGenerateTicket = () => {
     selectedCard?.residual_amount,
     selectedCard?.year,
     showToast,
+    typology,
   ]);
 
   useEffect(() => {

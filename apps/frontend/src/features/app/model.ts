@@ -1,5 +1,11 @@
 export type YearsList = string[];
 
+export enum VOUCHER_TYPOLOGY {
+  BOOK = 'LIBRO',
+  EBOOK = 'EBOOK',
+  AUDIOBOOK = 'AUDIOLIBRO',
+}
+
 //TODO Test only
 export enum TEST_USERS {
   REGISTRATION = 'REGISTRATION',

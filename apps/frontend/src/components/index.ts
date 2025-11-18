@@ -13,3 +13,4 @@ export * from './PopConfirm';
 export * from './QrCode';
 export * from './RequestLoader';
 export * from './ScrollToTop';
+export * from './RadioList';

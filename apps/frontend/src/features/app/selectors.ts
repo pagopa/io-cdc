@@ -7,6 +7,8 @@ const selectTickets = (state: RootState) => state.tickets;
 
 export const selectYearsResult = endpoints.getYearsList.select();
 
+export const selectTypologyResult = endpoints.getTypologies.select();
+
 export const selectNotAvailableYearsResult = endpoints.getNotAvailableYearsList.select();
 
 export const selectFirstSessionData = retrieveSessionQueryCached;
@@ -33,5 +35,7 @@ export const selectActiveCard = createSelector(selectTickets, (state) => state.a
 export const selectSelectedCardBonus = createSelector(selectTickets, (state) => state.selectedCard);
 
 export const selectAmountBonus = createSelector(selectTickets, (state) => state.amount);
+
+export const selectTypology = createSelector(selectTickets, (state) => state.typology);
 
 export const selectTicketDeleted = createSelector(selectTickets, (state) => state?.deleted);

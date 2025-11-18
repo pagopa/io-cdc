@@ -19,6 +19,7 @@ const CardsEmptyState = React.lazy(() => import('../pages/CardsEmptyState'));
 const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
+const SelectItemType = React.lazy(() => import('../pages/SelectItemType'));
 
 // global route
 const NotFound = React.lazy(() => import('../pages/NotFound'));
@@ -39,6 +40,7 @@ export enum APP_ROUTES {
   FEEDBACK_VOUCHERS = '/voucher-feedback',
   SELECT_CARD = '/genera-buono/seleziona-carta',
   SELECT_AMOUNT = '/genera-buono/seleziona-importo',
+  SELECT_TYPE = '/genera-buono/seleziona-tipologia',
 }
 
 export type APP_ROUTES_CONFIG_TYPE = {
@@ -73,6 +75,10 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.SELECT_AMOUNT,
     Element: SelectAmountGenerateTicket,
+  },
+  {
+    path: APP_ROUTES.SELECT_TYPE,
+    Element: SelectItemType,
   },
   {
     path: APP_ROUTES.BONUS_DETAIL,

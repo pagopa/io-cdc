@@ -1,10 +1,12 @@
-import { VoucherItem, Card, TEST_USERS } from './model';
+import { VoucherItem, Card, TEST_USERS, VOUCHER_TYPOLOGY } from './model';
 
 export type RequestBonusDto = string[];
 
 export type GetBonusByIdResponseDTO = VoucherItem;
 
 export type GetCardsResponseDTO = Card[];
+
+export type GetTypologiesResponseDTO = { typology: VOUCHER_TYPOLOGY }[];
 
 export type GetVouchersRequestQuery = string;
 
@@ -18,6 +20,7 @@ export type DeleteVoucherResponseDTO = {
 export type CreateVoucherRequestDTO = {
   year: string;
   amount: number;
+  typology: VOUCHER_TYPOLOGY;
 };
 
 export type CreateVoucherResponseDTO = {
