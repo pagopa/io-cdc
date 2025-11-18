@@ -35,12 +35,17 @@ export const useGetSession = () => {
     if (
       cachedSession &&
       cachedSession.redirectToken &&
-      redirectToken === cachedSession.redirectToken &&
-      isChachedSessionValid
+      redirectToken === cachedSession.redirectToken
     ) {
-      return navigate(
-        cachedSession.route === TEST_USERS.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
-      );
+      if (isChachedSessionValid)
+        return navigate(
+          cachedSession.route === TEST_USERS.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
+        );
+      return navigate(APP_ROUTES.UNAUTHORIZED, {
+        state: {
+          status: redirectTokenError.status,
+        },
+      });
     }
 
     const {
