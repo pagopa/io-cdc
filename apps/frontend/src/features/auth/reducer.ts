@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface AuthState {
+  redirectToken?: string;
   token?: string;
   route?: string;
   savedAt?: number;
@@ -12,7 +13,11 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setToken: (state, action: PayloadAction<{ token: string; route?: string }>) => {
+    setToken: (
+      state,
+      action: PayloadAction<{ redirectToken: string; token: string; route?: string }>,
+    ) => {
+      state.redirectToken = action.payload.redirectToken;
       state.token = action.payload.token;
       state.route = action.payload.route;
       state.savedAt = Date.now();
@@ -21,6 +26,7 @@ export const authSlice = createSlice({
       state.token = undefined;
       state.route = undefined;
       state.savedAt = undefined;
+      state.redirectToken = undefined;
     },
   },
 });

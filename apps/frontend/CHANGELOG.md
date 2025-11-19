@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.5
+
+### Patch Changes
+
+- 59761b4: Fix 401 api call in authorize
+
 ## 1.1.4
 
 ### Patch Changes
