@@ -18,7 +18,10 @@ import { ListVoucherDetails } from "../generated/cdc-api/ListVoucherDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import { SimpleResponseBean } from "../generated/cdc-api/SimpleResponseBean.js";
-import { VoucherBeanDetails } from "../generated/cdc-api/VoucherBeanDetails.js";
+import {
+  StatoEnum,
+  VoucherBeanDetails,
+} from "../generated/cdc-api/VoucherBeanDetails.js";
 import {
   ApplicantEnum,
   Refund_statusEnum,
@@ -351,11 +354,27 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
             : Refund_statusEnum.PENDING,
         }
       : undefined,
-  voucher_status:
-    v.stato === "INSERITO"
-      ? Voucher_statusEnum.PENDING
-      : Voucher_statusEnum.USED,
+  merchant: v.esercente || undefined,
+  voucher_status: mapVoucherStatus(v.stato),
+  spending_date: v.dataConferma ? new Date(v.dataConferma) : undefined,
 });
+
+const mapVoucherStatus = (status: StatoEnum): Voucher_statusEnum => {
+  switch (status) {
+    case StatoEnum.INSERITO:
+    case StatoEnum.PREVALIDATO:
+    case StatoEnum["INVIATO A CONSAP"]:
+      return Voucher_statusEnum.PENDING;
+    case StatoEnum.UTILIZZATO:
+      return Voucher_statusEnum.USED;
+    case StatoEnum.CANCELLATO:
+      return Voucher_statusEnum.CANCELLED;
+    case StatoEnum.SCADUTO:
+      return Voucher_statusEnum.EXPIRED;
+    default:
+      return Voucher_statusEnum.PENDING;
+  }
+};
 
 const getCdcVouchersTE =
   (config: Config, env: CdcEnvironmentT) =>
