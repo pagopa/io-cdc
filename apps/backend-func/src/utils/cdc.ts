@@ -332,20 +332,21 @@ const isCdcApiGetVouchersCallSuccess = (
 ): res is IResponseType<200, ListVoucherDetails, never> => res.status === 200;
 
 const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
-  amount: v.importoRichiesto || 0,
+  amount: v.importoRichiesto,
   applicant:
     v.richiedente === "SELF" ? ApplicantEnum.SELF : ApplicantEnum.FAMILY_MEMBER,
-  card_year: v.annoRif || "",
+  card_year: v.annoRif,
   expiration_date: v.dataScadenza
     ? new Date(v.dataScadenza)
     : new Date(config.CDC_CARDS_EXPIRATION_DATE),
-  id: v.codVoucher || "",
+  id: v.codVoucher,
   refund:
-    v.rimborso!.importoDaRiaccreditare! > 0
+    v.rimborso &&
+    v.rimborso.importoDaRiaccreditare &&
+    v.rimborso.importoDaRiaccreditare > 0
       ? {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          amount: v.rimborso!.importoDaRiaccreditare || 0,
-          refund_status: v.rimborso!.stato
+          amount: v.rimborso.importoDaRiaccreditare,
+          refund_status: v.rimborso.stato // TODO: Fix by requesting refund state enum
             ? Refund_statusEnum.COMPLETED
             : Refund_statusEnum.PENDING,
         }
@@ -435,7 +436,7 @@ const postCdcVouchersTE =
             TE.tryCatch(
               async () =>
                 await client.generaVoucher({
-                  body: { anno: year, idBene: 0, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO
+                  body: { anno: year, idBene: 7, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO
                 }),
               E.toError,
             ),
@@ -464,8 +465,8 @@ const postCdcVouchersTE =
             pipe(
               voucher,
               TE.fromPredicate(
-                (voucher) => voucher.codErrore === undefined,
-                () => new Error("Voucher error"),
+                (voucher) => voucher.codVoucher !== undefined,
+                () => new Error("Invalid Voucher Error"),
               ),
               TE.map((v) => mapVoucher(config, v)),
             ),
@@ -527,8 +528,8 @@ const getCdcVoucherTE =
             pipe(
               voucher,
               TE.fromPredicate(
-                (voucher) => voucher.codErrore === undefined,
-                () => new Error("Voucher error"),
+                (voucher) => voucher.codVoucher !== undefined,
+                () => new Error("Invalid Voucher Error"),
               ),
               TE.map((v) => mapVoucher(config, v)),
             ),
