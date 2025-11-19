@@ -13,7 +13,7 @@ import { selectTypology } from '../../features/app/selectors';
 import { VOUCHER_TYPOLOGY } from '../../features/app/model';
 import { useGetTypologiesQuery } from '../../features/app/services';
 import { EmptyState, Loader } from '@io-cdc/ui';
-import { Button } from '@mui/material';
+import { Button, capitalize } from '@mui/material';
 
 const SelectItemType = () => {
   //TODO test only
@@ -30,7 +30,7 @@ const SelectItemType = () => {
   const itemTypeOptions = useMemo(() => {
     if (!typologies) return [];
     return typologies.map(({ typology }) => ({
-      label: typology,
+      label: capitalize(typology.toLowerCase()),
       subLabel: `placeholder subtitle for ${typology.toLowerCase()}`,
       id: typology,
       value: typology,
