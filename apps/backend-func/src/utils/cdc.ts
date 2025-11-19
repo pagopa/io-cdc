@@ -362,9 +362,9 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
 const mapVoucherStatus = (status: StatoEnum): Voucher_statusEnum => {
   switch (status) {
     case StatoEnum.INSERITO:
+      return Voucher_statusEnum.PENDING;
     case StatoEnum.PREVALIDATO:
     case StatoEnum["INVIATO A CONSAP"]:
-      return Voucher_statusEnum.PENDING;
     case StatoEnum.UTILIZZATO:
       return Voucher_statusEnum.USED;
     case StatoEnum.CANCELLATO:
