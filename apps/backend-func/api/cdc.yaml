@@ -164,7 +164,7 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
-  /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher:
+  /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/:
     get:
       tags:
         - utilizzo
