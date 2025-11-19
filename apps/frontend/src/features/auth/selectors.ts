@@ -6,13 +6,19 @@ const EXPIRE_TIME = 30 * 60 * 1000; // 30 minuti in ms
 
 export const selectToken = (state: RootState) => state.auth.token;
 
-export const selectIsTokenValid = ({ auth }: RootState) =>
-  Boolean(auth.token && auth.savedAt && Date.now() - auth.savedAt < EXPIRE_TIME);
-
 export const selectSessionRoute = ({ auth }: RootState) => auth?.route;
+
+export const selectSavedAt = ({ auth }: RootState) => auth?.savedAt;
+
+export const selectRedirectToken = ({ auth }: RootState) => auth?.redirectToken;
+
+export const selectIsTokenValid = createSelector(selectToken, selectSavedAt, (token, savedAt) =>
+  Boolean(token && savedAt && Date.now() - savedAt < EXPIRE_TIME),
+);
 
 export const selectCachedSession = createSelector(
   selectToken,
   selectSessionRoute,
-  (token, route) => ({ token, route }),
+  selectRedirectToken,
+  (token, route, redirectToken) => ({ token, route, redirectToken }),
 );
