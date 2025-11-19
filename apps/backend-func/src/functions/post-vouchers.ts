@@ -11,7 +11,7 @@ import { VoucherDetails } from "../generated/definitions/internal/VoucherDetails
 import { withParams } from "../middlewares/withParams.js";
 import { Year } from "../models/card_request.js";
 import { Session } from "../models/session.js";
-import { CdcUtils } from "../utils/cdc.js";
+import { CdcClientEnvironmentRouter } from "../utils/env_router.js";
 import {
   errorToInternalError,
   errorToValidationError,
@@ -22,7 +22,7 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
 
 interface Dependencies {
-  cdcUtils: CdcUtils;
+  cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
   config: Config;
   redisClientFactory: RedisClientFactory;
 }
@@ -47,15 +47,17 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
 export const postVouchers =
   (user: Session, voucher: Query) => (deps: Dependencies) =>
     pipe(
-      deps.cdcUtils.postCdcVouchersTE(
-        {
-          first_name: user.given_name,
-          fiscal_code: user.fiscal_code,
-          last_name: user.family_name,
-        },
-        voucher.year,
-        voucher.amount,
-      ),
+      deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
+      (cdcClient) =>
+        cdcClient.postCdcVouchersTE(
+          {
+            first_name: user.given_name,
+            fiscal_code: user.fiscal_code,
+            last_name: user.family_name,
+          },
+          voucher.year,
+          voucher.amount,
+        ),
       TE.mapLeft(errorToInternalError),
     );
 

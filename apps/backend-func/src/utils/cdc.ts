@@ -334,9 +334,7 @@ const isCdcApiGetVouchersCallSuccess = (
 const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
   amount: v.importoRichiesto || 0,
   applicant:
-    v.richiedente === "SELF"
-      ? ApplicantEnum.SELF
-      : ApplicantEnum.FAMILY_MEMBER,
+    v.richiedente === "SELF" ? ApplicantEnum.SELF : ApplicantEnum.FAMILY_MEMBER,
   card_year: v.annoRif || "",
   expiration_date: v.dataScadenza
     ? new Date(v.dataScadenza)
@@ -437,7 +435,7 @@ const postCdcVouchersTE =
             TE.tryCatch(
               async () =>
                 await client.generaVoucher({
-                  body: { anno: year, idBene: 0, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO 
+                  body: { anno: year, idBene: 0, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO
                 }),
               E.toError,
             ),
@@ -620,6 +618,7 @@ export enum CdcEnvironment {
 export type CdcEnvironmentT = keyof typeof CdcEnvironment;
 
 export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
+  env,
   deleteCdcVoucherTE: deleteCdcVoucherTE(config, env),
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
   getCdcCardsTE: getCdcCardsTE(config, env),

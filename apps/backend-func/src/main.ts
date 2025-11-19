@@ -19,8 +19,8 @@ import { PostVouchersFn } from "./functions/post-vouchers.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
 import { TestSessionFn } from "./functions/test-session.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
-import { CdcEnvironment, CdcUtils } from "./utils/cdc.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
+import { CdcClientEnvironmentRouter } from "./utils/env_router.js";
 import { getFimsClient } from "./utils/fims.js";
 import { QueueStorage } from "./utils/queue.js";
 import { getRedisClientFactory } from "./utils/redis.js";
@@ -54,8 +54,7 @@ const redisClientFactory = getRedisClientFactory(config);
 const servicesClient = ServicesAPIClient(config);
 
 // CdC utils
-const cdcUtilsProd = CdcUtils(config, CdcEnvironment.PRODUCTION);
-const cdcUtilsTest = CdcUtils(config, CdcEnvironment.TEST);
+const cdcClientEnvironmentRouter = new CdcClientEnvironmentRouter(config);
 
 /*
  * CDC Utility Functions
@@ -146,7 +145,7 @@ app.http("PostCardRequests", {
 });
 
 const ProcessPendingRequest = ProcessPendingRequestFn({
-  cdcUtils: cdcUtilsProd,
+  cdcClientEnvironmentRouter,
   config,
   cosmosDbClient,
   inputDecoder: PendingCardRequestMessage,
@@ -161,7 +160,7 @@ app.storageQueue("ProcessPendingRequest", {
  * CDC Usage Functions
  */
 const GetCards = GetCardsFn({
-  cdcUtils: cdcUtilsTest,
+  cdcClientEnvironmentRouter,
   config,
   redisClientFactory,
 });
@@ -173,7 +172,7 @@ app.http("GetCards", {
 });
 
 const GetVouchers = GetVouchersFn({
-  cdcUtils: cdcUtilsTest,
+  cdcClientEnvironmentRouter,
   config,
   redisClientFactory,
 });
@@ -185,7 +184,7 @@ app.http("GetVouchers", {
 });
 
 const PostVouchers = PostVouchersFn({
-  cdcUtils: cdcUtilsTest,
+  cdcClientEnvironmentRouter,
   config,
   redisClientFactory,
 });
@@ -197,7 +196,7 @@ app.http("PostVouchers", {
 });
 
 const GetVoucher = GetVoucherFn({
-  cdcUtils: cdcUtilsTest,
+  cdcClientEnvironmentRouter,
   config,
   redisClientFactory,
 });
@@ -209,7 +208,7 @@ app.http("GetVoucher", {
 });
 
 const DeleteVoucher = DeleteVoucherFn({
-  cdcUtils: cdcUtilsTest,
+  cdcClientEnvironmentRouter,
   config,
   redisClientFactory,
 });
