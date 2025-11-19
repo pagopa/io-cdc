@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.3
+
+### Patch Changes
+
+- ab1ac76: Added cdc env router
+
 ## 1.1.2
 
 ### Patch Changes
