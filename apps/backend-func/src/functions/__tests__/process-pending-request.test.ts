@@ -4,7 +4,7 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  CdcUtilsMock,
+  CdcClientEnvironmentRouterMock,
   getAlreadyRequestedYearsCdcTEMock,
   requestCdcTEMock,
 } from "../../__mocks__/cdc.mock.js";
@@ -49,7 +49,7 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
       CosmosOperation.fetchAll,
     );
     const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -74,7 +74,7 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
       CosmosOperation.fetchAll,
     );
     const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -96,7 +96,7 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
     ]);
     requestCdcTEMock.mockReturnValueOnce(TE.left(new Error("Error")));
     const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -118,7 +118,7 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
     ]);
     requestCdcTEMock.mockReturnValueOnce(TE.of(false));
     const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -141,7 +141,7 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
     ]);
     clearContainersItems(CosmosDbRequestAuditRepository.containerName);
     const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -182,7 +182,7 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
       aRequestAudit, // this request audit has request_date "2025-07-11T14:16:49.633Z"
     ]);
     const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -226,7 +226,7 @@ describe("process-pending-requests | sendCdcCardRequests", () => {
       aCardRequest, // 2020 was already requested
     ]);
     const res = await sendCdcCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })();
@@ -269,7 +269,7 @@ describe("process-pending-requests | archiveCardRequests", () => {
       TE.left(new Error("Error")),
     );
     const res = await archiveCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })({
@@ -299,7 +299,7 @@ describe("process-pending-requests | archiveCardRequests", () => {
       CosmosOperation.create,
     );
     const res = await archiveCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })({
@@ -328,7 +328,7 @@ describe("process-pending-requests | archiveCardRequests", () => {
       TE.of(["2020", "2021"]),
     );
     const res = await archiveCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })({
@@ -371,7 +371,7 @@ describe("process-pending-requests | archiveCardRequests", () => {
       TE.of(["2020", "2021"]),
     );
     const res = await archiveCardRequests(aPendingCardRequestMessage, {
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
       cosmosDbClient: cosmosClientMock,
     })({

@@ -10,7 +10,7 @@ import { Config } from "../config.js";
 import { SimpleResponseBean } from "../generated/cdc-api/SimpleResponseBean.js";
 import { withParams } from "../middlewares/withParams.js";
 import { Session } from "../models/session.js";
-import { CdcUtils } from "../utils/cdc.js";
+import { CdcClientEnvironmentRouter } from "../utils/env_router.js";
 import {
   errorToInternalError,
   errorToValidationError,
@@ -21,7 +21,7 @@ import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
 
 interface Dependencies {
-  cdcUtils: CdcUtils;
+  cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
   config: Config;
   redisClientFactory: RedisClientFactory;
 }
@@ -45,14 +45,16 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
 export const deleteVoucher =
   (user: Session, id: string) => (deps: Dependencies) =>
     pipe(
-      deps.cdcUtils.deleteCdcVoucherTE(
-        {
-          first_name: user.given_name,
-          fiscal_code: user.fiscal_code,
-          last_name: user.family_name,
-        },
-        id,
-      ),
+      deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
+      (cdcClient) =>
+        cdcClient.deleteCdcVoucherTE(
+          {
+            first_name: user.given_name,
+            fiscal_code: user.fiscal_code,
+            last_name: user.family_name,
+          },
+          id,
+        ),
       TE.mapLeft(errorToInternalError),
     );
 

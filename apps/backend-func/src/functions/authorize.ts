@@ -14,6 +14,7 @@ import {
   SessionToken,
 } from "../generated/definitions/internal/SessionToken.js";
 import { withParams } from "../middlewares/withParams.js";
+import { isTestUser } from "../utils/env_router.js";
 import {
   ResponseError,
   errorToInternalError,
@@ -21,7 +22,6 @@ import {
   responseError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
-import { toHash } from "../utils/hash.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { deleteTask, getTask } from "../utils/redis_storage.js";
 import { getSessionTE } from "../utils/session.js";
@@ -88,11 +88,9 @@ export const getSessionToken =
             responseError(401, "Session not found", "Unauthorized"),
           ),
           TE.map((session) =>
-            pipe(toHash(session.fiscal_code), (cfHash) =>
-              deps.config.TEST_USERS.includes(cfHash)
-                ? { route: RouteEnum.USAGE, token: sessionToken }
-                : { route, token: sessionToken },
-            ),
+            isTestUser(deps.config, session.fiscal_code)
+              ? { route: RouteEnum.USAGE, token: sessionToken }
+              : { route, token: sessionToken },
           ),
         ),
       ),
