@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Divider, Stack, Typography } from '@mui/material';
 import { VoucherCard } from '../../pages/BonusList/components/BonusItem';
-import { EmptyState, SectionTitle, theme } from '@io-cdc/ui';
+import { SectionTitle, theme } from '@io-cdc/ui';
 import { VoucherItem } from '../../features/app/model';
 import { OthersBonusSheet } from '../OthersBonusSheet';
 import { separateVouchersByStatus } from '../../utils/separateVouchersByStatus';

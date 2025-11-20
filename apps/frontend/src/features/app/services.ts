@@ -112,4 +112,5 @@ export const {
   useCreateVoucherMutation,
   useDeleteVoucherMutation,
   useGetAllVoucherQuery,
+  useLazyGetAllVoucherQuery,
 } = appApi;
