@@ -378,7 +378,7 @@ const mapVoucherStatus = (status: StatoEnum): Voucher_statusEnum => {
 
 const getCdcVouchersTE =
   (config: Config, env: CdcEnvironmentT) =>
-  (user: CdcApiUserData, year: string) =>
+  (user: CdcApiUserData, year?: string) =>
     pipe(
       getJwtTE(config, env, user),
       TE.chain((jwt) =>
@@ -386,7 +386,8 @@ const getCdcVouchersTE =
           TE.of(getCdcClient(config, env)(jwt)),
           TE.chain((client) =>
             TE.tryCatch(
-              async () => await client.getListaVoucher({ annoRif: year }),
+              async () =>
+                await client.getListaVoucher(year ? { annoRif: year } : {}),
               E.toError,
             ),
           ),
