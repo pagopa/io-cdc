@@ -10,11 +10,11 @@ import { persistor, store } from './features/store.ts';
 import { ToastProvider } from './contexts/index.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Suspense } from 'react';
-import { RequestLoader, ScrollToTop } from './components';
+import { ScrollToTop } from './components';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <Suspense fallback={<RequestLoader />}>
+    <Suspense>
       <PersistGate persistor={persistor}>
         <ThemeProvider theme={theme}>
           <ToastProvider>

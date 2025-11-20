@@ -5,6 +5,7 @@ import { EmptyState, SectionTitle, theme } from '@io-cdc/ui';
 import { VoucherItem } from '../../features/app/model';
 import { OthersBonusSheet } from '../OthersBonusSheet';
 import { separateVouchersByStatus } from '../../utils/separateVouchersByStatus';
+import { EmptyVouchers } from './EmptyVouchers';
 
 type VoucherListProps = {
   vouchersList: VoucherItem[];
@@ -55,9 +56,7 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
             </Stack>
           ))
         ) : (
-          <Stack minHeight={100} justifyContent="center">
-            <EmptyState icon="info" title="Non sono stati trovati buoni" />
-          </Stack>
+          <EmptyVouchers />
         )}
       </Stack>
       <Stack>
@@ -74,9 +73,7 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
             </Stack>
           ))
         ) : (
-          <Stack minHeight={100} justifyContent="center">
-            <EmptyState icon="info" title="Non sono stati trovati buoni" />
-          </Stack>
+          <EmptyVouchers />
         )}
       </Stack>
       <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />

@@ -4,9 +4,10 @@ import { Stack } from '@mui/system';
 import { useCallback, useMemo } from 'react';
 import { VoucherCard } from '../../BonusList/components/BonusItem';
 import { separateVouchersByStatus } from '../../../utils/separateVouchersByStatus';
-import { useGetVoucherQuery } from '../../../features/app/services';
 import { useSelector } from 'react-redux';
 import { selectActiveCard } from '../../../features/app/selectors';
+import { EmptyVouchers } from '../../../components/VoucherList/EmptyVouchers';
+import { useGetVouchers } from '../../../hooks/useGetVouchers';
 
 type VoucherListHome = {
   onClickShowAll: () => void;
@@ -16,15 +17,9 @@ type VoucherListHome = {
 export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHome) => {
   const activeCard = useSelector(selectActiveCard);
 
-  const {
-    data: vouchers,
-    isError,
-    isLoading,
-    isFetching,
-    refetch,
-  } = useGetVoucherQuery(activeCard);
+  const { vouchers, getVouchers, isError, isSuccess } = useGetVouchers();
 
-  const loading = useMemo(() => isLoading || isFetching, [isFetching, isLoading]);
+  const loading = useMemo(() => !isError && !isSuccess, [isError, isSuccess]);
 
   const { toSpend: tbsAll, spent: sAll } = useMemo(
     () => separateVouchersByStatus(vouchers ?? []),
@@ -32,8 +27,8 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
   );
 
   const forceReload = useCallback(() => {
-    refetch();
-  }, [refetch]);
+    getVouchers(activeCard);
+  }, [activeCard, getVouchers]);
 
   const toSpend = useMemo(() => {
     return tbsAll.slice(0, 4);
@@ -54,13 +49,12 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
     );
   }
 
-  if (loading) {
+  if (loading)
     return (
-      <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
+      <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
         <Loader />
       </Stack>
     );
-  }
 
   return (
     <>
@@ -95,9 +89,7 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
               </Stack>
             ))
           ) : (
-            <Stack minHeight={100} justifyContent="center">
-              <EmptyState icon="info" title="Non sono stati trovati buoni" />
-            </Stack>
+            <EmptyVouchers />
           )}
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography fontWeight={700} fontSize={14}>
@@ -130,9 +122,7 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
               </Stack>
             ))
           ) : (
-            <Stack minHeight={100} justifyContent="center">
-              <EmptyState icon="info" title="Non sono stati trovati buoni" />
-            </Stack>
+            <EmptyVouchers />
           )}
         </Stack>
       ) : (
