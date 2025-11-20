@@ -21,11 +21,26 @@ export const useGetSession = () => {
   const [getSession] = useLazyGetSessionQuery();
 
   const cachedSession = useSelector(selectCachedSession);
-
   const isChachedSessionValid = useSelector(selectIsTokenValid);
 
   const retrieveSession = useCallback(async () => {
     if (!redirectToken) {
+      return navigate(APP_ROUTES.UNAUTHORIZED, {
+        state: {
+          status: redirectTokenError.status,
+        },
+      });
+    }
+
+    if (
+      cachedSession &&
+      cachedSession.redirectToken &&
+      redirectToken === cachedSession.redirectToken
+    ) {
+      if (isChachedSessionValid)
+        return navigate(
+          cachedSession.route === TEST_USERS.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
+        );
       return navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
           status: redirectTokenError.status,
@@ -56,7 +71,7 @@ export const useGetSession = () => {
       return;
     }
     if (data?.token) {
-      dispatch(authActions.setToken(data));
+      dispatch(authActions.setToken({ ...data, redirectToken }));
       //THIS LOGIC IS IN USE FOR TESTING ONLY - ROUTE MUST BE PASSED ONLY FOR TESTER USERS
       if (data?.route === TEST_USERS.USAGE) {
         navigate(APP_ROUTES.HOME);
