@@ -75,6 +75,9 @@ export const appApi = createApi({
     getVoucher: builder.query<GetVouchersResponseDTO, GetVouchersRequestQuery>({
       query: (year: string) => ({ url: 'vouchers', method: 'GET', params: { year } }),
     }),
+    getAllVoucher: builder.query<GetVouchersResponseDTO, void>({
+      ...API_DASHBOARD.getAllVouchers,
+    }),
     createVoucher: builder.mutation<CreateVoucherResponseDTO, CreateVoucherRequestDTO>({
       query: (voucher: CreateVoucherRequestDTO) => ({
         url: '/vouchers',
@@ -108,4 +111,6 @@ export const {
   useGetVoucherQuery,
   useCreateVoucherMutation,
   useDeleteVoucherMutation,
+  useGetAllVoucherQuery,
+  useLazyGetAllVoucherQuery,
 } = appApi;
