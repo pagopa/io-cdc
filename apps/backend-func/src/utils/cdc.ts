@@ -426,6 +426,12 @@ const getCdcVouchersTE =
                 () => new Error("Undefined cdc vouchers list"),
               ),
               TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
+              TE.map((vouchers) =>
+                // we do not want to see cancelled vouchers
+                vouchers.filter(
+                  (v) => v.voucher_status !== Voucher_statusEnum.CANCELLED,
+                ),
+              ),
             ),
           ),
         ),
@@ -568,7 +574,7 @@ const getCdcVoucherTE =
 // CDC DELETE VOUCHER API
 const isCdcApiDeleteVoucherCallSuccess = (
   res: IResponseType<number, unknown, never>,
-): res is IResponseType<200, SimpleResponseBean, never> => res.status === 200;
+): res is IResponseType<200, undefined, never> => res.status === 200;
 
 const deleteCdcVoucherTE =
   (config: Config, env: CdcEnvironmentT) =>
@@ -605,22 +611,7 @@ const deleteCdcVoucherTE =
               ),
             )(response),
           ),
-          TE.map((successResponse) => successResponse.value),
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          TE.chain((result) =>
-            pipe(
-              result,
-              TE.fromPredicate(
-                (result) => result.codErrore === undefined,
-                () => new Error("Voucher error"),
-              ),
-              TE.map(
-                () =>
-                  // TODO: Fix values when the API will be exposed
-                  true,
-              ),
-            ),
-          ),
+          TE.map(() => true)
         ),
       ),
       TE.mapLeft((err) =>

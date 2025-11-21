@@ -148,10 +148,6 @@ paths:
       responses:
         "200":
           description: Tutto OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SimpleResponseBean"
         "400":
           description: Validazioni non superate
           content:
