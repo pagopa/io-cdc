@@ -20,11 +20,58 @@ export const getCdcCardsTEMock = vi.fn().mockReturnValue(
   ]),
 );
 
-export const getCdcVouchersTEMock = vi.fn().mockReturnValue(TE.of([]));
+export const getCdcVouchersTEMock = vi.fn().mockReturnValue(
+  TE.of([
+    {
+      amount: 5,
+      applicant: "SELF",
+      card_year: "2020",
+      expiration_date: "2026-12-30T23:00:00.000Z",
+      id: "code1",
+      voucher_status: "PENDING",
+    },
+    {
+      amount: 5,
+      applicant: "SELF",
+      card_year: "2020",
+      expiration_date: "2026-12-30T23:00:00.000Z",
+      id: "code2",
+      voucher_status: "PENDING",
+    },
+    {
+      amount: 5,
+      applicant: "SELF",
+      card_year: "2020",
+      expiration_date: "2026-12-30T23:00:00.000Z",
+      id: "code3",
+      merchant: "DITTA INDIVIDUALE MARCUCCI STEFANO",
+      spending_date: "2026-01-30T23:00:00.000Z",
+      voucher_status: "USED",
+    },
+  ]),
+);
 
-export const postCdcVouchersMock = vi.fn().mockReturnValue(TE.of({}));
+export const postCdcVouchersMock = vi.fn().mockReturnValue(
+  TE.of({
+    amount: 5,
+    applicant: "SELF",
+    card_year: "2020",
+    expiration_date: "2026-12-30T23:00:00.000Z",
+    id: "code1",
+    voucher_status: "PENDING",
+  }),
+);
 
-export const getCdcVoucherTEMock = vi.fn().mockReturnValue(TE.of({}));
+export const getCdcVoucherTEMock = vi.fn().mockReturnValue(
+  TE.of({
+    amount: 5,
+    applicant: "SELF",
+    card_year: "2020",
+    expiration_date: "2026-12-30T23:00:00.000Z",
+    id: "code1",
+    voucher_status: "PENDING",
+  }),
+);
 
 export const deleteCdcVoucherTEMock = vi.fn().mockReturnValue(TE.of(true));
 
