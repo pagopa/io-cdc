@@ -16,8 +16,6 @@ import { getSession, getVouchers } from "../get-vouchers.js";
 
 const redisClientFactoryMock = getRedisClientFactoryMock();
 const config = {
-  CDC_USAGE_END_DATE: "2026-12-31T22:59:59.999Z",
-  CDC_USAGE_START_DATE: "2025-12-16T11:00:00.000Z",
   TEST_USERS: "",
 } as unknown as Config;
 const deps = {
