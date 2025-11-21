@@ -32,11 +32,11 @@ const Headers = t.type({
 });
 type Headers = t.TypeOf<typeof Headers>;
 
-const Query = t.type({
+const Body = t.type({
   amount: t.number,
   year: Year,
 });
-type Query = t.TypeOf<typeof Query>;
+type Body = t.TypeOf<typeof Body>;
 
 export const getSession = (sessionToken: string) => (deps: Dependencies) =>
   pipe(
@@ -45,7 +45,7 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
   );
 
 export const postVouchers =
-  (user: Session, voucher: Query) => (deps: Dependencies) =>
+  (user: Session, voucher: Body) => (deps: Dependencies) =>
     pipe(
       deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
       (cdcClient) =>
@@ -73,7 +73,7 @@ export const makePostVouchersHandler: H.Handler<
     RTE.chain(({ token }) => getSession(token)),
     RTE.chainW((user) =>
       pipe(
-        withParams(Query, req.query),
+        withParams(Body, req.body),
         RTE.mapLeft(errorToValidationError),
         RTE.map((voucher) => ({ user, voucher })),
       ),

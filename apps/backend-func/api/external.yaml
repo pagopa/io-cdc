@@ -463,7 +463,7 @@ components:
         voucher_status:
           type: string
           description: Status of the voucher (e.g., active, used, expired)
-          enum: ["PENDING", "USED", "EXPIRED", "REFUNDED"]
+          enum: ["PENDING", "USED", "EXPIRED", "REFUNDED", "CANCELLED"]
           example: "PENDING"
         card_year:
           type: string

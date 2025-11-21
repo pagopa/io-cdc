@@ -32,7 +32,7 @@ const Headers = t.type({
 });
 type Headers = t.TypeOf<typeof Headers>;
 
-const Query = t.type({
+const Query = t.partial({
   year: Year,
 });
 type Query = t.TypeOf<typeof Query>;
@@ -44,7 +44,7 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
   );
 
 export const getVouchers =
-  (user: Session, year: string) => (deps: Dependencies) =>
+  (user: Session, year?: string) => (deps: Dependencies) =>
     pipe(
       deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
       (cdcClient) =>
