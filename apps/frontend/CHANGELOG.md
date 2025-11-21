@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.6
+
+### Patch Changes
+
+- aeaa11f: Fix api calls for vouchers per year and all
+
 ## 1.1.5
 
 ### Patch Changes
