@@ -148,10 +148,6 @@ paths:
       responses:
         "200":
           description: Tutto OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SimpleResponseBean"
         "400":
           description: Validazioni non superate
           content:
@@ -164,7 +160,7 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
-  /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/{annoRif}:
+  "/CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/":
     get:
       tags:
         - utilizzo
@@ -176,8 +172,7 @@ paths:
         - JwtAuth: []
       parameters:
         - name: annoRif
-          in: path
-          required: true
+          in: query
           schema:
             type: string
       responses:
@@ -366,26 +361,17 @@ components:
         idBene:
           type: integer
           format: int64
+          enum:
+            - 7
+            - 8
+            - 9
+      required:
+        - anno
+        - importo
+        - idBene
     VoucherBeanDetails:
       type: object
       properties:
-        codErrore:
-          type: string
-        descrErrore:
-          type: string
-        status:
-          type: string
-          enum:
-            - NO_INPUT
-            - ANNI_RIFERIMENTO_NON_FORNITI
-            - LISTA_ANNI_VUOTA
-            - FORMATO_ANNI_ERRATO
-            - INPUT_SUPERIORE_AL_CONSENTITO
-        msgERRProcedura:
-          type: string
-        codErrProcedura:
-          type: integer
-          format: int32
         annoRif:
           type: string
         codVoucher:
@@ -396,6 +382,13 @@ components:
           type: number
         stato:
           type: string
+          enum:
+            - INVIATO A CONSAP
+            - INSERITO
+            - SCADUTO
+            - UTILIZZATO
+            - CANCELLATO
+            - PREVALIDATO
         richiedente:
           type: string
         esercente:
@@ -439,6 +432,16 @@ components:
           type: string
         codeLine:
           type: string
+      required:
+        - annoRif
+        - cfBeneficiario
+        - codVoucher
+        - importoRichiesto
+        - dataScadenza
+        - codeLine
+        - qr
+        - richiedente
+        - stato
     RimborsoBean:
       type: object
       properties:

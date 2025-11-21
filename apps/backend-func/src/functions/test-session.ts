@@ -54,7 +54,7 @@ export const getSessionToken =
                 // bind one time session id to session token
                 setWithExpirationTask(
                   deps.redisClientFactory,
-                  sessionId,
+                  `session-${sessionId}`,
                   sessionToken,
                   60,
                 ),

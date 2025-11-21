@@ -18,7 +18,10 @@ import { ListVoucherDetails } from "../generated/cdc-api/ListVoucherDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import { SimpleResponseBean } from "../generated/cdc-api/SimpleResponseBean.js";
-import { VoucherBeanDetails } from "../generated/cdc-api/VoucherBeanDetails.js";
+import {
+  StatoEnum,
+  VoucherBeanDetails,
+} from "../generated/cdc-api/VoucherBeanDetails.js";
 import {
   ApplicantEnum,
   Refund_statusEnum,
@@ -332,33 +335,50 @@ const isCdcApiGetVouchersCallSuccess = (
 ): res is IResponseType<200, ListVoucherDetails, never> => res.status === 200;
 
 const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
-  amount: v.importoRichiesto || 0,
+  amount: v.importoRichiesto,
   applicant:
     v.richiedente === "SELF" ? ApplicantEnum.SELF : ApplicantEnum.FAMILY_MEMBER,
-  card_year: v.annoRif || "",
+  card_year: v.annoRif,
   expiration_date: v.dataScadenza
     ? new Date(v.dataScadenza)
     : new Date(config.CDC_CARDS_EXPIRATION_DATE),
-  id: v.codVoucher || "",
+  id: v.codVoucher,
   refund:
-    v.rimborso!.importoDaRiaccreditare! > 0
+    v.rimborso &&
+    v.rimborso.importoDaRiaccreditare &&
+    v.rimborso.importoDaRiaccreditare > 0
       ? {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          amount: v.rimborso!.importoDaRiaccreditare || 0,
-          refund_status: v.rimborso!.stato
+          amount: v.rimborso.importoDaRiaccreditare,
+          refund_status: v.rimborso.stato // TODO: Fix by requesting refund state enum
             ? Refund_statusEnum.COMPLETED
             : Refund_statusEnum.PENDING,
         }
       : undefined,
-  voucher_status:
-    v.stato === "INSERITO"
-      ? Voucher_statusEnum.PENDING
-      : Voucher_statusEnum.USED,
+  merchant: v.esercente || undefined,
+  voucher_status: mapVoucherStatus(v.stato),
+  spending_date: v.dataConferma ? new Date(v.dataConferma) : undefined,
 });
+
+const mapVoucherStatus = (status: StatoEnum): Voucher_statusEnum => {
+  switch (status) {
+    case StatoEnum.INSERITO:
+      return Voucher_statusEnum.PENDING;
+    case StatoEnum.PREVALIDATO:
+    case StatoEnum["INVIATO A CONSAP"]:
+    case StatoEnum.UTILIZZATO:
+      return Voucher_statusEnum.USED;
+    case StatoEnum.CANCELLATO:
+      return Voucher_statusEnum.CANCELLED;
+    case StatoEnum.SCADUTO:
+      return Voucher_statusEnum.EXPIRED;
+    default:
+      return Voucher_statusEnum.PENDING;
+  }
+};
 
 const getCdcVouchersTE =
   (config: Config, env: CdcEnvironmentT) =>
-  (user: CdcApiUserData, year: string) =>
+  (user: CdcApiUserData, year?: string) =>
     pipe(
       getJwtTE(config, env, user),
       TE.chain((jwt) =>
@@ -366,7 +386,8 @@ const getCdcVouchersTE =
           TE.of(getCdcClient(config, env)(jwt)),
           TE.chain((client) =>
             TE.tryCatch(
-              async () => await client.getListaVoucher({ annoRif: year }),
+              async () =>
+                await client.getListaVoucher(year ? { annoRif: year } : {}),
               E.toError,
             ),
           ),
@@ -405,6 +426,12 @@ const getCdcVouchersTE =
                 () => new Error("Undefined cdc vouchers list"),
               ),
               TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
+              TE.map((vouchers) =>
+                // we do not want to see cancelled vouchers
+                vouchers.filter(
+                  (v) => v.voucher_status !== Voucher_statusEnum.CANCELLED,
+                ),
+              ),
             ),
           ),
         ),
@@ -435,7 +462,7 @@ const postCdcVouchersTE =
             TE.tryCatch(
               async () =>
                 await client.generaVoucher({
-                  body: { anno: year, idBene: 0, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO
+                  body: { anno: year, idBene: 7, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO
                 }),
               E.toError,
             ),
@@ -464,8 +491,8 @@ const postCdcVouchersTE =
             pipe(
               voucher,
               TE.fromPredicate(
-                (voucher) => voucher.codErrore === undefined,
-                () => new Error("Voucher error"),
+                (voucher) => voucher.codVoucher !== undefined,
+                () => new Error("Invalid Voucher Error"),
               ),
               TE.map((v) => mapVoucher(config, v)),
             ),
@@ -527,8 +554,8 @@ const getCdcVoucherTE =
             pipe(
               voucher,
               TE.fromPredicate(
-                (voucher) => voucher.codErrore === undefined,
-                () => new Error("Voucher error"),
+                (voucher) => voucher.codVoucher !== undefined,
+                () => new Error("Invalid Voucher Error"),
               ),
               TE.map((v) => mapVoucher(config, v)),
             ),
@@ -547,7 +574,7 @@ const getCdcVoucherTE =
 // CDC DELETE VOUCHER API
 const isCdcApiDeleteVoucherCallSuccess = (
   res: IResponseType<number, unknown, never>,
-): res is IResponseType<200, SimpleResponseBean, never> => res.status === 200;
+): res is IResponseType<200, undefined, never> => res.status === 200;
 
 const deleteCdcVoucherTE =
   (config: Config, env: CdcEnvironmentT) =>
@@ -584,22 +611,7 @@ const deleteCdcVoucherTE =
               ),
             )(response),
           ),
-          TE.map((successResponse) => successResponse.value),
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          TE.chain((result) =>
-            pipe(
-              result,
-              TE.fromPredicate(
-                (result) => result.codErrore === undefined,
-                () => new Error("Voucher error"),
-              ),
-              TE.map(
-                () =>
-                  // TODO: Fix values when the API will be exposed
-                  true,
-              ),
-            ),
-          ),
+          TE.map(() => true)
         ),
       ),
       TE.mapLeft((err) =>

@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.4
+
+### Patch Changes
+
+- 1a46c84: fixed apis
+
 ## 1.1.3
 
 ### Patch Changes
