@@ -57,8 +57,8 @@ No requirements.
 | <a name="input_cosmosdb_cdc_uri"></a> [cosmosdb\_cdc\_uri](#input\_cosmosdb\_cdc\_uri) | Connection uri for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain | `string` | n/a | yes |
 | <a name="input_encoding_encryption"></a> [encoding\_encryption](#input\_encoding\_encryption) | Encryption's encoding | `string` | n/a | yes |
-| <a name="input_encryption_private_key"></a> [encryption\_private\_key](#input\_encryption\_private\_key) | Encryption private key | `string` | n/a | yes |
 | <a name="input_encryption_public_key"></a> [encryption\_public\_key](#input\_encryption\_public\_key) | Encryption public key | `string` | n/a | yes |
+| <a name="input_encryption_public_key_test"></a> [encryption\_public\_key\_test](#input\_encryption\_public\_key\_test) | Encryption public key test | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | Short environment | `string` | n/a | yes |
 | <a name="input_fims_client_id"></a> [fims\_client\_id](#input\_fims\_client\_id) | FIMS client id | `string` | n/a | yes |
 | <a name="input_fims_client_secret"></a> [fims\_client\_secret](#input\_fims\_client\_secret) | FIMS client secret | `string` | n/a | yes |
@@ -70,7 +70,7 @@ No requirements.
 | <a name="input_jwt_expiration"></a> [jwt\_expiration](#input\_jwt\_expiration) | JWT expiration | `string` | n/a | yes |
 | <a name="input_jwt_issuer"></a> [jwt\_issuer](#input\_jwt\_issuer) | JWT issuer | `string` | n/a | yes |
 | <a name="input_jwt_private_key"></a> [jwt\_private\_key](#input\_jwt\_private\_key) | JWT private key | `string` | n/a | yes |
-| <a name="input_jwt_public_key"></a> [jwt\_public\_key](#input\_jwt\_public\_key) | JWT public key | `string` | n/a | yes |
+| <a name="input_jwt_private_key_test"></a> [jwt\_private\_key\_test](#input\_jwt\_private\_key\_test) | JWT private key test | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Azure region | `string` | n/a | yes |
 | <a name="input_nat_gateway_id"></a> [nat\_gateway\_id](#input\_nat\_gateway\_id) | The ID of the NAT Gateway | `string` | n/a | yes |
 | <a name="input_pagopa_idp_keys_base_url"></a> [pagopa\_idp\_keys\_base\_url](#input\_pagopa\_idp\_keys\_base\_url) | The base url to get idp keys | `string` | n/a | yes |
@@ -87,6 +87,7 @@ No requirements.
 | <a name="input_storage_account_queue_uri"></a> [storage\_account\_queue\_uri](#input\_storage\_account\_queue\_uri) | Storage account queue host | `string` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | A predefined subnet id | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Resource tags | `map(any)` | n/a | yes |
+| <a name="input_test_users"></a> [test\_users](#input\_test\_users) | List of test users | `string` | n/a | yes |
 | <a name="input_virtual_network"></a> [virtual\_network](#input\_virtual\_network) | Virtual network to create subnet in | <pre>object({<br/>    name                = string<br/>    resource_group_name = string<br/>  })</pre> | n/a | yes |
 
 ## Outputs

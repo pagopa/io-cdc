@@ -4,6 +4,7 @@ import { CardRequest } from "../models/card_request.js";
 import { RequestAudit } from "../models/request_audit.js";
 
 export const aValidFiscalCode = "AAABBB00C00D000E" as FiscalCode;
+export const anotherValidFiscalCode = "AAABBB00C00D000F" as FiscalCode;
 export const aValidFirstName = "Aname" as NonEmptyString;
 export const aValidLastName = "Asurname" as NonEmptyString;
 

@@ -15,7 +15,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cdc_fe_cdn"></a> [cdc\_fe\_cdn](#module\_cdc\_fe\_cdn) | pagopa-dx/azure-cdn/azurerm | 0.2.0 |
+| <a name="module_cdc_fe_cdn"></a> [cdc\_fe\_cdn](#module\_cdc\_fe\_cdn) | pagopa-dx/azure-cdn/azurerm | 0.3.2 |
 
 ## Resources
 

@@ -9,7 +9,7 @@ import * as t from "io-ts";
 import { Config } from "../config.js";
 import { CitizenStatus } from "../generated/definitions/internal/CitizenStatus.js";
 import { withParams } from "../middlewares/withParams.js";
-import { CdcUtils } from "../utils/cdc.js";
+import { CdcClientEnvironmentRouter } from "../utils/env_router.js";
 import {
   errorToInternalError,
   errorToNotFoundError,
@@ -18,7 +18,7 @@ import {
 } from "../utils/errors.js";
 
 interface Dependencies {
-  cdcUtils: CdcUtils;
+  cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
   config: Config;
 }
 
@@ -30,11 +30,13 @@ type Body = t.TypeOf<typeof Body>;
 export const getCitizenStatus =
   (fiscalCode: FiscalCode) => (deps: Dependencies) =>
     pipe(
-      deps.cdcUtils.getAlreadyRequestedYearsCdcTE({
-        first_name: "anyfirstname" as NonEmptyString, // we do not know first name here, GET will still work
-        fiscal_code: fiscalCode,
-        last_name: "anylastname" as NonEmptyString, // we do not know last name here, GET will still work
-      }),
+      deps.cdcClientEnvironmentRouter.getClient(fiscalCode),
+      (cdcUtils) =>
+        cdcUtils.getAlreadyRequestedYearsCdcTE({
+          first_name: "anyfirstname" as NonEmptyString, // we do not know first name here, GET will still work
+          fiscal_code: fiscalCode,
+          last_name: "anylastname" as NonEmptyString, // we do not know last name here, GET will still work
+        }),
       TE.mapLeft(errorToInternalError),
       TE.chainW((cardRequests) =>
         pipe(

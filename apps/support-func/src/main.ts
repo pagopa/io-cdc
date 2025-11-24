@@ -5,8 +5,8 @@ import { getConfigOrThrow } from "./config.js";
 import { InfoFn } from "./functions/info.js";
 import { RequestsFn } from "./functions/requests.js";
 import { StatusFn } from "./functions/status.js";
-import { CdcEnvironment, CdcUtils } from "./utils/cdc.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
+import { CdcClientEnvironmentRouter } from "./utils/env_router.js";
 
 registerAzureFunctionHooks(app);
 
@@ -20,7 +20,7 @@ const cosmosDbClient = getCosmosDbClientInstance(
 );
 
 // CdC utils
-const cdcUtils = CdcUtils(config, CdcEnvironment.TEST);
+const cdcClientEnvironmentRouter = new CdcClientEnvironmentRouter(config);
 
 const Info = InfoFn({ config });
 app.http("Info", {
@@ -31,7 +31,7 @@ app.http("Info", {
 });
 
 const Status = StatusFn({
-  cdcUtils,
+  cdcClientEnvironmentRouter,
   config,
 });
 app.http("Status", {
