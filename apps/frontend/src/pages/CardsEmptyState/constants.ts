@@ -7,9 +7,9 @@ type CardsEmptyConfig = {
 };
 
 export const CARDS_EMPTY_STATE_CONFIG: CardsEmptyConfig = {
-  icon: 'timeout',
-  title: 'Non hai carte associate per il servizio Carta della Cultura',
-  subTitle: undefined,
+  icon: 'emptyCard',
+  title: 'Carta della Cultura non è disponibile per il tuo profilo',
+  subTitle: 'La tua richiesta non è stata accolta o non risultano richieste per il tuo profilo',
   //   trackProperties: {
   //     name: 'CDC_BONUS_SHOW_DETAIL_ERROR',
   //     properties: {

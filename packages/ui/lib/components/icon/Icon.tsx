@@ -9,6 +9,7 @@ import IconChevronRight from "./svg/IconChevronRight";
 import IconClose from "./svg/IconClose";
 import IconCloseCircle from "./svg/IconCloseCircle";
 import IconCopy from "./svg/IconCopy";
+import IconEmptyCard from "./svg/IconEmptyCard";
 import IconEnte from "./svg/IconEnte";
 import IconError from "./svg/IconError";
 import IconEuro from "./svg/IconEuro";
@@ -40,6 +41,7 @@ export const Icons = {
   closeCircle: IconCloseCircle,
   copy: IconCopy,
   document: IconMasked,
+  emptyCard: IconEmptyCard,
   ente: IconEnte,
   error: IconError,
   euro: IconEuro,
