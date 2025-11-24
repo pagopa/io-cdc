@@ -44,6 +44,9 @@ module "support_func" {
   algorithm_encryption = data.azurerm_key_vault_secret.algorithm_encryption.value
   encoding_encryption  = data.azurerm_key_vault_secret.encoding_encryption.value
 
+  test_users = data.azurerm_key_vault_secret.test_users.value
+
+
   nat_gateway_id = data.azurerm_nat_gateway.itn_ng.id
 
   action_group_id = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id

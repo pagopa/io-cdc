@@ -135,6 +135,7 @@ export enum CdcEnvironment {
 export type CdcEnvironmentT = keyof typeof CdcEnvironment;
 
 export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
+  env,
   getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
 });
 export type CdcUtils = ReturnType<typeof CdcUtils>;

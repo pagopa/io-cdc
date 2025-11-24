@@ -44,6 +44,8 @@ export const Config = t.type({
   JWT_PRIVATE_KEY: NonEmptyString,
   JWT_PRIVATE_KEY_TEST: NonEmptyString,
 
+  TEST_USERS: NonEmptyString,
+
   isProduction: t.boolean,
 });
 

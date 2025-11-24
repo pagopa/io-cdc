@@ -185,3 +185,9 @@ variable "action_group_id" {
   description = "The action group id for alerts"
   sensitive   = true
 }
+
+variable "test_users" {
+  type        = string
+  description = "List of test users"
+  sensitive   = true
+}

@@ -34,6 +34,9 @@ locals {
       ALGORITHM_ENCRYPTION = var.algorithm_encryption
       ENCODING_ENCRYPTION  = var.encoding_encryption
 
+      // TESTING
+      TEST_USERS = var.test_users
+
       // Keepalive fields are all optionals
       FETCH_KEEPALIVE_ENABLED             = "true"
       FETCH_KEEPALIVE_SOCKET_ACTIVE_TTL   = "110000"

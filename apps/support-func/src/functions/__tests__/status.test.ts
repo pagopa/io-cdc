@@ -3,7 +3,7 @@ import * as TE from "fp-ts/lib/TaskEither.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  CdcUtilsMock,
+  CdcClientEnvironmentRouterMock,
   getAlreadyRequestedYearsCdcTEMock,
 } from "../../__mocks__/cdc.mock.js";
 import { aValidFiscalCode } from "../../__mocks__/types.mock.js";
@@ -22,7 +22,7 @@ describe("status | getCitizenStatus", () => {
 
   it("1. should return 404 if cosmos succeeds with no items", async () => {
     const res = await getCitizenStatus(aValidFiscalCode)({
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
     })();
     expect(E.isLeft(res)).toBe(true);
@@ -35,7 +35,7 @@ describe("status | getCitizenStatus", () => {
       TE.of(["2020", "2021", "2022"]),
     );
     const res = await getCitizenStatus(aValidFiscalCode)({
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
     })();
     expect(E.isRight(res)).toBe(true);
@@ -51,7 +51,7 @@ describe("status | getCitizenStatus", () => {
       TE.left(new Error("Error")),
     );
     const res = await getCitizenStatus(aValidFiscalCode)({
-      cdcUtils: CdcUtilsMock,
+      cdcClientEnvironmentRouter: CdcClientEnvironmentRouterMock,
       config,
     })();
     expect(E.isLeft(res)).toBe(true);
