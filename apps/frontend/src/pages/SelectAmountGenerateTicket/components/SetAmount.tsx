@@ -7,11 +7,10 @@ type SetAmountProps = {
   amount?: number;
   error: boolean;
   reset: () => void;
-  // balance: number;
-  // required: boolean;
+  helperText: string | null;
 };
 
-export const SetAmount = ({ amount, error, reset /*, required, balance, */ }: SetAmountProps) => {
+export const SetAmount = ({ amount, error, reset, helperText }: SetAmountProps) => {
   const dispatch = useDispatch();
 
   const onChange = useCallback(
@@ -37,7 +36,7 @@ export const SetAmount = ({ amount, error, reset /*, required, balance, */ }: Se
       label="Importo"
       margin="normal"
       error={error}
-      // helperText={helperText}
+      helperText={helperText}
     />
   );
 };

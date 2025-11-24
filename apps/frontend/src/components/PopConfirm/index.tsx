@@ -30,8 +30,10 @@ export const PopConfirm = ({
   onOpen,
 }: PopConfirmProps) => {
   useEffect(() => {
-    onOpen?.();
-  }, [onOpen]);
+    if (isOpen) {
+      onOpen?.();
+    }
+  }, [isOpen, onOpen]);
   return (
     <Dialog
       open={isOpen}
