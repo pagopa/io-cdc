@@ -63,8 +63,7 @@ const SelectAmountGenerateTicket = () => {
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
     await createBonus({ year: selectedCard?.year!, amount: amount ?? 0 });
     dispatch(ticketsActions.resetForm());
-    navigate(APP_ROUTES.HOME);
-  }, [amount, createBonus, dispatch, navigate, required, selectedCard]);
+  }, [amount, createBonus, dispatch, required, selectedCard]);
 
   const onResetField = useCallback(() => {
     setHelperText(null);

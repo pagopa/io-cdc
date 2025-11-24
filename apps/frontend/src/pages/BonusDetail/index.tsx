@@ -192,7 +192,7 @@ const BonusDetail = () => {
               Annulla il buono
             </Typography>
           </Button>
-          <Footer code={voucherDetail.id} />
+          <Footer code={voucherDetail.id} isGenerated={state?.generating} />
         </>
       )}
 
