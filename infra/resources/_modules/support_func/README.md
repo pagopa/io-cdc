@@ -38,15 +38,15 @@ No resources.
 | <a name="input_cosmosdb_cdc_uri"></a> [cosmosdb\_cdc\_uri](#input\_cosmosdb\_cdc\_uri) | Connection uri for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain | `string` | n/a | yes |
 | <a name="input_encoding_encryption"></a> [encoding\_encryption](#input\_encoding\_encryption) | Encryption's encoding | `string` | n/a | yes |
-| <a name="input_encryption_private_key"></a> [encryption\_private\_key](#input\_encryption\_private\_key) | Encryption private key | `string` | n/a | yes |
 | <a name="input_encryption_public_key"></a> [encryption\_public\_key](#input\_encryption\_public\_key) | Encryption public key | `string` | n/a | yes |
+| <a name="input_encryption_public_key_test"></a> [encryption\_public\_key\_test](#input\_encryption\_public\_key\_test) | Encryption public key for test | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | Short environment | `string` | n/a | yes |
 | <a name="input_instance_number"></a> [instance\_number](#input\_instance\_number) | The istance number to create | `string` | n/a | yes |
 | <a name="input_jwt_audience"></a> [jwt\_audience](#input\_jwt\_audience) | JWT audience | `string` | n/a | yes |
 | <a name="input_jwt_expiration"></a> [jwt\_expiration](#input\_jwt\_expiration) | JWT expiration | `string` | n/a | yes |
 | <a name="input_jwt_issuer"></a> [jwt\_issuer](#input\_jwt\_issuer) | JWT issuer | `string` | n/a | yes |
 | <a name="input_jwt_private_key"></a> [jwt\_private\_key](#input\_jwt\_private\_key) | JWT private key | `string` | n/a | yes |
-| <a name="input_jwt_public_key"></a> [jwt\_public\_key](#input\_jwt\_public\_key) | JWT public key | `string` | n/a | yes |
+| <a name="input_jwt_private_key_test"></a> [jwt\_private\_key\_test](#input\_jwt\_private\_key\_test) | JWT private key for test | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Azure region | `string` | n/a | yes |
 | <a name="input_nat_gateway_id"></a> [nat\_gateway\_id](#input\_nat\_gateway\_id) | The ID of the NAT Gateway | `string` | n/a | yes |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | IO Prefix | `string` | n/a | yes |
@@ -56,6 +56,7 @@ No resources.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of the resource group where resources will be created | `string` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | A predefined subnet id | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Resource tags | `map(any)` | n/a | yes |
+| <a name="input_test_users"></a> [test\_users](#input\_test\_users) | List of test users | `string` | n/a | yes |
 | <a name="input_virtual_network"></a> [virtual\_network](#input\_virtual\_network) | Virtual network to create subnet in | <pre>object({<br/>    name                = string<br/>    resource_group_name = string<br/>  })</pre> | n/a | yes |
 
 ## Outputs

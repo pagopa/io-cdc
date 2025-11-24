@@ -18,12 +18,12 @@ locals {
       CDC_CARDS_EXPIRATION_DATE = "2026-12-31T23:00:00Z"
 
       // JWT
-      JWT_PRIVATE_KEY = var.jwt_private_key
+      JWT_PRIVATE_KEY      = var.jwt_private_key
       JWT_PRIVATE_KEY_TEST = var.jwt_private_key_test
 
       // ENCRYPTION
-      ENCRYPTION_PUBLIC_KEY  = var.encryption_public_key
-      ENCRYPTION_PUBLIC_KEY_TEST  = var.encryption_public_key_test
+      ENCRYPTION_PUBLIC_KEY      = var.encryption_public_key
+      ENCRYPTION_PUBLIC_KEY_TEST = var.encryption_public_key_test
 
       // JWT AND ENCRYPTION CONFIG
       JWT_ISSUER           = var.jwt_issuer

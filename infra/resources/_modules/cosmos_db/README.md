@@ -15,7 +15,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cdc_cosmos_account"></a> [cdc\_cosmos\_account](#module\_cdc\_cosmos\_account) | pagopa-dx/azure-cosmos-account/azurerm | ~> 0.0 |
+| <a name="module_cdc_cosmos_account"></a> [cdc\_cosmos\_account](#module\_cdc\_cosmos\_account) | pagopa-dx/azure-cosmos-account/azurerm | 0.2.0 |
 
 ## Resources
 
