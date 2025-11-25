@@ -12,7 +12,6 @@ import { APP_ROUTES } from '../../routes/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/app/reducers';
-import { useToast } from '../../contexts';
 import { theme } from '@io-cdc/ui';
 import { useRouteGuard } from '../../hooks';
 
@@ -20,11 +19,11 @@ const SelectAmountGenerateTicket = () => {
   //TODO test only
   useRouteGuard();
 
-  const { showToast } = useToast();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [error, setError] = useState(false);
+  const [helperText, setHelperText] = useState<string | null>(null);
 
   const [
     createBonus,
@@ -57,27 +56,19 @@ const SelectAmountGenerateTicket = () => {
         selectedCard?.residual_amount < Number(amount)
           ? 'L’ importo è superiore al credito disponibile'
           : 'Inserisci un importo';
-      showToast({
-        message: helperText,
-        messageType: 'error',
-      });
+      setHelperText(helperText);
       setError(true);
       return;
     }
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
     await createBonus({ year: selectedCard?.year!, amount: amount ?? 0 });
     dispatch(ticketsActions.resetForm());
-    navigate(APP_ROUTES.HOME);
-  }, [
-    amount,
-    createBonus,
-    dispatch,
-    navigate,
-    required,
-    selectedCard?.residual_amount,
-    selectedCard?.year,
-    showToast,
-  ]);
+  }, [amount, createBonus, dispatch, required, selectedCard]);
+
+  const onResetField = useCallback(() => {
+    setHelperText(null);
+    setError(false);
+  }, []);
 
   useEffect(() => {
     trackWebviewEvent('CDC_BONUS_AMOUNT_INSERT');
@@ -112,7 +103,7 @@ const SelectAmountGenerateTicket = () => {
             </Typography>
           </Stack>
           <Stack>
-            <SetAmount amount={amount} error={error} reset={() => setError(false)} />
+            <SetAmount amount={amount} error={error} helperText={helperText} reset={onResetField} />
           </Stack>
         </Stack>
         <Stack width="100%" justifySelf="end">
