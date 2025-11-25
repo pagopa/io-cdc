@@ -1,5 +1,13 @@
 # frontend
 
+## 1.1.8
+
+### Patch Changes
+
+- 6126461: Add pictogram and align no card page
+- Updated dependencies [6126461]
+  - @io-cdc/ui@1.0.3
+
 ## 1.1.7
 
 ### Patch Changes

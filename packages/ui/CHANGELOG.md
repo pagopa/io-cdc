@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.3
+
+### Patch Changes
+
+- 6126461: Add pictogram and align no card page
+
 ## 1.0.2
 
 ### Patch Changes
