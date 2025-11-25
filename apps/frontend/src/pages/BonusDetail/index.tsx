@@ -56,6 +56,10 @@ const BonusDetail = () => {
 
   const chipConfig = useMemo(() => getChipConfig(refund, spent), [refund, spent]);
 
+  const showDeleteModal = useCallback(() => {
+    trackWebviewEvent('CDC_BONUS_CANCELLATION');
+  }, []);
+
   const onClickDeleteBonus = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_CANCEL');
     setIsDialogOpen(true);
@@ -116,15 +120,13 @@ const BonusDetail = () => {
 
   const formattedDetailDate = detailDate.toLocaleDateString('it-IT', {
     day: 'numeric',
-    month: 'short',
+    month: '2-digit',
     year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
   });
 
   return (
     <Stack p={3} gap={3}>
-      <Header onBack={() => navigate(-1)} />
+      {!state?.generating && <Header onBack={() => navigate(-1)} />}
 
       <Stack>
         <Stack gap={2} mb={1}>
@@ -190,13 +192,13 @@ const BonusDetail = () => {
               Annulla il buono
             </Typography>
           </Button>
-          <Footer code={voucherDetail.id} />
+          <Footer code={voucherDetail.id} isGenerated={state?.generating} />
         </>
       )}
 
       <PopConfirm
         isOpen={isDialogOpen}
-        onOpen={() => trackWebviewEvent('CDC_BONUS_CANCELLATION')}
+        onOpen={showDeleteModal}
         description="Se prosegui, l’importo del buono tornerà disponibile"
         title="Vuoi davvero annullare il buono?"
         buttonConfirm={{

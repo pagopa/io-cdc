@@ -63,7 +63,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (!cards) return;
+    if (!cards.length) return;
     trackWebviewEvent('CDC_CARD_DETAIL');
   }, [cards]);
 
