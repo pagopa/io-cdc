@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.7
+
+### Patch Changes
+
+- 12ae358: Fixed some figma mismatch and some mixpanel events
+
 ## 1.1.6
 
 ### Patch Changes
