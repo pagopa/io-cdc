@@ -455,6 +455,7 @@ components:
         stato:
           type: string
           enum:
+            - ""
             - Nessuna Riconversione Rilevata
             - RICONVERSIONE IN CORSO
             - RICONVERSIONE RIFIUTATA
