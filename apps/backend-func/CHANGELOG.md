@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.6
+
+### Patch Changes
+
+- 56d4153: Fixed enums
+
 ## 1.1.5
 
 ### Patch Changes
