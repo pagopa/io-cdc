@@ -1,9 +1,10 @@
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { UseCodeSheet } from './UseCodeSheet';
 import { APP_ROUTES } from '../../../routes/appRoutes';
+import { theme } from '@io-cdc/ui';
 
 type FooterProps = {
   code: string;
@@ -27,7 +28,7 @@ export const Footer = ({ code, isGenerated }: FooterProps) => {
   }, [isGenerated, navigate]);
 
   return (
-    <>
+    <Stack position="sticky" bottom={0} sx={{ backgroundColor: theme.palette.background.paper }}>
       <Button variant="contained" onClick={onClickUseBonus}>
         Usa il buono
       </Button>
@@ -37,6 +38,6 @@ export const Footer = ({ code, isGenerated }: FooterProps) => {
       </Button>
 
       <UseCodeSheet code={code} isOpen={isOpen} onClose={() => setIsOpen(false)} />
-    </>
+    </Stack>
   );
 };
