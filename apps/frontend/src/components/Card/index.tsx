@@ -38,7 +38,7 @@ export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
             {`Carta della Cultura ${year}`}
           </Typography>
           <Typography fontWeight={400} fontSize={16} color="#17324D">
-            Ministero della cultura
+            Ministero della Cultura
           </Typography>
           <Typography
             color="#5C6F82"

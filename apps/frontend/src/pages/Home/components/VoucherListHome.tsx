@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectActiveCard } from '../../../features/app/selectors';
 import { EmptyVouchers } from '../../../components/VoucherList/EmptyVouchers';
 import { useGetVouchers } from '../../../hooks/useGetVouchers';
+import { Reminder } from './Reminder';
 
 type VoucherListHome = {
   onClickShowAll: () => void;
@@ -59,43 +60,13 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
   return (
     <>
       {vouchers && vouchers.length > 0 ? (
-        <Stack width="100%" gap={2} paddingTop={3}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography fontWeight={700} fontSize={14}>
-              BUONI DA SPENDERE
-            </Typography>
-            <Typography
-              fontSize={16}
-              fontWeight={600}
-              margin={0}
-              onClick={onClickShowAll}
-              sx={{
-                color: '#0073E6',
-                textDecoration: 'none',
-              }}
-            >
-              Mostra tutti
-            </Typography>
-          </Stack>
-          {toSpend.length ? (
-            toSpend.map((voucher, index, array) => (
-              <Stack gap={3} key={voucher.id} paddingTop={3}>
-                <VoucherCard
-                  voucher={voucher}
-                  spent={false}
-                  openSheet={() => setOpenSheet([true, false])}
-                />
-                {index !== array.length - 1 && <Divider />}
-              </Stack>
-            ))
-          ) : (
-            <EmptyVouchers />
-          )}
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Typography fontWeight={700} fontSize={14}>
-              BUONI SPESI
-            </Typography>
-            {spent.length ? (
+        <>
+          <Reminder />
+          <Stack width="100%" gap={2} paddingTop={3}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Typography fontWeight={700} fontSize={14}>
+                BUONI DA SPENDERE
+              </Typography>
               <Typography
                 fontSize={16}
                 fontWeight={600}
@@ -108,23 +79,56 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
               >
                 Mostra tutti
               </Typography>
-            ) : null}
+            </Stack>
+            {toSpend.length ? (
+              toSpend.map((voucher, index, array) => (
+                <Stack gap={3} key={voucher.id} paddingTop={3}>
+                  <VoucherCard
+                    voucher={voucher}
+                    spent={false}
+                    openSheet={() => setOpenSheet([true, false])}
+                  />
+                  {index !== array.length - 1 && <Divider />}
+                </Stack>
+              ))
+            ) : (
+              <EmptyVouchers />
+            )}
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Typography fontWeight={700} fontSize={14}>
+                BUONI SPESI
+              </Typography>
+              {spent.length ? (
+                <Typography
+                  fontSize={16}
+                  fontWeight={600}
+                  margin={0}
+                  onClick={onClickShowAll}
+                  sx={{
+                    color: '#0073E6',
+                    textDecoration: 'none',
+                  }}
+                >
+                  Mostra tutti
+                </Typography>
+              ) : null}
+            </Stack>
+            {spent.length ? (
+              spent.map((voucher, index, array) => (
+                <Stack gap={3} key={voucher.id} paddingTop={3}>
+                  <VoucherCard
+                    voucher={voucher}
+                    spent={true}
+                    openSheet={() => setOpenSheet([true, true])}
+                  />
+                  {index !== array.length - 1 && <Divider />}
+                </Stack>
+              ))
+            ) : (
+              <EmptyVouchers />
+            )}
           </Stack>
-          {spent.length ? (
-            spent.map((voucher, index, array) => (
-              <Stack gap={3} key={voucher.id} paddingTop={3}>
-                <VoucherCard
-                  voucher={voucher}
-                  spent={true}
-                  openSheet={() => setOpenSheet([true, true])}
-                />
-                {index !== array.length - 1 && <Divider />}
-              </Stack>
-            ))
-          ) : (
-            <EmptyVouchers />
-          )}
-        </Stack>
+        </>
       ) : (
         <Stack justifyContent="center" alignItems="center" py={4} gap={2}>
           <Typography fontWeight={600}>Genera un buono</Typography>

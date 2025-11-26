@@ -17,6 +17,7 @@ import { ticketsActions } from '../../features/app/reducers';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { getChipConfig } from './constants';
 import { useRouteGuard } from '../../hooks';
+import { formatDecimals } from '../../utils/formatDecimals';
 
 const BonusDetail = () => {
   //TODO test only
@@ -124,6 +125,14 @@ const BonusDetail = () => {
     year: 'numeric',
   });
 
+  const formattedMerchantDate = detailDate.toLocaleDateString('it-IT', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
     <Stack p={3} gap={3}>
       {!state?.generating && <Header onBack={() => navigate(-1)} />}
@@ -135,26 +144,26 @@ const BonusDetail = () => {
         </Stack>
       </Stack>
 
-      <Stack direction="row" gap={1}>
-        <Icon name="ticket" />
-        <Typography fontWeight={700}>DETTAGLI DEL BUONO</Typography>
+      <Stack direction="row" gap={1} alignItems="center">
+        <Icon name="ticket" sx={{ width: 24, height: 24 }} />
+        <Typography fontWeight={700} fontSize={14}>
+          DETTAGLI DEL BUONO
+        </Typography>
       </Stack>
 
-      <DetailItemWrapper
-        chip={!refund && <Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />}
-      >
+      <DetailItemWrapper chip={!refund && <Chip {...chipConfig} size="small" />}>
         <Typography color={theme.palette.text.secondary}>Importo</Typography>
         <Typography fontWeight={600} fontSize={18}>
-          {voucherDetail.amount.toFixed(2)} €
+          {formatDecimals(voucherDetail.amount)} €
         </Typography>
       </DetailItemWrapper>
 
       {voucherDetail.refund && (
         <>
-          <DetailItemWrapper chip={<Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />}>
+          <DetailItemWrapper chip={<Chip {...chipConfig} size="small" />}>
             <Typography color={theme.palette.text.secondary}>Da riaccreditare</Typography>
             <Typography fontWeight={600} fontSize={18}>
-              {voucherDetail.refund.amount.toFixed(2)} €
+              {formatDecimals(voucherDetail.refund.amount)} €
             </Typography>
           </DetailItemWrapper>
         </>
@@ -174,7 +183,7 @@ const BonusDetail = () => {
         </Typography>
       </DetailItemWrapper>
 
-      <MerchantDetail merchant={voucherDetail.merchant} usage_date={formattedDetailDate} />
+      <MerchantDetail merchant={voucherDetail.merchant} usage_date={formattedMerchantDate} />
 
       {pending && (
         <>
