@@ -6,6 +6,7 @@ import { VoucherItem } from '../../../features/app/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { getVoucherConfig } from './constants';
 import { formatDecimals } from '../../../utils/formatDecimals';
+import { ChipLabel } from '../../BonusDetail/components/ChipLabel';
 
 type VoucherCardProps =
   | {
@@ -71,7 +72,7 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
           </Typography>
         )}
         {voucher?.refund && voucher?.refund?.refund_status === 'PENDING' && (
-          <Chip label="IN CORSO" color="warning" size="small" sx={{ fontSize: 14 }} />
+          <Chip label={<ChipLabel>IN CORSO</ChipLabel>} color="warning" size="small" />
         )}
       </Stack>
     </Stack>

@@ -151,9 +151,7 @@ const BonusDetail = () => {
         </Typography>
       </Stack>
 
-      <DetailItemWrapper
-        chip={!refund && <Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />}
-      >
+      <DetailItemWrapper chip={!refund && <Chip {...chipConfig} size="small" />}>
         <Typography color={theme.palette.text.secondary}>Importo</Typography>
         <Typography fontWeight={600} fontSize={18}>
           {formatDecimals(voucherDetail.amount)} €
@@ -162,7 +160,7 @@ const BonusDetail = () => {
 
       {voucherDetail.refund && (
         <>
-          <DetailItemWrapper chip={<Chip {...chipConfig} size="small" sx={{ fontSize: 14 }} />}>
+          <DetailItemWrapper chip={<Chip {...chipConfig} size="small" />}>
             <Typography color={theme.palette.text.secondary}>Da riaccreditare</Typography>
             <Typography fontWeight={600} fontSize={18}>
               {formatDecimals(voucherDetail.refund.amount)} €
