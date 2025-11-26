@@ -17,7 +17,13 @@ export const Card = ({ residual_amount, expiration_date, year }: CardType) => {
       <Stack sx={{ bgcolor: '#F1ECE6' }}>
         <Stack direction="row" justifyContent="flex-end" gap={2} padding={'16px'}>
           <IconButton
-            onClick={() => window.location.replace(import.meta.env.VITE_HELP_CARTA_DELLA_CULTURA)}
+            onClick={() =>
+              window.open(
+                import.meta.env.VITE_HELP_CARTA_DELLA_CULTURA,
+                '_blank',
+                'noopener,noreferrer',
+              )
+            }
             sx={ICON_STYLE_RESET}
           >
             <Icon name="help" />

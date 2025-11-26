@@ -59,7 +59,7 @@ const Home = () => {
 
   const onClickBRetailers = useCallback(() => {
     trackWebviewEvent('CDC_CARD_SHOW_RETAILERS');
-    window.location.replace(import.meta.env.VITE_LINK_RETAILERS);
+    window.open(import.meta.env.VITE_LINK_RETAILERS, '_blank', 'noopener,noreferrer');
   }, []);
 
   useEffect(() => {
