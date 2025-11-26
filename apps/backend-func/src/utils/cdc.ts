@@ -18,11 +18,11 @@ import { ListVoucherDetails } from "../generated/cdc-api/ListVoucherDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
 import {
+  RichiedenteEnum,
   StatoEnum as StatoVoucherEnum,
   VoucherBeanDetails,
 } from "../generated/cdc-api/VoucherBeanDetails.js";
-import {
-  StatoEnum as StatoRimborsoEnum} from "../generated/cdc-api/RimborsoBean.js";
+import { StatoEnum as StatoRimborsoEnum } from "../generated/cdc-api/RimborsoBean.js";
 import {
   ApplicantEnum,
   Refund_statusEnum,
@@ -338,7 +338,9 @@ const isCdcApiGetVouchersCallSuccess = (
 const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
   amount: v.importoRichiesto,
   applicant:
-    v.richiedente === "SELF" ? ApplicantEnum.SELF : ApplicantEnum.FAMILY_MEMBER,
+    v.richiedente === RichiedenteEnum.SELF
+      ? ApplicantEnum.SELF
+      : ApplicantEnum.FAMILY_MEMBER,
   card_year: v.annoRif,
   expiration_date: v.dataScadenza
     ? new Date(v.dataScadenza)
@@ -622,7 +624,7 @@ const deleteCdcVoucherTE =
               ),
             )(response),
           ),
-          TE.map(() => true)
+          TE.map(() => true),
         ),
       ),
       TE.mapLeft((err) =>
