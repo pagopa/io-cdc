@@ -391,6 +391,9 @@ components:
             - PREVALIDATO
         richiedente:
           type: string
+          enum:
+            - SELF
+            - FAMILY_MEMBER
         esercente:
           type: string
         rimborso:
@@ -451,6 +454,11 @@ components:
           type: number
         stato:
           type: string
+          enum:
+            - Nessuna Riconversione Rilevata
+            - RICONVERSIONE IN CORSO
+            - RICONVERSIONE RIFIUTATA
+            - VOUCHER RICONVERTITO
     SimpleResponseBean:
       type: object
       properties:

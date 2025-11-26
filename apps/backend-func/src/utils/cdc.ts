@@ -17,11 +17,12 @@ import { ListBorsellinoDetails } from "../generated/cdc-api/ListBorsellinoDetail
 import { ListVoucherDetails } from "../generated/cdc-api/ListVoucherDetails.js";
 import { ListaEsitoRichiestaBean } from "../generated/cdc-api/ListaEsitoRichiestaBean.js";
 import { ListaRegistratoBean } from "../generated/cdc-api/ListaRegistratoBean.js";
-import { SimpleResponseBean } from "../generated/cdc-api/SimpleResponseBean.js";
 import {
-  StatoEnum,
+  RichiedenteEnum,
+  StatoEnum as StatoVoucherEnum,
   VoucherBeanDetails,
 } from "../generated/cdc-api/VoucherBeanDetails.js";
+import { StatoEnum as StatoRimborsoEnum } from "../generated/cdc-api/RimborsoBean.js";
 import {
   ApplicantEnum,
   Refund_statusEnum,
@@ -337,7 +338,9 @@ const isCdcApiGetVouchersCallSuccess = (
 const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
   amount: v.importoRichiesto,
   applicant:
-    v.richiedente === "SELF" ? ApplicantEnum.SELF : ApplicantEnum.FAMILY_MEMBER,
+    v.richiedente === RichiedenteEnum.SELF
+      ? ApplicantEnum.SELF
+      : ApplicantEnum.FAMILY_MEMBER,
   card_year: v.annoRif,
   expiration_date: v.dataScadenza
     ? new Date(v.dataScadenza)
@@ -349,9 +352,7 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
     v.rimborso.importoDaRiaccreditare > 0
       ? {
           amount: v.rimborso.importoDaRiaccreditare,
-          refund_status: v.rimborso.stato // TODO: Fix by requesting refund state enum
-            ? Refund_statusEnum.COMPLETED
-            : Refund_statusEnum.PENDING,
+          refund_status: mapVoucherRefundStatus(v.rimborso.stato),
         }
       : undefined,
   merchant: v.esercente || undefined,
@@ -359,20 +360,32 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
   spending_date: v.dataConferma ? new Date(v.dataConferma) : undefined,
 });
 
-const mapVoucherStatus = (status: StatoEnum): Voucher_statusEnum => {
+const mapVoucherStatus = (status: StatoVoucherEnum): Voucher_statusEnum => {
   switch (status) {
-    case StatoEnum.INSERITO:
+    case StatoVoucherEnum.INSERITO:
       return Voucher_statusEnum.PENDING;
-    case StatoEnum.PREVALIDATO:
-    case StatoEnum["INVIATO A CONSAP"]:
-    case StatoEnum.UTILIZZATO:
+    case StatoVoucherEnum.PREVALIDATO:
+    case StatoVoucherEnum["INVIATO A CONSAP"]:
+    case StatoVoucherEnum.UTILIZZATO:
       return Voucher_statusEnum.USED;
-    case StatoEnum.CANCELLATO:
+    case StatoVoucherEnum.CANCELLATO:
       return Voucher_statusEnum.CANCELLED;
-    case StatoEnum.SCADUTO:
+    case StatoVoucherEnum.SCADUTO:
       return Voucher_statusEnum.EXPIRED;
+  }
+};
+
+const mapVoucherRefundStatus = (
+  status?: StatoRimborsoEnum,
+): Refund_statusEnum => {
+  switch (status) {
+    case StatoRimborsoEnum["VOUCHER RICONVERTITO"]:
+      return Refund_statusEnum.COMPLETED;
+    case StatoRimborsoEnum["RICONVERSIONE IN CORSO"]:
+      return Refund_statusEnum.PENDING;
+    case StatoRimborsoEnum["RICONVERSIONE RIFIUTATA"]:
     default:
-      return Voucher_statusEnum.PENDING;
+      return Refund_statusEnum.FAILED;
   }
 };
 
@@ -611,7 +624,7 @@ const deleteCdcVoucherTE =
               ),
             )(response),
           ),
-          TE.map(() => true)
+          TE.map(() => true),
         ),
       ),
       TE.mapLeft((err) =>
