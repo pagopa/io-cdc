@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.5
+
+### Patch Changes
+
+- cc6e067: Added statuses enums
+
 ## 1.1.4
 
 ### Patch Changes
