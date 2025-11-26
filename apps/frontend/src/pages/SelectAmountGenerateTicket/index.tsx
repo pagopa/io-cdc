@@ -85,10 +85,8 @@ const SelectAmountGenerateTicket = () => {
     );
   }
 
-  if (isBonusCreationCompleted && newVoucher?.id) {
-    trackWebviewEvent('CDC_BONUS_GENERATION_SUCCESS', { event_category: 'TECH' });
+  if (isBonusCreationCompleted && newVoucher?.id)
     return <Navigate to={`/dettaglio-buono/${newVoucher.id}`} state={{ generating: true }} />;
-  }
 
   if (isCreatingBonus) return <BonusCreationLoader />;
 
