@@ -27,6 +27,9 @@ export const Config = t.type({
 
   CDC_CARDS_EXPIRATION_DATE: NonEmptyString,
 
+  CDC_USAGE_END_DATE: NonEmptyString,
+  CDC_USAGE_START_DATE: NonEmptyString,
+
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
   COSMOSDB_CDC_KEY: NonEmptyString,
 
