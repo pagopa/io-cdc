@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.9
+
+### Patch Changes
+
+- 6a2396c: fix some events trigger and amount input focus status
+
 ## 1.1.8
 
 ### Patch Changes
