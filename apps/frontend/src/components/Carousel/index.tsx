@@ -37,7 +37,9 @@ export const Carousel = ({ list }: CarouselProps) => {
         const containerWidth = container.offsetWidth;
         const visibleIndex = Math.round(scrollLeft / containerWidth);
         setActiveIdx(visibleIndex);
-        trackWebviewEvent('CDC_CARD_SWIPE');
+        if (activeIdx !== visibleIndex) {
+          trackWebviewEvent('CDC_CARD_SWIPE');
+        }
       }, 0);
     };
     container.addEventListener('scroll', handleScroll);
@@ -45,7 +47,7 @@ export const Carousel = ({ list }: CarouselProps) => {
       container.removeEventListener('scroll', handleScroll);
       clearTimeout(scrollTimeout);
     };
-  }, [list]);
+  }, [list, activeIdx]);
 
   const onClickDots = useCallback((index: number) => {
     const container = containerRef.current;
