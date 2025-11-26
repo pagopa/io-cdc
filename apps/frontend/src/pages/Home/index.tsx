@@ -1,5 +1,5 @@
 import { Button, Stack, Typography } from '@mui/material';
-import { Carousel, OthersBonusSheet } from '../../components';
+import { Carousel, OthersBonusSheet, StickyContainer } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { APP_ROUTES } from '../../routes/appRoutes';
@@ -94,24 +94,17 @@ const Home = () => {
       <Typography sx={{ fontSize: 12, marginBottom: 2 }} color={theme.palette.text.secondary}>
         {lastUpdateLabel}
       </Typography>
-      <Stack width="100%" paddingInline={2} gap={4}>
+      <Stack width="100%" paddingInline={2} gap={4} mb={3}>
         <VoucherListHome onClickShowAll={onClickShowAll} setOpenSheet={setOpenSheet} />
-
-        <Stack
-          gap={2}
-          position="sticky"
-          bottom={0}
-          sx={{ backgroundColor: theme.palette.background.paper }}
-        >
-          <Button variant="contained" onClick={onClickBonus}>
-            Genera buono
-          </Button>
-          <Button variant="text" onClick={onClickBRetailers}>
-            Mostra esercenti
-          </Button>
-        </Stack>
       </Stack>
-
+      <StickyContainer>
+        <Button variant="contained" onClick={onClickBonus}>
+          Genera buono
+        </Button>
+        <Button variant="text" onClick={onClickBRetailers}>
+          Mostra esercenti
+        </Button>
+      </StickyContainer>
       <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />
     </Stack>
   );
