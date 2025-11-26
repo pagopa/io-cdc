@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.4
+
+### Patch Changes
+
+- a87269c: Some style fixes
+
 ## 1.0.3
 
 ### Patch Changes
