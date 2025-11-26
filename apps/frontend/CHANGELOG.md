@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.11
+
+### Patch Changes
+
+- d30b572: Fix some graphic problems on sticky elements
+
 ## 1.1.10
 
 ### Patch Changes
