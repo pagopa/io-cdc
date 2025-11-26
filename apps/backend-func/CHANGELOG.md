@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.7
+
+### Patch Changes
+
+- f112b61: Manage empty stato
+
 ## 1.1.6
 
 ### Patch Changes
