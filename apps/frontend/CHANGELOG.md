@@ -1,5 +1,19 @@
 # frontend
 
+## 1.1.10
+
+### Patch Changes
+
+- a87269c: Some style fixes
+- Updated dependencies [a87269c]
+  - @io-cdc/ui@1.0.4
+
+## 1.1.9
+
+### Patch Changes
+
+- 6a2396c: fix some events trigger and amount input focus status
+
 ## 1.1.8
 
 ### Patch Changes

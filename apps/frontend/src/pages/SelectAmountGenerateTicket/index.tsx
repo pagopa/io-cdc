@@ -14,6 +14,7 @@ import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/app/reducers';
 import { theme } from '@io-cdc/ui';
 import { useRouteGuard } from '../../hooks';
+import { formatDecimals } from '../../utils/formatDecimals';
 
 const SelectAmountGenerateTicket = () => {
   //TODO test only
@@ -84,10 +85,8 @@ const SelectAmountGenerateTicket = () => {
     );
   }
 
-  if (isBonusCreationCompleted && newVoucher?.id) {
-    trackWebviewEvent('CDC_BONUS_GENERATION_SUCCESS', { event_category: 'TECH' });
+  if (isBonusCreationCompleted && newVoucher?.id)
     return <Navigate to={`/dettaglio-buono/${newVoucher.id}`} state={{ generating: true }} />;
-  }
 
   if (isCreatingBonus) return <BonusCreationLoader />;
 
@@ -97,9 +96,11 @@ const SelectAmountGenerateTicket = () => {
       <Box display="flex" flexDirection="column" justifyContent="space-between" flex={1}>
         <Stack gap={2}>
           <Stack gap={2}>
-            <Typography variant="h2">{"Inserisci l'importo"}</Typography>
-            <Typography color={theme.palette.text.secondary} fontSize={16}>
-              {`Puoi generare un buono con un valore massimo di ${selectedCard?.residual_amount} €`}
+            <Typography variant="h4">{"Inserisci l'importo"}</Typography>
+            <Typography color={theme.palette.text.secondary} fontSize={18}>
+              {`Puoi generare un buono con un valore massimo di ${formatDecimals(
+                selectedCard?.residual_amount,
+              )} €`}
             </Typography>
           </Stack>
           <Stack>

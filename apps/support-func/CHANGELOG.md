@@ -1,5 +1,11 @@
 # support-func
 
+## 1.1.4
+
+### Patch Changes
+
+- 7dbae12: added start and stop date to return card status
+
 ## 1.1.3
 
 ### Patch Changes

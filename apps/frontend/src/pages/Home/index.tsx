@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectTicketDeleted } from '../../features/app/selectors';
 import { ticketsActions } from '../../features/app/reducers';
 import { useToast } from '../../contexts';
-import { Reminder } from './components/Reminder';
 import { useGetCards, useRouteGuard } from '../../hooks';
 import { VoucherListHome } from './components/VoucherListHome';
 
@@ -95,11 +94,15 @@ const Home = () => {
       <Typography sx={{ fontSize: 12, marginBottom: 2 }} color={theme.palette.text.secondary}>
         {lastUpdateLabel}
       </Typography>
-      <Reminder />
       <Stack width="100%" paddingInline={2} gap={4}>
         <VoucherListHome onClickShowAll={onClickShowAll} setOpenSheet={setOpenSheet} />
 
-        <Stack gap={2}>
+        <Stack
+          gap={2}
+          position="sticky"
+          bottom={0}
+          sx={{ backgroundColor: theme.palette.background.paper }}
+        >
           <Button variant="contained" onClick={onClickBonus}>
             Genera buono
           </Button>

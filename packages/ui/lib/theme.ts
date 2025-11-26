@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
 import { theme as muiItaliaTheme, pxToRem } from "@pagopa/mui-italia";
 
-export const colorTextPrimary = "#0E0F13";
+export const colorTextPrimary = "#17324D";
 export const colorPrimaryContainedHover = "#004D99";
 
 // Added colors from figma

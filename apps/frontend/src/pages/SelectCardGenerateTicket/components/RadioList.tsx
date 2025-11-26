@@ -8,6 +8,7 @@ import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { APP_ROUTES } from '../../../routes/appRoutes';
 import { ticketsActions } from '../../../features/app/reducers';
 import { useToast } from '../../../contexts';
+import { formatDecimals } from '../../../utils/formatDecimals';
 
 type RadioListProps = {
   cards: Pick<Card, 'residual_amount' | 'year'>[];
@@ -45,14 +46,14 @@ export const RadioList = ({ cards }: RadioListProps) => {
     <Box display="flex" flexDirection="column" justifyContent="space-between" flex={1}>
       <Stack gap={2}>
         <Stack gap={2}>
-          <Typography variant="h2">Scegli la Carta da usare</Typography>
-          <Typography color={TEXT_COLOR} fontSize={16}>
+          <Typography variant="h4">Scegli la Carta da usare</Typography>
+          <Typography color={TEXT_COLOR} fontSize={18}>
             Seleziona la carta che vuoi usare per generare il buono
           </Typography>
         </Stack>
         <Stack>
           <RadioGroup>
-            {cards.map(({ residual_amount, year }) =>
+            {cards.map(({ residual_amount, year }, i, arr) =>
               residual_amount <= 0 ? null : (
                 <Box key={year}>
                   <Stack direction="row">
@@ -68,10 +69,10 @@ export const RadioList = ({ cards }: RadioListProps) => {
                       <Typography
                         fontSize={14}
                         color={TEXT_COLOR}
-                      >{`Credito disponibile ${residual_amount?.toFixed(2)}€`}</Typography>
+                      >{`Credito disponibile ${formatDecimals(residual_amount)} €`}</Typography>
                     </Stack>
                   </Stack>
-                  <Divider />
+                  {i + 1 === arr.length ? null : <Divider />}
                 </Box>
               ),
             )}

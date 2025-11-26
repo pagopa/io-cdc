@@ -5,6 +5,8 @@ import { useCallback, useMemo } from 'react';
 import { VoucherItem } from '../../../features/app/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { getVoucherConfig } from './constants';
+import { formatDecimals } from '../../../utils/formatDecimals';
+import { ChipLabel } from '../../BonusDetail/components/ChipLabel';
 
 type VoucherCardProps =
   | {
@@ -60,17 +62,17 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
               {itemLabel}
             </Typography>
             <Typography fontSize={16} color="#5C6F82">
-              {`${date}${spent ? ` \u00B7 ${(voucher.amount * -1).toFixed(2)} €` : ''}`}
+              {`${date}${spent ? ` \u00B7 ${formatDecimals(voucher.amount * -1)} €` : ''}`}
             </Typography>
           </Stack>
         </Stack>
         {!spent && (
           <Typography color={mainColor} fontWeight={600}>
-            {voucher.amount.toFixed(2)} €
+            {formatDecimals(voucher.amount)} €
           </Typography>
         )}
         {voucher?.refund && voucher?.refund?.refund_status === 'PENDING' && (
-          <Chip label="IN CORSO" color="warning" size="small" sx={{ fontSize: 14 }} />
+          <Chip label={<ChipLabel>IN CORSO</ChipLabel>} color="warning" size="small" />
         )}
       </Stack>
     </Stack>
