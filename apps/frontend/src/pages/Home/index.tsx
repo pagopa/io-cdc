@@ -101,9 +101,6 @@ const Home = () => {
         <Button variant="contained" onClick={onClickBonus}>
           Genera buono
         </Button>
-        <Button variant="text" onClick={onClickBRetailers}>
-          Mostra esercenti
-        </Button>
       </StickyContainer>
       <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />
     </Stack>
