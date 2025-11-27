@@ -214,6 +214,186 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_post_card_request
   tags = local.tags
 }
 
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_get_cards_requests_failure" {
+  enabled             = true
+  name                = "[CDC | AppIO] GET cards request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_gateway.io_app_gateway.id]
+  description             = "There have been some failures on GET /api/cdc/v1/cards, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      AzureDiagnostics
+        | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
+        | where requestUri_s matches regex "/api/cdc/v1/cards"
+        | where httpMethod_s == 'GET'
+        | where httpStatus_d >= 400
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_get_vouchers_requests_failure" {
+  enabled             = true
+  name                = "[CDC | AppIO] GET vouchers request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_gateway.io_app_gateway.id]
+  description             = "There have been some failures on GET /api/cdc/v1/vouchers, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      AzureDiagnostics
+        | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
+        | where requestUri_s matches regex "/api/cdc/v1/vouchers"
+        | where httpMethod_s == 'GET'
+        | where httpStatus_d >= 400
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_post_vouchers_requests_failure" {
+  enabled             = true
+  name                = "[CDC | AppIO] POST vouchers request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_gateway.io_app_gateway.id]
+  description             = "There have been some failures on POST /api/cdc/v1/vouchers, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      AzureDiagnostics
+        | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
+        | where requestUri_s matches regex "/api/cdc/v1/vouchers"
+        | where httpMethod_s == 'POST'
+        | where httpStatus_d >= 400
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_get_voucher_requests_failure" {
+  enabled             = true
+  name                = "[CDC | AppIO] GET voucher detail request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_gateway.io_app_gateway.id]
+  description             = "There have been some failures on GET /api/cdc/v1/vouchers/{id}, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      AzureDiagnostics
+        | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
+        | where requestUri_s matches regex "/api/cdc/v1/vouchers/"
+        | where httpMethod_s == 'GET'
+        | where httpStatus_d >= 400
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_delete_voucher_requests_failure" {
+  enabled             = true
+  name                = "[CDC | AppIO] DELETE voucher detail request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_gateway.io_app_gateway.id]
+  description             = "There have been some failures on DELETE /api/cdc/v1/vouchers/{id}, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      AzureDiagnostics
+        | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
+        | where requestUri_s matches regex "/api/cdc/v1/vouchers/"
+        | where httpMethod_s == 'DELETE'
+        | where httpStatus_d >= 400
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
 ###############################
 # POISON QUEUE STORAGE ALERTS #
 ###############################
@@ -298,6 +478,225 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_process_pending_r
       QUERY
     operator                = "GreaterThan"
     threshold               = 0
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+#######################
+# PARTNER APIs ALERTS #
+#######################
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_status_requests_failure" {
+  enabled             = true
+  name                = "[CDC | Partner APIs] GET status request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_insights.common.id]
+  description             = "There have been some failures on GET /CDCUtenteWS/rest/secured/beneficiario/stato, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      dependencies
+        | where client_Type != "Browser"
+        | where target has "cartadellacultura.it"
+        | where resultCode != 200
+        | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/stato"
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_cards_requests_failure" {
+  enabled             = true
+  name                = "[CDC | Partner APIs] GET cards request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_insights.common.id]
+  description             = "There have been some failures on GET /CDCUtenteWS/rest/secured/beneficiario/getListaBorsellino, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      dependencies
+        | where client_Type != "Browser"
+        | where target has "cartadellacultura.it"
+        | where resultCode != 200
+        | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/getListaBorsellino"
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_vouchers_requests_failure" {
+  enabled             = true
+  name                = "[CDC | Partner APIs] GET vouchers request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_insights.common.id]
+  description             = "There have been some failures on GET /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      dependencies
+        | where client_Type != "Browser"
+        | where target has "cartadellacultura.it"
+        | where resultCode != 200
+        | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/"
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_voucher_requests_failure" {
+  enabled             = true
+  name                = "[CDC | Partner APIs] GET voucher request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_insights.common.id]
+  description             = "There have been some failures on GET /CDCUtenteWS/rest/secured/beneficiario/getDettaglioVoucher, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      dependencies
+        | where client_Type != "Browser"
+        | where target has "cartadellacultura.it"
+        | where resultCode != 200
+        | where name contains "GET /CDCUtenteWS/rest/secured/beneficiario/getDettaglioVoucher"
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_post_voucher_requests_failure" {
+  enabled             = true
+  name                = "[CDC | Partner APIs] POST voucher request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_insights.common.id]
+  description             = "There have been some failures on POST /CDCUtenteWS/rest/secured/beneficiario/generaVoucher, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      dependencies
+        | where client_Type != "Browser"
+        | where target has "cartadellacultura.it"
+        | where resultCode != 200
+        | where name contains "POST /CDCUtenteWS/rest/secured/beneficiario/generaVoucher"
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
+    time_aggregation_method = "Count"
+  }
+
+  action {
+    action_groups = [
+      azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id,
+    ]
+  }
+
+  tags = local.tags
+}
+
+resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_delete_voucher_requests_failure" {
+  enabled             = true
+  name                = "[CDC | Partner APIs] DELETE voucher request failed"
+  resource_group_name = data.azurerm_resource_group.itn_cdc.name
+  location            = local.location
+
+  scopes                  = [data.azurerm_application_insights.common.id]
+  description             = "There have been some failures on DELETE /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher, citizens are being impacted."
+  severity                = 1
+  auto_mitigation_enabled = false
+
+  window_duration      = "PT15M" # Window duration
+  evaluation_frequency = "PT15M" # Evaluation frequency
+
+  criteria {
+    query                   = <<-QUERY
+      dependencies
+        | where client_Type != "Browser"
+        | where target has "cartadellacultura.it"
+        | where resultCode != 200
+        | where name contains "DELETE /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher"
+      QUERY
+    operator                = "GreaterThan"
+    threshold               = 1
     time_aggregation_method = "Count"
   }
 
