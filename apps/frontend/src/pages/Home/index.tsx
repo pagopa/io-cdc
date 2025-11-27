@@ -56,11 +56,6 @@ const Home = () => {
     navigate(APP_ROUTES.SELECT_CARD);
   }, [navigate]);
 
-  const onClickBRetailers = useCallback(() => {
-    trackWebviewEvent('CDC_CARD_SHOW_RETAILERS');
-    window.location.replace(import.meta.env.VITE_LINK_RETAILERS);
-  }, []);
-
   useEffect(() => {
     if (!cards.length) return;
     trackWebviewEvent('CDC_CARD_DETAIL');
