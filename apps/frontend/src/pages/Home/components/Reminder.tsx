@@ -26,7 +26,7 @@ export const Reminder = () => {
       <Box display="flex" bgcolor="#F0FAFF" gap="1.2rem" px={1.5} py={2} alignItems="center">
         <Icon name="info" sx={{ color: '#17324D', height: 22, width: 22 }} />
         <Stack direction="column" gap={2}>
-          <Typography>
+          <Typography fontSize="16px">
             <strong>Ricorda:</strong> il credito disponibile si riduce anche quando{' '}
             <strong> altre persone del tuo nucleo familiare</strong> generano i buoni.
           </Typography>
