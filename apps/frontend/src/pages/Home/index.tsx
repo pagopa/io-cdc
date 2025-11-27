@@ -1,10 +1,10 @@
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { Carousel, OthersBonusSheet, StickyContainer } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { trackWebviewEvent } from '../../utils/trackEvent';
-import { Loader, theme } from '@io-cdc/ui';
+import { theme } from '@io-cdc/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTicketDeleted } from '../../features/app/selectors';
 import { ticketsActions } from '../../features/app/reducers';
@@ -82,7 +82,7 @@ const Home = () => {
   if (!isFulfilled)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-        <Loader />
+        <CircularProgress />
       </Stack>
     );
 

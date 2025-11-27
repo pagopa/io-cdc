@@ -8,7 +8,7 @@ export const getVoucherConfig = (voucher: VoucherItem) => {
         itemLabel: `Buono ${
           voucher.voucher_status === 'USED' ? 'speso da altri' : 'generato da altri'
         }`,
-        mainColor: '#5C6F82',
+        mainColor: '#17324D',
       };
     case 'SELF':
     default:

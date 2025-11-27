@@ -36,7 +36,7 @@ export const BottomSheet = ({ isOpen, onClose, children, snapPoint = 0.5 }: Bott
     >
       <Stack flexDirection="column" flex={1}>
         <Stack alignItems="end" paddingX={3} paddingY={2}>
-          <Icon onClick={onClose} name="close" color="disabled" height={14} width={14} />
+          <Icon onClick={onClose} name="close" height={14} width={14} />
         </Stack>{' '}
         <Stack flexGrow={1} overflow="auto">
           {children}

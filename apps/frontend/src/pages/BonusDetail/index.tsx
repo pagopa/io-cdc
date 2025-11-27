@@ -1,8 +1,8 @@
-import { Button, Chip, Typography } from '@mui/material';
+import { Button, Chip, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Header, PopConfirm } from '../../components';
-import { Icon, Loader, theme } from '@io-cdc/ui';
+import { Icon, theme } from '@io-cdc/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BonusDescription } from './components/BonusDescription';
 import { Footer } from './components/Footer';
@@ -96,7 +96,7 @@ const BonusDetail = () => {
   if (detailLoading)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-        <Loader />
+        <CircularProgress />
         <Typography fontSize={22} fontWeight={700} textAlign="center">
           Stiamo recuperando il tuo buono
         </Typography>
@@ -107,7 +107,7 @@ const BonusDetail = () => {
   if (deleteLoading)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-        <Loader />
+        <CircularProgress />
         <Typography fontSize={22} fontWeight={700} textAlign="center">
           Operazione in corso
         </Typography>

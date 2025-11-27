@@ -1,10 +1,9 @@
-import { Loader } from '@io-cdc/ui';
-import { Stack, Typography } from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 
 export const BonusCreationLoader = () => {
   return (
     <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-      <Loader />
+      <CircularProgress />
       <Typography fontSize={22} fontWeight={700} textAlign="center">
         Stiamo generando il tuo buono
       </Typography>
