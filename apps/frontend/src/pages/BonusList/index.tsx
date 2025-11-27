@@ -36,9 +36,9 @@ const BonusList = () => {
   if (isError)
     return (
       <Stack minHeight={100} justifyContent="center">
-        <EmptyState icon="info" title="Errore nel caricamento dei buoni" />
+        <EmptyState icon="info" title="Non siamo riusciti a caricare la lista dei buoni" />
         <Button variant="text" onClick={() => getVouchers()}>
-          Ricarica Lista Buoni
+          Prova di nuovo
         </Button>
       </Stack>
     );
