@@ -73,7 +73,7 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
             </Stack>
           ))
         ) : (
-          <EmptyVouchers />
+          <EmptyVouchers type="SPENT" />
         )}
       </Stack>
       <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />

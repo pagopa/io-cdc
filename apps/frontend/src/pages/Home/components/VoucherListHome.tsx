@@ -125,7 +125,7 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
                 </Stack>
               ))
             ) : (
-              <EmptyVouchers />
+              <EmptyVouchers type="SPENT" />
             )}
           </Stack>
         </>
