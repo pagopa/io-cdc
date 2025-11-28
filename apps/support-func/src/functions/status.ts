@@ -38,11 +38,11 @@ export const checkStartDatetime =
           const testUser = isTestUser(deps.config, fiscalCode);
           const now = new Date();
           const validDate = isAfter(now, startDate) || testUser;
-          emitCustomEvent("cdc.get.cards.iniziative.status", {
+          emitCustomEvent("cdc.get.status.iniziative.status", {
             data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${
               validDate ? "Iniziative open" : "Initiative closed"
             }`,
-          })("getCards");
+          })("getCitizenStatus");
           if (testUser) {
             emitCustomEvent("cdc.get.status.iniziative.status.test", {
               data: `Test user connected`,
