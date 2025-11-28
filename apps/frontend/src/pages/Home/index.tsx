@@ -84,21 +84,23 @@ const Home = () => {
   if (!cards) return <div>no data</div>;
 
   return (
-    <Stack justifyContent="center" alignItems="center" paddingInline={2}>
-      <Carousel list={cards} />
-      <Typography sx={{ fontSize: 12, marginBottom: 2 }} color={theme.palette.text.secondary}>
-        {lastUpdateLabel}
-      </Typography>
-      <Stack width="100%" paddingInline={2} gap={4} mb={3}>
-        <VoucherListHome onClickShowAll={onClickShowAll} setOpenSheet={setOpenSheet} />
+    <>
+      <Stack justifyContent="center" alignItems="center" paddingInline={2}>
+        <Carousel list={cards} />
+        <Typography sx={{ fontSize: 12, marginBottom: 2 }} color={theme.palette.text.secondary}>
+          {lastUpdateLabel}
+        </Typography>
+        <Stack width="100%" paddingInline={2} gap={4} mb={3}>
+          <VoucherListHome onClickShowAll={onClickShowAll} setOpenSheet={setOpenSheet} />
+        </Stack>
+        <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />
       </Stack>
       <StickyContainer>
         <Button variant="contained" onClick={onClickBonus}>
           Genera buono
         </Button>
       </StickyContainer>
-      <OthersBonusSheet openSheet={openSheet} onClose={() => setOpenSheet([false, false])} />
-    </Stack>
+    </>
   );
 };
 
