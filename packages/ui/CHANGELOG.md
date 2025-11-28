@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.5
+
+### Patch Changes
+
+- ab5449f: some ui and frontend design fix
+
 ## 1.0.4
 
 ### Patch Changes
