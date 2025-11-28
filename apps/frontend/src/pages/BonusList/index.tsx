@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRouteGuard } from '../../hooks';
-import { EmptyState, Loader } from '@io-cdc/ui';
+import { EmptyState } from '@io-cdc/ui';
 import { Button, Typography } from '@mui/material';
 import { useGetAllVouchers } from '../../hooks/useGetAllVouchers';
+import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 
 const BonusList = () => {
   //TODO test only
@@ -25,7 +26,7 @@ const BonusList = () => {
   if (isLoading)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-        <Loader />
+        <CircularProgress />
         <Typography fontSize={22} fontWeight={700} textAlign="center">
           Stiamo recuperando i tuoi buoni
         </Typography>
@@ -36,9 +37,9 @@ const BonusList = () => {
   if (isError)
     return (
       <Stack minHeight={100} justifyContent="center">
-        <EmptyState icon="info" title="Errore nel caricamento dei buoni" />
+        <EmptyState icon="info" title="Non siamo riusciti a caricare la lista dei buoni" />
         <Button variant="text" onClick={() => getVouchers()}>
-          Ricarica Lista Buoni
+          Prova di nuovo
         </Button>
       </Stack>
     );

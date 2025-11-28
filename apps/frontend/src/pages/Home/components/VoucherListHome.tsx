@@ -1,5 +1,5 @@
-import { EmptyState, Loader } from '@io-cdc/ui';
-import { Typography, Divider, Button } from '@mui/material';
+import { EmptyState } from '@io-cdc/ui';
+import { Typography, Divider, Button, CircularProgress } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useCallback, useMemo } from 'react';
 import { VoucherCard } from '../../BonusList/components/BonusItem';
@@ -42,9 +42,9 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
   if (isError) {
     return (
       <Stack minHeight={100} justifyContent="center">
-        <EmptyState icon="info" title="Errore nel caricamento dei buoni" />
+        <EmptyState icon="info" title="Non siamo riusciti a caricare la lista dei buoni" />
         <Button variant="text" onClick={forceReload}>
-          Ricarica Buoni
+          Prova di nuovo
         </Button>
       </Stack>
     );
@@ -53,7 +53,7 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
   if (loading)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-        <Loader />
+        <CircularProgress />
       </Stack>
     );
 
@@ -80,20 +80,22 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
                 Mostra tutti
               </Typography>
             </Stack>
-            {toSpend.length ? (
-              toSpend.map((voucher, index, array) => (
-                <Stack gap={3} key={voucher.id} paddingTop={3}>
-                  <VoucherCard
-                    voucher={voucher}
-                    spent={false}
-                    openSheet={() => setOpenSheet([true, false])}
-                  />
-                  {index !== array.length - 1 && <Divider />}
-                </Stack>
-              ))
-            ) : (
-              <EmptyVouchers />
-            )}
+            <Stack>
+              {toSpend.length ? (
+                toSpend.map((voucher, index, array) => (
+                  <Stack gap={3} key={voucher.id} paddingTop={3}>
+                    <VoucherCard
+                      voucher={voucher}
+                      spent={false}
+                      openSheet={() => setOpenSheet([true, false])}
+                    />
+                    {index !== array.length - 1 && <Divider />}
+                  </Stack>
+                ))
+              ) : (
+                <EmptyVouchers />
+              )}
+            </Stack>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography fontWeight={700} fontSize={14}>
                 BUONI SPESI
@@ -113,20 +115,22 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
                 </Typography>
               ) : null}
             </Stack>
-            {spent.length ? (
-              spent.map((voucher, index, array) => (
-                <Stack gap={3} key={voucher.id} paddingTop={3}>
-                  <VoucherCard
-                    voucher={voucher}
-                    spent={true}
-                    openSheet={() => setOpenSheet([true, true])}
-                  />
-                  {index !== array.length - 1 && <Divider />}
-                </Stack>
-              ))
-            ) : (
-              <EmptyVouchers />
-            )}
+            <Stack>
+              {spent.length ? (
+                spent.map((voucher, index, array) => (
+                  <Stack gap={3} key={voucher.id} paddingTop={3}>
+                    <VoucherCard
+                      voucher={voucher}
+                      spent={true}
+                      openSheet={() => setOpenSheet([true, true])}
+                    />
+                    {index !== array.length - 1 && <Divider />}
+                  </Stack>
+                ))
+              ) : (
+                <EmptyVouchers type="SPENT" />
+              )}
+            </Stack>
           </Stack>
         </>
       ) : (

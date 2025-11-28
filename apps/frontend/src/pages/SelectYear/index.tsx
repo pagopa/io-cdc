@@ -1,5 +1,5 @@
-import { CheckboxList, Loader, SectionTitle } from '@io-cdc/ui';
-import { Button, Chip, Stack, Typography } from '@mui/material';
+import { CheckboxList, SectionTitle } from '@io-cdc/ui';
+import { Button, Chip, CircularProgress, Stack, Typography } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../routes/appRoutes';
@@ -107,7 +107,7 @@ const SelectYear = () => {
   if (isLoading)
     return (
       <Stack flex={1} justifyContent="center" alignItems="center" rowGap={2}>
-        <Loader />
+        <CircularProgress />
         <Typography fontSize={22} fontWeight={700} textAlign="center">
           Stiamo inviando la tua richiesta
         </Typography>
