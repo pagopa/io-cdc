@@ -1,5 +1,13 @@
 # frontend
 
+## 1.1.12
+
+### Patch Changes
+
+- ab5449f: some ui and frontend design fix
+- Updated dependencies [ab5449f]
+  - @io-cdc/ui@1.0.5
+
 ## 1.1.11
 
 ### Patch Changes
