@@ -1,5 +1,11 @@
 # support-func
 
+## 1.1.5
+
+### Patch Changes
+
+- 4f8979e: fixed tracing
+
 ## 1.1.4
 
 ### Patch Changes
