@@ -475,7 +475,7 @@ const postCdcVouchersTE =
             TE.tryCatch(
               async () =>
                 await client.generaVoucher({
-                  body: { anno: year, idBene: 7, importo: amount }, // TODO: Fix idBene 7, 8, 9 - LIBRO, EBOOK, AUDIOLIBRO
+                  body: { anno: year, idBene: 7, importo: amount }, // idBene is fixed to 7 as per CDC API spec (LIBRO)
                 }),
               E.toError,
             ),
