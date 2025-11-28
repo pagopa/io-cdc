@@ -1,4 +1,4 @@
-oa3_spec: ./apps/support-func/api/external.yaml
+oa3_spec: ./apps/support-func/api/internal.yaml
 name: opex_cdc_api_support
 location: Italy North
 timespan: 5m
