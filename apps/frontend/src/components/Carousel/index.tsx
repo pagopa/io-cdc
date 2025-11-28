@@ -38,7 +38,7 @@ export const Carousel = ({ list }: CarouselProps) => {
         inline: 'start',
       });
     }
-  }, [initialActiveIdx]);
+  }, []);
 
   useEffect(() => {
     const activeYear = list?.[activeIdx]?.year;
