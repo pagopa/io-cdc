@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.8
+
+### Patch Changes
+
+- f33aa17: fixed idbene
+
 ## 1.1.7
 
 ### Patch Changes
