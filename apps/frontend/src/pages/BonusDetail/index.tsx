@@ -1,6 +1,6 @@
 import { Button, Chip, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Header, PopConfirm } from '../../components';
 import { Icon, theme } from '@io-cdc/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -87,11 +87,14 @@ const BonusDetail = () => {
     }
   }, [error, isError, isSuccess, spent, state?.generating]);
 
-  if (isBonusDeleteSuccess) {
-    dispatch(ticketsActions.setDeleted(true));
-    trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
-    return <Navigate to={APP_ROUTES.HOME} />;
-  }
+  useEffect(() => {
+    if (isBonusDeleteSuccess) {
+      console.log('trigger cdc bonus cancellation confirm');
+      dispatch(ticketsActions.setDeleted(true));
+      trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
+      navigate(APP_ROUTES.HOME);
+    }
+  }, [dispatch, isBonusDeleteSuccess, navigate]);
 
   if (detailLoading)
     return (
