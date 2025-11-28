@@ -1,12 +1,13 @@
 import { Card } from '../Card';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
 import { Stack } from '@mui/material';
 import { Card as CardType } from '../../features/app/model';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { Icon } from '@io-cdc/ui';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ticketsActions } from '../../features/app/reducers';
+import { selectActiveCard } from '../../features/app/selectors';
 
 type CarouselProps = {
   list: Array<CardType>;
@@ -15,7 +16,29 @@ export const Carousel = ({ list }: CarouselProps) => {
   const dispatch = useDispatch();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIdx, setActiveIdx] = useState<number>(0);
+
+  const activeCard = useSelector(selectActiveCard);
+
+  const initialActiveIdx = useMemo(() => {
+    const index = list.findIndex(({ year }) => year === activeCard);
+    if (index === -1) return 0;
+    return index;
+  }, [activeCard, list]);
+
+  const [activeIdx, setActiveIdx] = useState<number>(initialActiveIdx);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const item = container.children[initialActiveIdx] as HTMLElement;
+    if (item) {
+      item.scrollIntoView({
+        behavior: 'instant',
+        inline: 'start',
+      });
+    }
+  }, [initialActiveIdx]);
 
   useEffect(() => {
     const activeYear = list?.[activeIdx]?.year;
@@ -47,7 +70,7 @@ export const Carousel = ({ list }: CarouselProps) => {
       container.removeEventListener('scroll', handleScroll);
       clearTimeout(scrollTimeout);
     };
-  }, [list, activeIdx]);
+  }, [list, activeIdx, dispatch]);
 
   const onClickDots = useCallback((index: number) => {
     const container = containerRef.current;
