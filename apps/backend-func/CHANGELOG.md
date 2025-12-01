@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.9
+
+### Patch Changes
+
+- 042cb3d: Optimize load all vouchers
+
 ## 1.1.8
 
 ### Patch Changes
