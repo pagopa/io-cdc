@@ -59,7 +59,7 @@ export const VoucherList = ({ vouchersList }: VoucherListProps) => {
           <EmptyVouchers />
         )}
       </Stack>
-      <Stack>
+      <Stack mb={4}>
         <SectionTitle title="Buoni spesi" />
         {spent.length ? (
           spent.map((voucher, index, array) => (
