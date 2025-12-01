@@ -1,5 +1,13 @@
 # frontend
 
+## 1.1.13
+
+### Patch Changes
+
+- 1432e01: some style fix | functionality fix for cards slider
+- Updated dependencies [1432e01]
+  - @io-cdc/ui@1.0.6
+
 ## 1.1.12
 
 ### Patch Changes

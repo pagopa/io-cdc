@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.6
+
+### Patch Changes
+
+- 1432e01: some style fix | functionality fix for cards slider
+
 ## 1.0.5
 
 ### Patch Changes
