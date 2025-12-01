@@ -3,12 +3,15 @@ import { useLazyGetCardsQuery } from '../features/app/services';
 import { Card } from '../features/app/model';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../routes/appRoutes';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ticketsActions } from '../features/app/reducers';
+import { selectActiveCard } from '../features/app/selectors';
 
 export const useGetCards = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const activeCard = useSelector(selectActiveCard);
 
   const [getCards] = useLazyGetCardsQuery();
 
@@ -38,7 +41,9 @@ export const useGetCards = () => {
       cards: cards ?? [],
     });
 
-    dispatch(ticketsActions.setActiveCard(cards[0].year));
+    if (!activeCard) {
+      dispatch(ticketsActions.setActiveCard(cards[0].year));
+    }
   }, [dispatch, getCards, navigate]);
 
   useEffect(() => {

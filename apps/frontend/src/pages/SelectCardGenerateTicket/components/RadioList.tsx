@@ -26,6 +26,7 @@ export const RadioList = ({ cards }: RadioListProps) => {
   const onSelect = useCallback(
     (selected: Pick<Card, 'residual_amount' | 'year'>) => {
       dispatch(ticketsActions.setSelectedCard(selected));
+      dispatch(ticketsActions.setActiveCard(selected.year));
     },
     [dispatch],
   );

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { Toast } from "../Toast";
 
-describe("Test SectionTitle Components", () => {
+describe("Test Toast Components", () => {
   it("Should match the snapshot with default type", () => {
     const comp = render(<Toast message="Default" messageType="default" />);
     expect(comp).toMatchSnapshot();

@@ -1,4 +1,5 @@
 import { Box, Snackbar, SnackbarProps, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 
 import { Icon, IconType } from "../icon";
 
@@ -35,16 +36,24 @@ export const Toast = ({
   TransitionProps,
   message,
   messageType = "default",
-  onClose,
-  open,
 }: ToastProps) => {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(!!message);
+  }, [message]);
+
   const { color, icon } = ICON_COLOR_CONFIG[messageType];
+
+  if (!message) return null;
+
   return (
     <Snackbar
+      ClickAwayListenerProps={{ onClickAway: () => null }}
       TransitionProps={TransitionProps}
       anchorOrigin={{ horizontal: "center", vertical: "top" }}
       autoHideDuration={2000}
-      onClose={onClose}
+      onClose={() => setOpen(false)}
       open={open}
       sx={{ mt: 4, zIndex: 99999999 }}
     >

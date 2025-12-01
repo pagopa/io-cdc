@@ -19,13 +19,11 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toast, setToast] = useState<Toast | null>(null);
-  const [open, setOpen] = useState(false);
   const showToast = ({ message, messageType, onOpen, onClose }: Omit<Toast, 'id'>) => {
     const id = String(Date.now() + Math.random());
     const newToast: Toast = { id, message, messageType, onOpen, onClose };
 
     setToast(newToast);
-    setOpen(true);
 
     newToast.onOpen?.();
 
@@ -43,13 +41,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <Toast
-        {...toast}
-        sx={{ zIndex: 99999999 }}
-        open={open}
-        onClose={() => setOpen(false)}
-        TransitionProps={{ onExited: handleExited }}
-      />
+      <Toast {...toast} TransitionProps={{ onExited: handleExited }} />
     </ToastContext.Provider>
   );
 };

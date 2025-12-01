@@ -7,7 +7,6 @@ export const CdcInput = ({ ...props }: CdcInputProps) => {
   return (
     <TextField
       {...props}
-      focused
       type="number"
       onChange={(e) => {
         if (/^\d*[.,]?\d{0,2}$/.test(e.target.value)) {

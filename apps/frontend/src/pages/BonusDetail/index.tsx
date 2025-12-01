@@ -1,6 +1,6 @@
 import { Button, Chip, CircularProgress, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Header, PopConfirm } from '../../components';
 import { Icon, theme } from '@io-cdc/ui';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -87,11 +87,14 @@ const BonusDetail = () => {
     }
   }, [error, isError, isSuccess, spent, state?.generating]);
 
-  if (isBonusDeleteSuccess) {
-    dispatch(ticketsActions.setDeleted(true));
-    trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
-    return <Navigate to={APP_ROUTES.HOME} />;
-  }
+  useEffect(() => {
+    if (isBonusDeleteSuccess) {
+      console.log('trigger cdc bonus cancellation confirm');
+      dispatch(ticketsActions.setDeleted(true));
+      trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
+      navigate(APP_ROUTES.HOME);
+    }
+  }, [dispatch, isBonusDeleteSuccess, navigate]);
 
   if (detailLoading)
     return (
@@ -134,59 +137,59 @@ const BonusDetail = () => {
   });
 
   return (
-    <Stack p={3} gap={3}>
-      {!state?.generating && <Header onBack={() => navigate(-1)} />}
+    <>
+      <Stack p={3} gap={3}>
+        {!state?.generating && <Header onBack={() => navigate(-1)} />}
 
-      <Stack>
-        <Stack gap={2} mb={1}>
-          <Typography variant="h2">Il tuo buono</Typography>
-          <BonusDescription pending={pending} />
+        <Stack>
+          <Stack gap={2} mb={1}>
+            <Typography variant="h2">Il tuo buono</Typography>
+            <BonusDescription pending={pending} />
+          </Stack>
         </Stack>
-      </Stack>
 
-      <Stack direction="row" gap={1} alignItems="center">
-        <Icon name="ticket" sx={{ width: 24, height: 24 }} />
-        <Typography fontWeight={700} fontSize={14}>
-          DETTAGLI DEL BUONO
-        </Typography>
-      </Stack>
+        <Stack direction="row" gap={1} alignItems="center">
+          <Icon name="ticket" sx={{ width: 24, height: 24 }} />
+          <Typography fontWeight={700} fontSize={14}>
+            DETTAGLI DEL BUONO
+          </Typography>
+        </Stack>
 
-      <DetailItemWrapper chip={!refund && <Chip {...chipConfig} size="small" />}>
-        <Typography color={theme.palette.text.secondary}>Importo</Typography>
-        <Typography fontWeight={600} fontSize={18}>
-          {formatDecimals(voucherDetail.amount)} €
-        </Typography>
-      </DetailItemWrapper>
+        <DetailItemWrapper chip={!refund && <Chip {...chipConfig} size="small" />}>
+          <Typography color={theme.palette.text.secondary}>Importo</Typography>
+          <Typography fontWeight={600} fontSize={18}>
+            {formatDecimals(voucherDetail.amount)} €
+          </Typography>
+        </DetailItemWrapper>
 
-      {voucherDetail.refund && (
-        <>
-          <DetailItemWrapper chip={<Chip {...chipConfig} size="small" />}>
-            <Typography color={theme.palette.text.secondary}>Da riaccreditare</Typography>
-            <Typography fontWeight={600} fontSize={18}>
-              {formatDecimals(voucherDetail.refund.amount)} €
-            </Typography>
-          </DetailItemWrapper>
-        </>
-      )}
+        {voucherDetail.refund && (
+          <>
+            <DetailItemWrapper chip={<Chip {...chipConfig} size="small" />}>
+              <Typography color={theme.palette.text.secondary}>Da riaccreditare</Typography>
+              <Typography fontWeight={600} fontSize={18}>
+                {formatDecimals(voucherDetail.refund.amount)} €
+              </Typography>
+            </DetailItemWrapper>
+          </>
+        )}
 
-      <DetailItemWrapper>
-        <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
-        <Typography fontWeight={600} fontSize={18}>
-          {formattedDetailDate}
-        </Typography>
-      </DetailItemWrapper>
+        <DetailItemWrapper>
+          <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
+          <Typography fontWeight={600} fontSize={18}>
+            {formattedDetailDate}
+          </Typography>
+        </DetailItemWrapper>
 
-      <DetailItemWrapper last>
-        <Typography color={theme.palette.text.secondary}>Carta della cultura usata</Typography>
-        <Typography fontWeight={600} fontSize={18}>
-          {voucherDetail.card_year}
-        </Typography>
-      </DetailItemWrapper>
+        <DetailItemWrapper last>
+          <Typography color={theme.palette.text.secondary}>Carta della cultura usata</Typography>
+          <Typography fontWeight={600} fontSize={18}>
+            {voucherDetail.card_year}
+          </Typography>
+        </DetailItemWrapper>
 
-      <MerchantDetail merchant={voucherDetail.merchant} usage_date={formattedMerchantDate} />
+        <MerchantDetail merchant={voucherDetail.merchant} usage_date={formattedMerchantDate} />
 
-      {pending && (
-        <>
+        {pending && (
           <Button
             variant="text"
             onClick={onClickDeleteBonus}
@@ -201,25 +204,25 @@ const BonusDetail = () => {
               Annulla il buono
             </Typography>
           </Button>
-          <Footer code={voucherDetail.id} isGenerated={state?.generating} />
-        </>
-      )}
+        )}
 
-      <PopConfirm
-        isOpen={isDialogOpen}
-        onOpen={showDeleteModal}
-        description="Se prosegui, l’importo del buono tornerà disponibile"
-        title="Vuoi davvero annullare il buono?"
-        buttonConfirm={{
-          title: 'ANNULLA BUONO',
-          onClick: onDeleteBonus,
-        }}
-        buttonClose={{
-          title: 'TORNA INDIETRO',
-          onClick: onStopDeleteBonus,
-        }}
-      />
-    </Stack>
+        <PopConfirm
+          isOpen={isDialogOpen}
+          onOpen={showDeleteModal}
+          description="Se prosegui, l’importo del buono tornerà disponibile"
+          title="Vuoi davvero annullare il buono?"
+          buttonConfirm={{
+            title: 'ANNULLA BUONO',
+            onClick: onDeleteBonus,
+          }}
+          buttonClose={{
+            title: 'TORNA INDIETRO',
+            onClick: onStopDeleteBonus,
+          }}
+        />
+      </Stack>
+      {pending && <Footer code={voucherDetail.id} isGenerated={state?.generating} />}
+    </>
   );
 };
 
