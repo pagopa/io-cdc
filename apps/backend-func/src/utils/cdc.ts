@@ -438,13 +438,13 @@ const getCdcVouchersTE =
                 (vouchers) => !!vouchers,
                 () => new Error("Undefined cdc vouchers list"),
               ),
-              TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
               TE.map((vouchers) =>
                 // we do not want to see cancelled vouchers
                 vouchers.filter(
-                  (v) => v.voucher_status !== Voucher_statusEnum.CANCELLED,
+                  (v) => v.stato !== StatoVoucherEnum.CANCELLATO,
                 ),
               ),
+              TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
             ),
           ),
         ),
