@@ -39,6 +39,7 @@
     "@mui/lab": "^5.0.0-alpha.140",
     "@mui/material": "^5.14.5",
     "@mui/system": "^5.14.5",
+    "@mui/utils": "^5.17.1",
     "@pagopa/eslint-config": "^4.0.1",
     "@pagopa/mui-italia": "^1.8.1",
     "@testing-library/dom": "^10.4.0",
