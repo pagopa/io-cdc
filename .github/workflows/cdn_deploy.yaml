@@ -97,10 +97,6 @@ jobs:
 
       - name: Build the artifact
         id: make-artifact
-        env:
-          # we fall back to node-moules, even in case pnp is configured, in order to avoid bundling dependendencies
-          YARN_NODE_LINKER: node-modules
-          YARN_NM_HOISTING_LIMITS: workspaces
         run: |
           set -e
 
