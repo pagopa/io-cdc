@@ -1,6 +1,6 @@
 import { Icon, OperationResult } from '@io-cdc/ui';
 // import { useNavigate } from 'react-router-dom';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { useEffect, useMemo } from 'react';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { useMobileOS, useRouteGuard } from '../../hooks';
@@ -31,13 +31,13 @@ const CourtesyPage = () => {
         subTitle="Carta della Cultura non è ancora disponibile, riceverai l’esito direttamente su IO."
         description=" Nel frattempo, ti suggeriamo di aggiornare l’app all’ultima versione"
       />
-      <Stack direction="column" justifyContent="center" alignItems="center">
+      <Stack direction="column" justifyContent="center" alignItems="center" gap={2}>
         <Button onClick={() => window.location.replace(deepLink)} variant="contained">
           Aggiorna l&apos;app
         </Button>
         <Button
           variant="text"
-          onClick={() => window.location.replace(import.meta.env.VITE_HELP_CARTA_DELLA_CULTURA)}
+          onClick={() => window.location.replace(import.meta.env.VITE_CLOSE_DEEPLINK)}
         >
           Chiudi
         </Button>
