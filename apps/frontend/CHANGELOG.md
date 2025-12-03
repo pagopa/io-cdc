@@ -1,5 +1,14 @@
 # frontend
 
+## 1.1.15
+
+### Patch Changes
+
+- ff10d4f: pached all packages - add courtesy page and some feedback page
+- Updated dependencies [ff10d4f]
+  - @io-cdc/mixpanel@1.0.3
+  - @io-cdc/ui@1.0.8
+
 ## 1.1.14
 
 ### Patch Changes

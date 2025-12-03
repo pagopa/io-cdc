@@ -54,8 +54,13 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
       {vouchers && vouchers.length > 0 ? (
         <>
           <Reminder />
-          <Stack width="100%" gap={2} paddingTop={3}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack width="100%" gap={2}>
+            <Stack
+              direction="row"
+              paddingTop={3}
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Typography fontWeight={700} fontSize={14}>
                 BUONI DA SPENDERE
               </Typography>
@@ -88,7 +93,12 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
                 <EmptyVouchers />
               )}
             </Stack>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack
+              direction="row"
+              paddingTop={3}
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Typography fontWeight={700} fontSize={14}>
                 BUONI SPESI
               </Typography>

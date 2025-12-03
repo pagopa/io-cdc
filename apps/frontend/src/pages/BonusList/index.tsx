@@ -7,23 +7,22 @@ import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRouteGuard } from '../../hooks';
 import { EmptyState } from '@io-cdc/ui';
 import { Button, Typography } from '@mui/material';
-import { useGetAllVouchers } from '../../hooks/useGetAllVouchers';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
+import { useGetAllVoucherQuery } from '../../features/app/services';
 
 const BonusList = () => {
   //TODO test only
   useRouteGuard();
 
-  const { vouchers, getVouchers, isError, isSuccess } = useGetAllVouchers();
+  const { data: vouchers, isError, isFetching, refetch } = useGetAllVoucherQuery();
 
-  const isLoading = !isError && !isSuccess;
   const navigate = useNavigate();
 
   useEffect(() => {
     trackWebviewEvent('CDC_BONUS_LIST');
   }, []);
 
-  if (isLoading)
+  if (isFetching)
     return (
       <Stack height="100dvh" flex={1} justifyContent="center" alignItems="center" rowGap={2}>
         <CircularProgress />
@@ -34,12 +33,14 @@ const BonusList = () => {
       </Stack>
     );
 
-  if (isError) return <VoucherListError reload={() => getVouchers()} />;
-
   return (
-    <Stack p={3} gap={3}>
+    <Stack p={3} gap={3} height="100%">
       <Header onBack={() => navigate(APP_ROUTES.HOME)} />
-      <VoucherList vouchersList={vouchers} />
+      {isError ? (
+        <VoucherListError reload={() => refetch()} />
+      ) : (
+        <VoucherList vouchersList={vouchers ?? []} />
+      )}
     </Stack>
   );
 };
