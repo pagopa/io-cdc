@@ -8,6 +8,7 @@ type TrackEventProperties = {
   name: 'CDC_BONUS_GENERATION_ERROR' | 'CDC_BONUS_SHOW_DETAIL_ERROR' | '';
   properties: {
     reason: 'service_not_available' | 'generic_error';
+    event_type: 'error';
     event_category: 'KO';
   };
 };
@@ -28,6 +29,7 @@ const DEFAULT_GENERIC_ERROR: TrackConfig = {
     name: '',
     properties: {
       event_category: 'KO',
+      event_type: 'error',
       reason: 'generic_error',
     },
   },
@@ -54,6 +56,7 @@ const CONFIG_GENERATE: Record<number, TrackConfig> = {
       name: 'CDC_BONUS_GENERATION_ERROR',
       properties: {
         event_category: 'KO',
+        event_type: 'error',
         reason: 'service_not_available',
       },
     },
@@ -71,6 +74,7 @@ const CONFIG_RETRIEVE: Record<number, TrackConfig> = {
       name: 'CDC_BONUS_SHOW_DETAIL_ERROR',
       properties: {
         event_category: 'KO',
+        event_type: 'error',
         reason: 'service_not_available',
       },
     },

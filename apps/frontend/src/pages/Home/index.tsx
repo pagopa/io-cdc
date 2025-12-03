@@ -55,6 +55,7 @@ const Home = () => {
       onOpen: () =>
         trackWebviewEvent(
           success ? 'CDC_BONUS_CANCELLATION_SUCCESS' : 'CDC_BONUS_CANCELLATION_ERROR',
+          { event_category: success ? 'UX' : 'KO', event_type: success ? 'screen_view' : 'error' },
         ),
     };
   }, [deleted]);

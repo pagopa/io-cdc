@@ -1,5 +1,5 @@
 import { Stack } from '@mui/system';
-import { Header, VoucherList } from '../../components';
+import { Header, VoucherList, VoucherListError } from '../../components';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trackWebviewEvent } from '../../utils/trackEvent';
@@ -34,15 +34,7 @@ const BonusList = () => {
       </Stack>
     );
 
-  if (isError)
-    return (
-      <Stack minHeight={100} justifyContent="center">
-        <EmptyState icon="info" title="Non siamo riusciti a caricare la lista dei buoni" />
-        <Button variant="text" onClick={() => getVouchers()}>
-          Prova di nuovo
-        </Button>
-      </Stack>
-    );
+  if (isError) return <VoucherListError reload={() => getVouchers()} />;
 
   return (
     <Stack p={3} gap={3}>
