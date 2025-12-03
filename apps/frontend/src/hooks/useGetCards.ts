@@ -30,9 +30,9 @@ export const useGetCards = () => {
   const loadData = useCallback(async () => {
     const { data: cards, isError, isSuccess, error } = await getCards();
 
-    if (isError && isFetchBaseQueryError(error) && error.status === 400) {
-      navigate(APP_ROUTES.COURTESY);
-      return;
+    if (isError && isFetchBaseQueryError(error)) {
+      if (error.status === 400) return navigate(APP_ROUTES.COURTESY);
+      if (error.status >= 500) return navigate(APP_ROUTES.FEEDBACK_CARDS);
     }
 
     if (!cards || !cards?.length) {
