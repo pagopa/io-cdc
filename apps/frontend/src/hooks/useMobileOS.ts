@@ -5,13 +5,6 @@ export const useMobileOS = () => {
 
   useEffect(() => {
     const ua = navigator.userAgent || navigator.vendor;
-    console.log('🚀 ~ useMobileOS ~ ua:', {
-      ua,
-      userAgent: navigator.userAgent,
-      vendor: navigator.vendor,
-      platform: navigator.platform,
-      maxTouchPoints: navigator.maxTouchPoints,
-    });
 
     if (/android/i.test(ua)) {
       setOS('android');
