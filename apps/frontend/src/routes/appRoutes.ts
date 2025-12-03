@@ -14,6 +14,7 @@ const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'))
 // Usage routes
 const Home = React.lazy(() => import('../pages/Home'));
 const BonusList = React.lazy(() => import('../pages/BonusList'));
+const CourtesyPage = React.lazy(() => import('../pages/Courtesy'));
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const CardsEmptyState = React.lazy(() => import('../pages/CardsEmptyState'));
 const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
@@ -30,6 +31,7 @@ export enum APP_ROUTES {
   AUTHORIZE = '/authorize',
   NOT_FOUND = '/not-found',
   CARDS_EMPTY = '/no-cards',
+  COURTESY = '/courtesy-page',
   BONUS_LIST = '/lista-buoni',
   FEEDBACK_REQUEST = '/esito',
   SELECT_YEAR = '/scelta-anno',
@@ -89,6 +91,10 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.CARDS_EMPTY,
     Element: CardsEmptyState,
+  },
+  {
+    path: APP_ROUTES.COURTESY,
+    Element: CourtesyPage,
   },
 ];
 
