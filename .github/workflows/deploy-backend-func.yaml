@@ -12,12 +12,16 @@ on:
 jobs:
   deploy:
     name: Deploy Backend Func
-    uses: pagopa/dx/.github/workflows/function_app_deploy.yaml@dbc5a5a25c47432b9faca8b183f26d7df707a29b
+    uses: pagopa/dx/.github/workflows/release-azure-appsvc.yaml@5ee71138780439aa0af1c422e445468c77f5112c
     secrets: inherit
     with:
       workspace_name: backend-func
       environment: app-prod
       resource_group_name: io-p-itn-cdc-rg-01
-      function_app_name: io-p-itn-cdc-backend-func-01
-      use_staging_slot: true
+      web_app_name: io-p-itn-cdc-backend-func-01
       use_labels: false
+      disable_auto_staging_deploy: true
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write

@@ -9,14 +9,14 @@
     "test:coverage": "turbo run test:coverage",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
-    "version": "changeset version && yarn install",
+    "version": "changeset version && pnpm install",
     "release": "changeset tag",
     "generate": "turbo run generate",
-    "frontend:dev": "yarn workspace frontend dev",
-    "frontend:build": "yarn workspace frontend build",
-    "frontend:preview": "yarn workspace frontend preview --host",
-    "ui:build": "yarn workspace @io-cdc/ui build",
-    "mixpanel:build": "yarn workspace @io-cdc/mixpanel build"
+    "frontend:dev": "pnpm --filter frontend dev",
+    "frontend:build": "pnpm --filter frontend build",
+    "frontend:preview": "pnpm --filter frontend preview --host",
+    "ui:build": "pnpm --filter @io-cdc/ui build",
+    "mixpanel:build": "pnpm --filter @io-cdc/mixpanel build"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
@@ -38,9 +38,5 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@4.9.2",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
 }
