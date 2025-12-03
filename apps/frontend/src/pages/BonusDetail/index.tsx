@@ -67,9 +67,11 @@ const BonusDetail = () => {
 
   const onDeleteBonus = useCallback(async () => {
     trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
+    setIsDialogOpen(false);
     const res = await deleteBonus(id);
     if (res.error) {
       dispatch(ticketsActions.setDeleted('error'));
+      return navigate(APP_ROUTES.HOME);
     }
     dispatch(ticketsActions.setDeleted('success'));
     navigate(APP_ROUTES.HOME);
