@@ -1,11 +1,19 @@
 import { Icon, OperationResult } from '@io-cdc/ui';
 // import { useNavigate } from 'react-router-dom';
-import { Button, Stack } from '@mui/material';
-import { useEffect } from 'react';
+import { Button, Stack, Typography } from '@mui/material';
+import { useEffect, useMemo } from 'react';
 import { trackWebviewEvent } from '../../utils/trackEvent';
-import { useRouteGuard } from '../../hooks';
+import { useMobileOS, useRouteGuard } from '../../hooks';
 
 const CourtesyPage = () => {
+  const os = useMobileOS();
+
+  const deepLink = useMemo(() => {
+    if (!os) return '';
+    if (os === 'android') return 'https://play.google.com/store/apps/details?id=it.pagopa.io.app';
+    return 'https://apps.apple.com/it/app/io/id1501681835';
+  }, [os]);
+
   //TODO test only
   useRouteGuard();
 
@@ -24,10 +32,7 @@ const CourtesyPage = () => {
         description=" Nel frattempo, ti suggeriamo di aggiornare l’app all’ultima versione"
       />
       <Stack direction="column" justifyContent="center" alignItems="center">
-        <Button
-          onClick={() => window.location.replace('https://apps.apple.com/it/app/io/id1501681835')}
-          variant="contained"
-        >
+        <Button onClick={() => window.location.replace(deepLink)} variant="contained">
           Aggiorna l&apos;app
         </Button>
         <Button
