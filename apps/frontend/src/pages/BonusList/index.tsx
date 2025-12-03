@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRouteGuard } from '../../hooks';
-import { EmptyState } from '@io-cdc/ui';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import { useGetAllVoucherQuery } from '../../features/app/services';
 
@@ -37,7 +36,9 @@ const BonusList = () => {
     <Stack p={3} gap={3} height="100%">
       <Header onBack={() => navigate(APP_ROUTES.HOME)} />
       {isError ? (
-        <VoucherListError reload={() => refetch()} />
+        <Stack height="100%" justifyContent="center" alignItems="center">
+          <VoucherListError reload={() => refetch()} />
+        </Stack>
       ) : (
         <VoucherList vouchersList={vouchers ?? []} />
       )}

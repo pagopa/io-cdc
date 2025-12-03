@@ -1,5 +1,4 @@
-import { EmptyState } from '@io-cdc/ui';
-import { Typography, Divider, Button, CircularProgress } from '@mui/material';
+import { Typography, Divider, CircularProgress } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useCallback, useMemo } from 'react';
 import { VoucherCard } from '../../BonusList/components/BonusItem';
