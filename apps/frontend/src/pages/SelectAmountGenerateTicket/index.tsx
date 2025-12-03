@@ -79,7 +79,7 @@ const SelectAmountGenerateTicket = () => {
     return (
       <Navigate
         to={APP_ROUTES.FEEDBACK_VOUCHERS}
-        state={{ status: creationError.status, name: 'CDC_BONUS_GENERATION_ERROR' }}
+        state={{ status: 503, name: 'CDC_BONUS_GENERATION_ERROR' }}
         replace
       />
     );

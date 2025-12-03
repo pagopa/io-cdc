@@ -33,7 +33,7 @@ export const useGetVoucherDetail = ({ id }: UseGetVoucherDetail) => {
 
     if (isError && isFetchBaseQueryError(error)) {
       navigate(APP_ROUTES.FEEDBACK_VOUCHERS, {
-        state: { status: error.status, name: 'CDC_BONUS_SHOW_DETAIL_ERROR' },
+        state: { status: 503, name: 'CDC_BONUS_SHOW_DETAIL_ERROR' },
         replace: true,
       });
       return;

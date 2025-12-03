@@ -44,8 +44,6 @@ export const generateGenericError = (
 });
 
 const CONFIG_GENERATE: Record<number, TrackConfig> = {
-  400: generateGenericError('CDC_BONUS_GENERATION_ERROR'),
-  500: generateGenericError('CDC_BONUS_GENERATION_ERROR'),
   503: {
     icon: 'umbrella',
     title: 'Al momento non riusciamo a generare il buono',
@@ -61,8 +59,6 @@ const CONFIG_GENERATE: Record<number, TrackConfig> = {
 };
 
 const CONFIG_RETRIEVE: Record<number, TrackConfig> = {
-  400: generateGenericError('CDC_BONUS_GENERATION_ERROR'),
-  500: generateGenericError('CDC_BONUS_SHOW_DETAIL_ERROR'),
   503: {
     icon: 'umbrella',
     title: 'Al momento non riusciamo a recuperare il buono',

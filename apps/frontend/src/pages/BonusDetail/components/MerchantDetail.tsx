@@ -9,7 +9,7 @@ type MerchantDetailProps = {
 export const MerchantDetail = ({ merchant, usage_date }: MerchantDetailProps) => {
   if (!merchant) return null;
   return (
-    <Stack direction="column" gap={2}>
+    <Stack direction="column" gap={2} mb={4}>
       <Stack direction="row" gap={2} py={1} alignItems="flex-end">
         <Icon name="store" />
         <Typography fontWeight={700} fontSize={18}>

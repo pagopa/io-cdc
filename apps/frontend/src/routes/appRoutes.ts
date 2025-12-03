@@ -14,7 +14,9 @@ const ExpiredInitiative = React.lazy(() => import('../pages/ExpiredInitiative'))
 // Usage routes
 const Home = React.lazy(() => import('../pages/Home'));
 const BonusList = React.lazy(() => import('../pages/BonusList'));
+const CourtesyPage = React.lazy(() => import('../pages/Courtesy'));
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
+const FeedbackCards = React.lazy(() => import('../pages/FeedbackCards'));
 const CardsEmptyState = React.lazy(() => import('../pages/CardsEmptyState'));
 const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
@@ -30,6 +32,7 @@ export enum APP_ROUTES {
   AUTHORIZE = '/authorize',
   NOT_FOUND = '/not-found',
   CARDS_EMPTY = '/no-cards',
+  COURTESY = '/courtesy-page',
   BONUS_LIST = '/lista-buoni',
   FEEDBACK_REQUEST = '/esito',
   SELECT_YEAR = '/scelta-anno',
@@ -39,6 +42,7 @@ export enum APP_ROUTES {
   FEEDBACK_VOUCHERS = '/voucher-feedback',
   SELECT_CARD = '/genera-buono/seleziona-carta',
   SELECT_AMOUNT = '/genera-buono/seleziona-importo',
+  FEEDBACK_CARDS = '/dettaglio-carta-non-disponibile',
 }
 
 export type APP_ROUTES_CONFIG_TYPE = {
@@ -89,6 +93,14 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.CARDS_EMPTY,
     Element: CardsEmptyState,
+  },
+  {
+    path: APP_ROUTES.COURTESY,
+    Element: CourtesyPage,
+  },
+  {
+    path: APP_ROUTES.FEEDBACK_CARDS,
+    Element: FeedbackCards,
   },
 ];
 

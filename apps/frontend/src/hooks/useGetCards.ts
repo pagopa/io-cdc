@@ -6,6 +6,7 @@ import { APP_ROUTES } from '../routes/appRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { ticketsActions } from '../features/app/reducers';
 import { selectActiveCard } from '../features/app/selectors';
+import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 
 export const useGetCards = () => {
   const navigate = useNavigate();
@@ -28,6 +29,11 @@ export const useGetCards = () => {
 
   const loadData = useCallback(async () => {
     const { data: cards, isError, isSuccess, error } = await getCards();
+
+    if (isError && isFetchBaseQueryError(error)) {
+      if (error.status === 400) return navigate(APP_ROUTES.COURTESY);
+      if (error.status >= 500) return navigate(APP_ROUTES.FEEDBACK_CARDS);
+    }
 
     if (!cards || !cards?.length) {
       navigate(APP_ROUTES.CARDS_EMPTY);
