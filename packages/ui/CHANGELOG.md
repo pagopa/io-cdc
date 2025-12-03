@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.7
+
+### Patch Changes
+
+- daf9465: upgrade node, fix action, migrated to pnpm
+
 ## 1.0.6
 
 ### Patch Changes
