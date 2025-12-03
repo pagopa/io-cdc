@@ -1,17 +1,17 @@
 {
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "display": "Node 20",
-    "_version": "20.17.0",
-  
-    "compilerOptions": {
-      "lib": ["es2023","DOM"],
-      "module": "nodenext",
-      "target": "es2022",
-  
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node16"
-    }
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 22",
+  "_version": "22.14.0",
+
+  "compilerOptions": {
+    "lib": ["es2023", "DOM"],
+    "module": "nodenext",
+    "target": "es2022",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node16"
   }
+}
