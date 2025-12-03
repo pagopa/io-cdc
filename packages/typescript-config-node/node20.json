@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Node 22",
-  "_version": "24.11.1",
+  "_version": "22.14.0",
 
   "compilerOptions": {
     "lib": ["es2023", "DOM"],
