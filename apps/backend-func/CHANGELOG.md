@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.11
+
+### Patch Changes
+
+- ff10d4f: pached all packages - add courtesy page and some feedback page
+
 ## 1.1.10
 
 ### Patch Changes

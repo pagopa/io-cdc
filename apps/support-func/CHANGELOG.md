@@ -1,5 +1,11 @@
 # support-func
 
+## 1.1.7
+
+### Patch Changes
+
+- ff10d4f: pached all packages - add courtesy page and some feedback page
+
 ## 1.1.6
 
 ### Patch Changes
