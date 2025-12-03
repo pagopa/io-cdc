@@ -1,5 +1,14 @@
 # frontend
 
+## 1.1.14
+
+### Patch Changes
+
+- daf9465: upgrade node, fix action, migrated to pnpm
+- Updated dependencies [daf9465]
+  - @io-cdc/mixpanel@1.0.2
+  - @io-cdc/ui@1.0.7
+
 ## 1.1.13
 
 ### Patch Changes
