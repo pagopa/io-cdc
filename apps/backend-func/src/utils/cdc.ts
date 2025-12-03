@@ -438,12 +438,28 @@ const getCdcVouchersTE =
                 (vouchers) => !!vouchers,
                 () => new Error("Undefined cdc vouchers list"),
               ),
+              TE.map((vouchers) => {
+                console.log("VOUCHERS LENGTH", vouchers.length);
+                traceEvent(vouchers.length)(
+                  "getCdcVouchersTE",
+                  `cdc.api.${env}.request.vouchers.prefilter.cardinality.response`,
+                  vouchers.length,
+                );
+                return vouchers;
+              }),
               TE.map((vouchers) =>
                 // we do not want to see cancelled vouchers
-                vouchers.filter(
-                  (v) => v.stato !== StatoVoucherEnum.CANCELLATO,
-                ),
+                vouchers.filter((v) => v.stato !== StatoVoucherEnum.CANCELLATO),
               ),
+              TE.map((vouchers) => {
+                console.log("Filtered vouchers:", vouchers.length);
+                traceEvent(vouchers.length)(
+                  "getCdcVouchersTE",
+                  `cdc.api.${env}.request.vouchers.postfilter.cardinality.response`,
+                  vouchers.length,
+                );
+                return vouchers;
+              }),
               TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
             ),
           ),

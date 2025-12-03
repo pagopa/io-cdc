@@ -62,3 +62,6 @@ generated
 
 local.settings.json
 local_scripts
+
+# PNPM
+.pnpm-store

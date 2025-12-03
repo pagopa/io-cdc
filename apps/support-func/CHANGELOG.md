@@ -1,5 +1,11 @@
 # support-func
 
+## 1.1.6
+
+### Patch Changes
+
+- daf9465: upgrade node, fix action, migrated to pnpm
+
 ## 1.1.5
 
 ### Patch Changes
