@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.8
+
+### Patch Changes
+
+- ff10d4f: pached all packages - add courtesy page and some feedback page
+
 ## 1.0.7
 
 ### Patch Changes
