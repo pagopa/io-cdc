@@ -12,7 +12,7 @@ on:
 jobs:
   deploy:
     name: Deploy Backend Func
-    uses: pagopa/dx/.github/workflows/release-azure-appsvc.yaml@5ee71138780439aa0af1c422e445468c77f5112c
+    uses: pagopa/dx/.github/workflows/release-azure-appsvc-v1.yaml@d187d7667ee20d93cb588e06d7ab194ece3de911
     secrets: inherit
     with:
       workspace_name: backend-func
