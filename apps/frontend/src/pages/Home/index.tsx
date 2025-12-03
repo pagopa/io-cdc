@@ -46,6 +46,19 @@ const Home = () => {
     return label;
   }, []);
 
+  const bannerConfig = useMemo(() => {
+    if (!deleted) return undefined;
+    const success = deleted === 'success';
+    return {
+      message: success ? 'Hai annullato il buono' : 'Non è stato possibile annullare, riprova',
+      messageType: deleted,
+      onOpen: () =>
+        trackWebviewEvent(
+          success ? 'CDC_BONUS_CANCELLATION_SUCCESS' : 'CDC_BONUS_CANCELLATION_ERROR',
+        ),
+    };
+  }, [deleted]);
+
   const onClickShowAll = useCallback(() => {
     trackWebviewEvent('CDC_SHOW_BONUS_LIST');
     navigate(APP_ROUTES.BONUS_LIST);
@@ -62,14 +75,12 @@ const Home = () => {
   }, [cards]);
 
   useEffect(() => {
-    if (deleted && isFulfilled) {
+    if (bannerConfig && isFulfilled) {
       showToast({
-        message: 'Hai annullato il buono',
-        messageType: 'success',
+        ...bannerConfig,
         onClose: () => {
-          dispatch(ticketsActions.setDeleted(false));
+          dispatch(ticketsActions.setDeleted(undefined));
         },
-        onOpen: () => trackWebviewEvent('CDC_BONUS_CANCELLATION_SUCCESS'),
       });
     }
   }, [isFulfilled]);
