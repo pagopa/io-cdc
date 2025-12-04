@@ -46,7 +46,7 @@ export const checkStartDatetime = (user: Session) => (deps: Dependencies) =>
       (startDate) => {
         const testUser = isTestUser(deps.config, user.fiscal_code);
         const now = new Date();
-        const validDate = isAfter(now, startDate) || testUser;
+        const validDate = isAfter(now, startDate); // || testUser;
         emitCustomEvent("cdc.get.cards.iniziative.status", {
           data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${
             validDate ? "Iniziative open" : "Initiative closed"
