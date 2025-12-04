@@ -1,5 +1,11 @@
 # support-func
 
+## 1.1.8
+
+### Patch Changes
+
+- 57decdf: Remove aggressive debug logs
+
 ## 1.1.7
 
 ### Patch Changes

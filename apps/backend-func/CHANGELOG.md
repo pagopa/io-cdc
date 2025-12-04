@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.14
+
+### Patch Changes
+
+- 57decdf: Remove aggressive debug logs
+
 ## 1.1.13
 
 ### Patch Changes
