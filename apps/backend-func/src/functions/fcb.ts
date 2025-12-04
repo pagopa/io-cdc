@@ -310,6 +310,9 @@ export const makeFimsCallbackHandler: H.Handler<
         `Error: ${responseError.message}`,
       ),
     ),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)("fcb", "cdc.function.error", responseError),
+    ),
     responseErrorToHttpError,
   ),
 );

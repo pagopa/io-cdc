@@ -21,6 +21,7 @@ import {
 } from "../utils/errors.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
@@ -113,6 +114,13 @@ export const makeGetCardsHandler: H.Handler<
     RTE.chain(({ token }) => getSession(token)),
     RTE.chain((user) => getCards(user)),
     RTE.map(H.successJson),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "get-cards",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     responseErrorToHttpError,
   ),
 );

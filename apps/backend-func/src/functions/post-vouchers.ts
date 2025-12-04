@@ -20,6 +20,7 @@ import {
 } from "../utils/errors.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
@@ -80,6 +81,13 @@ export const makePostVouchersHandler: H.Handler<
     ),
     RTE.chain(({ user, voucher }) => postVouchers(user, voucher)),
     RTE.map(H.successJson),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "post-vouchers",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     responseErrorToHttpError,
   ),
 );

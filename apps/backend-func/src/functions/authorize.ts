@@ -25,6 +25,7 @@ import {
 import { RedisClientFactory } from "../utils/redis.js";
 import { deleteTask, getTask } from "../utils/redis_storage.js";
 import { getSessionTE } from "../utils/session.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   config: Config;
@@ -106,6 +107,13 @@ export const makeAuthorizeHandler: H.Handler<
     withParams(QueryParams, req.query),
     RTE.mapLeft(errorToValidationError),
     RTE.chain(flow(getSessionToken, RTE.map(H.successJson))),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "authorize",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     responseErrorToHttpError,
   ),
 );
