@@ -15,6 +15,7 @@ import { Session } from "../models/session.js";
 import { CdcClientEnvironmentRouter, isTestUser } from "../utils/env_router.js";
 import {
   errorToInternalError,
+  errorToNotFoundError,
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
@@ -98,6 +99,16 @@ export const getCards = (user: Session) => (deps: Dependencies) =>
             last_name: user.family_name,
           }),
         TE.mapLeft(errorToInternalError),
+      ),
+    ),
+    TE.chainW((cards) =>
+      pipe(
+        cards,
+        TE.fromPredicate(
+          (cards) => cards.length > 0,
+          () => new Error("Empty cdc cards list"),
+        ),
+        TE.mapLeft(errorToNotFoundError),
       ),
     ),
   );

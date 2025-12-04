@@ -10,6 +10,7 @@ type TrackEventProperties =
       properties: {
         reason: 'service_not_available' | 'generic_error';
         event_category: 'KO';
+        event_type: 'error';
       };
     }
   | {
@@ -50,6 +51,7 @@ export const CONFIG_BY_STATUS: Record<
       name: 'CDC_REQUEST_FAILURE',
       properties: {
         event_category: 'KO',
+        event_type: 'error',
         reason: 'service_not_available',
       },
     },
@@ -62,6 +64,7 @@ export const CONFIG_BY_STATUS: Record<
       name: 'CDC_REQUEST_FAILURE',
       properties: {
         event_category: 'KO',
+        event_type: 'error',
         reason: 'generic_error',
       },
     },
