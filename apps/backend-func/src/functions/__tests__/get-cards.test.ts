@@ -135,6 +135,19 @@ describe("get-cards | getCards", () => {
       });
   });
 
+  it("1. should return 404 when no cards are found", async () => {
+    vi.setSystemTime(new Date("2026-12-31T22:00:00.001Z"));
+    getCdcCardsTEMock.mockReturnValueOnce(TE.right([]));
+    const res = await getCards(aValidSession)(deps)();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 404,
+        message: "Empty cdc cards list",
+        title: "Not Found",
+      });
+  });
+
   it("1. should succeed when everything is ok", async () => {
     vi.setSystemTime(new Date("2026-12-31T22:00:00.001Z"));
     const res = await getCards(aValidSession)(deps)();
