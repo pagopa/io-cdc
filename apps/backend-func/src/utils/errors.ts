@@ -34,6 +34,12 @@ export const errorToValidationError = (e: Error) => ({
   title: "Bad Request",
 });
 
+export const errorToNotFoundError = (e: Error) => ({
+  code: 404 as const,
+  message: e.message,
+  title: "Not Found",
+});
+
 export const errorToInternalError = (e: Error): ResponseError => ({
   code: 500 as const,
   message: e.message,
