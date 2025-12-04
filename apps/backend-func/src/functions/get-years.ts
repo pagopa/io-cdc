@@ -13,6 +13,7 @@ import {
   errorToValidationError,
   responseErrorToHttpError,
 } from "../utils/errors.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   config: Config;
@@ -73,6 +74,13 @@ export const makeGetYearsHandler: H.Handler<
   pipe(
     getYears(),
     RTE.map((years) => H.successJson(years)),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "get-years",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     responseErrorToHttpError,
   ),
 );

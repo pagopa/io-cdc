@@ -20,6 +20,7 @@ import {
 import { OidcClient, getFimsRedirectTE } from "../utils/fims.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { setWithExpirationTask } from "../utils/redis_storage.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   fimsClient: OidcClient;
@@ -96,6 +97,9 @@ export const makeFimsAuthHandler: H.Handler<
     RTE.chain(({ query }) => getFimsRedirect(query.device, query.route)),
     RTE.map((redirect) =>
       pipe(H.empty, H.withStatusCode(302), H.withHeader("Location", redirect)),
+    ),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)("fauth", "cdc.function.error", responseError),
     ),
     responseErrorToHttpError,
   ),

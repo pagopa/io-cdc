@@ -19,6 +19,7 @@ import {
 } from "../utils/errors.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   cdcClientEnvironmentRouter: CdcClientEnvironmentRouter;
@@ -77,6 +78,13 @@ export const makeDeleteVoucherHandler: H.Handler<
     ),
     RTE.chain(({ params, user }) => deleteVoucher(user, params.id)),
     RTE.map(H.successJson),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "delete-voucher",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     responseErrorToHttpError,
   ),
 );

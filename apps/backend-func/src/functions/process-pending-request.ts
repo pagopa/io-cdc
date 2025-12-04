@@ -227,6 +227,13 @@ export const ProcessPendingRequestHandler: H.Handler<
 > = H.of((pendingCardRequestMessage) =>
   pipe(
     processPendingCardRequests(pendingCardRequestMessage),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "process-pending-request",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     RTE.map(() => void 0),
   ),
 );

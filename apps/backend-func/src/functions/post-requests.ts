@@ -31,6 +31,7 @@ import { QueueStorage } from "../utils/queue.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { activateSpecialServiceIfNotActive } from "../utils/services.js";
 import { getSessionTE } from "../utils/session.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   config: Config;
@@ -177,6 +178,13 @@ export const makePostCardRequestsHandler: H.Handler<
     ),
     RTE.chain(({ user, years }) => postCardRequests(user, years)),
     RTE.map((years) => pipe(H.successJson(years), H.withStatusCode(201))),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "post-requests",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     responseErrorToHttpError,
   ),
 );

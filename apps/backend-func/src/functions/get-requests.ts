@@ -20,6 +20,7 @@ import {
 } from "../utils/errors.js";
 import { RedisClientFactory } from "../utils/redis.js";
 import { getSessionTE } from "../utils/session.js";
+import { traceEvent } from "../utils/tracing.js";
 
 interface Dependencies {
   config: Config;
@@ -70,6 +71,13 @@ export const makeGetCardRequestsHandler: H.Handler<
     RTE.chain(({ token }) => getSession(token)),
     RTE.chain((user) => getCardRequests(user.fiscal_code)),
     RTE.map(H.successJson),
+    RTE.mapLeft((responseError) =>
+      traceEvent(responseError)(
+        "get-requests",
+        "cdc.function.error",
+        responseError,
+      ),
+    ),
     responseErrorToHttpError,
   ),
 );
