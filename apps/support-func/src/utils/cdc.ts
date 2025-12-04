@@ -99,13 +99,6 @@ const getAlreadyRequestedYearsCdcTE =
             )(response),
           ),
           TE.map((successResponse) => successResponse.value),
-          TE.map((responseValue) =>
-            traceEvent(responseValue)(
-              "getAlreadyRequestedYearsCdcTE",
-              `cdc.io.api.${env}.request.status.response`,
-              responseValue,
-            ),
-          ),
           TE.map((res) =>
             (
               res.listaStatoPerAnno

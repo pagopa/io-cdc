@@ -71,8 +71,8 @@ const getJwtTE = (
 
 const mapCdcApiCallFailure =
   (message: string) =>
-  (res: IResponseType<number, unknown, never>): Error =>
-    new Error(`${message} | ${res.status} | ${JSON.stringify(res.value)}`);
+    (res: IResponseType<number, unknown, never>): Error =>
+      new Error(`${message} | ${res.status} | ${JSON.stringify(res.value)}`);
 
 // CDC STATUS API
 const isCdcApiStatusCallSuccess = (
@@ -115,13 +115,6 @@ const getAlreadyRequestedYearsCdcTE =
             )(response),
           ),
           TE.map((successResponse) => successResponse.value),
-          TE.map((responseValue) =>
-            traceEvent(responseValue)(
-              "getAlreadyRequestedYearsCdcTE",
-              `cdc.api.${env}.request.status.response`,
-              responseValue,
-            ),
-          ),
           TE.map((res) =>
             (
               res.listaStatoPerAnno
@@ -165,9 +158,9 @@ const requestSuccessfulCodes = [
 
 const requestCdcTE =
   (config: Config, env: CdcEnvironmentT) =>
-  (user: CdcApiUserData, request: CdcApiRequestData) =>
-    request.length > 0
-      ? pipe(
+    (user: CdcApiUserData, request: CdcApiRequestData) =>
+      request.length > 0
+        ? pipe(
           TE.Do,
           TE.bind("client", () =>
             pipe(
@@ -185,13 +178,6 @@ const requestCdcTE =
                   })),
                 } as InputBeneficiarioBean,
               }),
-              TE.map((payload) =>
-                traceEvent(payload)(
-                  "requestCdcTE",
-                  `cdc.api.${env}.request.register.payload`,
-                  payload,
-                ),
-              ),
             ),
           ),
           TE.chain(({ client, payload }) =>
@@ -218,13 +204,6 @@ const requestCdcTE =
             ),
           ),
           TE.map((successResponse) => successResponse.value),
-          TE.map((responseValue) =>
-            traceEvent(responseValue)(
-              "requestCdcTE",
-              `cdc.api.${env}.request.register.response`,
-              responseValue,
-            ),
-          ),
           TE.map(
             (res) =>
               res.listaEsitoRichiestaPerAnno
@@ -249,7 +228,7 @@ const requestCdcTE =
             ),
           ),
         )
-      : pipe(TE.of(true));
+        : pipe(TE.of(true));
 
 // CDC LIST CARDS API
 const isCdcApiGetCardsCallSuccess = (
@@ -288,14 +267,7 @@ const getCdcCardsTE =
               ),
             )(response),
           ),
-          TE.map((successResponse) => {
-            traceEvent(successResponse.value)(
-              "getCdcCardsTE",
-              `cdc.api.${env}.request.cards.response`,
-              successResponse.value,
-            );
-            return successResponse.value;
-          }),
+          TE.map((successResponse) => successResponse.value),
           TE.chain(({ listaRisultati }) =>
             pipe(
               listaRisultati,
@@ -342,12 +314,12 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
   id: v.codVoucher,
   refund:
     v.rimborso &&
-    v.rimborso.importoDaRiaccreditare &&
-    v.rimborso.importoDaRiaccreditare > 0
+      v.rimborso.importoDaRiaccreditare &&
+      v.rimborso.importoDaRiaccreditare > 0
       ? {
-          amount: v.rimborso.importoDaRiaccreditare,
-          refund_status: mapVoucherRefundStatus(v.rimborso.stato),
-        }
+        amount: v.rimborso.importoDaRiaccreditare,
+        refund_status: mapVoucherRefundStatus(v.rimborso.stato),
+      }
       : undefined,
   merchant: v.esercente || undefined,
   voucher_status: mapVoucherStatus(v.stato),
@@ -385,88 +357,63 @@ const mapVoucherRefundStatus = (
 
 const getCdcVouchersTE =
   (config: Config, env: CdcEnvironmentT) =>
-  (user: CdcApiUserData, year?: string) =>
-    pipe(
-      getJwtTE(config, env, user),
-      TE.chain((jwt) =>
-        pipe(
-          TE.of(getCdcClient(config, env)(jwt)),
-          TE.chain((client) =>
-            TE.tryCatch(
-              async () =>
-                await client.getListaVoucher(year ? { annoRif: year } : {}),
-              E.toError,
-            ),
-          ),
-          TE.chain((response) =>
-            pipe(
-              response,
-              TE.fromEither,
-              TE.mapLeft(
-                (errors) =>
-                  new Error(errorsToReadableMessages(errors).join(" / ")),
+    (user: CdcApiUserData, year?: string) =>
+      pipe(
+        getJwtTE(config, env, user),
+        TE.chain((jwt) =>
+          pipe(
+            TE.of(getCdcClient(config, env)(jwt)),
+            TE.chain((client) =>
+              TE.tryCatch(
+                async () =>
+                  await client.getListaVoucher(year ? { annoRif: year } : {}),
+                E.toError,
               ),
             ),
-          ),
-          TE.chain((response) =>
-            TE.fromPredicate(
-              isCdcApiGetVouchersCallSuccess,
-              mapCdcApiCallFailure(
-                `Get vouchers CDC failure | API result not success.`,
+            TE.chain((response) =>
+              pipe(
+                response,
+                TE.fromEither,
+                TE.mapLeft(
+                  (errors) =>
+                    new Error(errorsToReadableMessages(errors).join(" / ")),
+                ),
               ),
-            )(response),
-          ),
-          TE.map((successResponse) => {
-            traceEvent(successResponse.value)(
-              "getCdcVouchersTE",
-              `cdc.api.${env}.request.vouchers.response`,
-              successResponse.value,
-            );
-            return successResponse.value;
-          }),
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          TE.chain(({ listaRisultati, ..._ }) =>
-            pipe(
-              listaRisultati,
+            ),
+            TE.chain((response) =>
               TE.fromPredicate(
-                (vouchers) => !!vouchers,
-                () => new Error("Undefined cdc vouchers list"),
+                isCdcApiGetVouchersCallSuccess,
+                mapCdcApiCallFailure(
+                  `Get vouchers CDC failure | API result not success.`,
+                ),
+              )(response),
+            ),
+            TE.map((successResponse) => successResponse.value),
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            TE.chain(({ listaRisultati, ..._ }) =>
+              pipe(
+                listaRisultati,
+                TE.fromPredicate(
+                  (vouchers) => !!vouchers,
+                  () => new Error("Undefined cdc vouchers list"),
+                ),
+                TE.map((vouchers) =>
+                  // we do not want to see cancelled vouchers
+                  vouchers.filter((v) => v.stato !== StatoVoucherEnum.CANCELLATO),
+                ),
+                TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
               ),
-              TE.map((vouchers) => {
-                console.log("VOUCHERS LENGTH", vouchers.length);
-                traceEvent(vouchers.length)(
-                  "getCdcVouchersTE",
-                  `cdc.api.${env}.request.vouchers.prefilter.cardinality.response`,
-                  vouchers.length,
-                );
-                return vouchers;
-              }),
-              TE.map((vouchers) =>
-                // we do not want to see cancelled vouchers
-                vouchers.filter((v) => v.stato !== StatoVoucherEnum.CANCELLATO),
-              ),
-              TE.map((vouchers) => {
-                console.log("Filtered vouchers:", vouchers.length);
-                traceEvent(vouchers.length)(
-                  "getCdcVouchersTE",
-                  `cdc.api.${env}.request.vouchers.postfilter.cardinality.response`,
-                  vouchers.length,
-                );
-                return vouchers;
-              }),
-              TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
             ),
           ),
         ),
-      ),
-      TE.mapLeft((err) =>
-        traceEvent(err)(
-          "getCdcVouchersTE",
-          `cdc.api.${env}.request.vouchers.error`,
-          err,
+        TE.mapLeft((err) =>
+          traceEvent(err)(
+            "getCdcVouchersTE",
+            `cdc.api.${env}.request.vouchers.error`,
+            err,
+          ),
         ),
-      ),
-    );
+      );
 
 // CDC POST VOUCHER API
 const isCdcApiPostVouchersCallSuccess = (
@@ -475,61 +422,61 @@ const isCdcApiPostVouchersCallSuccess = (
 
 const postCdcVouchersTE =
   (config: Config, env: CdcEnvironmentT) =>
-  (user: CdcApiUserData, year: string, amount: number) =>
-    pipe(
-      getJwtTE(config, env, user),
-      TE.chain((jwt) =>
-        pipe(
-          TE.of(getCdcClient(config, env)(jwt)),
-          TE.chain((client) =>
-            TE.tryCatch(
-              async () =>
-                await client.generaVoucher({
-                  body: { anno: year, idBene: 7, importo: amount }, // idBene is fixed to 7 as per CDC API spec (LIBRO)
-                }),
-              E.toError,
-            ),
-          ),
-          TE.chain((response) =>
-            pipe(
-              response,
-              TE.fromEither,
-              TE.mapLeft(
-                (errors) =>
-                  new Error(errorsToReadableMessages(errors).join(" / ")),
+    (user: CdcApiUserData, year: string, amount: number) =>
+      pipe(
+        getJwtTE(config, env, user),
+        TE.chain((jwt) =>
+          pipe(
+            TE.of(getCdcClient(config, env)(jwt)),
+            TE.chain((client) =>
+              TE.tryCatch(
+                async () =>
+                  await client.generaVoucher({
+                    body: { anno: year, idBene: 7, importo: amount }, // idBene is fixed to 7 as per CDC API spec (LIBRO)
+                  }),
+                E.toError,
               ),
             ),
-          ),
-          TE.chain((response) =>
-            TE.fromPredicate(
-              isCdcApiPostVouchersCallSuccess,
-              mapCdcApiCallFailure(
-                `Post vouchers CDC failure | API result not success.`,
+            TE.chain((response) =>
+              pipe(
+                response,
+                TE.fromEither,
+                TE.mapLeft(
+                  (errors) =>
+                    new Error(errorsToReadableMessages(errors).join(" / ")),
+                ),
               ),
-            )(response),
-          ),
-          TE.map((successResponse) => successResponse.value),
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          TE.chain((voucher) =>
-            pipe(
-              voucher,
+            ),
+            TE.chain((response) =>
               TE.fromPredicate(
-                (voucher) => voucher.codVoucher !== undefined,
-                () => new Error("Invalid Voucher Error"),
+                isCdcApiPostVouchersCallSuccess,
+                mapCdcApiCallFailure(
+                  `Post vouchers CDC failure | API result not success.`,
+                ),
+              )(response),
+            ),
+            TE.map((successResponse) => successResponse.value),
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            TE.chain((voucher) =>
+              pipe(
+                voucher,
+                TE.fromPredicate(
+                  (voucher) => voucher.codVoucher !== undefined,
+                  () => new Error("Invalid Voucher Error"),
+                ),
+                TE.map((v) => mapVoucher(config, v)),
               ),
-              TE.map((v) => mapVoucher(config, v)),
             ),
           ),
         ),
-      ),
-      TE.mapLeft((err) =>
-        traceEvent(err)(
-          "postCdcVouchersTE",
-          `cdc.api.${env}.request.post.voucher.error`,
-          err,
+        TE.mapLeft((err) =>
+          traceEvent(err)(
+            "postCdcVouchersTE",
+            `cdc.api.${env}.request.post.voucher.error`,
+            err,
+          ),
         ),
-      ),
-    );
+      );
 
 // CDC GET VOUCHER API
 const isCdcApiGetVoucherCallSuccess = (
@@ -538,61 +485,61 @@ const isCdcApiGetVoucherCallSuccess = (
 
 const getCdcVoucherTE =
   (config: Config, env: CdcEnvironmentT) =>
-  (user: CdcApiUserData, id: string) =>
-    pipe(
-      getJwtTE(config, env, user),
-      TE.chain((jwt) =>
-        pipe(
-          TE.of(getCdcClient(config, env)(jwt)),
-          TE.chain((client) =>
-            TE.tryCatch(
-              async () =>
-                await client.getDettaglioVoucher({
-                  codVoucher: id,
-                }),
-              E.toError,
-            ),
-          ),
-          TE.chain((response) =>
-            pipe(
-              response,
-              TE.fromEither,
-              TE.mapLeft(
-                (errors) =>
-                  new Error(errorsToReadableMessages(errors).join(" / ")),
+    (user: CdcApiUserData, id: string) =>
+      pipe(
+        getJwtTE(config, env, user),
+        TE.chain((jwt) =>
+          pipe(
+            TE.of(getCdcClient(config, env)(jwt)),
+            TE.chain((client) =>
+              TE.tryCatch(
+                async () =>
+                  await client.getDettaglioVoucher({
+                    codVoucher: id,
+                  }),
+                E.toError,
               ),
             ),
-          ),
-          TE.chain((response) =>
-            TE.fromPredicate(
-              isCdcApiGetVoucherCallSuccess,
-              mapCdcApiCallFailure(
-                `Get voucher CDC failure | API result not success.`,
+            TE.chain((response) =>
+              pipe(
+                response,
+                TE.fromEither,
+                TE.mapLeft(
+                  (errors) =>
+                    new Error(errorsToReadableMessages(errors).join(" / ")),
+                ),
               ),
-            )(response),
-          ),
-          TE.map((successResponse) => successResponse.value),
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          TE.chain((voucher) =>
-            pipe(
-              voucher,
+            ),
+            TE.chain((response) =>
               TE.fromPredicate(
-                (voucher) => voucher.codVoucher !== undefined,
-                () => new Error("Invalid Voucher Error"),
+                isCdcApiGetVoucherCallSuccess,
+                mapCdcApiCallFailure(
+                  `Get voucher CDC failure | API result not success.`,
+                ),
+              )(response),
+            ),
+            TE.map((successResponse) => successResponse.value),
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            TE.chain((voucher) =>
+              pipe(
+                voucher,
+                TE.fromPredicate(
+                  (voucher) => voucher.codVoucher !== undefined,
+                  () => new Error("Invalid Voucher Error"),
+                ),
+                TE.map((v) => mapVoucher(config, v)),
               ),
-              TE.map((v) => mapVoucher(config, v)),
             ),
           ),
         ),
-      ),
-      TE.mapLeft((err) =>
-        traceEvent(err)(
-          "getCdcVoucherTE",
-          `cdc.api.${env}.request.get.voucher.error`,
-          err,
+        TE.mapLeft((err) =>
+          traceEvent(err)(
+            "getCdcVoucherTE",
+            `cdc.api.${env}.request.get.voucher.error`,
+            err,
+          ),
         ),
-      ),
-    );
+      );
 
 // CDC DELETE VOUCHER API
 const isCdcApiDeleteVoucherCallSuccess = (
@@ -601,50 +548,50 @@ const isCdcApiDeleteVoucherCallSuccess = (
 
 const deleteCdcVoucherTE =
   (config: Config, env: CdcEnvironmentT) =>
-  (user: CdcApiUserData, id: string) =>
-    pipe(
-      getJwtTE(config, env, user),
-      TE.chain((jwt) =>
-        pipe(
-          TE.of(getCdcClient(config, env)(jwt)),
-          TE.chain((client) =>
-            TE.tryCatch(
-              async () =>
-                await client.annullaVoucher({
-                  codVoucher: id,
-                }),
-              E.toError,
-            ),
-          ),
-          TE.chain((response) =>
-            pipe(
-              response,
-              TE.fromEither,
-              TE.mapLeft(
-                (errors) =>
-                  new Error(errorsToReadableMessages(errors).join(" / ")),
+    (user: CdcApiUserData, id: string) =>
+      pipe(
+        getJwtTE(config, env, user),
+        TE.chain((jwt) =>
+          pipe(
+            TE.of(getCdcClient(config, env)(jwt)),
+            TE.chain((client) =>
+              TE.tryCatch(
+                async () =>
+                  await client.annullaVoucher({
+                    codVoucher: id,
+                  }),
+                E.toError,
               ),
             ),
-          ),
-          TE.chain((response) =>
-            TE.fromPredicate(
-              isCdcApiDeleteVoucherCallSuccess,
-              mapCdcApiCallFailure(
-                `Get voucher CDC failure | API result not success.`,
+            TE.chain((response) =>
+              pipe(
+                response,
+                TE.fromEither,
+                TE.mapLeft(
+                  (errors) =>
+                    new Error(errorsToReadableMessages(errors).join(" / ")),
+                ),
               ),
-            )(response),
+            ),
+            TE.chain((response) =>
+              TE.fromPredicate(
+                isCdcApiDeleteVoucherCallSuccess,
+                mapCdcApiCallFailure(
+                  `Get voucher CDC failure | API result not success.`,
+                ),
+              )(response),
+            ),
+            TE.map(() => true),
           ),
-          TE.map(() => true),
         ),
-      ),
-      TE.mapLeft((err) =>
-        traceEvent(err)(
-          "deleteCdcVoucherTE",
-          `cdc.api.${env}.request.delete.voucher.error`,
-          err,
+        TE.mapLeft((err) =>
+          traceEvent(err)(
+            "deleteCdcVoucherTE",
+            `cdc.api.${env}.request.delete.voucher.error`,
+            err,
+          ),
         ),
-      ),
-    );
+      );
 
 export enum CdcEnvironment {
   PRODUCTION = "PRODUCTION",
