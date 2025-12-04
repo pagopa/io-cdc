@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.16
+
+### Patch Changes
+
+- d617e4b: Some fix in events and ui
+
 ## 1.1.15
 
 ### Patch Changes

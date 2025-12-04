@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.12
+
+### Patch Changes
+
+- 1141a16: fixed 404 when no cards found
+
 ## 1.1.11
 
 ### Patch Changes

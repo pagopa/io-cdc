@@ -1,5 +1,4 @@
-import { EmptyState } from '@io-cdc/ui';
-import { Typography, Divider, Button, CircularProgress } from '@mui/material';
+import { Typography, Divider, CircularProgress } from '@mui/material';
 import { Stack } from '@mui/system';
 import { useCallback, useMemo } from 'react';
 import { VoucherCard } from '../../BonusList/components/BonusItem';
@@ -9,6 +8,7 @@ import { selectActiveCard } from '../../../features/app/selectors';
 import { EmptyVouchers } from '../../../components/VoucherList/EmptyVouchers';
 import { useGetVouchers } from '../../../hooks/useGetVouchers';
 import { Reminder } from './Reminder';
+import { VoucherListError } from '../../../components';
 
 type VoucherListHome = {
   onClickShowAll: () => void;
@@ -39,16 +39,7 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
     return sAll.slice(0, 4);
   }, [sAll]);
 
-  if (isError) {
-    return (
-      <Stack minHeight={100} justifyContent="center">
-        <EmptyState icon="info" title="Non siamo riusciti a caricare la lista dei buoni" />
-        <Button variant="text" onClick={forceReload}>
-          Prova di nuovo
-        </Button>
-      </Stack>
-    );
-  }
+  if (isError) return <VoucherListError reload={forceReload} />;
 
   if (loading)
     return (

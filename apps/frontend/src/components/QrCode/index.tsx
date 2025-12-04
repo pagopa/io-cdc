@@ -4,10 +4,14 @@ import { trackWebviewEvent } from '../../utils/trackEvent';
 
 type QrCodeProps = {
   code: string;
+  isOpen?: boolean;
 };
-export const QrCode = ({ code }: QrCodeProps) => {
+export const QrCode = ({ code, isOpen }: QrCodeProps) => {
   useEffect(() => {
-    trackWebviewEvent('CDC_BONUS_CODE', { code_type: 'qrcode' });
-  }, []);
+    if (isOpen) {
+      trackWebviewEvent('CDC_BONUS_CODE', { code_type: 'qrcode' });
+    }
+  }, [isOpen]);
+
   return <QRCode value={code} size={256} fgColor="#000" bgColor="#fff" level="M" />;
 };

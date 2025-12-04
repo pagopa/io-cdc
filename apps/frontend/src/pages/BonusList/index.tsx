@@ -1,12 +1,11 @@
 import { Stack } from '@mui/system';
-import { Header, VoucherList } from '../../components';
+import { Header, VoucherList, VoucherListError } from '../../components';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRouteGuard } from '../../hooks';
-import { EmptyState } from '@io-cdc/ui';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import { useGetAllVoucherQuery } from '../../features/app/services';
 
@@ -38,10 +37,7 @@ const BonusList = () => {
       <Header onBack={() => navigate(APP_ROUTES.HOME)} />
       {isError ? (
         <Stack height="100%" justifyContent="center" alignItems="center">
-          <EmptyState icon="info" title="Non siamo riusciti a caricare la lista dei buoni" />
-          <Button variant="text" onClick={() => refetch()}>
-            Prova di nuovo
-          </Button>
+          <VoucherListError reload={() => refetch()} />
         </Stack>
       ) : (
         <VoucherList vouchersList={vouchers ?? []} />

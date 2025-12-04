@@ -38,8 +38,7 @@ const BonusDetail = () => {
     isSuccess,
   } = useGetVoucherDetail({ id });
 
-  const [deleteBonus, { isSuccess: isBonusDeleteSuccess, isLoading: deleteLoading }] =
-    useDeleteVoucherMutation();
+  const [deleteBonus, { isLoading: deleteLoading }] = useDeleteVoucherMutation();
 
   const spent = useMemo(
     () =>
@@ -66,9 +65,17 @@ const BonusDetail = () => {
     setIsDialogOpen(true);
   }, []);
 
-  const onDeleteBonus = useCallback(() => {
-    deleteBonus(id);
-  }, [id, deleteBonus]);
+  const onDeleteBonus = useCallback(async () => {
+    trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
+    setIsDialogOpen(false);
+    const res = await deleteBonus(id);
+    if (res.error) {
+      dispatch(ticketsActions.setDeleted('error'));
+      return navigate(APP_ROUTES.HOME);
+    }
+    dispatch(ticketsActions.setDeleted('success'));
+    navigate(APP_ROUTES.HOME);
+  }, [deleteBonus, id, dispatch, navigate]);
 
   const onStopDeleteBonus = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_CANCELLATION_BACK');
@@ -86,15 +93,6 @@ const BonusDetail = () => {
       });
     }
   }, [error, isError, isSuccess, spent, state?.generating]);
-
-  useEffect(() => {
-    if (isBonusDeleteSuccess) {
-      console.log('trigger cdc bonus cancellation confirm');
-      dispatch(ticketsActions.setDeleted(true));
-      trackWebviewEvent('CDC_BONUS_CANCELLATION_CONFIRM');
-      navigate(APP_ROUTES.HOME);
-    }
-  }, [dispatch, isBonusDeleteSuccess, navigate]);
 
   if (detailLoading)
     return (

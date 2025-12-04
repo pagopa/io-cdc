@@ -14,3 +14,4 @@ export * from './QrCode';
 export * from './RequestLoader';
 export * from './ScrollToTop';
 export * from './StickyContainer';
+export * from './VoucherListError';

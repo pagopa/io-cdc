@@ -303,12 +303,6 @@ const getCdcCardsTE =
                 (cards) => !!cards,
                 () => new Error("Invalid cdc cards list"),
               ),
-              TE.chain(
-                TE.fromPredicate(
-                  (cards) => cards.length > 0,
-                  () => new Error("Empty cdc cards list"),
-                ),
-              ),
               TE.map((cards) =>
                 cards.map((c) => ({
                   card_name: `Carta della Cultura ${c.annoRif}`,
