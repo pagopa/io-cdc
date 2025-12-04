@@ -28,16 +28,12 @@ export const useGetCards = () => {
   });
 
   const loadData = useCallback(async () => {
-    const { data: cards, isError, isSuccess, error } = await getCards();
+    const { data: cards = [], isError, isSuccess, error } = await getCards();
 
     if (isError && isFetchBaseQueryError(error)) {
       if (error.status === 400) return navigate(APP_ROUTES.COURTESY);
-      if (error.status >= 500) return navigate(APP_ROUTES.FEEDBACK_CARDS);
-    }
-
-    if (!cards || !cards?.length) {
-      navigate(APP_ROUTES.CARDS_EMPTY);
-      return;
+      if (error.status === 401) return navigate(APP_ROUTES.UNAUTHORIZED);
+      return navigate(APP_ROUTES.FEEDBACK_CARDS, { state: { status: error.status } });
     }
 
     setResponse({

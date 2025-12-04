@@ -5,7 +5,7 @@ type TicketsState = {
   activeCard: string;
   selectedCard: Pick<Card, 'residual_amount' | 'year'>;
   amount?: number;
-  deleted: boolean;
+  deleted?: 'success' | 'error';
 };
 
 const initialState: TicketsState = {
@@ -14,7 +14,6 @@ const initialState: TicketsState = {
     residual_amount: 0,
     year: '',
   },
-  deleted: false,
 };
 
 const ticketsSlice = createSlice({

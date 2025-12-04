@@ -17,7 +17,6 @@ const BonusList = React.lazy(() => import('../pages/BonusList'));
 const CourtesyPage = React.lazy(() => import('../pages/Courtesy'));
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const FeedbackCards = React.lazy(() => import('../pages/FeedbackCards'));
-const CardsEmptyState = React.lazy(() => import('../pages/CardsEmptyState'));
 const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
@@ -89,10 +88,6 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.FEEDBACK_VOUCHERS,
     Element: FeedbackVouchers,
-  },
-  {
-    path: APP_ROUTES.CARDS_EMPTY,
-    Element: CardsEmptyState,
   },
   {
     path: APP_ROUTES.COURTESY,
