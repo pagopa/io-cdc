@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.13
+
+### Patch Changes
+
+- 703924d: trace functions exit errors
+
 ## 1.1.12
 
 ### Patch Changes
