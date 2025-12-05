@@ -12,7 +12,7 @@ type UseCodeSheetProps = {
 export const UseCodeSheet = ({ isOpen, onClose, code }: UseCodeSheetProps) => {
   const [tabIndex, setTabIndex] = useState(0);
 
-  const SheetContentComponent = useMemo(() => (tabIndex === 0 ? QrCode : BarCode), [tabIndex]);
+  const SheetContentComponent = useMemo(() => (tabIndex === 0 ? BarCode : QrCode), [tabIndex]);
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose} snapPoint={0.9}>
