@@ -34,6 +34,18 @@ export const errorToValidationError = (e: Error) => ({
   title: "Bad Request",
 });
 
+export const errorToUnauthorizedError = (e: Error) => ({
+  code: 401 as const,
+  message: e.message,
+  title: "Unauthorized",
+});
+
+export const errorToForbiddenError = (e: Error) => ({
+  code: 403 as const,
+  message: e.message,
+  title: "Forbidden",
+});
+
 export const errorToNotFoundError = (e: Error) => ({
   code: 404 as const,
   message: e.message,

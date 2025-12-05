@@ -14,8 +14,10 @@ import { withParams } from "../middlewares/withParams.js";
 import { Session } from "../models/session.js";
 import { CdcClientEnvironmentRouter, isTestUser } from "../utils/env_router.js";
 import {
+  errorToForbiddenError,
   errorToInternalError,
   errorToNotFoundError,
+  errorToUnauthorizedError,
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
@@ -82,13 +84,13 @@ export const checkEndDatetime = (deps: Dependencies) =>
       },
       () => new Error("CDC usage period is over"),
     ),
-    TE.mapLeft(errorToValidationError),
+    TE.mapLeft(errorToForbiddenError),
   );
 
 export const getCards = (user: Session) => (deps: Dependencies) =>
   pipe(
     checkStartDatetime(user)(deps),
-    TE.chain(() => checkEndDatetime(deps)),
+    TE.chainW(() => checkEndDatetime(deps)),
     TE.chain(() =>
       pipe(
         deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
@@ -121,7 +123,7 @@ export const makeGetCardsHandler: H.Handler<
 > = H.of((req) =>
   pipe(
     withParams(Headers, req.headers),
-    RTE.mapLeft(errorToValidationError),
+    RTE.mapLeft(errorToUnauthorizedError),
     RTE.chain(({ token }) => getSession(token)),
     RTE.chain((user) => getCards(user)),
     RTE.map(H.successJson),
