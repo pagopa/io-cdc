@@ -20,6 +20,7 @@ const FeedbackCards = React.lazy(() => import('../pages/FeedbackCards'));
 const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
+const ExpiredInitiativeUsage = React.lazy(() => import('../pages/ExpiredInitiativeUsage'));
 
 // global route
 const NotFound = React.lazy(() => import('../pages/NotFound'));
@@ -40,6 +41,7 @@ export enum APP_ROUTES {
   BONUS_DETAIL = '/dettaglio-buono/:id',
   FEEDBACK_VOUCHERS = '/voucher-feedback',
   SELECT_CARD = '/genera-buono/seleziona-carta',
+  EXPIRED_USAGE = '/iniziativa-scaduta-utilizzo',
   SELECT_AMOUNT = '/genera-buono/seleziona-importo',
   FEEDBACK_CARDS = '/dettaglio-carta-non-disponibile',
 }
@@ -96,6 +98,10 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.FEEDBACK_CARDS,
     Element: FeedbackCards,
+  },
+  {
+    path: APP_ROUTES.EXPIRED_USAGE,
+    Element: ExpiredInitiativeUsage,
   },
 ];
 
