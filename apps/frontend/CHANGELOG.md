@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.18
+
+### Patch Changes
+
+- 38d28c9: fix codes section
+
 ## 1.1.17
 
 ### Patch Changes
