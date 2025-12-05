@@ -156,7 +156,7 @@ const BonusDetail = () => {
         <DetailItemWrapper chip={!refund && <Chip {...chipConfig} size="small" />}>
           <Typography color={theme.palette.text.secondary}>Importo</Typography>
           <Typography fontWeight={600} fontSize={18}>
-            {formatDecimals(voucherDetail.amount)} €
+            {`${spent ? '\u2013' : ''}${formatDecimals(voucherDetail.amount)}`} €
           </Typography>
         </DetailItemWrapper>
 
