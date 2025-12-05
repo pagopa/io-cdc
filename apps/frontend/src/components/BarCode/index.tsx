@@ -30,7 +30,15 @@ export const BarCode = ({ code, isOpen }: BarCodeProps) => {
 
   return (
     <Stack direction="column" flexGrow={1} justifyContent="space-between" width="100%">
-      <Barcode value={code} format="CODE128" />
+      <Stack
+        border="1px solid #E8EBF1"
+        borderRadius={2}
+        width="100%"
+        alignItems="center"
+        padding={3}
+      >
+        <Barcode value={code} format="CODE128" />
+      </Stack>
       <Button variant="contained" onClick={copyBonusCode}>
         Copia codice
       </Button>

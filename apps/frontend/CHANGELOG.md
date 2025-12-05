@@ -1,5 +1,17 @@
 # frontend
 
+## 1.1.18
+
+### Patch Changes
+
+- 38d28c9: fix codes section
+
+## 1.1.17
+
+### Patch Changes
+
+- 2b05488: remove negative sign from spent vouchers
+
 ## 1.1.16
 
 ### Patch Changes
