@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.17
+
+### Patch Changes
+
+- 2b05488: remove negative sign from spent vouchers
+
 ## 1.1.16
 
 ### Patch Changes
