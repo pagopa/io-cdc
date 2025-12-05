@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.15
+
+### Patch Changes
+
+- 56fbbb5: Datetime check on all function + fixes
+
 ## 1.1.14
 
 ### Patch Changes
