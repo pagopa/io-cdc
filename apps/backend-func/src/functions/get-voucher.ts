@@ -1,6 +1,8 @@
+import { emitCustomEvent } from "@pagopa/azure-tracing/logger";
 import * as H from "@pagopa/handler-kit";
 import { httpAzureFunction } from "@pagopa/handler-kit-azure-func";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings.js";
+import { isAfter } from "date-fns";
 import * as RTE from "fp-ts/lib/ReaderTaskEither.js";
 import * as TE from "fp-ts/lib/TaskEither.js";
 import { pipe } from "fp-ts/lib/function.js";
@@ -10,9 +12,11 @@ import { Config } from "../config.js";
 import { VoucherDetails } from "../generated/definitions/internal/VoucherDetails.js";
 import { withParams } from "../middlewares/withParams.js";
 import { Session } from "../models/session.js";
-import { CdcClientEnvironmentRouter } from "../utils/env_router.js";
+import { CdcClientEnvironmentRouter, isTestUser } from "../utils/env_router.js";
 import {
+  errorToForbiddenError,
   errorToInternalError,
+  errorToUnauthorizedError,
   errorToValidationError,
   responseError,
   responseErrorToHttpError,
@@ -43,19 +47,69 @@ export const getSession = (sessionToken: string) => (deps: Dependencies) =>
     TE.mapLeft(() => responseError(401, "Session not found", "Unauthorized")),
   );
 
+export const checkStartDatetime = (user: Session) => (deps: Dependencies) =>
+  pipe(
+    new Date(deps.config.CDC_USAGE_START_DATE),
+    TE.fromPredicate(
+      (startDate) => {
+        const testUser = isTestUser(deps.config, user.fiscal_code);
+        const now = new Date();
+        const validDate = isAfter(now, startDate) || testUser;
+        emitCustomEvent("cdc.get.voucher.iniziative.status", {
+          data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${
+            validDate ? "Iniziative open" : "Initiative closed"
+          }`,
+        })("getVoucher");
+        if (testUser) {
+          emitCustomEvent("cdc.get.voucher.iniziative.status.test", {
+            data: `Test user connected`,
+          })("getVoucher");
+        }
+        return validDate;
+      },
+      () => new Error("CDC usage period is not started yet"),
+    ),
+    TE.mapLeft(errorToValidationError),
+  );
+
+export const checkEndDatetime = (deps: Dependencies) =>
+  pipe(
+    new Date(deps.config.CDC_USAGE_END_DATE),
+    TE.fromPredicate(
+      (endDate) => {
+        const now = new Date();
+        const validDate = isAfter(endDate, now);
+        emitCustomEvent("cdc.get.voucher.iniziative.status", {
+          data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
+            validDate ? "Iniziative open" : "Initiative closed"
+          }`,
+        })("getVoucher");
+        return validDate;
+      },
+      () => new Error("CDC usage period is over"),
+    ),
+    TE.mapLeft(errorToForbiddenError),
+  );
+
 export const getVoucher = (user: Session, id: string) => (deps: Dependencies) =>
   pipe(
-    deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
-    (cdcClient) =>
-      cdcClient.getCdcVoucherTE(
-        {
-          first_name: user.given_name,
-          fiscal_code: user.fiscal_code,
-          last_name: user.family_name,
-        },
-        id,
+    checkStartDatetime(user)(deps),
+    TE.chainW(() => checkEndDatetime(deps)),
+    TE.chain(() =>
+      pipe(
+        deps.cdcClientEnvironmentRouter.getClient(user.fiscal_code),
+        (cdcClient) =>
+          cdcClient.getCdcVoucherTE(
+            {
+              first_name: user.given_name,
+              fiscal_code: user.fiscal_code,
+              last_name: user.family_name,
+            },
+            id,
+          ),
+        TE.mapLeft(errorToInternalError),
       ),
-    TE.mapLeft(errorToInternalError),
+    ),
   );
 
 export const makeGetVoucherHandler: H.Handler<
@@ -66,7 +120,7 @@ export const makeGetVoucherHandler: H.Handler<
 > = H.of((req) =>
   pipe(
     withParams(Headers, req.headers),
-    RTE.mapLeft(errorToValidationError),
+    RTE.mapLeft(errorToUnauthorizedError),
     RTE.chain(({ token }) => getSession(token)),
     RTE.chainW((user) =>
       pipe(

@@ -116,9 +116,9 @@ describe("get-cards | getCards", () => {
     expect(E.isLeft(res)).toBe(true);
     if (E.isLeft(res))
       expect(res.left).toEqual({
-        code: 400,
+        code: 403,
         message: "CDC usage period is over",
-        title: "Bad Request",
+        title: "Forbidden",
       });
   });
 
