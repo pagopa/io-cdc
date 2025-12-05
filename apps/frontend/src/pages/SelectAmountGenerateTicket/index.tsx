@@ -76,7 +76,6 @@ const SelectAmountGenerateTicket = () => {
   }, [dispatch]);
 
   if (isError && isFetchBaseQueryError(creationError)) {
-    if (creationError.status === 400) return <Navigate to={APP_ROUTES.COURTESY} replace />;
     if (creationError.status === 401) return <Navigate to={APP_ROUTES.UNAUTHORIZED} replace />;
     if (creationError.status === 403) return <Navigate to={APP_ROUTES.EXPIRED_USAGE} replace />;
     return (

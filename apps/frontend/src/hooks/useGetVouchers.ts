@@ -33,7 +33,6 @@ export const useGetVouchers = () => {
       const { data: vouchers, isError, isSuccess, error } = await _getVouchers(activeCard);
 
       if (isError && isFetchBaseQueryError(error)) {
-        if (error.status === 400) return navigate(APP_ROUTES.COURTESY);
         if (error.status === 401) return navigate(APP_ROUTES.UNAUTHORIZED);
         if (error.status === 403) return navigate(APP_ROUTES.EXPIRED_USAGE);
       }
