@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.19
+
+### Patch Changes
+
+- 9f12f1d: Expired initiative page for usage
+
 ## 1.1.18
 
 ### Patch Changes
