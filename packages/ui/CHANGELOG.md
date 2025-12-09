@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.9
+
+### Patch Changes
+
+- ec484a0: Some style fix - order voucher lists - some text changes
+
 ## 1.0.8
 
 ### Patch Changes

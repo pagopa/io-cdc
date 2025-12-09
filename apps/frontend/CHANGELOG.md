@@ -1,5 +1,13 @@
 # frontend
 
+## 1.1.21
+
+### Patch Changes
+
+- ec484a0: Some style fix - order voucher lists - some text changes
+- Updated dependencies [ec484a0]
+  - @io-cdc/ui@1.0.9
+
 ## 1.1.20
 
 ### Patch Changes
