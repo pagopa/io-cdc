@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.20
+
+### Patch Changes
+
+- c1e623e: Change courtesy page content | fix numeric keyboard | fix vouchers list and detail dates and visualization
+
 ## 1.1.19
 
 ### Patch Changes
