@@ -44,7 +44,7 @@ const SelectAmountGenerateTicket = () => {
 
   const amount = useSelector(selectAmountBonus);
 
-  const required = useMemo(() => !amount || amount === '0', [amount]);
+  const required = useMemo(() => !amount || convertAmount(amount) < 0.1, [amount]);
 
   const onBackHeader = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_GENERATION_BACK', {

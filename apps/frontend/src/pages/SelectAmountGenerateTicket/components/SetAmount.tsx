@@ -31,7 +31,7 @@ export const SetAmount = ({ amount, error, reset, helperText }: SetAmountProps) 
   return (
     <CdcInput
       value={amount}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={onChange}
       fullWidth
       label="Importo"
       margin="normal"
