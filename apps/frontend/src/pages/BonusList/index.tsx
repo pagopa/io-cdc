@@ -1,6 +1,6 @@
 import { Stack } from '@mui/system';
 import { Header, VoucherList, VoucherListError } from '../../components';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../routes/appRoutes';
@@ -14,6 +14,14 @@ const BonusList = () => {
   useRouteGuard();
 
   const { data: vouchers, isError, isFetching, refetch } = useGetAllVoucherQuery();
+
+  const orderedVouchers = useMemo(
+    () =>
+      [...(vouchers ?? [])].sort(
+        (a, b) => new Date(a.creation_date).getTime() - new Date(b.creation_date).getTime(),
+      ),
+    [vouchers],
+  );
 
   const navigate = useNavigate();
 
@@ -40,7 +48,7 @@ const BonusList = () => {
           <VoucherListError reload={() => refetch()} />
         </Stack>
       ) : (
-        <VoucherList vouchersList={vouchers ?? []} />
+        <VoucherList vouchersList={orderedVouchers} />
       )}
     </Stack>
   );

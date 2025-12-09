@@ -37,11 +37,15 @@ export const useGetVouchers = () => {
         if (error.status === 403) return navigate(APP_ROUTES.EXPIRED_USAGE);
       }
 
+      let orderedVouchers = [...(vouchers ?? [])].sort(
+        (a, b) => new Date(a.creation_date).getTime() - new Date(b.creation_date).getTime(),
+      );
+
       setResponse({
         isError,
         isSuccess,
         error,
-        vouchers: vouchers ?? [],
+        vouchers: orderedVouchers ?? [],
       });
     },
     [_getVouchers],

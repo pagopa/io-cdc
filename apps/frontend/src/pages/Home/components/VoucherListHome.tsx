@@ -23,7 +23,7 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
   const loading = useMemo(() => !isError && !isSuccess, [isError, isSuccess]);
 
   const { toSpend: tbsAll, spent: sAll } = useMemo(
-    () => separateVouchersByStatus(vouchers ?? []),
+    () => separateVouchersByStatus(vouchers),
     [vouchers],
   );
 
