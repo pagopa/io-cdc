@@ -17,7 +17,10 @@ const CourtesyPage = () => {
   //TODO test only
   useRouteGuard();
 
-  // const navigate = useNavigate();
+  const onClickDeeplink = () => {
+    trackWebviewEvent('CDC_APP_UPDATE');
+    window.location.replace(deepLink);
+  };
 
   useEffect(() => {
     trackWebviewEvent('CDC_ON_EVALUATION', { event_category: 'KO' });
@@ -32,7 +35,7 @@ const CourtesyPage = () => {
         description="Nel frattempo, ti suggeriamo di aggiornare l’app all’ultima versione"
       />
       <Stack direction="column" justifyContent="center" alignItems="center" gap={2}>
-        <Button onClick={() => window.location.replace(deepLink)} variant="contained">
+        <Button onClick={onClickDeeplink} variant="contained">
           Aggiorna l&apos;app
         </Button>
         <Button
