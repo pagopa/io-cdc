@@ -31,6 +31,7 @@ import {
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 import { traceEvent } from "./tracing.js";
+import { cons } from "fp-ts/lib/ReadonlyNonEmptyArray.js";
 
 export const CdcApiUserData = t.type({
   first_name: NonEmptyString,
@@ -308,6 +309,7 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
       ? ApplicantEnum.SELF
       : ApplicantEnum.FAMILY_MEMBER,
   card_year: v.annoRif,
+  creation_date: new Date(v.dataInserimento),
   expiration_date: v.dataScadenza
     ? new Date(v.dataScadenza)
     : new Date(config.CDC_CARDS_EXPIRATION_DATE),
