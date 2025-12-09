@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.16
+
+### Patch Changes
+
+- 8c3fe85: added voucher creation date
+
 ## 1.1.15
 
 ### Patch Changes
