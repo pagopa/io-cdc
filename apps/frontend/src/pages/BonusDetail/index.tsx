@@ -120,11 +120,19 @@ const BonusDetail = () => {
 
   const detailDate = new Date(voucherDetail.spending_date ?? voucherDetail.expiration_date);
 
-  const formattedDetailDate = detailDate.toLocaleDateString('it-IT', {
-    day: 'numeric',
-    month: '2-digit',
-    year: 'numeric',
-  });
+  const formattedDetailDate = spent
+    ? detailDate.toLocaleDateString('it-IT', {
+        day: 'numeric',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : detailDate.toLocaleDateString('it-IT', {
+        day: 'numeric',
+        month: '2-digit',
+        year: 'numeric',
+      });
 
   const formattedMerchantDate = detailDate.toLocaleDateString('it-IT', {
     day: 'numeric',

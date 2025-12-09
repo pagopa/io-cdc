@@ -4,7 +4,7 @@ import { Card } from './model';
 type TicketsState = {
   activeCard: string;
   selectedCard: Pick<Card, 'residual_amount' | 'year'>;
-  amount?: number;
+  amount?: string;
   deleted?: 'success' | 'error';
 };
 
