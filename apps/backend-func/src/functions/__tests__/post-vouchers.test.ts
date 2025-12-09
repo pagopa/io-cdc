@@ -152,6 +152,7 @@ describe("post-vouchers | postVouchers", () => {
         amount: 5,
         applicant: "SELF",
         card_year: "2020",
+        creation_date: "2025-12-01T23:00:00.000Z",
         expiration_date: "2026-12-30T23:00:00.000Z",
         id: "code1",
         voucher_status: "PENDING",
