@@ -14,7 +14,7 @@ type RadioListProps = {
   cards: Pick<Card, 'residual_amount' | 'year'>[];
 };
 
-const TEXT_COLOR = '#5C6F82';
+const TEXT_COLOR = '#555C70';
 
 export const RadioList = ({ cards }: RadioListProps) => {
   const dispatch = useDispatch();
