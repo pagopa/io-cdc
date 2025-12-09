@@ -56,10 +56,20 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
   return (
     <Stack onClick={goToDetail}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Stack direction="row" alignItems="center" gap={1}>
+        <Stack direction="row" alignItems="center" gap={1} sx={{ minWidth: 0, flex: 1 }}>
           <Icon name={spent ? 'store' : others ? 'people' : 'ticket'} />
-          <Stack>
-            <Typography color={mainColor} fontWeight={600}>
+          <Stack overflow="hidden">
+            <Typography
+              color={mainColor}
+              fontWeight={600}
+              textOverflow="ellipsis"
+              overflow="hidden"
+              sx={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+              }}
+            >
               {itemLabel}
             </Typography>
             <Typography fontSize={16} color="#5C6F82">

@@ -50,7 +50,9 @@ const Home = () => {
     if (!deleted) return undefined;
     const success = deleted === 'success';
     return {
-      message: success ? 'Hai annullato il buono' : 'Non è stato possibile annullare, riprova',
+      message: success
+        ? 'Hai annullato il buono'
+        : 'Non è stato possibile annullare il buono, riprova',
       messageType: deleted,
       onOpen: () =>
         trackWebviewEvent(

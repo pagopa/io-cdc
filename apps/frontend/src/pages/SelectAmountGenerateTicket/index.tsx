@@ -12,9 +12,10 @@ import { APP_ROUTES } from '../../routes/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/app/reducers';
-import { theme } from '@io-cdc/ui';
 import { useRouteGuard } from '../../hooks';
 import { formatDecimals } from '../../utils/formatDecimals';
+
+const TEXT_COLOR = '#555C70';
 
 const convertAmount = (amount: string | undefined): number =>
   Number(parseFloat(amount?.replace(',', '.') ?? '0').toFixed(2));
@@ -105,7 +106,7 @@ const SelectAmountGenerateTicket = () => {
         <Stack gap={2}>
           <Stack gap={2}>
             <Typography variant="h4">{"Inserisci l'importo"}</Typography>
-            <Typography color={theme.palette.text.secondary} fontSize={18}>
+            <Typography color={TEXT_COLOR} fontSize={18}>
               {`Puoi generare un buono con un valore massimo di ${formatDecimals(
                 selectedCard?.residual_amount,
               )} €`}

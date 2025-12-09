@@ -199,7 +199,7 @@ const BonusDetail = () => {
           <Button
             variant="text"
             onClick={onClickDeleteBonus}
-            startIcon={<Icon name="close" sx={{ width: 18, height: 18 }} />}
+            startIcon={<Icon name="close" color="inherit" sx={{ width: 18, height: 18 }} />}
             color="error"
             sx={{
               padding: 0,

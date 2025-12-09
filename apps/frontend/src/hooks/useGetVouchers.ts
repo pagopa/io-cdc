@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../routes/appRoutes';
+import { sortByCreationDate } from '../utils/sortVouchers';
 
 export const useGetVouchers = () => {
   const navigate = useNavigate();
@@ -37,11 +38,14 @@ export const useGetVouchers = () => {
         if (error.status === 403) return navigate(APP_ROUTES.EXPIRED_USAGE);
       }
 
+      const orderedVouchers = sortByCreationDate(vouchers);
+      console.log('🚀 ~ useGetVouchers ~ orderedVouchers:', orderedVouchers);
+
       setResponse({
         isError,
         isSuccess,
         error,
-        vouchers: vouchers ?? [],
+        vouchers: orderedVouchers ?? [],
       });
     },
     [_getVouchers],
