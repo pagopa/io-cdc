@@ -8,6 +8,7 @@ import { useRouteGuard } from '../../hooks';
 import { Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import { useGetAllVoucherQuery } from '../../features/app/services';
+import { sortByCreationDate } from '../../utils/sortVouchers';
 
 const BonusList = () => {
   //TODO test only
@@ -15,13 +16,7 @@ const BonusList = () => {
 
   const { data: vouchers, isError, isFetching, refetch } = useGetAllVoucherQuery();
 
-  const orderedVouchers = useMemo(
-    () =>
-      [...(vouchers ?? [])].sort(
-        (a, b) => new Date(a.creation_date).getTime() - new Date(b.creation_date).getTime(),
-      ),
-    [vouchers],
-  );
+  const orderedVouchers = useMemo(() => sortByCreationDate(vouchers), [vouchers]);
 
   const navigate = useNavigate();
 
