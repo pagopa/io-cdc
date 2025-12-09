@@ -6,16 +6,15 @@ type CdcInputProps = Omit<TextFieldProps, 'onChange'> & { onChange: (s: string) 
 export const CdcInput = ({ ...props }: CdcInputProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace('.', ',');
-    console.info('🚀 ~ handleChange ~ value:', value);
+    if (value.startsWith(',')) return;
 
     const separators = (value.match(/[.,]/g) || []).length;
-    console.info('🚀 ~ handleChange ~ separators:', separators);
 
     if (separators > 1) return;
 
     const regex = /^\d*[.,]?\d{0,2}$/;
     const isValid = regex.test(value);
-    console.info('🚀 ~ handleChange ~ regex:', isValid);
+
     if (!isValid) return;
 
     props?.onChange?.(value);
