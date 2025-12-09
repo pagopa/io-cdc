@@ -46,6 +46,7 @@ export type Card = {
 export type VoucherItem = {
   id: string;
   amount: number;
+  creation_date: string;
   expiration_date: string;
   voucher_status: VOUCHER_STATUS;
   card_year: string;

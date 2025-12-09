@@ -20,7 +20,8 @@ type VoucherCardProps =
       openSheet?: () => void;
     };
 
-const formatDate = (d: string | Date) => {
+const formatDate = (d: string | Date | undefined) => {
+  if (!d) return '';
   const date = typeof d !== 'string' ? d : new Date(d);
   return date.toLocaleDateString('it-IT', {
     day: 'numeric',
@@ -39,8 +40,8 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
   const { itemLabel, mainColor } = getVoucherConfig(voucher);
 
   const date = useMemo(() => {
-    if (voucher.voucher_status === 'PENDING') return formatDate(voucher.expiration_date);
-    return formatDate(voucher.spending_date ?? voucher.expiration_date);
+    if (voucher.voucher_status === 'PENDING') return formatDate(voucher.creation_date);
+    return formatDate(voucher.spending_date);
   }, [voucher]);
 
   const goToDetail = useCallback(() => {
@@ -56,7 +57,7 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
     <Stack onClick={goToDetail}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap={1}>
-          <Icon name={others ? 'people' : 'ticket'} />
+          <Icon name={spent ? 'store' : others ? 'people' : 'ticket'} />
           <Stack>
             <Typography color={mainColor} fontWeight={600}>
               {itemLabel}

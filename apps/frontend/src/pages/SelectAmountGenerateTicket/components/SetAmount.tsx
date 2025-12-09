@@ -21,13 +21,6 @@ export const SetAmount = ({ amount, error, reset, helperText }: SetAmountProps) 
     [dispatch, reset],
   );
 
-  // const helperText = useMemo(() => {
-  //   if (!error) return null;
-  //   if (balance < Number(amount)) return 'L’ importo è superiore al credito disponibile';
-  //   if (required) return 'Inserisci un importo';
-  //   return null;
-  // }, [error, balance, amount, required]);
-
   return (
     <CdcInput
       value={amount}
