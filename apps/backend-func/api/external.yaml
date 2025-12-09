@@ -455,6 +455,11 @@ components:
           format: float
           description: Amount loaded onto the voucher
           example: 20.00
+        creation_date:
+          type: string
+          format: date-time
+          description: Creation date of the voucher
+          example: "2026-12-31T23:59:59Z"
         expiration_date:
           type: string
           format: date-time
@@ -497,6 +502,7 @@ components:
       required:
         - id
         - amount
+        - creation_date
         - expiration_date
         - voucher_status
         - card_year

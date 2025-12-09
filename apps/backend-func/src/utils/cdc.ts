@@ -308,6 +308,7 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
       ? ApplicantEnum.SELF
       : ApplicantEnum.FAMILY_MEMBER,
   card_year: v.annoRif,
+  creation_date: new Date(v.dataInserimento),
   expiration_date: v.dataScadenza
     ? new Date(v.dataScadenza)
     : new Date(config.CDC_CARDS_EXPIRATION_DATE),

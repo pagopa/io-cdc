@@ -438,6 +438,7 @@ components:
         - cfBeneficiario
         - codVoucher
         - importoRichiesto
+        - dataInserimento
         - dataScadenza
         - codeLine
         - qr
