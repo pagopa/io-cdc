@@ -31,7 +31,6 @@ import {
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 import { traceEvent } from "./tracing.js";
-import { cons } from "fp-ts/lib/ReadonlyNonEmptyArray.js";
 
 export const CdcApiUserData = t.type({
   first_name: NonEmptyString,
