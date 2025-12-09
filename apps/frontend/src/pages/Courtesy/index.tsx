@@ -27,9 +27,9 @@ const CourtesyPage = () => {
     <Stack height="100%" justifyContent="center" alignItems="center" gap={4} padding={2}>
       <Icon name="hourglass" sx={{ width: 60, height: 60 }} />
       <OperationResult
-        title="Attendi l'esito della tua richiesta"
-        subTitle="Carta della Cultura non è ancora disponibile, riceverai l’esito direttamente su IO."
-        description=" Nel frattempo, ti suggeriamo di aggiornare l’app all’ultima versione"
+        title="Il periodo per richiedere la Carta è terminato"
+        subTitle="Se hai fatto richiesta, riceverai l’esito direttamente su IO."
+        description="Nel frattempo, ti suggeriamo di aggiornare l’app all’ultima versione"
       />
       <Stack direction="column" justifyContent="center" alignItems="center" gap={2}>
         <Button onClick={() => window.location.replace(deepLink)} variant="contained">
