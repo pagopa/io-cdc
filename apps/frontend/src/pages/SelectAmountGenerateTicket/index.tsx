@@ -16,6 +16,9 @@ import { theme } from '@io-cdc/ui';
 import { useRouteGuard } from '../../hooks';
 import { formatDecimals } from '../../utils/formatDecimals';
 
+const convertAmount = (amount: string | undefined): number =>
+  Number(parseFloat(amount?.replace(',', '.') ?? '0').toFixed(2));
+
 const SelectAmountGenerateTicket = () => {
   //TODO test only
   useRouteGuard();
@@ -41,7 +44,7 @@ const SelectAmountGenerateTicket = () => {
 
   const amount = useSelector(selectAmountBonus);
 
-  const required = useMemo(() => !amount || amount === 0, [amount]);
+  const required = useMemo(() => !amount || convertAmount(amount) < 0.1, [amount]);
 
   const onBackHeader = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_GENERATION_BACK', {
@@ -52,9 +55,9 @@ const SelectAmountGenerateTicket = () => {
   }, [dispatch, navigate]);
 
   const onClickBottom = useCallback(async () => {
-    if (required || selectedCard?.residual_amount! < Number(amount)) {
+    if (required || selectedCard?.residual_amount! < convertAmount(amount)) {
       const helperText =
-        selectedCard?.residual_amount < Number(amount)
+        selectedCard?.residual_amount < convertAmount(amount)
           ? 'L’ importo è superiore al credito disponibile'
           : 'Inserisci un importo';
       setHelperText(helperText);
@@ -62,7 +65,10 @@ const SelectAmountGenerateTicket = () => {
       return;
     }
     trackWebviewEvent('CDC_BONUS_GENERATION_CONVERSION');
-    await createBonus({ year: selectedCard?.year!, amount: amount ?? 0 });
+    await createBonus({
+      year: selectedCard?.year!,
+      amount: convertAmount(amount),
+    });
     dispatch(ticketsActions.resetForm());
   }, [amount, createBonus, dispatch, required, selectedCard]);
 
