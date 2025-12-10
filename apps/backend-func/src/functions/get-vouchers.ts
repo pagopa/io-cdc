@@ -57,9 +57,8 @@ export const checkStartDatetime = (user: Session) => (deps: Dependencies) =>
         const now = new Date();
         const validDate = isAfter(now, startDate) || testUser;
         emitCustomEvent("cdc.get.vouchers.iniziative.status", {
-          data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${
-            validDate ? "Iniziative open" : "Initiative closed"
-          }`,
+          data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${validDate ? "Iniziative open" : "Initiative closed"
+            }`,
         })("getVouchers");
         if (testUser) {
           emitCustomEvent("cdc.get.vouchers.iniziative.status.test", {
@@ -81,9 +80,8 @@ export const checkEndDatetime = (deps: Dependencies) =>
         const now = new Date();
         const validDate = isAfter(endDate, now);
         emitCustomEvent("cdc.get.vouchers.iniziative.status", {
-          data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
-            validDate ? "Iniziative open" : "Initiative closed"
-          }`,
+          data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${validDate ? "Iniziative open" : "Initiative closed"
+            }`,
         })("getVouchers");
         return validDate;
       },
@@ -112,7 +110,7 @@ export const getVouchers =
           TE.mapLeft(errorToInternalError),
         ),
       ),
-      TE.chainW(() => TE.left(errorToInternalError(new Error("Triggered Error")))),
+      TE.chainW(res => year ? TE.right(res) : TE.left(errorToInternalError(new Error("Triggered Error")))),
     );
 
 export const makeGetVouchersHandler: H.Handler<
