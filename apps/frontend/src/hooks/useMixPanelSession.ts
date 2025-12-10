@@ -1,11 +1,22 @@
 import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { initAnalytics } from '@io-cdc/mixpanel';
+import { useSelector } from 'react-redux';
+import { selectDeviceId } from '../features/auth/selectors';
 
 export const useMixPanelSession = () => {
   const { search } = useLocation();
 
-  const deviceId = useMemo(() => new URLSearchParams(search).get('device'), [search]);
+  const isEmptySearch = !search || search === '';
+
+  const cachedDeviceId = useSelector(selectDeviceId);
+
+  const deviceIdQuery = useMemo(() => new URLSearchParams(search).get('device'), [search]);
+
+  const deviceId = useMemo(
+    () => (isEmptySearch ? cachedDeviceId : deviceIdQuery),
+    [cachedDeviceId, deviceIdQuery, isEmptySearch],
+  );
 
   useEffect(() => {
     if (deviceId) {

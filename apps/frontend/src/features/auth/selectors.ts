@@ -12,6 +12,8 @@ export const selectSavedAt = ({ auth }: RootState) => auth?.savedAt;
 
 export const selectRedirectToken = ({ auth }: RootState) => auth?.redirectToken;
 
+export const selectDeviceId = ({ auth }: RootState) => auth?.deviceId;
+
 export const selectIsTokenValid = createSelector(selectToken, selectSavedAt, (token, savedAt) =>
   Boolean(token && savedAt && Date.now() - savedAt < EXPIRE_TIME),
 );

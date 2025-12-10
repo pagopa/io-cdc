@@ -4,6 +4,7 @@ export interface AuthState {
   redirectToken?: string;
   token?: string;
   route?: string;
+  deviceId?: string;
   savedAt?: number;
 }
 
@@ -15,17 +16,24 @@ export const authSlice = createSlice({
   reducers: {
     setToken: (
       state,
-      action: PayloadAction<{ redirectToken: string; token: string; route?: string }>,
+      action: PayloadAction<{
+        redirectToken: string;
+        token: string;
+        route?: string;
+        deviceId?: string;
+      }>,
     ) => {
       state.redirectToken = action.payload.redirectToken;
       state.token = action.payload.token;
       state.route = action.payload.route;
+      state.deviceId = action.payload.deviceId;
       state.savedAt = Date.now();
     },
     clearToken: (state) => {
       state.token = undefined;
       state.route = undefined;
       state.savedAt = undefined;
+      state.deviceId = undefined;
       state.redirectToken = undefined;
     },
   },
