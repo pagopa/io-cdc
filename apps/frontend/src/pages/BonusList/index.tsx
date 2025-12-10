@@ -40,7 +40,7 @@ const BonusList = () => {
       <Header onBack={() => navigate(APP_ROUTES.HOME)} />
       {isError ? (
         <Stack height="100%" justifyContent="center" alignItems="center">
-          <VoucherListError reload={() => refetch()} />
+          <VoucherListError reload={() => refetch()} showAll />
         </Stack>
       ) : (
         <VoucherList vouchersList={orderedVouchers} />
