@@ -457,7 +457,6 @@ const postCdcVouchersTE =
               )(response),
             ),
             TE.map((successResponse) => successResponse.value),
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TE.chain((voucher) =>
               pipe(
                 voucher,
@@ -520,7 +519,6 @@ const getCdcVoucherTE =
               )(response),
             ),
             TE.map((successResponse) => successResponse.value),
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             TE.chain((voucher) =>
               pipe(
                 voucher,
