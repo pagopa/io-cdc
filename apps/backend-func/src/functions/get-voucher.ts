@@ -9,13 +9,17 @@ import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 import { Config } from "../config.js";
-import { VoucherDetails } from "../generated/definitions/internal/VoucherDetails.js";
+import {
+  Voucher_statusEnum,
+  VoucherDetails,
+} from "../generated/definitions/internal/VoucherDetails.js";
 import { withParams } from "../middlewares/withParams.js";
 import { Session } from "../models/session.js";
 import { CdcClientEnvironmentRouter, isTestUser } from "../utils/env_router.js";
 import {
   errorToForbiddenError,
   errorToInternalError,
+  errorToNotFoundError,
   errorToUnauthorizedError,
   errorToValidationError,
   responseError,
@@ -108,6 +112,16 @@ export const getVoucher = (user: Session, id: string) => (deps: Dependencies) =>
             id,
           ),
         TE.mapLeft(errorToInternalError),
+      ),
+    ),
+    TE.chainW((voucher) =>
+      pipe(
+        voucher,
+        TE.fromPredicate(
+          (voucher) => voucher.voucher_status !== Voucher_statusEnum.CANCELLED,
+          () => new Error("Voucher is cancelled"),
+        ),
+        TE.mapLeft(errorToNotFoundError),
       ),
     ),
   );

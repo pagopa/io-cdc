@@ -135,6 +135,29 @@ describe("get-voucher | getVoucher", () => {
       });
   });
 
+  it("1. should return 404 when the voucher is cancelled", async () => {
+    vi.setSystemTime(new Date("2026-12-31T22:00:00.001Z"));
+    getCdcVoucherTEMock.mockReturnValueOnce(
+      TE.of({
+        amount: 5,
+        applicant: "SELF",
+        card_year: "2020",
+        creation_date: "2025-12-01T23:00:00.000Z",
+        expiration_date: "2026-12-30T23:00:00.000Z",
+        id: "code1",
+        voucher_status: "CANCELLED",
+      }),
+    );
+    const res = await getVoucher(aValidSession, "code1")(deps)();
+    expect(E.isLeft(res)).toBe(true);
+    if (E.isLeft(res))
+      expect(res.left).toEqual({
+        code: 404,
+        message: "Voucher is cancelled",
+        title: "Not Found",
+      });
+  });
+
   it("1. should succeed when everything is ok", async () => {
     vi.setSystemTime(new Date("2026-12-31T22:00:00.001Z"));
     const res = await getVoucher(aValidSession, "code1")(deps)();
