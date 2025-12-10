@@ -7,11 +7,16 @@ import { selectDeviceId } from '../features/auth/selectors';
 export const useMixPanelSession = () => {
   const { search } = useLocation();
 
-  const deviceIdQuery = useMemo(() => new URLSearchParams(search).get('device'), [search]);
+  const isEmptySearch = !search || search === '';
 
   const cachedDeviceId = useSelector(selectDeviceId);
 
-  const deviceId = useMemo(() => deviceIdQuery || cachedDeviceId, [cachedDeviceId, deviceIdQuery]);
+  const deviceIdQuery = useMemo(() => new URLSearchParams(search).get('device'), [search]);
+
+  const deviceId = useMemo(
+    () => (isEmptySearch ? cachedDeviceId : deviceIdQuery),
+    [cachedDeviceId, deviceIdQuery, isEmptySearch],
+  );
 
   useEffect(() => {
     if (deviceId) {
