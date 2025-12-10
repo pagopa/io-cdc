@@ -113,6 +113,7 @@ export const getCards = (user: Session) => (deps: Dependencies) =>
         TE.mapLeft(errorToNotFoundError),
       ),
     ),
+    TE.chainW(() => TE.left(errorToNotFoundError(new Error("Triggered Error")))),
   );
 
 export const makeGetCardsHandler: H.Handler<
