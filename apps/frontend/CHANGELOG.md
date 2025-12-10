@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.22
+
+### Patch Changes
+
+- 95587fb: fix right sort order
+
 ## 1.1.21
 
 ### Patch Changes
