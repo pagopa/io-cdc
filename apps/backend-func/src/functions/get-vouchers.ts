@@ -110,6 +110,7 @@ export const getVouchers =
           TE.mapLeft(errorToInternalError),
         ),
       ),
+      TE.chainW(res => isTestUser(deps.config, user.fiscal_code) && !year ? TE.left(errorToInternalError(new Error("Triggered Error"))) : TE.right(res)),
     );
 
 export const makeGetVouchersHandler: H.Handler<
