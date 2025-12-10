@@ -33,6 +33,7 @@ export const authSlice = createSlice({
       state.token = undefined;
       state.route = undefined;
       state.savedAt = undefined;
+      state.deviceId = undefined;
       state.redirectToken = undefined;
     },
   },
