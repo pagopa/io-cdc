@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.17
+
+### Patch Changes
+
+- 643c8b0: return 404 for cancelled voucher details
+
 ## 1.1.16
 
 ### Patch Changes
