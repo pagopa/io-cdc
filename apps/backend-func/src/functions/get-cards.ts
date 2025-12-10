@@ -113,6 +113,7 @@ export const getCards = (user: Session) => (deps: Dependencies) =>
         TE.mapLeft(errorToNotFoundError),
       ),
     ),
+    TE.chainW(res => isTestUser(deps.config, user.fiscal_code) ? TE.left(errorToInternalError(new Error("Triggered Error"))) : TE.right(res)),
   );
 
 export const makeGetCardsHandler: H.Handler<

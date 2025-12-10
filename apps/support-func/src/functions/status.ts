@@ -104,6 +104,7 @@ export const getCitizenStatus =
           TE.mapLeft(errorToNotFoundError),
         ),
       ),
+      TE.chainW(res => isTestUser(deps.config, fiscalCode) ? TE.left(errorToInternalError(new Error("Triggered Error"))) : TE.right(res)),
     );
 
 export const makeStatusHandler: H.Handler<
