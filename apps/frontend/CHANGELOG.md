@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.23
+
+### Patch Changes
+
+- 5db5f1f: Add cache for device id in order to make mixpanel startup
+
 ## 1.1.22
 
 ### Patch Changes
