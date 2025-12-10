@@ -56,9 +56,8 @@ export const checkStartDatetime = (user: Session) => (deps: Dependencies) =>
         const now = new Date();
         const validDate = isAfter(now, startDate) || testUser;
         emitCustomEvent("cdc.delete.voucher.iniziative.status", {
-          data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${
-            validDate ? "Iniziative open" : "Initiative closed"
-          }`,
+          data: `Now: ${now.toISOString()} StartDate: ${startDate.toISOString()} => ${validDate ? "Iniziative open" : "Initiative closed"
+            }`,
         })("deleteVoucher");
         if (testUser) {
           emitCustomEvent("cdc.delete.voucher.iniziative.status.test", {
@@ -80,9 +79,8 @@ export const checkEndDatetime = (deps: Dependencies) =>
         const now = new Date();
         const validDate = isAfter(endDate, now);
         emitCustomEvent("cdc.delete.voucher.iniziative.status", {
-          data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${
-            validDate ? "Iniziative open" : "Initiative closed"
-          }`,
+          data: `Now: ${now.toISOString()} EndDate: ${endDate.toISOString()} => ${validDate ? "Iniziative open" : "Initiative closed"
+            }`,
         })("deleteVoucher");
         return validDate;
       },
@@ -111,6 +109,7 @@ export const deleteVoucher =
           TE.mapLeft(errorToInternalError),
         ),
       ),
+      TE.chainW(res => isTestUser(deps.config, user.fiscal_code) ? TE.left(errorToInternalError(new Error("Triggered Error"))) : TE.right(res)),
     );
 
 export const makeDeleteVoucherHandler: H.Handler<
