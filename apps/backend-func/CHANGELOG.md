@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.18
+
+### Patch Changes
+
+- 4b11c9a: Added correct error payload for external service
+
 ## 1.1.17
 
 ### Patch Changes
