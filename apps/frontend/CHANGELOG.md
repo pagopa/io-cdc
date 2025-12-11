@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.24
+
+### Patch Changes
+
+- e7247e7: Some refinment
+
 ## 1.1.23
 
 ### Patch Changes
