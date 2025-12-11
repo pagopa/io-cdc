@@ -4,16 +4,12 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../routes/appRoutes';
-import { useRouteGuard } from '../../hooks';
 import { Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import { useGetAllVoucherQuery } from '../../features/rtk/services';
 import { sortByCreationDate } from '../../utils/sortVouchers';
 
 const BonusList = () => {
-  //TODO test only
-  useRouteGuard();
-
   const { data: vouchers, isError, isFetching, refetch } = useGetAllVoucherQuery();
 
   const orderedVouchers = useMemo(() => sortByCreationDate(vouchers), [vouchers]);
