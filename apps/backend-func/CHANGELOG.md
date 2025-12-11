@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.19
+
+### Patch Changes
+
+- c906144: Removed test session function
+
 ## 1.1.18
 
 ### Patch Changes
