@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.25
+
+### Patch Changes
+
+- 4715084: Remove some unused utilities and feature flags
+
 ## 1.1.24
 
 ### Patch Changes
