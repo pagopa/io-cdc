@@ -17,7 +17,6 @@ import { InfoFn } from "./functions/info.js";
 import { PostCardRequestsFn } from "./functions/post-requests.js";
 import { PostVouchersFn } from "./functions/post-vouchers.js";
 import { ProcessPendingRequestFn } from "./functions/process-pending-request.js";
-import { TestSessionFn } from "./functions/test-session.js";
 import { PendingCardRequestMessage } from "./types/queue-message.js";
 import { getCosmosDbClientInstance } from "./utils/cosmosdb.js";
 import { CdcClientEnvironmentRouter } from "./utils/env_router.js";
@@ -97,14 +96,6 @@ app.http("Authorize", {
   handler: Authorize,
   methods: ["GET"],
   route: "api/v1/authorize",
-});
-
-const TestSession = TestSessionFn({ config, redisClientFactory });
-app.http("TestSession", {
-  authLevel: "function",
-  handler: TestSession,
-  methods: ["POST"],
-  route: "api/v1/test-session",
 });
 
 /*
