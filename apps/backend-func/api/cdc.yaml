@@ -99,6 +99,10 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
   /CDCUtenteWS/rest/secured/beneficiario/generaVoucher:
     post:
       tags:
@@ -131,6 +135,10 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
   /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher/{codVoucher}:
     delete:
       tags:
@@ -160,6 +168,10 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
   "/CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/":
     get:
       tags:
@@ -194,6 +206,10 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
   /CDCUtenteWS/rest/secured/beneficiario/getDettaglioVoucher/{codVoucher}:
     get:
       tags:
@@ -227,6 +243,10 @@ paths:
           description: Utente non loggato
         "500":
           description: Errore interno.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemBean"
 components:
   securitySchemes:
     JwtAuth:
@@ -270,20 +290,16 @@ components:
     ProblemBean:
       type: object
       properties:
-        type:
-          type: string
         title:
           type: string
-        status:
-          type: string
-          enum:
-            - NO_INPUT
-            - ANNI_RIFERIMENTO_NON_FORNITI
-            - LISTA_ANNI_VUOTA
-            - FORMATO_ANNI_ERRATO
-            - INPUT_SUPERIORE_AL_CONSENTITO
         detail:
           type: string
+          enum:
+            - Validazioni non superate
+            - il Voucher inserito non risulta presente
+            - Nessun Borsellino Disponibile
+            - Errore generico verificare congruenza dati
+            - FORMATO_ANNI_ERRATO
         instance:
           type: string
         errorCode:
