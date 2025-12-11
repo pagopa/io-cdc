@@ -2,8 +2,6 @@
 
 interface ImportMetaEnv {
   readonly VITE_BASE_URL: string;
-  readonly VITE_ENABLE_REQUEST: string;
-  readonly VITE_ENABLE_DASHBOARD: string;
   readonly VITE_HELP_CARTA_DELLA_CULTURA: string;
   readonly VITE_LINK_RETAILERS: string;
   readonly VITE_CLOSE_DEEPLINK: string;

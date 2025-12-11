@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useLazyGetSessionQuery } from '../features/rtk/services';
 import { APP_ROUTES } from '../routes/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
-import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
 import { USERS_ROUTE } from '../features/types/model';
 import { selectCachedSession, selectIsTokenValid } from '../features/reducers/auth/selectors';
 import { authActions } from '../features/reducers/auth/reducer';
@@ -73,13 +72,10 @@ export const useGetSession = () => {
     }
     if (data?.token) {
       dispatch(authActions.setToken({ ...data, redirectToken, deviceId: deviceId ?? undefined }));
-      //THIS LOGIC IS IN USE FOR TESTING ONLY - ROUTE MUST BE PASSED ONLY FOR TESTER USERS
-      if (data?.route === USERS_ROUTE.USAGE) {
-        navigate(APP_ROUTES.HOME);
-        return;
-      }
+      const isUsage = data?.route === USERS_ROUTE.USAGE;
+      navigate(isUsage ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR);
+      return;
     }
-    navigate(getPathFromEvironment());
     return;
   }, [dispatch, getSession, isChachedSessionValid, navigate, redirectToken, deviceId]);
 

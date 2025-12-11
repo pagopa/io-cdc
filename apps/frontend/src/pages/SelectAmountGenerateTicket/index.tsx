@@ -15,7 +15,6 @@ import { APP_ROUTES } from '../../routes/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { ticketsActions } from '../../features/reducers/usage/reducers';
-import { useRouteGuard } from '../../hooks';
 import { formatDecimals } from '../../utils/formatDecimals';
 
 const TEXT_COLOR = '#555C70';
@@ -24,9 +23,6 @@ const convertAmount = (amount: string | undefined): number =>
   Number(parseFloat(amount?.replace(',', '.') ?? '0').toFixed(2));
 
 const SelectAmountGenerateTicket = () => {
-  //TODO test only
-  useRouteGuard();
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

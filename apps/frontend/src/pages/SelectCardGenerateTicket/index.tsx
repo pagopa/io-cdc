@@ -8,12 +8,8 @@ import { trackWebviewEvent } from '../../utils/trackEvent';
 import { RadioList } from './components/RadioList';
 import { ticketsActions } from '../../features/reducers/usage/reducers';
 import { useDispatch } from 'react-redux';
-import { useRouteGuard } from '../../hooks';
 
 const GenerateTicket = () => {
-  //TODO test only
-  useRouteGuard();
-
   const dispatch = useDispatch();
   const { data: cards } = useGetCardsQuery();
   const navigate = useNavigate();

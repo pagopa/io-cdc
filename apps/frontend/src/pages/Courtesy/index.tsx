@@ -1,9 +1,8 @@
 import { Icon, OperationResult } from '@io-cdc/ui';
-// import { useNavigate } from 'react-router-dom';
 import { Button, Stack } from '@mui/material';
 import { useEffect, useMemo } from 'react';
 import { trackWebviewEvent } from '../../utils/trackEvent';
-import { useMobileOS, useRouteGuard } from '../../hooks';
+import { useMobileOS } from '../../hooks';
 
 const CourtesyPage = () => {
   const os = useMobileOS();
@@ -13,9 +12,6 @@ const CourtesyPage = () => {
     if (os === 'android') return 'https://play.google.com/store/apps/details?id=it.pagopa.io.app';
     return 'https://apps.apple.com/it/app/io/id1501681835';
   }, [os]);
-
-  //TODO test only
-  useRouteGuard();
 
   const onClickDeeplink = () => {
     trackWebviewEvent('CDC_APP_UPDATE');

@@ -9,13 +9,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectTicketDeleted } from '../../features/reducers/usage/selectors';
 import { ticketsActions } from '../../features/reducers/usage/reducers';
 import { useToast } from '../../contexts';
-import { useGetCards, useRouteGuard } from '../../hooks';
+import { useGetCards } from '../../hooks';
 import { VoucherListHome } from './components/VoucherListHome';
 
 const Home = () => {
-  //TODO test only
-  useRouteGuard();
-
   const dispatch = useDispatch();
   const { showToast } = useToast();
   const navigate = useNavigate();

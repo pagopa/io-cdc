@@ -1,11 +1,5 @@
 import React from 'react';
 
-/**
- * TODO
- * For testing purposes, we need to load all routes in app. We could return back to previous logic when production environment is working
- */
-// import { featureFlags } from './featureFlags';
-
 // Request routes
 const SelectYear = React.lazy(() => import('../pages/SelectYear'));
 const FeedbackRequest = React.lazy(() => import('../pages/FeedbackRequest'));
@@ -119,12 +113,7 @@ const APP_ROUTES_CONFIG = {
   DASHBOARD: APP_ROUTES_DASHBOARD,
 };
 
-export const getAppRoutes = () => {
-  // const { dashboard, request } = featureFlags;
-  // if (request && !dashboard) return [...APP_ROUTES_CONFIG.REQUEST, ...GLOBAL_ROUTES];
-  // if (!request) return [...APP_ROUTES_CONFIG.DASHBOARD, ...GLOBAL_ROUTES];
-  return {
-    protectedRoutes: [...APP_ROUTES_CONFIG.DASHBOARD, ...APP_ROUTES_CONFIG.REQUEST],
-    global: GLOBAL_ROUTES,
-  };
-};
+export const getAppRoutes = () => ({
+  protectedRoutes: [...APP_ROUTES_CONFIG.DASHBOARD, ...APP_ROUTES_CONFIG.REQUEST],
+  global: GLOBAL_ROUTES,
+});

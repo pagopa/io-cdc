@@ -5,12 +5,8 @@ import { CONFIG_BY_STATUS, CONFIG_KEYS, generateGenericError } from './constants
 import { useEffect } from 'react';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { APP_ROUTES } from '../../routes/appRoutes';
-import { useRouteGuard } from '../../hooks';
 
 const TicketFeedback = () => {
-  //TODO test only
-  useRouteGuard();
-
   const {
     state: { status, name },
   } = useLocation();
