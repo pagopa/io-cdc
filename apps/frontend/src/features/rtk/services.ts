@@ -1,31 +1,24 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { RootState } from '../store';
+import { retrieveSessionQueryCached } from '../utils';
+import { GetSessionParamsRequestDTO, SessionResponseDTO } from '../types/sessionDTO';
+import {
+  GetNotAvailableYearsListResponseDTO,
+  GetYearsListResponseDTO,
+  RequestBonusRequestDTO,
+  RequestBonusResponseDTO,
+} from '../types/cdcRequestsDTO';
 import {
   CreateVoucherRequestDTO,
+  CreateVoucherResponseDTO,
   DeleteVoucherResponseDTO,
   GetBonusByIdResponseDTO,
-  GetVouchersResponseDTO,
   GetCardsResponseDTO,
-  RequestBonusDto,
-  SessionResponseDTO,
-  GetYearsListResponseDTO,
-  GetNotAvailableYearsListResponseDTO,
-  GetSessionParamsRequestDTO,
-  CreateVoucherResponseDTO,
   GetVouchersRequestQuery,
-} from './dto';
-import { RootState } from '../store';
-import { retrieveSessionQueryCached } from './utils';
-import { API_DASHBOARD, API_REQUEST } from './api';
-import { isEnvConfigEnabled } from '../../utils/isEnvConfigEnabled';
+  GetVouchersResponseDTO,
+} from '../types/cdcUsageDTO';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-
-enum API_ENV_OPTIONS {
-  DEV = 'DEV',
-  PROD = 'PROD',
-}
-
-const API_ENV = API_ENV_OPTIONS[isEnvConfigEnabled(import.meta.env.VITE_MOCK_API) ? 'DEV' : 'PROD'];
 
 export const appApi = createApi({
   reducerPath: 'app',
@@ -48,35 +41,39 @@ export const appApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    //REQUEST APP APIS
+    //SESSION APP API
     getSession: builder.query<SessionResponseDTO, GetSessionParamsRequestDTO>({
-      ...API_REQUEST[API_ENV].getSession,
+      query: ({ id }: GetSessionParamsRequestDTO): string | FetchArgs => ({
+        url: '/authorize',
+        params: { id },
+      }),
       providesTags: (_, __, { id }, ___) => [{ type: 'getSession' as const, id }],
       keepUnusedDataFor: 1800,
     }),
+    //REQUEST APP APIS
     getYearsList: builder.query<GetYearsListResponseDTO, void>({
-      ...API_REQUEST[API_ENV].getYearsList,
+      query: () => 'years',
       keepUnusedDataFor: 3600,
     }),
     getNotAvailableYearsList: builder.query<GetNotAvailableYearsListResponseDTO, void>({
-      ...API_REQUEST[API_ENV].getNotAvailableYearsList,
+      query: () => 'card-requests',
       keepUnusedDataFor: 3600,
     }),
-    requestBonus: builder.mutation<{ success: boolean }, RequestBonusDto>({
-      ...API_REQUEST[API_ENV].requestBonus,
+    requestBonus: builder.mutation<RequestBonusResponseDTO, RequestBonusRequestDTO>({
+      query: () => 'card-requests',
     }),
     // DASHBOARD APP APIS
     getVoucherById: builder.query<GetBonusByIdResponseDTO, string>({
-      ...API_DASHBOARD.getVoucherById,
+      query: (id: string) => `/vouchers/${id}`,
     }),
     getCards: builder.query<GetCardsResponseDTO, void>({
-      ...API_DASHBOARD.getCards,
+      query: () => 'cards',
     }),
     getVoucher: builder.query<GetVouchersResponseDTO, GetVouchersRequestQuery>({
       query: (year: string) => ({ url: 'vouchers', method: 'GET', params: { year } }),
     }),
     getAllVoucher: builder.query<GetVouchersResponseDTO, void>({
-      ...API_DASHBOARD.getAllVouchers,
+      query: () => 'vouchers',
     }),
     createVoucher: builder.mutation<CreateVoucherResponseDTO, CreateVoucherRequestDTO>({
       query: (voucher: CreateVoucherRequestDTO) => ({

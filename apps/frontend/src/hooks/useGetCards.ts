@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useLazyGetCardsQuery } from '../features/app/services';
-import { Card } from '../features/app/model';
+import { useLazyGetCardsQuery } from '../features/rtk/services';
+import { Card } from '../features/types/model';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../routes/appRoutes';
 import { useDispatch, useSelector } from 'react-redux';
-import { ticketsActions } from '../features/app/reducers';
-import { selectActiveCard } from '../features/app/selectors';
+import { ticketsActions } from '../features/reducers/usage/reducers';
+import { selectActiveCard } from '../features/reducers/usage/selectors';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 
 export const useGetCards = () => {

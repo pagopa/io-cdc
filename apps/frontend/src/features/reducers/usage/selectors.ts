@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { endpoints } from './services';
-import { retrieveSessionQueryCached } from './utils';
-import { RootState } from '../store';
+import { endpoints } from '../../rtk/services';
+import { retrieveSessionQueryCached } from '../../utils';
+import { RootState } from '../../store';
 
 const selectTickets = (state: RootState) => state.tickets;
 

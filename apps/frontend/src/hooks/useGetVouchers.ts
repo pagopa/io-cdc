@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useLazyGetVoucherQuery } from '../features/app/services';
-import { VoucherItem } from '../features/app/model';
-import { selectActiveCard } from '../features/app/selectors';
+import { useLazyGetVoucherQuery } from '../features/rtk/services';
+import { VoucherItem } from '../features/types/model';
+import { selectActiveCard } from '../features/reducers/usage/selectors';
 import { useSelector } from 'react-redux';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { useNavigate } from 'react-router-dom';

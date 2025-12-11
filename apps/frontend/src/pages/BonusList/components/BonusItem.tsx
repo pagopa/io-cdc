@@ -2,7 +2,7 @@ import { Chip, Stack, Typography } from '@mui/material';
 import { Icon } from '@io-cdc/ui';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
-import { VoucherItem } from '../../../features/app/model';
+import { VoucherItem } from '../../../features/types/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { getVoucherConfig } from './constants';
 import { formatDecimals } from '../../../utils/formatDecimals';

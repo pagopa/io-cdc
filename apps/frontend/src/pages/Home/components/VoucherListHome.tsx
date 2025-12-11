@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { VoucherCard } from '../../BonusList/components/BonusItem';
 import { separateVouchersByStatus } from '../../../utils/separateVouchersByStatus';
 import { useSelector } from 'react-redux';
-import { selectActiveCard } from '../../../features/app/selectors';
+import { selectActiveCard } from '../../../features/reducers/usage/selectors';
 import { EmptyVouchers } from '../../../components/VoucherList/EmptyVouchers';
 import { useGetVouchers } from '../../../hooks/useGetVouchers';
 import { Reminder } from './Reminder';

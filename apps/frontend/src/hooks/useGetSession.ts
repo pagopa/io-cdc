@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useLazyGetSessionQuery } from '../features/app/services';
+import { useLazyGetSessionQuery } from '../features/rtk/services';
 import { APP_ROUTES } from '../routes/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';
 import { getPathFromEvironment } from '../utils/getDefaultPathFromEnv';
-import { authActions } from '../features/auth/reducer';
-import { TEST_USERS } from '../features/app/model';
-import { selectCachedSession, selectIsTokenValid } from '../features/auth/selectors';
+import { USERS_ROUTE } from '../features/types/model';
+import { selectCachedSession, selectIsTokenValid } from '../features/reducers/auth/selectors';
+import { authActions } from '../features/reducers/auth/reducer';
 
 const redirectTokenError = { data: 'Session ID not provided', status: 401 };
 
@@ -40,7 +40,7 @@ export const useGetSession = () => {
     ) {
       if (isChachedSessionValid)
         return navigate(
-          cachedSession.route === TEST_USERS.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
+          cachedSession.route === USERS_ROUTE.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
         );
       return navigate(APP_ROUTES.UNAUTHORIZED, {
         state: {
@@ -60,7 +60,7 @@ export const useGetSession = () => {
     if (sessionError && isFetchBaseQueryError(sessionErrorMsg)) {
       if (isChachedSessionValid && cachedSession) {
         return navigate(
-          cachedSession.route === TEST_USERS.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
+          cachedSession.route === USERS_ROUTE.USAGE ? APP_ROUTES.HOME : APP_ROUTES.SELECT_YEAR,
         );
       }
       dispatch(authActions.clearToken());
@@ -74,7 +74,7 @@ export const useGetSession = () => {
     if (data?.token) {
       dispatch(authActions.setToken({ ...data, redirectToken, deviceId: deviceId ?? undefined }));
       //THIS LOGIC IS IN USE FOR TESTING ONLY - ROUTE MUST BE PASSED ONLY FOR TESTER USERS
-      if (data?.route === TEST_USERS.USAGE) {
+      if (data?.route === USERS_ROUTE.USAGE) {
         navigate(APP_ROUTES.HOME);
         return;
       }

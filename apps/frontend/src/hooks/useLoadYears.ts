@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   useLazyGetNotAvailableYearsListQuery,
   useLazyGetYearsListQuery,
-} from '../features/app/services';
-import { Year } from '../features/app/model';
+} from '../features/rtk/services';
+import { Year } from '../features/types/model';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../routes/appRoutes';
 import { isFetchBaseQueryError } from '../utils/isFetchBaseQueryError';

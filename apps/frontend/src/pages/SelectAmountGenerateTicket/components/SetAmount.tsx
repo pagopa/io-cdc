@@ -1,7 +1,7 @@
 import { CdcInput } from '../../../components';
 import { useDispatch } from 'react-redux';
-import { useCallback /*, useMemo */ } from 'react';
-import { ticketsActions } from '../../../features/app/reducers';
+import { useCallback } from 'react';
+import { ticketsActions } from '../../../features/reducers/usage/reducers';
 
 type SetAmountProps = {
   amount?: string;

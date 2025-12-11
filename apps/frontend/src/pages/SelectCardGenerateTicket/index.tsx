@@ -3,10 +3,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Header, PopConfirm } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../routes/appRoutes';
-import { useGetCardsQuery } from '../../features/app/services';
+import { useGetCardsQuery } from '../../features/rtk/services';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { RadioList } from './components/RadioList';
-import { ticketsActions } from '../../features/app/reducers';
+import { ticketsActions } from '../../features/reducers/usage/reducers';
 import { useDispatch } from 'react-redux';
 import { useRouteGuard } from '../../hooks';
 

@@ -1,7 +1,7 @@
 import { Icon } from '@io-cdc/ui';
 import { Stack, IconButton, Typography } from '@mui/material';
 import { CardFooter } from './CardFooter';
-import { Card as CardType } from '../../features/app/model';
+import { Card as CardType } from '../../features/types/model';
 
 const ICON_STYLE_RESET = { color: '#17324D', backgroundColor: 'unset', padding: 0 };
 

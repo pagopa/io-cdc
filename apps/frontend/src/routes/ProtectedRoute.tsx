@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { selectIsTokenValid, selectToken } from '../features/auth/selectors';
 import { APP_ROUTES } from './appRoutes';
-import { authActions } from '../features/auth/reducer';
 import { useEffect } from 'react';
+import { selectIsTokenValid, selectToken } from '../features/reducers/auth/selectors';
+import { authActions } from '../features/reducers/auth/reducer';
 
 export const ProtectedRoute = () => {
   const dispatch = useDispatch();
