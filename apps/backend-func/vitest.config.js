@@ -11,7 +11,6 @@ export default defineConfig({
         "**/src/config.ts",
         "**/src/main.ts",
         "**/src/functions/info.ts",
-        "**/src/functions/test-session.ts",
         "**/src/utils/queue.ts",
         "**/src/utils/redis.ts",
         "**/src/utils/lollipopKeys.ts",
