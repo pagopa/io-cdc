@@ -3,7 +3,7 @@ import { Button, Chip, CircularProgress, Stack, Typography } from '@mui/material
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APP_ROUTES } from '../../routes/appRoutes';
-import { useRequestBonusMutation } from '../../features/app/services';
+import { useRequestBonusMutation } from '../../features/rtk/services';
 import { useLoadYears } from '../../hooks';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
 import { RequestLoader } from '../../components';

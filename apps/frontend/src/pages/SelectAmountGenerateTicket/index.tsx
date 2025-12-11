@@ -5,13 +5,16 @@ import { trackWebviewEvent } from '../../utils/trackEvent';
 import { SetAmount } from './components/SetAmount';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
-import { useCreateVoucherMutation } from '../../features/app/services';
+import { useCreateVoucherMutation } from '../../features/rtk/services';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAmountBonus, selectSelectedCardBonus } from '../../features/app/selectors';
+import {
+  selectAmountBonus,
+  selectSelectedCardBonus,
+} from '../../features/reducers/usage/selectors';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { BonusCreationLoader } from './components/BonusCreationLoader';
 import { isFetchBaseQueryError } from '../../utils/isFetchBaseQueryError';
-import { ticketsActions } from '../../features/app/reducers';
+import { ticketsActions } from '../../features/reducers/usage/reducers';
 import { useRouteGuard } from '../../hooks';
 import { formatDecimals } from '../../utils/formatDecimals';
 

@@ -1,5 +1,5 @@
 import { ChipProps } from '@mui/material';
-import { REFUND_STATUS, VoucherItem } from '../../features/app/model';
+import { REFUND_STATUS, VoucherItem } from '../../features/types/model';
 import { ChipLabel } from './components/ChipLabel';
 
 export const getChipConfig: (

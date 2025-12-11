@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Card } from './model';
+import { Card } from '../../types/model';
 
 type TicketsState = {
   activeCard: string;

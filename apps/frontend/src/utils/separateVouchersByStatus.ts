@@ -1,4 +1,4 @@
-import { VoucherItem } from '../features/app/model';
+import { VoucherItem } from '../features/types/model';
 import { sortByCreationDate, sortBySpendingDate } from './sortVouchers';
 
 type ReturnValue = { toSpend: VoucherItem[]; spent: VoucherItem[] };

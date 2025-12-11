@@ -1,4 +1,4 @@
-import { VoucherItem } from '../../../features/app/model';
+import { VoucherItem } from '../../../features/types/model';
 
 export const getVoucherConfig = (voucher: VoucherItem) => {
   switch (voucher.applicant) {

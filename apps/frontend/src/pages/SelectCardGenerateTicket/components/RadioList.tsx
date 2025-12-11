@@ -2,11 +2,11 @@ import { Box, Button, Divider, Radio, RadioGroup, Stack, Typography } from '@mui
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { selectSelectedCardBonus } from '../../../features/app/selectors';
-import { Card } from '../../../features/app/model';
+import { selectSelectedCardBonus } from '../../../features/reducers/usage/selectors';
+import { Card } from '../../../features/types/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { APP_ROUTES } from '../../../routes/appRoutes';
-import { ticketsActions } from '../../../features/app/reducers';
+import { ticketsActions } from '../../../features/reducers/usage/reducers';
 import { useToast } from '../../../contexts';
 import { formatDecimals } from '../../../utils/formatDecimals';
 

@@ -1,7 +1,6 @@
 export type YearsList = string[];
 
-//TODO Test only
-export enum TEST_USERS {
+export enum USERS_ROUTE {
   REGISTRATION = 'REGISTRATION',
   USAGE = 'USAGE',
 }

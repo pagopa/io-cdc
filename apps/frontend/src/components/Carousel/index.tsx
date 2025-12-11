@@ -2,12 +2,12 @@ import { Card } from '../Card';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { CarouselContainer, ScrollArea, SlideBox, StyledDots } from './styled';
 import { Stack } from '@mui/material';
-import { Card as CardType } from '../../features/app/model';
+import { Card as CardType } from '../../features/types/model';
 import { trackWebviewEvent } from '../../utils/trackEvent';
 import { Icon } from '@io-cdc/ui';
 import { useDispatch, useSelector } from 'react-redux';
-import { ticketsActions } from '../../features/app/reducers';
-import { selectActiveCard } from '../../features/app/selectors';
+import { ticketsActions } from '../../features/reducers/usage/reducers';
+import { selectActiveCard } from '../../features/reducers/usage/selectors';
 
 type CarouselProps = {
   list: Array<CardType>;

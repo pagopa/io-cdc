@@ -1,9 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { appApi } from './app/services';
-import { ticketsReducer } from './app/reducers';
-import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { authReducer } from './auth/reducer';
+import { appApi } from './rtk/services';
+import { configureStore } from '@reduxjs/toolkit';
+import { authReducer } from './reducers/auth/reducer';
+import { ticketsReducer } from './reducers/usage/reducers';
+import { persistReducer, persistStore } from 'redux-persist';
 
 const persistConfig = {
   key: 'root',

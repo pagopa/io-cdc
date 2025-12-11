@@ -7,7 +7,7 @@ import { APP_ROUTES } from '../../routes/appRoutes';
 import { useRouteGuard } from '../../hooks';
 import { Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
-import { useGetAllVoucherQuery } from '../../features/app/services';
+import { useGetAllVoucherQuery } from '../../features/rtk/services';
 import { sortByCreationDate } from '../../utils/sortVouchers';
 
 const BonusList = () => {
@@ -37,13 +37,15 @@ const BonusList = () => {
 
   return (
     <Stack p={3} gap={3} height="100%">
-      <Header onBack={() => navigate(APP_ROUTES.HOME)} />
       {isError ? (
         <Stack height="100%" justifyContent="center" alignItems="center">
           <VoucherListError reload={() => refetch()} showAll />
         </Stack>
       ) : (
-        <VoucherList vouchersList={orderedVouchers} />
+        <>
+          <Header onBack={() => navigate(APP_ROUTES.HOME)} />
+          <VoucherList vouchersList={orderedVouchers} />
+        </>
       )}
     </Stack>
   );

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { initAnalytics } from '@io-cdc/mixpanel';
 import { useSelector } from 'react-redux';
-import { selectDeviceId } from '../features/auth/selectors';
+import { selectDeviceId } from '../features/reducers/auth/selectors';
 
 export const useMixPanelSession = () => {
   const { search } = useLocation();
