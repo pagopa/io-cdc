@@ -28,7 +28,7 @@ const CourtesyPage = () => {
       <OperationResult
         title="Il periodo per richiedere la Carta è terminato"
         subTitle="Se hai fatto richiesta, riceverai l’esito direttamente su IO."
-        description="Nel frattempo, ti suggeriamo di aggiornare l’app all’ultima versione"
+        description="Nel frattempo, per usare Carta della Cultura appena sarà disponibile, aggiorna l’app all’ultima versione."
       />
       <Stack direction="column" justifyContent="center" alignItems="center" gap={2}>
         <Button onClick={onClickDeeplink} variant="contained">

@@ -1,8 +1,8 @@
-import { Chip, Stack, Typography } from '@mui/material';
+import { Chip, ChipProps, Stack, Typography } from '@mui/material';
 import { Icon } from '@io-cdc/ui';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
-import { VoucherItem } from '../../../features/types/model';
+import { REFUND_STATUS, VoucherItem } from '../../../features/types/model';
 import { trackWebviewEvent } from '../../../utils/trackEvent';
 import { getVoucherConfig } from './constants';
 import { formatDecimals } from '../../../utils/formatDecimals';
@@ -53,6 +53,17 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
     navigate(`/dettaglio-buono/${voucher.id}`);
   }, [others, voucher.id, navigate, openSheet]);
 
+  const chipConfig: {
+    label: ChipProps['label'];
+    color: ChipProps['color'];
+  } | null = useMemo(() => {
+    if (voucher?.refund?.refund_status === REFUND_STATUS.PENDING)
+      return { label: <ChipLabel>IN CORSO</ChipLabel>, color: 'warning' };
+    if (voucher?.refund?.refund_status === REFUND_STATUS.FAILED)
+      return { label: <ChipLabel>RIFIUTATO</ChipLabel>, color: 'error' };
+    return null;
+  }, [voucher?.refund?.refund_status]);
+
   return (
     <Stack onClick={goToDetail}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -82,9 +93,7 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
             {formatDecimals(voucher.amount)} €
           </Typography>
         )}
-        {voucher?.refund && voucher?.refund?.refund_status === 'PENDING' && (
-          <Chip label={<ChipLabel>IN CORSO</ChipLabel>} color="warning" size="small" />
-        )}
+        {chipConfig && <Chip {...chipConfig} size="small" />}
       </Stack>
     </Stack>
   );
