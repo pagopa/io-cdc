@@ -11,7 +11,7 @@ export const getChipConfig: (
   if (refund?.refund_status === REFUND_STATUS.PENDING)
     return { label: <ChipLabel>IN CORSO</ChipLabel>, color: 'warning' };
   if (refund?.refund_status === REFUND_STATUS.FAILED)
-    return { label: <ChipLabel>NEGATO</ChipLabel>, color: 'error' };
+    return { label: <ChipLabel>RIFIUTATO</ChipLabel>, color: 'error' };
   if (spent) return { label: <ChipLabel>SPESO</ChipLabel>, color: 'default' };
   return { label: <ChipLabel>DA SPENDERE</ChipLabel>, color: 'info' };
 };
