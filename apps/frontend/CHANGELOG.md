@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.26
+
+### Patch Changes
+
+- 1baa563: Some text changes and add chip in voucher list for refund rejected
+
 ## 1.1.25
 
 ### Patch Changes
