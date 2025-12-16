@@ -11,8 +11,8 @@ locals {
       COSMOSDB_CDC_DATABASE_NAME = var.cosmosdb_cdc_database_name
 
       // CDC
-      CDC_USAGE_START_DATE = "2028-12-16T11:00:00.000Z" // 12:00:00 CET of December 16th, 2025
-      CDC_USAGE_END_DATE   = "2029-12-31T22:59:59.999Z" // 23:59:59 CET of December 31st, 2026
+      CDC_USAGE_START_DATE = "2025-12-18T09:30:00.000Z" // 10:30:00 CET of December 18th, 2025
+      CDC_USAGE_END_DATE   = "2026-12-31T22:59:59.999Z" // 23:59:59 CET of December 31st, 2026
 
       // CDC API
       CDC_API_BASE_URL      = var.cdc_api_base_url
