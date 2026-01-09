@@ -14,7 +14,7 @@ locals {
       CDC_BASE_URL                = var.cdc_base_url
       CDC_REGISTRATION_START_DATE = "2025-10-01T11:00:00.000Z" // 12:00:00 CET of October 1st, 2025
       CDC_REGISTRATION_END_DATE   = "2025-10-31T10:59:59.999Z" // 11:59:59 CET of October 31st, 2025
-      CDC_USAGE_START_DATE        = "2025-12-18T09:30:00.000Z" // 10:30:00 CET of December 18th, 2025
+      CDC_USAGE_START_DATE        = "2026-01-14T09:30:00.000Z" // 10:30:00 CET of January 14th, 2026
       CDC_USAGE_END_DATE          = "2026-12-31T22:59:59.999Z" // 23:59:59 CET of December 31st, 2026
 
       // COSMOS
