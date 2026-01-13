@@ -17,7 +17,7 @@ export const CARDS_FEEDBACK_CONFIG: Record<number, CardsFeedbackConfig> = {
   404: {
     icon: 'emptyCard',
     title: 'Carta della Cultura non è disponibile per il tuo profilo',
-    subTitle: 'La tua richiesta non è stata accolta o non risultano richieste per il tuo profilo',
+    subTitle: 'Non risultano richieste o, se presenti, non sono state accolte',
     trackProperties: {
       name: 'CDC_NOT_AVAILABLE',
       properties: {
