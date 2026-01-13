@@ -14,8 +14,8 @@ locals {
       CDC_BASE_URL                = var.cdc_base_url
       CDC_REGISTRATION_START_DATE = "2025-10-01T11:00:00.000Z" // 12:00:00 CET of October 1st, 2025
       CDC_REGISTRATION_END_DATE   = "2025-10-31T10:59:59.999Z" // 11:59:59 CET of October 31st, 2025
-      CDC_USAGE_START_DATE        = "2028-12-16T11:00:00.000Z" // 12:00:00 CET of December 16th, 2025
-      CDC_USAGE_END_DATE          = "2029-12-31T22:59:59.999Z" // 23:59:59 CET of December 31st, 2026
+      CDC_USAGE_START_DATE        = "2026-01-14T09:30:00.000Z" // 10:30:00 CET of January 14th, 2026
+      CDC_USAGE_END_DATE          = "2027-01-14T22:59:59.999Z" // 23:59:59 CET of January 14th, 2027
 
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri
@@ -35,7 +35,7 @@ locals {
       CDC_API_BASE_URL_TEST = var.cdc_api_base_url_test
 
       // CDC CARDS EXPIRATION DATE
-      CDC_CARDS_EXPIRATION_DATE = "2026-12-31T22:59:59.000Z"
+      CDC_CARDS_EXPIRATION_DATE = "2027-01-14T22:59:59.999Z"
 
       // FIMS
       FIMS_REDIRECT_URL  = var.fims_redirect_url
