@@ -12,14 +12,14 @@ locals {
 
       // CDC
       CDC_USAGE_START_DATE = "2026-01-14T09:30:00.000Z" // 10:30:00 CET of January 14th, 2026
-      CDC_USAGE_END_DATE   = "2026-12-31T22:59:59.999Z" // 23:59:59 CET of December 31st, 2026
+      CDC_USAGE_END_DATE   = "2027-01-14T22:59:59.999Z" // 23:59:59 CET of January 14th, 2027
 
       // CDC API
       CDC_API_BASE_URL      = var.cdc_api_base_url
       CDC_API_BASE_URL_TEST = var.cdc_api_base_url_test
 
       // CDC CARDS EXPIRATION DATE
-      CDC_CARDS_EXPIRATION_DATE = "2026-12-31T23:00:00Z"
+      CDC_CARDS_EXPIRATION_DATE = "2027-01-14T22:59:59.999Z"
 
       // JWT
       JWT_PRIVATE_KEY      = var.jwt_private_key
