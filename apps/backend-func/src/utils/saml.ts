@@ -156,25 +156,25 @@ export const checkAssertionSignatures = async (
 
   const latestKeys = getIdpKeysFromMetadata(parsedLatestIdpKeys, issuer);
 
-  // find alternative keys with a suitable timestamp in latest keys do not work
+  // find alternative keys with a suitable timestamp if latest keys do not work
   // the timestamp is suitable if just before issueinstant
   const alternativeSuitableTimestamp = idpKeysTimestamps
     .filter((ts) => ts <= issueInstantTimestamp)
     .sort()
     .pop();
-  if (!alternativeSuitableTimestamp)
-    throw "Cannot find suitable idp key timestamp";
 
-  const idpKeysResponse = await fetch(
-    `${idpKeyEndpoint}/${alternativeSuitableTimestamp}`,
-  );
-  const idpKeys: string = await idpKeysResponse.text();
-  const parsedIdpKeys: Document = new DOMParser().parseFromString(
-    idpKeys,
-    "text/xml",
-  );
-
-  const alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
+  let alternativeKeys: string[] = [];
+  if (alternativeSuitableTimestamp) {
+    const idpKeysResponse = await fetch(
+      `${idpKeyEndpoint}/${alternativeSuitableTimestamp}`,
+    );
+    const idpKeys: string = await idpKeysResponse.text();
+    const parsedIdpKeys: Document = new DOMParser().parseFromString(
+      idpKeys,
+      "text/xml",
+    );
+    alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
+  }
 
   const keys = [...latestKeys, ...alternativeKeys];
 
