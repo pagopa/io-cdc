@@ -163,7 +163,7 @@ export const checkAssertionSignatures = async (
     .sort()
     .pop();
   if (!alternativeSuitableTimestamp)
-    throw "Cannot find suitable idp key timestamp";
+    throw `Cannot find suitable idp key timestamp | searching before ${issueInstantTimestamp} inside ${JSON.stringify(idpKeysTimestamps)}`;
 
   const idpKeysResponse = await fetch(
     `${idpKeyEndpoint}/${alternativeSuitableTimestamp}`,
