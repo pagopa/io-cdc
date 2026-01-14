@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.20
+
+### Patch Changes
+
+- c8d51f7: fixed error
+
 ## 1.1.19
 
 ### Patch Changes
