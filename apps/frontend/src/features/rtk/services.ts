@@ -74,6 +74,7 @@ export const appApi = createApi({
     }),
     getAllVoucher: builder.query<GetVouchersResponseDTO, void>({
       query: () => 'vouchers',
+      keepUnusedDataFor: 0,
     }),
     createVoucher: builder.mutation<CreateVoucherResponseDTO, CreateVoucherRequestDTO>({
       query: (voucher: CreateVoucherRequestDTO) => ({
