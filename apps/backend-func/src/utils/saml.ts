@@ -25,23 +25,23 @@ export const SAML_NAMESPACE = {
 
 export const getAttributeFromSamlResponse =
   (tagName: string, attrName: string, namespace: string) =>
-  (doc: Document): O.Option<string> =>
-    pipe(
-      O.fromNullable(doc.getElementsByTagNameNS(namespace, tagName).item(0)),
-      O.chain((element) =>
-        O.fromEither(NonEmptyString.decode(element.getAttribute(attrName))),
-      ),
-    );
+    (doc: Document): O.Option<string> =>
+      pipe(
+        O.fromNullable(doc.getElementsByTagNameNS(namespace, tagName).item(0)),
+        O.chain((element) =>
+          O.fromEither(NonEmptyString.decode(element.getAttribute(attrName))),
+        ),
+      );
 
 export const getValueFromSamlResponse =
   (tagName: string, namespace: string) =>
-  (doc: Document): O.Option<string> =>
-    pipe(
-      O.fromNullable(doc.getElementsByTagNameNS(namespace, tagName).item(0)),
-      O.chain((element) =>
-        O.fromEither(NonEmptyString.decode(element.textContent)),
-      ),
-    );
+    (doc: Document): O.Option<string> =>
+      pipe(
+        O.fromNullable(doc.getElementsByTagNameNS(namespace, tagName).item(0)),
+        O.chain((element) =>
+          O.fromEither(NonEmptyString.decode(element.textContent)),
+        ),
+      );
 
 export const getNotOnOrAfterFromSamlResponse = getAttributeFromSamlResponse(
   "SubjectConfirmationData",
@@ -123,7 +123,13 @@ export const checkAssertionSignatures = async (
     .item(0)?.textContent;
   if (!issuer) throw "Issuer not found";
 
-  const isCie = issuer.indexOf("cie") > 0;
+  const CIE_IDP_IDENTIFIERS = [
+    "https://collaudo.idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO",
+    "https://idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO",
+    "https://preproduzione.idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO"
+  ];
+
+  const isCie = CIE_IDP_IDENTIFIERS.includes(issuer);
 
   const issueInstant = doc
     .getElementsByTagNameNS(SAML_NAMESPACE.PROTOCOL, "Response")
