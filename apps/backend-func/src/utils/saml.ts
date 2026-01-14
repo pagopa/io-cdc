@@ -123,7 +123,13 @@ export const checkAssertionSignatures = async (
     .item(0)?.textContent;
   if (!issuer) throw "Issuer not found";
 
-  const isCie = issuer.indexOf("cie") > 0;
+  const CIE_IDP_IDENTIFIERS = [
+    "https://collaudo.idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO",
+    "https://idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO",
+    "https://preproduzione.idserver.servizicie.interno.gov.it/idp/profile/SAML2/POST/SSO",
+  ];
+
+  const isCie = CIE_IDP_IDENTIFIERS.includes(issuer);
 
   const issueInstant = doc
     .getElementsByTagNameNS(SAML_NAMESPACE.PROTOCOL, "Response")
@@ -156,25 +162,25 @@ export const checkAssertionSignatures = async (
 
   const latestKeys = getIdpKeysFromMetadata(parsedLatestIdpKeys, issuer);
 
-  // find alternative keys with a suitable timestamp in latest keys do not work
+  // find alternative keys with a suitable timestamp if latest keys do not work
   // the timestamp is suitable if just before issueinstant
   const alternativeSuitableTimestamp = idpKeysTimestamps
     .filter((ts) => ts <= issueInstantTimestamp)
     .sort()
     .pop();
-  if (!alternativeSuitableTimestamp)
-    throw "Cannot find suitable idp key timestamp";
 
-  const idpKeysResponse = await fetch(
-    `${idpKeyEndpoint}/${alternativeSuitableTimestamp}`,
-  );
-  const idpKeys: string = await idpKeysResponse.text();
-  const parsedIdpKeys: Document = new DOMParser().parseFromString(
-    idpKeys,
-    "text/xml",
-  );
-
-  const alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
+  let alternativeKeys: string[] = [];
+  if (alternativeSuitableTimestamp) {
+    const idpKeysResponse = await fetch(
+      `${idpKeyEndpoint}/${alternativeSuitableTimestamp}`,
+    );
+    const idpKeys: string = await idpKeysResponse.text();
+    const parsedIdpKeys: Document = new DOMParser().parseFromString(
+      idpKeys,
+      "text/xml",
+    );
+    alternativeKeys = getIdpKeysFromMetadata(parsedIdpKeys, issuer);
+  }
 
   const keys = [...latestKeys, ...alternativeKeys];
 
