@@ -23,6 +23,11 @@ const Home = () => {
 
   const isFulfilled = isSuccess || isError;
 
+  const hasPlafond = useMemo(
+    () => cards.some(({ residual_amount }) => residual_amount > 0),
+    [cards],
+  );
+
   const [openSheet, setOpenSheet] = useState<[boolean, boolean]>([false, false]);
 
   const lastUpdateLabel = useMemo(() => {
@@ -66,8 +71,9 @@ const Home = () => {
 
   const onClickBonus = useCallback(() => {
     trackWebviewEvent('CDC_BONUS_GENERATION_START');
+    if (!hasPlafond) return navigate(APP_ROUTES.FEEDBACK_OOC);
     navigate(APP_ROUTES.SELECT_CARD);
-  }, [navigate]);
+  }, [hasPlafond, navigate]);
 
   useEffect(() => {
     if (!cards.length) return;
@@ -91,8 +97,6 @@ const Home = () => {
         <CircularProgress />
       </Stack>
     );
-
-  if (!cards) return <div>no data</div>;
 
   return (
     <>

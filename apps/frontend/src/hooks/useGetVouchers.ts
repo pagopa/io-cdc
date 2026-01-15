@@ -39,7 +39,6 @@ export const useGetVouchers = () => {
       }
 
       const orderedVouchers = sortByCreationDate(vouchers);
-      console.log('🚀 ~ useGetVouchers ~ orderedVouchers:', orderedVouchers);
 
       setResponse({
         isError,

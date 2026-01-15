@@ -12,6 +12,7 @@ const CourtesyPage = React.lazy(() => import('../pages/Courtesy'));
 const BonusDetail = React.lazy(() => import('../pages/BonusDetail'));
 const FeedbackCards = React.lazy(() => import('../pages/FeedbackCards'));
 const FeedbackVouchers = React.lazy(() => import('../pages/FeedbackVouchers'));
+const FeedbackOutOfCredits = React.lazy(() => import('../pages/FeedbackOutOfCredits'));
 const SelectCardGenerateTicket = React.lazy(() => import('../pages/SelectCardGenerateTicket'));
 const SelectAmountGenerateTicket = React.lazy(() => import('../pages/SelectAmountGenerateTicket'));
 const ExpiredInitiativeUsage = React.lazy(() => import('../pages/ExpiredInitiativeUsage'));
@@ -33,6 +34,7 @@ export enum APP_ROUTES {
   UNAUTHORIZED = '/unauthorized',
   EXPIRED = '/iniziativa-scaduta',
   BONUS_DETAIL = '/dettaglio-buono/:id',
+  FEEDBACK_OOC = '/out-of-credits',
   FEEDBACK_VOUCHERS = '/voucher-feedback',
   SELECT_CARD = '/genera-buono/seleziona-carta',
   EXPIRED_USAGE = '/iniziativa-scaduta-utilizzo',
@@ -84,6 +86,10 @@ const APP_ROUTES_DASHBOARD: APP_ROUTES_CONFIG_TYPE[] = [
   {
     path: APP_ROUTES.FEEDBACK_VOUCHERS,
     Element: FeedbackVouchers,
+  },
+  {
+    path: APP_ROUTES.FEEDBACK_OOC,
+    Element: FeedbackOutOfCredits,
   },
   {
     path: APP_ROUTES.COURTESY,
