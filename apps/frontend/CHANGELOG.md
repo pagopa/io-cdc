@@ -1,5 +1,13 @@
 # frontend
 
+## 1.1.27
+
+### Patch Changes
+
+- 8488459: Add feedback page for credit not available - remove cache in voucher list
+- Updated dependencies [8488459]
+  - @io-cdc/ui@1.0.10
+
 ## 1.1.26
 
 ### Patch Changes
