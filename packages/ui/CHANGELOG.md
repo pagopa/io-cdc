@@ -1,5 +1,11 @@
 # @io-cdc/ui
 
+## 1.0.10
+
+### Patch Changes
+
+- 8488459: Add feedback page for credit not available - remove cache in voucher list
+
 ## 1.0.9
 
 ### Patch Changes
