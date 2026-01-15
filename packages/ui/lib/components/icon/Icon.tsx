@@ -22,6 +22,7 @@ import IconKey from "./svg/IconKey";
 import IconMasked from "./svg/IconMasked";
 import IconParty from "./svg/IconParty";
 import IconPeople from "./svg/IconPeople";
+import IconPiggybank from "./svg/IconPiggybank";
 import IconQuestionMarker from "./svg/IconQuestionMarker";
 import IconRequestedAllYears from "./svg/IconRequestedAllYears";
 import IconStore from "./svg/IconStore";
@@ -53,6 +54,7 @@ export const Icons = {
   key: IconKey,
   party: IconParty,
   people: IconPeople,
+  piggybank: IconPiggybank,
   question: IconQuestionMarker,
   store: IconStore,
   ticket: IconTicket,
