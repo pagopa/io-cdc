@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.21
+
+### Patch Changes
+
+- c18c71e: Fixed used voucher amount
+
 ## 1.1.20
 
 ### Patch Changes
