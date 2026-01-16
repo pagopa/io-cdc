@@ -302,7 +302,7 @@ const isCdcApiGetVouchersCallSuccess = (
 ): res is IResponseType<200, ListVoucherDetails, never> => res.status === 200;
 
 const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
-  amount: v.importoRichiesto,
+  amount: isVoucherUsed(v.stato) && v.importoValidato ? v.importoValidato : v.importoRichiesto,
   applicant:
     v.richiedente === RichiedenteEnum.SELF
       ? ApplicantEnum.SELF
@@ -326,6 +326,9 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
   voucher_status: mapVoucherStatus(v.stato),
   spending_date: v.dataConferma ? new Date(v.dataConferma) : undefined,
 });
+
+const isVoucherUsed = (status: StatoVoucherEnum): boolean => 
+  [StatoVoucherEnum.PREVALIDATO, StatoVoucherEnum["INVIATO A CONSAP"], StatoVoucherEnum.UTILIZZATO].includes(status);
 
 const mapVoucherStatus = (status: StatoVoucherEnum): Voucher_statusEnum => {
   switch (status) {
