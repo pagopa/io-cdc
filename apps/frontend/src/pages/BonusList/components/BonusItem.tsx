@@ -84,7 +84,7 @@ export const VoucherCard = ({ voucher, spent, openSheet }: VoucherCardProps) => 
               {itemLabel}
             </Typography>
             <Typography fontSize={16} color="#5C6F82">
-              {`${date}${spent ? ` \u00B7 \u2013${formatDecimals(voucher.amount)} €` : ''}`}
+              {`${date && `${date} \u00B7 `}${spent ? `\u2013 ${formatDecimals(voucher.amount)} €` : ''}`}
             </Typography>
           </Stack>
         </Stack>
