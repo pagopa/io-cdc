@@ -301,8 +301,8 @@ const isCdcApiGetVouchersCallSuccess = (
   res: IResponseType<number, unknown, never>,
 ): res is IResponseType<200, ListVoucherDetails, never> => res.status === 200;
 
-const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
-  amount: v.importoRichiesto,
+const mapVoucher = (config: Config, v: VoucherBeanDetails, isVoucherListApi: boolean) => ({
+  amount: getAmountToShow(v, isVoucherListApi),
   applicant:
     v.richiedente === RichiedenteEnum.SELF
       ? ApplicantEnum.SELF
@@ -313,19 +313,48 @@ const mapVoucher = (config: Config, v: VoucherBeanDetails) => ({
     ? new Date(v.dataScadenza)
     : new Date(config.CDC_CARDS_EXPIRATION_DATE),
   id: v.codVoucher,
-  refund:
-    v.rimborso &&
-      v.rimborso.importoDaRiaccreditare &&
-      v.rimborso.importoDaRiaccreditare > 0
-      ? {
-        amount: v.rimborso.importoDaRiaccreditare,
-        refund_status: mapVoucherRefundStatus(v.rimborso.stato),
-      }
-      : undefined,
+  refund: mapRefund(v),
   merchant: v.esercente || undefined,
   voucher_status: mapVoucherStatus(v.stato),
   spending_date: v.dataConferma ? new Date(v.dataConferma) : undefined,
 });
+
+const isVoucherUsed = (status: StatoVoucherEnum): boolean =>
+  [StatoVoucherEnum.PREVALIDATO, StatoVoucherEnum["INVIATO A CONSAP"], StatoVoucherEnum.UTILIZZATO].includes(status);
+
+const mapRefund = (v: VoucherBeanDetails) => {
+  // if the voucher is not used we don't have a refund
+  if (!isVoucherUsed(v.stato)) return undefined;
+
+  // if we have a refund we return it (amazon)
+  if (v.rimborso && v.rimborso.importoDaRiaccreditare && v.rimborso.importoDaRiaccreditare > 0) {
+    return {
+      amount: v.rimborso.importoDaRiaccreditare,
+      refund_status: mapVoucherRefundStatus(v.rimborso.stato),
+    }
+  }
+
+  // if we don't have a refund but the validated amount is less than the requested amount we assume a refund happened
+  if (v.importoValidato && v.importoValidato > 0 && v.importoValidato < v.importoRichiesto) {
+    return {
+      amount: parseFloat(((v.importoRichiesto * 100 - v.importoValidato * 100) / 100).toFixed(2)),
+      refund_status: Refund_statusEnum.COMPLETED,
+    }
+  }
+
+  // else no refund
+  return undefined;
+}
+
+const getAmountToShow = (v: VoucherBeanDetails, isVoucherListApi: boolean): number => {
+  // if we are mapping the voucher list api result and the voucher is used we show the validated amount if present
+  if (isVoucherListApi && isVoucherUsed(v.stato) && v.importoValidato) {
+    return v.importoValidato;
+  }
+
+  // else we show the requested amount
+  return v.importoRichiesto;
+}
 
 const mapVoucherStatus = (status: StatoVoucherEnum): Voucher_statusEnum => {
   switch (status) {
@@ -402,7 +431,7 @@ const getCdcVouchersTE =
                   // we do not want to see cancelled vouchers
                   vouchers.filter((v) => v.stato !== StatoVoucherEnum.CANCELLATO),
                 ),
-                TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v))),
+                TE.map((vouchers) => vouchers.map((v) => mapVoucher(config, v, true))),
               ),
             ),
           ),
@@ -464,7 +493,7 @@ const postCdcVouchersTE =
                   (voucher) => voucher.codVoucher !== undefined,
                   () => new Error("Invalid Voucher Error"),
                 ),
-                TE.map((v) => mapVoucher(config, v)),
+                TE.map((v) => mapVoucher(config, v, false)),
               ),
             ),
           ),
@@ -526,7 +555,7 @@ const getCdcVoucherTE =
                   (voucher) => voucher.codVoucher !== undefined,
                   () => new Error("Invalid Voucher Error"),
                 ),
-                TE.map((v) => mapVoucher(config, v)),
+                TE.map((v) => mapVoucher(config, v, false)),
               ),
             ),
           ),
