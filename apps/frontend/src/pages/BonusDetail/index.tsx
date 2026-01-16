@@ -114,29 +114,43 @@ const BonusDetail = () => {
 
   if (!voucherDetail) return <></>;
 
-  const detailDate = new Date(voucherDetail.spending_date ?? voucherDetail.expiration_date);
+  const spending_date = voucherDetail.spending_date
+    ? new Date(voucherDetail.spending_date)
+    : undefined;
 
-  const formattedDetailDate = spent
-    ? detailDate.toLocaleDateString('it-IT', {
+  const expiration_date = new Date(voucherDetail.expiration_date);
+
+  const formattedDate = spent
+    ? spending_date &&
+      spending_date.toLocaleDateString('it-IT', {
         day: 'numeric',
         month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
       })
-    : detailDate.toLocaleDateString('it-IT', {
+    : expiration_date.toLocaleDateString('it-IT', {
         day: 'numeric',
         month: '2-digit',
         year: 'numeric',
       });
 
-  const formattedMerchantDate = detailDate.toLocaleDateString('it-IT', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const formattedMerchantDate = spent
+    ? spending_date &&
+      spending_date.toLocaleDateString('it-IT', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : expiration_date.toLocaleDateString('it-IT', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
 
   return (
     <>
@@ -175,12 +189,14 @@ const BonusDetail = () => {
           </>
         )}
 
-        <DetailItemWrapper>
-          <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
-          <Typography fontWeight={600} fontSize={18}>
-            {formattedDetailDate}
-          </Typography>
-        </DetailItemWrapper>
+        {formattedDate && (
+          <DetailItemWrapper>
+            <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
+            <Typography fontWeight={600} fontSize={18}>
+              {formattedDate}
+            </Typography>
+          </DetailItemWrapper>
+        )}
 
         <DetailItemWrapper last>
           <Typography color={theme.palette.text.secondary}>Carta della cultura usata</Typography>
