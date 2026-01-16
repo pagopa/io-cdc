@@ -335,9 +335,9 @@ const mapRefund = (v: VoucherBeanDetails) => {
   }
 
   // if we don't have a refund but the validated amount is less than the requested amount we assume a refund happened
-  if (!v.rimborso && v.importoValidato && v.importoValidato < v.importoRichiesto) {
+  if (v.importoValidato && v.importoValidato > 0 && v.importoValidato < v.importoRichiesto) {
     return {
-      amount: v.importoRichiesto - v.importoValidato,
+      amount: parseFloat(((v.importoRichiesto * 100 - v.importoValidato * 100) / 100).toFixed(2)),
       refund_status: Refund_statusEnum.COMPLETED,
     }
   }
