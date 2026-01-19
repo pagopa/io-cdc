@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.30
+
+### Patch Changes
+
+- cc58f8a: remove shadow from alert boxes
+
 ## 1.1.29
 
 ### Patch Changes
