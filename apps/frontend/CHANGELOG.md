@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.28
+
+### Patch Changes
+
+- 1d20655: Handle spending date not existing
+
 ## 1.1.27
 
 ### Patch Changes
