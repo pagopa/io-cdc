@@ -29,7 +29,6 @@ export const Reminder = ({ text, storageKey }: ReminderProps) => {
       bgcolor="white"
       borderRadius={2}
       overflow="hidden"
-      boxShadow="4px 4px 12px rgba(0, 43, 85, 0.1)"
     >
       <Box width={12} height="100%" bgcolor="#6BCFFB" />
       <Box display="flex" bgcolor="#F0FAFF" gap="1.2rem" px={1.5} py={2} alignItems="center">
