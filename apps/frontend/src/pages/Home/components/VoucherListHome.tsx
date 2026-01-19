@@ -52,7 +52,15 @@ export const VoucherListHome = ({ setOpenSheet, onClickShowAll }: VoucherListHom
     <>
       {vouchers && vouchers.length > 0 ? (
         <>
-          <Reminder />
+          <Reminder
+            text={
+              <>
+                <strong>Ricorda:</strong> il credito disponibile si riduce anche quando
+                <strong> altre persone del tuo nucleo familiare</strong> generano i buoni.{' '}
+              </>
+            }
+            storageKey="reminder"
+          />
           <Stack width="100%" gap={2}>
             <Stack
               direction="row"
