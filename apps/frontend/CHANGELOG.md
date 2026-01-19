@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.29
+
+### Patch Changes
+
+- 96d1e86: Add Scam alert
+
 ## 1.1.28
 
 ### Patch Changes
