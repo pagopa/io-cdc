@@ -17,6 +17,7 @@ import { ticketsActions } from '../../features/reducers/usage/reducers';
 import { APP_ROUTES } from '../../routes/appRoutes';
 import { getChipConfig } from './constants';
 import { formatDecimals } from '../../utils/formatDecimals';
+import { Reminder } from '../Home/components/Reminder';
 
 const BonusDetail = () => {
   const dispatch = useDispatch();
@@ -163,6 +164,19 @@ const BonusDetail = () => {
             <BonusDescription pending={pending} />
           </Stack>
         </Stack>
+
+        {!spent && (
+          <Reminder
+            text={
+              <>
+                <strong>Fai attenzione alle truffe!</strong>
+                <br />
+                Non fornire i tuoi dati o quelli dei buoni generati al di fuori dei canali
+                ufficiali.
+              </>
+            }
+          />
+        )}
 
         <Stack direction="row" gap={1} alignItems="center">
           <Icon name="ticket" sx={{ width: 24, height: 24 }} />
