@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.31
+
+### Patch Changes
+
+- 932ca08: minor fix spacing
+
 ## 1.1.30
 
 ### Patch Changes
