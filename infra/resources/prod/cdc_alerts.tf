@@ -21,10 +21,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_fims_auth_failure
       AzureDiagnostics
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/fauth"
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -56,10 +56,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_fims_callback_fai
       AzureDiagnostics
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/fcb"
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -91,10 +91,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_authorize_failure
       AzureDiagnostics
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/authorize"
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -126,10 +126,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_years_failure" {
       AzureDiagnostics
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/years"
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -162,10 +162,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_get_card_requests
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/card-requests"
         | where httpMethod_s == 'GET'
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -198,10 +198,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_post_card_request
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/card-requests"
         | where httpMethod_s == 'POST'
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -234,10 +234,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_get_cards_request
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/cards"
         | where httpMethod_s == 'GET'
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -270,10 +270,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_get_vouchers_requ
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/vouchers"
         | where httpMethod_s == 'GET'
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -306,10 +306,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_post_vouchers_req
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/vouchers"
         | where httpMethod_s == 'POST'
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -342,10 +342,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_get_voucher_reque
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/vouchers/"
         | where httpMethod_s == 'GET'
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -378,10 +378,10 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_delete_voucher_re
         | where originalHost_s in (datatable (name: string) ["api-app.io.pagopa.it"])
         | where requestUri_s matches regex "/api/cdc/v1/vouchers/"
         | where httpMethod_s == 'DELETE'
-        | where httpStatus_d >= 400
+        | where httpStatus_d >= 500
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 10
     time_aggregation_method = "Count"
   }
 
@@ -512,11 +512,11 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_s
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode != 200
+        | where httpStatus_d >= 400
         | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/stato"
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 0
     time_aggregation_method = "Count"
   }
 
@@ -548,11 +548,11 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_c
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode != 200
+        | where httpStatus_d >= 400
         | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/getListaBorsellino"
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 0
     time_aggregation_method = "Count"
   }
 
@@ -584,11 +584,11 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_v
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode != 200
+        | where httpStatus_d >= 400
         | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/"
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 0
     time_aggregation_method = "Count"
   }
 
@@ -620,11 +620,11 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_v
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode != 200
+        | where httpStatus_d >= 400
         | where name contains "GET /CDCUtenteWS/rest/secured/beneficiario/getDettaglioVoucher"
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 0
     time_aggregation_method = "Count"
   }
 
@@ -656,11 +656,11 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_post_
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode != 200
+        | where httpStatus_d >= 400
         | where name contains "POST /CDCUtenteWS/rest/secured/beneficiario/generaVoucher"
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 0
     time_aggregation_method = "Count"
   }
 
@@ -692,11 +692,11 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_delet
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode != 200
+        | where httpStatus_d >= 400
         | where name contains "DELETE /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher"
       QUERY
     operator                = "GreaterThan"
-    threshold               = 1
+    threshold               = 0
     time_aggregation_method = "Count"
   }
 
