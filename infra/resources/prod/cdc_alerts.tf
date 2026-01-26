@@ -512,7 +512,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_s
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode >= 400
+        | where resultCode != 200
         | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/stato"
       QUERY
     operator                = "GreaterThan"
@@ -548,7 +548,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_c
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode >= 400
+        | where resultCode != 200
         | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/getListaBorsellino"
       QUERY
     operator                = "GreaterThan"
@@ -584,7 +584,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_v
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode >= 400
+        | where resultCode != 200
         | where name == "GET /CDCUtenteWS/rest/secured/beneficiario/getListaVoucher/"
       QUERY
     operator                = "GreaterThan"
@@ -620,7 +620,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_get_v
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode >= 400
+        | where resultCode != 200
         | where name contains "GET /CDCUtenteWS/rest/secured/beneficiario/getDettaglioVoucher"
       QUERY
     operator                = "GreaterThan"
@@ -656,7 +656,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_post_
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode >= 400
+        | where resultCode != 200
         | where name contains "POST /CDCUtenteWS/rest/secured/beneficiario/generaVoucher"
       QUERY
     operator                = "GreaterThan"
@@ -692,7 +692,7 @@ resource "azurerm_monitor_scheduled_query_rules_alert_v2" "cdc_partner_api_delet
       dependencies
         | where client_Type != "Browser"
         | where target has "cartadellacultura.it"
-        | where resultCode >= 400
+        | where resultCode != 200
         | where name contains "DELETE /CDCUtenteWS/rest/secured/beneficiario/annullaVoucher"
       QUERY
     operator                = "GreaterThan"
