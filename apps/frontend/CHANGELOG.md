@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.32
+
+### Patch Changes
+
+- 57d1103: fix list voucher empty state
+
 ## 1.1.31
 
 ### Patch Changes
