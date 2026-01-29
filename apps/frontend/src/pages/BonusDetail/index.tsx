@@ -185,6 +185,15 @@ const BonusDetail = () => {
           </Typography>
         </Stack>
 
+        {spent && (
+          <DetailItemWrapper>
+            <Typography color={theme.palette.text.secondary}>Codice buono</Typography>
+            <Typography fontWeight={600} fontSize={18}>
+              {voucherDetail.id}
+            </Typography>
+          </DetailItemWrapper>
+        )}
+
         <DetailItemWrapper chip={!refund && <Chip {...chipConfig} size="small" />}>
           <Typography color={theme.palette.text.secondary}>Importo</Typography>
           <Typography fontWeight={600} fontSize={18}>
@@ -205,7 +214,9 @@ const BonusDetail = () => {
 
         {formattedDate && (
           <DetailItemWrapper>
-            <Typography color="#5C6F82">{spent ? 'Speso' : 'Scade'} il</Typography>
+            <Typography color={theme.palette.text.secondary}>
+              {spent ? 'Speso' : 'Scade'} il
+            </Typography>
             <Typography fontWeight={600} fontSize={18}>
               {formattedDate}
             </Typography>
