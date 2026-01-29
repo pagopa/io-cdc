@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.33
+
+### Patch Changes
+
+- 4053342: Add voucher id field in voucher detail for used vouchers
+
 ## 1.1.32
 
 ### Patch Changes
