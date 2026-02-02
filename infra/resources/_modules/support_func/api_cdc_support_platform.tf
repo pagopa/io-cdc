@@ -73,3 +73,13 @@ resource "azurerm_api_management_named_value" "app_backend_key" {
   value               = var.app_backend_api_key_secret
   secret              = true
 }
+
+resource "azurerm_api_management_tag" "io_cdc_tag" {
+  api_management_id = data.azurerm_api_management.apim_platform.id
+  name              = "IO-CDC"
+}
+
+resource "azurerm_api_management_api_tag" "io_cdc_api_tag" {
+  api_id = azurerm_api_management_api.cdc_support_platform_v1.id
+  name   = azurerm_api_management_tag.io_cdc_tag.name
+}

@@ -215,7 +215,7 @@ data "azurerm_key_vault_secret" "test_users" {
 }
 
 data "azurerm_key_vault_secret" "app_backend_api_key_secret" {
-  name         = "APP-BACKEND-PRIMARY-KEY"
+  name         = "appbackend-APP-BACKEND-PRIMARY-KEY"
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
