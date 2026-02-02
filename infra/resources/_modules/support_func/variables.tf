@@ -191,3 +191,9 @@ variable "test_users" {
   description = "List of test users"
   sensitive   = true
 }
+
+variable "app_backend_api_key_secret" {
+  type        = string
+  description = "The secret for the app backend API key"
+  sensitive   = true
+}
