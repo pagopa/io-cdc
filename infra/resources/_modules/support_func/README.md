@@ -7,7 +7,9 @@ No requirements.
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
 
 ## Modules
 
@@ -18,7 +20,18 @@ No providers.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [azurerm_api_management_api.cdc_support_platform_v1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_api) | resource |
+| [azurerm_api_management_api_policy.cdc_support_platform_v1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_api_policy) | resource |
+| [azurerm_api_management_api_tag.io_cdc_api_tag](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_api_tag) | resource |
+| [azurerm_api_management_api_version_set.cdc_support_platform](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_api_version_set) | resource |
+| [azurerm_api_management_named_value.app_backend_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_named_value) | resource |
+| [azurerm_api_management_product.cdc_support_platform](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product) | resource |
+| [azurerm_api_management_product_api.cdc_support_platform_v1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_api) | resource |
+| [azurerm_api_management_product_policy.cdc_support_platform](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_product_policy) | resource |
+| [azurerm_api_management_tag.io_cdc_tag](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/api_management_tag) | resource |
+| [azurerm_api_management.apim_platform](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/api_management) | data source |
 
 ## Inputs
 
@@ -31,6 +44,7 @@ No resources.
 | <a name="input_algorithm_encryption"></a> [algorithm\_encryption](#input\_algorithm\_encryption) | Encryption's algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_keys"></a> [algorithm\_keys](#input\_algorithm\_keys) | Keys' algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_signature"></a> [algorithm\_signature](#input\_algorithm\_signature) | Signature's algorithm | `string` | n/a | yes |
+| <a name="input_app_backend_api_key_secret"></a> [app\_backend\_api\_key\_secret](#input\_app\_backend\_api\_key\_secret) | The secret for the app backend API key | `string` | n/a | yes |
 | <a name="input_cdc_api_base_url"></a> [cdc\_api\_base\_url](#input\_cdc\_api\_base\_url) | The base url for cdc api | `string` | n/a | yes |
 | <a name="input_cdc_api_base_url_test"></a> [cdc\_api\_base\_url\_test](#input\_cdc\_api\_base\_url\_test) | The test base url for cdc api | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_database_name"></a> [cosmosdb\_cdc\_database\_name](#input\_cosmosdb\_cdc\_database\_name) | Database name for CdC cosmosdb | `string` | n/a | yes |
