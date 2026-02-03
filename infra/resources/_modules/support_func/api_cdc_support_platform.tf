@@ -1,7 +1,7 @@
 resource "azurerm_api_management_product" "cdc_support_platform" {
   product_id   = "io-cdc-support-api"
   display_name = "IO CDC SUPPORT API"
-  description  = "Product for IO CDC Support APIs"
+  description  = "Product for IO CDC Support Platform APIs"
 
   api_management_name = data.azurerm_api_management.apim_platform.name
   resource_group_name = data.azurerm_api_management.apim_platform.resource_group_name
@@ -23,7 +23,7 @@ resource "azurerm_api_management_api_version_set" "cdc_support_platform" {
   name                = "cdc_support_platform_v1"
   api_management_name = azurerm_api_management_product.cdc_support_platform.api_management_name
   resource_group_name = azurerm_api_management_product.cdc_support_platform.resource_group_name
-  display_name        = "Carta della Cultura Support APIs"
+  display_name        = "Carta della Cultura Support Platform APIs"
   versioning_scheme   = "Segment"
 }
 
@@ -39,8 +39,8 @@ resource "azurerm_api_management_api" "cdc_support_platform_v1" {
   version        = "v1"
   revision       = "1"
 
-  description  = "These APIs serve the microfrontend related to Carta della Cultura"
-  display_name = "CdC Backend API"
+  description  = "These APIs serve App IO related to Carta della Cultura"
+  display_name = "CdC App IO Backend API"
   path         = "api/cdc-support"
   protocols    = ["https"]
 
