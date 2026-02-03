@@ -39,8 +39,8 @@ resource "azurerm_api_management_api" "cdc_support_platform_v1" {
   version        = "v1"
   revision       = "1"
 
-  description  = "These APIs serve App IO related to Carta della Cultura"
-  display_name = "CdC App IO Backend API"
+  description  = "These APIs support App IO about Carta della Cultura"
+  display_name = "CdC Support API"
   path         = "api/cdc-support"
   protocols    = ["https"]
 
