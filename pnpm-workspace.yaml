@@ -1,3 +1,6 @@
+linkWorkspacePackages: true
+packageImportMethod: "clone-or-copy"
+cleanupUnusedCatalogs: true
 injectWorkspacePackages: true
 
 packages:
@@ -8,6 +11,3 @@ packageExtensions:
   '@testing-library/jest-dom':
     peerDependencies:
       vitest: '*'
-
-configDependencies:
-  pnpm-plugin-pagopa: 1.0.0+sha512-fWP4sdK5yH3OXi1oZeMEcMzBtjINfXx6woFOuzWtdlvuF7Co3vFJ3UIFLrOAolbYrXi4b3r2pIMESJt7vilizA==
