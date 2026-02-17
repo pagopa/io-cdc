@@ -22,46 +22,46 @@ module "backend_func" {
     name                = data.azurerm_virtual_network.vnet_common_itn.name
   }
 
-  pagopa_idp_keys_base_url = data.azurerm_key_vault_secret.pagopa_idp_keys_base_url.value
+  pagopa_idp_keys_base_url = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=PAGOPA-IDP-KEYS-BASE-URL)"
 
-  audit_log_connection_string = data.azurerm_key_vault_secret.audit_log_connection_string.value
-  audit_log_container         = data.azurerm_key_vault_secret.audit_log_container.value
+  audit_log_connection_string = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-AUDIT-LOG-CONNECTION-STRING)"
+  audit_log_container         = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-AUDIT-LOG-CONTAINER)"
 
-  cdc_base_url = data.azurerm_key_vault_secret.cdc_base_url.value
+  cdc_base_url = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-BASE-URL)"
 
-  cdc_api_base_url      = data.azurerm_key_vault_secret.cdc_api_base_url.value
-  cdc_api_base_url_test = data.azurerm_key_vault_secret.cdc_api_base_url_test.value
+  cdc_api_base_url      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-API-BASE-URL)"
+  cdc_api_base_url_test = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-API-BASE-URL-TEST)"
 
   cosmosdb_cdc_uri           = module.cosmos_db.cosmos_db.endpoint
-  cosmosdb_cdc_key           = data.azurerm_key_vault_secret.cosmosdb_cdc_key.value
-  cosmosdb_cdc_database_name = data.azurerm_key_vault_secret.cosmosdb_cdc_database_name.value
+  cosmosdb_cdc_key           = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=COSMOSDB-CDC-KEY)"
+  cosmosdb_cdc_database_name = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=COSMOSDB-CDC-DATABASE-NAME)"
 
-  storage_account_queue_uri = data.azurerm_key_vault_secret.storage_account_queue_uri.value
-  card_request_queue_name   = data.azurerm_key_vault_secret.card_request_queue_name.value
+  storage_account_queue_uri = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=STORAGE-ACCOUNT-QUEUE-URI)"
+  card_request_queue_name   = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CARD-REQUEST-QUEUE-NAME)"
 
-  services_api_url = data.azurerm_key_vault_secret.services_api_url.value
-  services_api_key = data.azurerm_key_vault_secret.services_api_key.value
+  services_api_url = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=SERVICES-API-URL)"
+  services_api_key = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=SERVICES-API-KEY)"
 
-  fims_redirect_url  = data.azurerm_key_vault_secret.fims_redirect_url.value
-  fims_client_id     = data.azurerm_key_vault_secret.fims_client_id.value
-  fims_client_secret = data.azurerm_key_vault_secret.fims_client_secret.value
-  fims_issuer_url    = data.azurerm_key_vault_secret.fims_issuer_url.value
-  fims_scope         = data.azurerm_key_vault_secret.fims_scope.value
+  fims_redirect_url  = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=FIMS-REDIRECT-URL)"
+  fims_client_id     = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=FIMS-CLIENT-ID)"
+  fims_client_secret = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=FIMS-CLIENT-SECRET)"
+  fims_issuer_url    = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=FIMS-ISSUER-URL)"
+  fims_scope         = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=FIMS-SCOPE)"
 
-  jwt_private_key_test = data.azurerm_key_vault_secret.jwt_private_key_test.value
-  jwt_private_key      = data.azurerm_key_vault_secret.jwt_private_key.value
+  jwt_private_key_test = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-PRIVATE-KEY-TEST)"
+  jwt_private_key      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-PRIVATE-KEY)"
 
-  encryption_public_key_test = data.azurerm_key_vault_secret.encryption_public_key_test.value
-  encryption_public_key      = data.azurerm_key_vault_secret.encryption_public_key.value
+  encryption_public_key_test = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ENCRYPTION-PUBLIC-KEY-TEST)"
+  encryption_public_key      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ENCRYPTION-PUBLIC-KEY)"
 
-  jwt_issuer     = data.azurerm_key_vault_secret.jwt_issuer.value
-  jwt_audience   = data.azurerm_key_vault_secret.jwt_audience.value
-  jwt_expiration = data.azurerm_key_vault_secret.jwt_expiration.value
+  jwt_issuer     = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-ISSUER)"
+  jwt_audience   = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-AUDIENCE)"
+  jwt_expiration = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-EXPIRATION)"
 
-  algorithm_keys       = data.azurerm_key_vault_secret.algorithm_keys.value
-  algorithm_signature  = data.azurerm_key_vault_secret.algorithm_signature.value
-  algorithm_encryption = data.azurerm_key_vault_secret.algorithm_encryption.value
-  encoding_encryption  = data.azurerm_key_vault_secret.encoding_encryption.value
+  algorithm_keys       = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ALGORITHM-KEYS)"
+  algorithm_signature  = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ALGORITHM-SIGNATURE)"
+  algorithm_encryption = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ALGORITHM-ENCRYPTION)"
+  encoding_encryption  = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ENCODING-ENCRYPTION)"
 
   nat_gateway_id = data.azurerm_nat_gateway.itn_ng.id
 
@@ -69,10 +69,10 @@ module "backend_func" {
   redis_port     = module.redis_cdc.ssl_port
   redis_password = module.redis_cdc.primary_access_key
 
-  cdc_backend_func_url = data.azurerm_key_vault_secret.cdc_backend_func_url.value
-  cdc_backend_func_key = data.azurerm_key_vault_secret.cdc_backend_func_key.value
+  cdc_backend_func_url = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-BACKEND-FUNC-URL)"
+  cdc_backend_func_key = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-BACKEND-FUNC-KEY)"
 
-  test_users = data.azurerm_key_vault_secret.test_users.value
+  test_users = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=TEST-USERS)"
 
   action_group_id = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
 
