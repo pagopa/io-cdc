@@ -46,7 +46,7 @@ module "support_func" {
 
   test_users = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=TEST-USERS)"
 
-  app_backend_api_key_secret = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=appbackend-APP-BACKEND-PRIMARY-KEY)"
+  app_backend_api_key_secret = data.azurerm_key_vault_secret.app_backend_api_key_secret.value
 
   nat_gateway_id = data.azurerm_nat_gateway.itn_ng.id
 
