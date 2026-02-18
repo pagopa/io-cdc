@@ -45,6 +45,27 @@ module "roles_staging" {
   principal_id    = module.backend_func.cdc_backend_func.staging_principal_id
   subscription_id = data.azurerm_subscription.current.subscription_id
 
+  storage_queue = [
+    {
+      storage_account_name = module.storage_be.cdc_storage_be.name
+      resource_group_name  = module.storage_be.cdc_storage_be.resource_group_name
+      role                 = "writer"
+      description          = "we need to write queue"
+    },
+    {
+      storage_account_name = module.storage_be.cdc_storage_be.name
+      resource_group_name  = module.storage_be.cdc_storage_be.resource_group_name
+      role                 = "reader"
+      description          = "we need to read queue"
+    },
+    {
+      storage_account_name = module.storage_be.cdc_storage_be.name
+      resource_group_name  = module.storage_be.cdc_storage_be.resource_group_name
+      role                 = "owner"
+      description          = "we need to own the queue"
+    }
+  ]
+
   key_vault = [
     {
       name                = module.key_vaults.key_vault_cdc.name
