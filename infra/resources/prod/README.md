@@ -28,6 +28,7 @@
 | <a name="module_storage_be"></a> [storage\_be](#module\_storage\_be) | ../_modules/storage_be | n/a |
 | <a name="module_storage_fe"></a> [storage\_fe](#module\_storage\_fe) | ../_modules/storage_fe | n/a |
 | <a name="module_support_func"></a> [support\_func](#module\_support\_func) | ../_modules/support_func | n/a |
+| <a name="module_support_func_roles"></a> [support\_func\_roles](#module\_support\_func\_roles) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
 
 ## Resources
 
