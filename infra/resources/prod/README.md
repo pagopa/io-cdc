@@ -24,10 +24,13 @@
 | <a name="module_key_vaults"></a> [key\_vaults](#module\_key\_vaults) | ../_modules/key_vaults | n/a |
 | <a name="module_redis_cdc"></a> [redis\_cdc](#module\_redis\_cdc) | github.com/pagopa/terraform-azurerm-v4//redis_cache | v5.5.0 |
 | <a name="module_roles"></a> [roles](#module\_roles) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
+| <a name="module_roles_staging"></a> [roles\_staging](#module\_roles\_staging) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
 | <a name="module_storage_audit"></a> [storage\_audit](#module\_storage\_audit) | ../_modules/storage_audit | n/a |
 | <a name="module_storage_be"></a> [storage\_be](#module\_storage\_be) | ../_modules/storage_be | n/a |
 | <a name="module_storage_fe"></a> [storage\_fe](#module\_storage\_fe) | ../_modules/storage_fe | n/a |
 | <a name="module_support_func"></a> [support\_func](#module\_support\_func) | ../_modules/support_func | n/a |
+| <a name="module_support_func_roles"></a> [support\_func\_roles](#module\_support\_func\_roles) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
+| <a name="module_support_func_staging_roles"></a> [support\_func\_staging\_roles](#module\_support\_func\_staging\_roles) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
 
 ## Resources
 
