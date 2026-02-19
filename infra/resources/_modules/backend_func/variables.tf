@@ -298,3 +298,17 @@ variable "test_users" {
   description = "List of test users"
   sensitive   = true
 }
+
+variable "subscription_id" {
+  type        = string
+  description = "The subscription id"
+  sensitive   = true
+}
+
+variable "key_vault" {
+  type = object({
+    name                = string
+    resource_group_name = string
+  })
+  description = "Key vault where the secrets are stored"
+}
