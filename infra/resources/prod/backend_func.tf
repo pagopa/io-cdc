@@ -70,7 +70,7 @@ module "backend_func" {
   redis_password = module.redis_cdc.primary_access_key
 
   cdc_backend_func_url = data.azurerm_key_vault_secret.cdc_backend_func_url.value
-  cdc_backend_func_key = data.azurerm_key_vault_secret.cdc_backend_func_key.value
+  cdc_backend_func_key = azurerm_key_vault_secret.cdc_backend_function_key.versionless_id
 
   test_users = data.azurerm_key_vault_secret.test_users.value
 
