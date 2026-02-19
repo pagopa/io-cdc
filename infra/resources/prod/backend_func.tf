@@ -76,5 +76,11 @@ module "backend_func" {
 
   action_group_id = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
 
+  subscription_id = data.azurerm_subscription.current.subscription_id
+  key_vault = {
+    name                = module.key_vaults.key_vault_cdc.name
+    resource_group_name = module.key_vaults.key_vault_cdc.resource_group_name
+  }
+
   tags = local.tags
 }

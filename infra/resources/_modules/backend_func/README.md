@@ -15,6 +15,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_apim_roles"></a> [apim\_roles](#module\_apim\_roles) | pagopa-dx/azure-role-assignments/azurerm | ~> 1 |
 | <a name="module_cdc_backend_func"></a> [cdc\_backend\_func](#module\_cdc\_backend\_func) | pagopa-dx/azure-function-app/azurerm | 0.2.9 |
 | <a name="module_func_autoscaler"></a> [func\_autoscaler](#module\_func\_autoscaler) | pagopa-dx/azure-app-service-plan-autoscaler/azurerm | 2.0.0 |
 
@@ -71,6 +72,7 @@ No requirements.
 | <a name="input_jwt_issuer"></a> [jwt\_issuer](#input\_jwt\_issuer) | JWT issuer | `string` | n/a | yes |
 | <a name="input_jwt_private_key"></a> [jwt\_private\_key](#input\_jwt\_private\_key) | JWT private key | `string` | n/a | yes |
 | <a name="input_jwt_private_key_test"></a> [jwt\_private\_key\_test](#input\_jwt\_private\_key\_test) | JWT private key test | `string` | n/a | yes |
+| <a name="input_key_vault"></a> [key\_vault](#input\_key\_vault) | Key vault where the secrets are stored | <pre>object({<br/>    name                = string<br/>    resource_group_name = string<br/>  })</pre> | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Azure region | `string` | n/a | yes |
 | <a name="input_nat_gateway_id"></a> [nat\_gateway\_id](#input\_nat\_gateway\_id) | The ID of the NAT Gateway | `string` | n/a | yes |
 | <a name="input_pagopa_idp_keys_base_url"></a> [pagopa\_idp\_keys\_base\_url](#input\_pagopa\_idp\_keys\_base\_url) | The base url to get idp keys | `string` | n/a | yes |
@@ -86,6 +88,7 @@ No requirements.
 | <a name="input_services_api_url"></a> [services\_api\_url](#input\_services\_api\_url) | Services API url | `string` | n/a | yes |
 | <a name="input_storage_account_queue_uri"></a> [storage\_account\_queue\_uri](#input\_storage\_account\_queue\_uri) | Storage account queue host | `string` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | A predefined subnet id | `string` | `null` | no |
+| <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | The subscription id | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Resource tags | `map(any)` | n/a | yes |
 | <a name="input_test_users"></a> [test\_users](#input\_test\_users) | List of test users | `string` | n/a | yes |
 | <a name="input_virtual_network"></a> [virtual\_network](#input\_virtual\_network) | Virtual network to create subnet in | <pre>object({<br/>    name                = string<br/>    resource_group_name = string<br/>  })</pre> | n/a | yes |
