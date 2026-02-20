@@ -179,11 +179,6 @@ data "azurerm_key_vault_secret" "cdc_backend_func_url" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "cdc_backend_func_key" {
-  name         = "CDC-BACKEND-FUNC-KEY"
-  key_vault_id = module.key_vaults.key_vault_cdc.id
-}
-
 data "azurerm_key_vault_secret" "pagopa_idp_keys_base_url" {
   name         = "PAGOPA-IDP-KEYS-BASE-URL"
   key_vault_id = module.key_vaults.key_vault_cdc.id
