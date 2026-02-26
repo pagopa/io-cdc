@@ -70,8 +70,10 @@ resource "azurerm_api_management_named_value" "app_backend_key" {
   api_management_name = data.azurerm_api_management.apim_platform.name
   resource_group_name = data.azurerm_api_management.apim_platform.resource_group_name
   display_name        = "io-app-backend-key"
-  value               = var.app_backend_api_key_secret
   secret              = true
+  value_from_key_vault {
+    secret_id = var.app_backend_api_key_secret
+  }
 }
 
 resource "azurerm_api_management_tag" "io_cdc_tag" {

@@ -214,11 +214,6 @@ data "azurerm_key_vault_secret" "test_users" {
   key_vault_id = module.key_vaults.key_vault_cdc.id
 }
 
-data "azurerm_key_vault_secret" "app_backend_api_key_secret" {
-  name         = "appbackend-APP-BACKEND-PRIMARY-KEY"
-  key_vault_id = module.key_vaults.key_vault_cdc.id
-}
-
 data "azurerm_storage_account" "storage_cdc_be" {
   name                = "iopitncdcbest01"
   resource_group_name = data.azurerm_resource_group.itn_cdc.name

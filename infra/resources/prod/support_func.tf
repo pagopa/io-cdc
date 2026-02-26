@@ -46,7 +46,7 @@ module "support_func" {
 
   test_users = data.azurerm_key_vault_secret.test_users.value
 
-  app_backend_api_key_secret = data.azurerm_key_vault_secret.app_backend_api_key_secret.value
+  app_backend_api_key_secret = azurerm_key_vault_secret.app_backend_primary_key.versionless_id
 
   nat_gateway_id = data.azurerm_nat_gateway.itn_ng.id
 
