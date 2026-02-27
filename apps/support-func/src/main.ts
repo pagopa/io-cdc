@@ -14,10 +14,7 @@ registerAzureFunctionHooks(app);
 const config = getConfigOrThrow();
 
 // CosmosDB singleton
-const cosmosDbClient = getCosmosDbClientInstance(
-  config.COSMOSDB_CDC_URI,
-  config.COSMOSDB_CDC_KEY,
-);
+const cosmosDbClient = getCosmosDbClientInstance(config.COSMOSDB_CDC_URI);
 
 // CdC utils
 const cdcClientEnvironmentRouter = new CdcClientEnvironmentRouter(config);

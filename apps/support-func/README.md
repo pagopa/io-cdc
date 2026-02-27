@@ -50,10 +50,17 @@ Contains middlewares for local business logic, that in not usefull to share with
 
 The following table contains the required ENV variables that the applicative require
 
-| Variable name                      | Description                                  | type    |
-|------------------------------------|----------------------------------------------|---------|
-| APPINSIGHTS_INSTRUMENTATIONKEY     | The Application Insights instrumentation key | string  |
-| FETCH_TIMEOUT_MS                   | (optional) Fetch Timeout for AbortableFetch  | number  |
+| Variable name                           | Description                                                        | type    |
+|-----------------------------------------|--------------------------------------------------------------------|---------|
+| APPLICATIONINSIGHTS_CONNECTION_STRING   | The Application Insights connection string                         | string  |
+| COSMOSDB_CDC_URI                        | The CosmosDB endpoint URI                                          | string  |
+| COSMOSDB_CDC_DATABASE_NAME              | The CosmosDB database name                                         | string  |
+| FETCH_TIMEOUT_MS                        | (optional) Fetch Timeout for AbortableFetch                        | number  |
+
+> **Note:** CosmosDB authentication uses Azure RBAC via `DefaultAzureCredential` (managed identity).  
+> No connection key (`COSMOSDB_CDC_KEY`) is required. The function's managed identity must be assigned  
+> the `Cosmos DB Built-in Data Contributor` role on the CosmosDB account.  
+> For local development, ensure you are logged in via `az login` or have a suitable credential configured.
 
 ## Local Execution
 
