@@ -85,6 +85,15 @@ module "support_func_roles" {
   principal_id    = module.support_func.cdc_support_func.principal_id
   subscription_id = data.azurerm_subscription.current.subscription_id
 
+  cosmos = [
+    {
+      account_name        = module.cosmos_db.cosmos_db.name
+      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+      role                = "writer"
+      description         = "Allow Support Function to read/write CosmosDB via RBAC"
+    }
+  ]
+
   key_vault = [
     {
       name                = module.key_vaults.key_vault_cdc.name
@@ -103,6 +112,15 @@ module "support_func_staging_roles" {
 
   principal_id    = module.support_func.cdc_support_func.staging_principal_id
   subscription_id = data.azurerm_subscription.current.subscription_id
+
+  cosmos = [
+    {
+      account_name        = module.cosmos_db.cosmos_db.name
+      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+      role                = "writer"
+      description         = "Allow Support Function (staging slot) to read/write CosmosDB via RBAC"
+    }
+  ]
 
   key_vault = [
     {
