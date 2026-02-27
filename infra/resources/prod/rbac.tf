@@ -26,6 +26,15 @@ module "roles" {
     }
   ]
 
+  cosmos = [
+    {
+      account_name        = module.cosmos_db.cosmos_db.name
+      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+      role                = "writer"
+      description         = "Allow CDC Backend Function to read/write CosmosDB via RBAC"
+    }
+  ]
+
   key_vault = [
     {
       name                = module.key_vaults.key_vault_cdc.name
@@ -63,6 +72,15 @@ module "roles_staging" {
       resource_group_name  = module.storage_be.cdc_storage_be.resource_group_name
       role                 = "owner"
       description          = "we need to own the queue"
+    }
+  ]
+
+  cosmos = [
+    {
+      account_name        = module.cosmos_db.cosmos_db.name
+      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+      role                = "writer"
+      description         = "Allow CDC Backend Function (staging slot) to read/write CosmosDB via RBAC"
     }
   ]
 
