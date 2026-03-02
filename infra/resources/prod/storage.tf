@@ -75,7 +75,7 @@ module "storage_audit_proxy" {
   location        = local.location
   project         = local.project
   domain          = local.domain
-  app_name        = "audit-proxy"
+  app_name        = "auditproxy"
   instance_number = "01"
 
   resource_group_name                  = data.azurerm_resource_group.itn_cdc.name
