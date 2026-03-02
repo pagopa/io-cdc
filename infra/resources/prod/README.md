@@ -26,6 +26,7 @@
 | <a name="module_roles"></a> [roles](#module\_roles) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
 | <a name="module_roles_staging"></a> [roles\_staging](#module\_roles\_staging) | pagopa-dx/azure-role-assignments/azurerm | ~> 1.0 |
 | <a name="module_storage_audit"></a> [storage\_audit](#module\_storage\_audit) | ../_modules/storage_audit | n/a |
+| <a name="module_storage_audit_proxy"></a> [storage\_audit\_proxy](#module\_storage\_audit\_proxy) | ../_modules/storage_audit_proxy | n/a |
 | <a name="module_storage_be"></a> [storage\_be](#module\_storage\_be) | ../_modules/storage_be | n/a |
 | <a name="module_storage_fe"></a> [storage\_fe](#module\_storage\_fe) | ../_modules/storage_fe | n/a |
 | <a name="module_support_func"></a> [support\_func](#module\_support\_func) | ../_modules/support_func | n/a |
