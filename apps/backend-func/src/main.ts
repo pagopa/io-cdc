@@ -41,10 +41,7 @@ const auditContainerClient = BlobServiceClient.fromConnectionString(
 ).getContainerClient(config.AUDIT_LOG_CONTAINER);
 
 // CosmosDB singleton
-const cosmosDbClient = getCosmosDbClientInstance(
-  config.COSMOSDB_CDC_URI,
-  config.COSMOSDB_CDC_KEY,
-);
+const cosmosDbClient = getCosmosDbClientInstance(config.COSMOSDB_CDC_URI);
 
 // Redis client factory
 const redisClientFactory = getRedisClientFactory(config);
