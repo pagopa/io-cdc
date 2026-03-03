@@ -34,7 +34,6 @@ module "immutable_cdc_audit_logs_storage_proxy" {
 
   subservices_enabled = {
     blob  = true
-    queue = true
   }
 
   blob_features = {
