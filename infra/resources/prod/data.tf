@@ -53,6 +53,11 @@ data "azurerm_application_insights" "common" {
   resource_group_name = data.azurerm_resource_group.weu_common.name
 }
 
+data "azurerm_log_analytics_workspace" "log" {
+  name                = format("%s-common-log-01", local.project)
+  resource_group_name = "${local.project}-common-rg-01"
+}
+
 data "azurerm_application_gateway" "io_app_gateway" {
   name                = "io-p-itn-agw-01"
   resource_group_name = "io-p-itn-common-rg-01"
