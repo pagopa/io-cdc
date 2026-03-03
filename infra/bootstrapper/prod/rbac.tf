@@ -72,3 +72,9 @@ module "roles_cd" {
     }
   ]
 }
+
+resource "azurerm_role_assignment" "infra_cd_law_contributor" {
+  scope                = data.azurerm_log_analytics_workspace.log.id
+  role_definition_name = "Log Analytics Contributor"
+  principal_id         = module.repo.identities.infra.cd.principal_id
+}

@@ -10,6 +10,8 @@ locals {
     devs_name   = "io-p-adgroup-bonus-developers"
   }
 
+  project = "${local.prefix}-${local.env_short}-itn"
+
   runner = {
     cae_name                = "${local.prefix}-${local.env_short}-itn-github-runner-cae-01"
     cae_resource_group_name = "${local.prefix}-${local.env_short}-itn-github-runner-rg-01"
