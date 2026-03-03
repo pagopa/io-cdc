@@ -69,7 +69,7 @@ module "backend_func" {
   redis_port     = module.redis_cdc.ssl_port
   redis_password = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault_secret.redis_primary_access_key.versionless_id})"
 
-  cdc_backend_func_url = data.azurerm_key_vault_secret.cdc_backend_func_url.versionless_id
+  cdc_backend_func_url = "${module.key_vaults.key_vault_cdc.uri}secrets/CDC-BACKEND-FUNC-URL"
   cdc_backend_func_key = azurerm_key_vault_secret.cdc_backend_function_key.versionless_id
 
   test_users = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=TEST-USERS)"

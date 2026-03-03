@@ -58,12 +58,6 @@ data "azurerm_application_gateway" "io_app_gateway" {
   resource_group_name = "io-p-itn-common-rg-01"
 }
 
-// SECRETS
-data "azurerm_key_vault_secret" "cdc_backend_func_url" {
-  name         = "CDC-BACKEND-FUNC-URL"
-  key_vault_id = module.key_vaults.key_vault_cdc.id
-}
-
 data "azurerm_storage_account" "storage_cdc_be" {
   name                = "iopitncdcbest01"
   resource_group_name = data.azurerm_resource_group.itn_cdc.name
