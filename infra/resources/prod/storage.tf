@@ -75,7 +75,7 @@ module "storage_audit_proxy" {
   location        = local.location
   project         = local.project
   domain          = local.domain
-  app_name        = "auditproxy"
+  app_name        = "extaudit"
   instance_number = "01"
 
   resource_group_name                  = data.azurerm_resource_group.itn_cdc.name
@@ -84,6 +84,7 @@ module "storage_audit_proxy" {
   tenant_id                            = data.azurerm_subscription.current.tenant_id
   key_vault_id                         = module.key_vaults.key_vault_cdc.id
   action_group_id                      = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
+  log_analytics_workspace_id           = data.azurerm_log_analytics_workspace.log.id
 
   tags = local.tags
 }

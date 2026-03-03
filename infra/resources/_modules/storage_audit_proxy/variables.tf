@@ -68,10 +68,15 @@ variable "action_group_id" {
 variable "cdc_storage_proxy_immutability_policy_days" {
   type        = number
   description = "Number of days for the immutability policy"
-  default     = 30
+  default     = 90
 }
 
 variable "key_vault_id" {
   type        = string
   description = "ID of the Key Vault for storing secrets"
+}
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "ID of the Log Analytics workspace"
 }

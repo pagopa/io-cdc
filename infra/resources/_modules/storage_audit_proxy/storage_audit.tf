@@ -3,7 +3,15 @@
 ###
 module "immutable_cdc_audit_logs_storage_proxy" {
   source  = "pagopa-dx/azure-storage-account/azurerm"
-  version = "~> 1.0"
+  version = "~> 2.0"
+
+  resource_group_name = var.resource_group_name
+  subnet_pep_id       = var.subnet_pep_id
+
+  use_case                           = "audit"
+  audit_retention_days               = var.cdc_storage_proxy_immutability_policy_days
+  override_infrastructure_encryption = true
+  secondary_location                 = "spaincentral"
 
   environment = {
     prefix          = var.prefix
@@ -14,17 +22,23 @@ module "immutable_cdc_audit_logs_storage_proxy" {
     instance_number = var.instance_number
   }
 
-  resource_group_name = var.resource_group_name
-  subnet_pep_id       = var.subnet_pep_id
+  diagnostic_settings = {
+    enabled                    = true
+    log_analytics_workspace_id = var.log_analytics_workspace_id
+  }
+
+  containers = [{
+    name        = "logs"
+    access_type = "private"
+  }]
+
+  subservices_enabled = {
+    blob  = true
+    queue = true
+  }
 
   blob_features = {
-    versioning          = true
-    restore_policy_days = 0
-    immutability_policy = {
-      enabled                       = true
-      allow_protected_append_writes = false
-      period_since_creation_in_days = var.cdc_storage_proxy_immutability_policy_days
-    }
+    versioning = true
   }
 
   customer_managed_key = {
@@ -35,45 +49,5 @@ module "immutable_cdc_audit_logs_storage_proxy" {
 
   action_group_id = var.action_group_id
 
-  tier = "l"
-
   tags = var.tags
-}
-
-# Containers
-resource "azurerm_storage_container" "immutable_cdc_audit_logs_proxy_storage_logs" {
-  depends_on = [module.immutable_cdc_audit_logs_storage_proxy]
-
-  name                  = "logs"
-  storage_account_name  = module.immutable_cdc_audit_logs_storage_proxy.name
-  container_access_type = "private"
-}
-
-# Policies
-resource "azurerm_storage_management_policy" "immutable_cdc_audit_logs_proxy_storage_management_policy" {
-  depends_on = [module.immutable_cdc_audit_logs_storage_proxy, azurerm_storage_container.immutable_cdc_audit_logs_proxy_storage_logs]
-
-  storage_account_id = module.immutable_cdc_audit_logs_storage_proxy.id
-
-  rule {
-    name    = "deletepolicy"
-    enabled = true
-    filters {
-      prefix_match = [
-        azurerm_storage_container.immutable_cdc_audit_logs_proxy_storage_logs.name,
-      ]
-      blob_types = ["blockBlob"]
-    }
-    actions {
-      base_blob {
-        delete_after_days_since_creation_greater_than = var.cdc_storage_proxy_immutability_policy_days + 1
-      }
-      snapshot {
-        delete_after_days_since_creation_greater_than = var.cdc_storage_proxy_immutability_policy_days + 1
-      }
-      version {
-        delete_after_days_since_creation = var.cdc_storage_proxy_immutability_policy_days + 1
-      }
-    }
-  }
 }

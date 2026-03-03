@@ -84,9 +84,9 @@
     "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/1.3.1"
   },
   "storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy": {
-    "hash": "a2a257b25753f91b36acef29e080efc4d62dea59e803f56e33e813e7a343e66b",
-    "version": "1.0.1",
+    "hash": "bb76fcbb89a9f589b7cdd69de201e756bae00720103b4c3d021a392483581910",
+    "version": "2.1.4",
     "name": "azure_storage_account",
-    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/1.0.1"
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/2.1.4"
   }
 }
