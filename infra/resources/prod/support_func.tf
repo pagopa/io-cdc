@@ -22,29 +22,29 @@ module "support_func" {
     name                = data.azurerm_virtual_network.vnet_common_itn.name
   }
 
-  cdc_api_base_url      = data.azurerm_key_vault_secret.cdc_api_base_url.value
-  cdc_api_base_url_test = data.azurerm_key_vault_secret.cdc_api_base_url_test.value
+  cdc_api_base_url      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-API-BASE-URL)"
+  cdc_api_base_url_test = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-API-BASE-URL-TEST)"
 
   cosmosdb_cdc_uri           = module.cosmos_db.cosmos_db.endpoint
-  cosmosdb_cdc_key           = data.azurerm_key_vault_secret.cosmosdb_cdc_key.value
-  cosmosdb_cdc_database_name = data.azurerm_key_vault_secret.cosmosdb_cdc_database_name.value
+  cosmosdb_cdc_key           = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=COSMOSDB-CDC-KEY)"
+  cosmosdb_cdc_database_name = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=COSMOSDB-CDC-DATABASE-NAME)"
 
-  jwt_private_key      = data.azurerm_key_vault_secret.jwt_private_key.value
-  jwt_private_key_test = data.azurerm_key_vault_secret.jwt_private_key_test.value
+  jwt_private_key      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-PRIVATE-KEY)"
+  jwt_private_key_test = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-PRIVATE-KEY-TEST)"
 
-  encryption_public_key      = data.azurerm_key_vault_secret.encryption_public_key.value
-  encryption_public_key_test = data.azurerm_key_vault_secret.encryption_public_key_test.value
+  encryption_public_key      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ENCRYPTION-PUBLIC-KEY)"
+  encryption_public_key_test = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ENCRYPTION-PUBLIC-KEY-TEST)"
 
-  jwt_issuer     = data.azurerm_key_vault_secret.jwt_issuer.value
-  jwt_audience   = data.azurerm_key_vault_secret.jwt_audience.value
-  jwt_expiration = data.azurerm_key_vault_secret.jwt_expiration.value
+  jwt_issuer     = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-ISSUER)"
+  jwt_audience   = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-AUDIENCE)"
+  jwt_expiration = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-EXPIRATION)"
 
-  algorithm_keys       = data.azurerm_key_vault_secret.algorithm_keys.value
-  algorithm_signature  = data.azurerm_key_vault_secret.algorithm_signature.value
-  algorithm_encryption = data.azurerm_key_vault_secret.algorithm_encryption.value
-  encoding_encryption  = data.azurerm_key_vault_secret.encoding_encryption.value
+  algorithm_keys       = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ALGORITHM-KEYS)"
+  algorithm_signature  = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ALGORITHM-SIGNATURE)"
+  algorithm_encryption = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ALGORITHM-ENCRYPTION)"
+  encoding_encryption  = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=ENCODING-ENCRYPTION)"
 
-  test_users = data.azurerm_key_vault_secret.test_users.value
+  test_users = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=TEST-USERS)"
 
   app_backend_api_key_secret = azurerm_key_vault_secret.app_backend_primary_key.versionless_id
 
