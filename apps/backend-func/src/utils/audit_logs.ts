@@ -32,8 +32,8 @@ const AuditVerifyDoc = t.type({
 
 const AuditPartnerApiDoc = t.type({
   fiscalCode: FiscalCode,
-  request: t.unknown,
-  response: t.unknown,
+  request: t.string,
+  response: t.string,
 });
 
 const ActionTag = t.type({
