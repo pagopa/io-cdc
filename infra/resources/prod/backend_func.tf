@@ -27,6 +27,9 @@ module "backend_func" {
   audit_log_connection_string = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-AUDIT-LOG-CONNECTION-STRING)"
   audit_log_container         = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-AUDIT-LOG-CONTAINER)"
 
+  ext_audit_log_connection_string = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-EXT-AUDIT-LOG-CONNECTION-STRING)"
+  ext_audit_log_container         = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-EXT-AUDIT-LOG-CONTAINER)"
+
   cdc_base_url = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-BASE-URL)"
 
   cdc_api_base_url      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-API-BASE-URL)"

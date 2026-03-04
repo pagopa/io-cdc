@@ -31,6 +31,8 @@ import {
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 import { traceEvent } from "./tracing.js";
+import { ContainerClient } from "@azure/storage-blob";
+import { fireAndForgetPartnerApiAuditLog, OperationTypes } from "./audit_logs.js";
 
 export const CdcApiUserData = t.type({
   first_name: NonEmptyString,
@@ -39,10 +41,10 @@ export const CdcApiUserData = t.type({
 });
 export type CdcApiUserData = t.TypeOf<typeof CdcApiUserData>;
 
-const getCdcClient = (config: Config, env: CdcEnvironmentT) =>
+const getCdcClient = (config: Config, env: CdcEnvironmentT, storeAuditLogFunction: StoreAuditLogFunction) =>
   env === CdcEnvironment.PRODUCTION
-    ? CdcAPIClient(config)
-    : CdcAPIClientTest(config);
+    ? CdcAPIClient(config, storeAuditLogFunction)
+    : CdcAPIClientTest(config, storeAuditLogFunction);
 
 const getJwtTE = (
   config: Config,
@@ -69,6 +71,20 @@ const getJwtTE = (
   );
 };
 
+const getStoreAuditLogFunction = (auditContainerClient: ContainerClient, fiscalCode: FiscalCode, operationType: OperationTypes) =>
+  (request: string, response: string) => fireAndForgetPartnerApiAuditLog(
+    auditContainerClient,
+    {
+      fiscalCode,
+      request, response
+    },
+    {
+      DateTime: new Date().toISOString(),
+      FiscalCode: fiscalCode,
+      Type: operationType
+    });
+type StoreAuditLogFunction = ReturnType<typeof getStoreAuditLogFunction>;
+
 const mapCdcApiCallFailure =
   (message: string) =>
     (res: IResponseType<number, unknown, never>): Error =>
@@ -87,12 +103,12 @@ const statusSuccessfulCodes = [
 ];
 
 const getAlreadyRequestedYearsCdcTE =
-  (config: Config, env: CdcEnvironmentT) => (user: CdcApiUserData) =>
+  (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) => (user: CdcApiUserData) =>
     pipe(
       getJwtTE(config, env, user),
       TE.chain((jwt) =>
         pipe(
-          TE.of(getCdcClient(config, env)(jwt)),
+          TE.of(getCdcClient(config, env, getStoreAuditLogFunction(auditContainerClient, user.fiscal_code, OperationTypes.GET_STATUS))(jwt)),
           TE.chain((client) =>
             TE.tryCatch(async () => await client.stato({}), E.toError),
           ),
@@ -157,7 +173,7 @@ const requestSuccessfulCodes = [
 ];
 
 const requestCdcTE =
-  (config: Config, env: CdcEnvironmentT) =>
+  (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) =>
     (user: CdcApiUserData, request: CdcApiRequestData) =>
       request.length > 0
         ? pipe(
@@ -165,7 +181,7 @@ const requestCdcTE =
           TE.bind("client", () =>
             pipe(
               getJwtTE(config, env, user),
-              TE.map(getCdcClient(config, env)),
+              TE.map(getCdcClient(config, env, getStoreAuditLogFunction(auditContainerClient, user.fiscal_code, OperationTypes.POST_CARD_REQUEST))),
             ),
           ),
           TE.bindW("payload", () =>
@@ -237,12 +253,12 @@ const isCdcApiGetCardsCallSuccess = (
   res.status === 200;
 
 const getCdcCardsTE =
-  (config: Config, env: CdcEnvironmentT) => (user: CdcApiUserData) =>
+  (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) => (user: CdcApiUserData) =>
     pipe(
       getJwtTE(config, env, user),
       TE.chain((jwt) =>
         pipe(
-          TE.of(getCdcClient(config, env)(jwt)),
+          TE.of(getCdcClient(config, env, getStoreAuditLogFunction(auditContainerClient, user.fiscal_code, OperationTypes.GET_CARDS))(jwt)),
           TE.chain((client) =>
             TE.tryCatch(
               async () => await client.getListaBorsellino({}),
@@ -386,13 +402,13 @@ const mapVoucherRefundStatus = (
 };
 
 const getCdcVouchersTE =
-  (config: Config, env: CdcEnvironmentT) =>
+  (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) =>
     (user: CdcApiUserData, year?: string) =>
       pipe(
         getJwtTE(config, env, user),
         TE.chain((jwt) =>
           pipe(
-            TE.of(getCdcClient(config, env)(jwt)),
+            TE.of(getCdcClient(config, env, getStoreAuditLogFunction(auditContainerClient, user.fiscal_code, OperationTypes.GET_VOUCHERS))(jwt)),
             TE.chain((client) =>
               TE.tryCatch(
                 async () =>
@@ -451,13 +467,13 @@ const isCdcApiPostVouchersCallSuccess = (
 ): res is IResponseType<200, VoucherBeanDetails, never> => res.status === 200;
 
 const postCdcVouchersTE =
-  (config: Config, env: CdcEnvironmentT) =>
+  (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) =>
     (user: CdcApiUserData, year: string, amount: number) =>
       pipe(
         getJwtTE(config, env, user),
         TE.chain((jwt) =>
           pipe(
-            TE.of(getCdcClient(config, env)(jwt)),
+            TE.of(getCdcClient(config, env, getStoreAuditLogFunction(auditContainerClient, user.fiscal_code, OperationTypes.POST_VOUCHER))(jwt)),
             TE.chain((client) =>
               TE.tryCatch(
                 async () =>
@@ -513,13 +529,13 @@ const isCdcApiGetVoucherCallSuccess = (
 ): res is IResponseType<200, VoucherBeanDetails, never> => res.status === 200;
 
 const getCdcVoucherTE =
-  (config: Config, env: CdcEnvironmentT) =>
+  (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) =>
     (user: CdcApiUserData, id: string) =>
       pipe(
         getJwtTE(config, env, user),
         TE.chain((jwt) =>
           pipe(
-            TE.of(getCdcClient(config, env)(jwt)),
+            TE.of(getCdcClient(config, env, getStoreAuditLogFunction(auditContainerClient, user.fiscal_code, OperationTypes.GET_VOUCHER))(jwt)),
             TE.chain((client) =>
               TE.tryCatch(
                 async () =>
@@ -575,13 +591,13 @@ const isCdcApiDeleteVoucherCallSuccess = (
 ): res is IResponseType<200, undefined, never> => res.status === 200;
 
 const deleteCdcVoucherTE =
-  (config: Config, env: CdcEnvironmentT) =>
+  (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) =>
     (user: CdcApiUserData, id: string) =>
       pipe(
         getJwtTE(config, env, user),
         TE.chain((jwt) =>
           pipe(
-            TE.of(getCdcClient(config, env)(jwt)),
+            TE.of(getCdcClient(config, env, getStoreAuditLogFunction(auditContainerClient, user.fiscal_code, OperationTypes.DELETE_VOUCHER))(jwt)),
             TE.chain((client) =>
               TE.tryCatch(
                 async () =>
@@ -605,7 +621,7 @@ const deleteCdcVoucherTE =
               TE.fromPredicate(
                 isCdcApiDeleteVoucherCallSuccess,
                 mapCdcApiCallFailure(
-                  `Get voucher CDC failure | API result not success.`,
+                  `Delete voucher CDC failure | API result not success.`,
                 ),
               )(response),
             ),
@@ -627,14 +643,14 @@ export enum CdcEnvironment {
 }
 export type CdcEnvironmentT = keyof typeof CdcEnvironment;
 
-export const CdcUtils = (config: Config, env: CdcEnvironmentT) => ({
+export const CdcUtils = (config: Config, env: CdcEnvironmentT, auditContainerClient: ContainerClient) => ({
   env,
-  deleteCdcVoucherTE: deleteCdcVoucherTE(config, env),
-  getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env),
-  getCdcCardsTE: getCdcCardsTE(config, env),
-  getCdcVoucherTE: getCdcVoucherTE(config, env),
-  getCdcVouchersTE: getCdcVouchersTE(config, env),
-  postCdcVouchersTE: postCdcVouchersTE(config, env),
-  requestCdcTE: requestCdcTE(config, env),
+  deleteCdcVoucherTE: deleteCdcVoucherTE(config, env, auditContainerClient),
+  getAlreadyRequestedYearsCdcTE: getAlreadyRequestedYearsCdcTE(config, env, auditContainerClient),
+  getCdcCardsTE: getCdcCardsTE(config, env, auditContainerClient),
+  getCdcVoucherTE: getCdcVoucherTE(config, env, auditContainerClient),
+  getCdcVouchersTE: getCdcVouchersTE(config, env, auditContainerClient),
+  postCdcVouchersTE: postCdcVouchersTE(config, env, auditContainerClient),
+  requestCdcTE: requestCdcTE(config, env, auditContainerClient),
 });
 export type CdcUtils = ReturnType<typeof CdcUtils>;

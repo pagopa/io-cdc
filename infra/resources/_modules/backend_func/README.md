@@ -61,6 +61,8 @@ No requirements.
 | <a name="input_encryption_public_key"></a> [encryption\_public\_key](#input\_encryption\_public\_key) | Encryption public key | `string` | n/a | yes |
 | <a name="input_encryption_public_key_test"></a> [encryption\_public\_key\_test](#input\_encryption\_public\_key\_test) | Encryption public key test | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | Short environment | `string` | n/a | yes |
+| <a name="input_ext_audit_log_connection_string"></a> [ext\_audit\_log\_connection\_string](#input\_ext\_audit\_log\_connection\_string) | The connection string for external audit log storage account | `string` | n/a | yes |
+| <a name="input_ext_audit_log_container"></a> [ext\_audit\_log\_container](#input\_ext\_audit\_log\_container) | The container name for external audit logs | `string` | n/a | yes |
 | <a name="input_fims_client_id"></a> [fims\_client\_id](#input\_fims\_client\_id) | FIMS client id | `string` | n/a | yes |
 | <a name="input_fims_client_secret"></a> [fims\_client\_secret](#input\_fims\_client\_secret) | FIMS client secret | `string` | n/a | yes |
 | <a name="input_fims_issuer_url"></a> [fims\_issuer\_url](#input\_fims\_issuer\_url) | FIMS issuer url | `string` | n/a | yes |

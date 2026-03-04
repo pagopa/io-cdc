@@ -293,6 +293,18 @@ variable "audit_log_container" {
   sensitive   = true
 }
 
+variable "ext_audit_log_connection_string" {
+  type        = string
+  description = "The connection string for external audit log storage account"
+  sensitive   = true
+}
+
+variable "ext_audit_log_container" {
+  type        = string
+  description = "The container name for external audit logs"
+  sensitive   = true
+}
+
 variable "test_users" {
   type        = string
   description = "List of test users"

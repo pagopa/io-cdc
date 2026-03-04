@@ -27,15 +27,15 @@ export const Config = t.type({
   AUDIT_LOG_CONTAINER: NonEmptyString,
 
   CARD_REQUEST_QUEUE_NAME: NonEmptyString,
-
   CDC_API_BASE_URL: NonEmptyString,
+
   CDC_API_BASE_URL_TEST: NonEmptyString,
 
   CDC_BASE_URL: NonEmptyString,
-
   CDC_CARDS_EXPIRATION_DATE: NonEmptyString,
 
   CDC_REGISTRATION_END_DATE: NonEmptyString,
+
   CDC_REGISTRATION_START_DATE: NonEmptyString,
 
   CDC_USAGE_END_DATE: NonEmptyString,
@@ -49,7 +49,10 @@ export const Config = t.type({
 
   ENCODING_ENCRYPTION: NonEmptyString,
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
+
   ENCRYPTION_PUBLIC_KEY_TEST: NonEmptyString,
+  EXT_AUDIT_LOG_CONNECTION_STRING: NonEmptyString,
+  EXT_AUDIT_LOG_CONTAINER: NonEmptyString,
 
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),
 

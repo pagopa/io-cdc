@@ -27,27 +27,52 @@ const fetchApi: typeof fetchWithTimeout =
 
 // This function is used to ensure that the fetch API is safe to use
 // It allows us to get also chunked data
-const safeFetch: typeof fetchWithTimeout = async (...args) => {
-  const response = await fetchApi(...args);
-  const clone = response.clone();
-  await clone.text();
-  return response;
-};
+const getSafeFetch =
+  (
+    storeAuditLogFunction: (request: string, response: string) => void,
+  ): typeof fetchWithTimeout =>
+  async (...args) => {
+    const response = await fetchApi(...args);
+    const clone = response.clone();
+    const res = await clone.text();
 
-export const CdcAPIClient = (config: Config) => (jwt: string) =>
-  createClient<"JwtAuth">({
-    basePath: "",
-    baseUrl: config.CDC_API_BASE_URL,
-    fetchApi: safeFetch,
-    withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
-  });
+    // Store the request data and response in the audit log
+    const url = String(args[0]);
+    const requestBody = args[1]?.body ? String(args[1].body) : "";
+    const method = args[1]?.method || "GET";
+    storeAuditLogFunction(
+      JSON.stringify({ body: requestBody, method, url }),
+      res,
+    );
 
-export const CdcAPIClientTest = (config: Config) => (jwt: string) =>
-  createClient<"JwtAuth">({
-    basePath: "",
-    baseUrl: config.CDC_API_BASE_URL_TEST,
-    fetchApi: safeFetch,
-    withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
-  });
+    // Return the original response to be used by the caller
+    return response;
+  };
+
+export const CdcAPIClient =
+  (
+    config: Config,
+    storeAuditLogFunction: (request: string, response: string) => void,
+  ) =>
+  (jwt: string) =>
+    createClient<"JwtAuth">({
+      basePath: "",
+      baseUrl: config.CDC_API_BASE_URL,
+      fetchApi: getSafeFetch(storeAuditLogFunction),
+      withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
+    });
+
+export const CdcAPIClientTest =
+  (
+    config: Config,
+    storeAuditLogFunction: (request: string, response: string) => void,
+  ) =>
+  (jwt: string) =>
+    createClient<"JwtAuth">({
+      basePath: "",
+      baseUrl: config.CDC_API_BASE_URL_TEST,
+      fetchApi: getSafeFetch(storeAuditLogFunction),
+      withDefaults: (op) => (params) => op({ JwtAuth: jwt, ...params }),
+    });
 
 export type CdcAPIClient = ReturnType<typeof CdcAPIClient>;

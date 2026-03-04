@@ -33,7 +33,7 @@ module "immutable_cdc_audit_logs_storage_proxy" {
   }]
 
   subservices_enabled = {
-    blob  = true
+    blob = true
   }
 
   blob_features = {

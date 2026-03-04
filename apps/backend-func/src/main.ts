@@ -35,10 +35,15 @@ const fimsClient = getFimsClient(config);
 // Queue Storage
 const queueStorage: QueueStorage = new QueueStorage(config);
 
-// Audit Blob Storage
-const auditContainerClient = BlobServiceClient.fromConnectionString(
+// FIMS Audit Blob Storage
+const fimsAuditContainerClient = BlobServiceClient.fromConnectionString(
   config.AUDIT_LOG_CONNECTION_STRING,
 ).getContainerClient(config.AUDIT_LOG_CONTAINER);
+
+// External Audit Blob Storage
+const externalAuditContainerClient = BlobServiceClient.fromConnectionString(
+  config.EXT_AUDIT_LOG_CONNECTION_STRING,
+).getContainerClient(config.EXT_AUDIT_LOG_CONTAINER);
 
 // CosmosDB singleton
 const cosmosDbClient = getCosmosDbClientInstance(
@@ -53,7 +58,10 @@ const redisClientFactory = getRedisClientFactory(config);
 const servicesClient = ServicesAPIClient(config);
 
 // CdC utils
-const cdcClientEnvironmentRouter = new CdcClientEnvironmentRouter(config);
+const cdcClientEnvironmentRouter = new CdcClientEnvironmentRouter(
+  config,
+  externalAuditContainerClient,
+);
 
 /*
  * CDC Utility Functions
@@ -78,7 +86,7 @@ app.http("FimsAuth", {
 });
 
 const FimsCallback = FimsCallbackFn({
-  auditContainerClient,
+  auditContainerClient: fimsAuditContainerClient,
   config,
   fimsClient,
   redisClientFactory,

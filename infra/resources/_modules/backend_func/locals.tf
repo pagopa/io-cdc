@@ -6,8 +6,10 @@ locals {
       NODE_OPTIONS                   = "--import @pagopa/azure-tracing"
 
       // AUDIT
-      AUDIT_LOG_CONNECTION_STRING = var.audit_log_connection_string
-      AUDIT_LOG_CONTAINER         = var.audit_log_container
+      AUDIT_LOG_CONNECTION_STRING     = var.audit_log_connection_string
+      AUDIT_LOG_CONTAINER             = var.audit_log_container
+      EXT_AUDIT_LOG_CONNECTION_STRING = var.ext_audit_log_connection_string
+      EXT_AUDIT_LOG_CONTAINER         = var.ext_audit_log_container
 
       // CDC
       DEFAULT_ROUTE               = "USAGE"
