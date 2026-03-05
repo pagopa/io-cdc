@@ -41,10 +41,7 @@ const getSafeFetch =
     const requestBody = JSON.stringify(args[1]?.body);
     const method = JSON.stringify(args[1]?.method);
     try {
-      storeAuditLogFunction(
-        `${method} ${url} - ${requestBody}`,
-        res,
-      );
+      storeAuditLogFunction(`${method} ${url} - ${requestBody}`, res);
     } catch {
       // Ignore audit log errors to avoid impacting the main HTTP response
     }

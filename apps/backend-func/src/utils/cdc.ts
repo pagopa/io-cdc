@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+import { ContainerClient } from "@azure/storage-blob";
 import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates.js";
 import { errorsToReadableMessages } from "@pagopa/ts-commons/lib/reporters.js";
 import { IResponseType } from "@pagopa/ts-commons/lib/requests.js";
@@ -31,7 +32,6 @@ import {
 import { Year } from "../models/card_request.js";
 import { JwtGenerator } from "./jwt.js";
 import { traceEvent } from "./tracing.js";
-import { ContainerClient } from "@azure/storage-blob";
 import { fireAndForgetPartnerApiAuditLog, OperationTypes } from "./audit_logs.js";
 
 export const CdcApiUserData = t.type({
@@ -40,6 +40,8 @@ export const CdcApiUserData = t.type({
   last_name: NonEmptyString,
 });
 export type CdcApiUserData = t.TypeOf<typeof CdcApiUserData>;
+
+type StoreAuditLogFunction = ReturnType<typeof getStoreAuditLogFunction>;
 
 const getCdcClient = (config: Config, env: CdcEnvironmentT, storeAuditLogFunction: StoreAuditLogFunction) =>
   env === CdcEnvironment.PRODUCTION
@@ -83,7 +85,6 @@ const getStoreAuditLogFunction = (auditContainerClient: ContainerClient, fiscalC
       FiscalCode: fiscalCode,
       Type: operationType
     });
-type StoreAuditLogFunction = ReturnType<typeof getStoreAuditLogFunction>;
 
 const mapCdcApiCallFailure =
   (message: string) =>
