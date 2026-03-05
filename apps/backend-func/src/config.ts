@@ -23,8 +23,8 @@ export const Config = t.type({
   ALGORITHM_SIGNATURE: NonEmptyString,
   APPLICATIONINSIGHTS_CONNECTION_STRING: NonEmptyString,
 
-  AUDIT_LOG_CONNECTION_STRING: NonEmptyString,
   AUDIT_LOG_BLOB_URI: NonEmptyString,
+  AUDIT_LOG_CONNECTION_STRING: NonEmptyString,
   AUDIT_LOG_CONTAINER: NonEmptyString,
 
   CARD_REQUEST_QUEUE_NAME: NonEmptyString,

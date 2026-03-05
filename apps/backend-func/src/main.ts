@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
-import { BlobServiceClient } from "@azure/storage-blob";
 import { DefaultAzureCredential } from "@azure/identity";
+import { BlobServiceClient } from "@azure/storage-blob";
 import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
 
 import { ServicesAPIClient } from "./clients/services.js";
