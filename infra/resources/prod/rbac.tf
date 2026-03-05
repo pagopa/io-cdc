@@ -9,13 +9,13 @@ module "roles" {
     {
       storage_account_name = module.storage_audit.immutable_cdc_audit_logs_storage.name
       resource_group_name  = module.storage_audit.immutable_cdc_audit_logs_storage.resource_group_name
-      role                 = "contributor"
+      role                 = "writer"
       description          = "Allow backend func to write FIMS audit blobs"
     },
     {
       storage_account_name = module.storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy.name
       resource_group_name  = module.storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy.resource_group_name
-      role                 = "contributor"
+      role                 = "writer"
       description          = "Allow backend func to write external audit blobs"
     }
   ]
