@@ -40,10 +40,14 @@ const getSafeFetch =
     const url = String(args[0]);
     const requestBody = args[1]?.body ? String(args[1].body) : "";
     const method = args[1]?.method || "GET";
-    storeAuditLogFunction(
-      JSON.stringify({ body: requestBody, method, url }),
-      res,
-    );
+    try {
+      storeAuditLogFunction(
+        JSON.stringify({ body: requestBody, method, url }),
+        res,
+      );
+    } catch {
+      // Ignore audit log errors to avoid impacting the main HTTP response
+    }
 
     // Return the original response to be used by the caller
     return response;
