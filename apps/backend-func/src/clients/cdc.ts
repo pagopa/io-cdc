@@ -37,12 +37,12 @@ const getSafeFetch =
     const res = await clone.text();
 
     // Store the request data and response in the audit log
-    const url = String(args[0]);
-    const requestBody = args[1]?.body ? String(args[1].body) : "";
-    const method = args[1]?.method || "GET";
+    const url = JSON.stringify(args[0]);
+    const requestBody = JSON.stringify(args[1]?.body);
+    const method = JSON.stringify(args[1]?.method);
     try {
       storeAuditLogFunction(
-        JSON.stringify({ body: requestBody, method, url }),
+        `${method} ${url} - ${requestBody}`,
         res,
       );
     } catch {
