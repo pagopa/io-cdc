@@ -1,5 +1,6 @@
 import { app } from "@azure/functions";
 import { BlobServiceClient } from "@azure/storage-blob";
+import { DefaultAzureCredential } from "@azure/identity";
 import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
 
 import { ServicesAPIClient } from "./clients/services.js";
@@ -36,13 +37,15 @@ const fimsClient = getFimsClient(config);
 const queueStorage: QueueStorage = new QueueStorage(config);
 
 // FIMS Audit Blob Storage
-const fimsAuditContainerClient = BlobServiceClient.fromConnectionString(
-  config.AUDIT_LOG_CONNECTION_STRING,
+const fimsAuditContainerClient = new BlobServiceClient(
+  config.AUDIT_LOG_BLOB_URI,
+  new DefaultAzureCredential(),
 ).getContainerClient(config.AUDIT_LOG_CONTAINER);
 
 // External Audit Blob Storage
-const externalAuditContainerClient = BlobServiceClient.fromConnectionString(
-  config.EXT_AUDIT_LOG_CONNECTION_STRING,
+const externalAuditContainerClient = new BlobServiceClient(
+  config.EXT_AUDIT_LOG_BLOB_URI,
+  new DefaultAzureCredential(),
 ).getContainerClient(config.EXT_AUDIT_LOG_CONTAINER);
 
 // CosmosDB singleton

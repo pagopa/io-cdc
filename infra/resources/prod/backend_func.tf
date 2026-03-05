@@ -25,10 +25,11 @@ module "backend_func" {
   pagopa_idp_keys_base_url = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=PAGOPA-IDP-KEYS-BASE-URL)"
 
   audit_log_connection_string = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-AUDIT-LOG-CONNECTION-STRING)"
+  audit_log_blob_uri          = "https://${module.storage_audit.immutable_cdc_audit_logs_storage.name}.blob.core.windows.net"
   audit_log_container         = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-AUDIT-LOG-CONTAINER)"
 
-  ext_audit_log_connection_string = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-EXT-AUDIT-LOG-CONNECTION-STRING)"
-  ext_audit_log_container         = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-EXT-AUDIT-LOG-CONTAINER)"
+  ext_audit_log_blob_uri  = "https://${module.storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy.name}.blob.core.windows.net"
+  ext_audit_log_container = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-EXT-AUDIT-LOG-CONTAINER)"
 
   cdc_base_url = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-BASE-URL)"
 

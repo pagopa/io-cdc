@@ -45,6 +45,7 @@ No requirements.
 | <a name="input_algorithm_encryption"></a> [algorithm\_encryption](#input\_algorithm\_encryption) | Encryption's algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_keys"></a> [algorithm\_keys](#input\_algorithm\_keys) | Keys' algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_signature"></a> [algorithm\_signature](#input\_algorithm\_signature) | Signature's algorithm | `string` | n/a | yes |
+| <a name="input_audit_log_blob_uri"></a> [audit\_log\_blob\_uri](#input\_audit\_log\_blob\_uri) | The blob service endpoint URI for the audit log storage account | `string` | n/a | yes |
 | <a name="input_audit_log_connection_string"></a> [audit\_log\_connection\_string](#input\_audit\_log\_connection\_string) | The connection string for audit log storage account | `string` | n/a | yes |
 | <a name="input_audit_log_container"></a> [audit\_log\_container](#input\_audit\_log\_container) | The container name for audit logs | `string` | n/a | yes |
 | <a name="input_card_request_queue_name"></a> [card\_request\_queue\_name](#input\_card\_request\_queue\_name) | Card request queue name | `string` | n/a | yes |
@@ -61,7 +62,7 @@ No requirements.
 | <a name="input_encryption_public_key"></a> [encryption\_public\_key](#input\_encryption\_public\_key) | Encryption public key | `string` | n/a | yes |
 | <a name="input_encryption_public_key_test"></a> [encryption\_public\_key\_test](#input\_encryption\_public\_key\_test) | Encryption public key test | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | Short environment | `string` | n/a | yes |
-| <a name="input_ext_audit_log_connection_string"></a> [ext\_audit\_log\_connection\_string](#input\_ext\_audit\_log\_connection\_string) | The connection string for external audit log storage account | `string` | n/a | yes |
+| <a name="input_ext_audit_log_blob_uri"></a> [ext\_audit\_log\_blob\_uri](#input\_ext\_audit\_log\_blob\_uri) | The blob service endpoint URI for the external audit log storage account | `string` | n/a | yes |
 | <a name="input_ext_audit_log_container"></a> [ext\_audit\_log\_container](#input\_ext\_audit\_log\_container) | The container name for external audit logs | `string` | n/a | yes |
 | <a name="input_fims_client_id"></a> [fims\_client\_id](#input\_fims\_client\_id) | FIMS client id | `string` | n/a | yes |
 | <a name="input_fims_client_secret"></a> [fims\_client\_secret](#input\_fims\_client\_secret) | FIMS client secret | `string` | n/a | yes |

@@ -24,6 +24,7 @@ export const Config = t.type({
   APPLICATIONINSIGHTS_CONNECTION_STRING: NonEmptyString,
 
   AUDIT_LOG_CONNECTION_STRING: NonEmptyString,
+  AUDIT_LOG_BLOB_URI: NonEmptyString,
   AUDIT_LOG_CONTAINER: NonEmptyString,
 
   CARD_REQUEST_QUEUE_NAME: NonEmptyString,
@@ -51,7 +52,8 @@ export const Config = t.type({
   ENCRYPTION_PUBLIC_KEY: NonEmptyString,
 
   ENCRYPTION_PUBLIC_KEY_TEST: NonEmptyString,
-  EXT_AUDIT_LOG_CONNECTION_STRING: NonEmptyString,
+
+  EXT_AUDIT_LOG_BLOB_URI: NonEmptyString,
   EXT_AUDIT_LOG_CONTAINER: NonEmptyString,
 
   FETCH_TIMEOUT_MS: withDefault(t.string, "10000").pipe(NumberFromString),

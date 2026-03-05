@@ -287,16 +287,20 @@ variable "audit_log_connection_string" {
   sensitive   = true
 }
 
+variable "audit_log_blob_uri" {
+  type        = string
+  description = "The blob service endpoint URI for the audit log storage account"
+}
+
 variable "audit_log_container" {
   type        = string
   description = "The container name for audit logs"
   sensitive   = true
 }
 
-variable "ext_audit_log_connection_string" {
+variable "ext_audit_log_blob_uri" {
   type        = string
-  description = "The connection string for external audit log storage account"
-  sensitive   = true
+  description = "The blob service endpoint URI for the external audit log storage account"
 }
 
 variable "ext_audit_log_container" {
