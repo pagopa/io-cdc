@@ -7,15 +7,15 @@ import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 export enum OperationTypes {
-  DELETE_VOUCHER = "delete-voucher",
+  DELETE_VOUCHER = "deletevoucher",
   FIMS = "fims",
-  GET_CARDS = "get-cards",
-  GET_STATUS = "get-status",
-  GET_VOUCHER = "get-voucher",
-  GET_VOUCHERS = "get-vouchers",
+  GET_CARDS = "getcards",
+  GET_STATUS = "getstatus",
+  GET_VOUCHER = "getvoucher",
+  GET_VOUCHERS = "getvouchers",
   LOLLIPOP = "lollipop",
-  POST_CARD_REQUEST = "post-card-request",
-  POST_VOUCHER = "post-voucher",
+  POST_CARD_REQUEST = "postcardrequest",
+  POST_VOUCHER = "postvoucher",
 }
 
 const AuditExchangeDoc = t.type({
