@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.22
+
+### Patch Changes
+
+- 7dba6f4: Added audit logs for external requests
+
 ## 1.1.21
 
 ### Patch Changes
