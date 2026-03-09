@@ -1,3 +1,4 @@
+import { ContainerClient } from "@azure/storage-blob";
 import { FiscalCode } from "@pagopa/ts-commons/lib/strings.js";
 
 import { Config } from "../config.js";
@@ -12,10 +13,18 @@ export class CdcClientEnvironmentRouter {
   private prodClient: CdcUtils;
   private testClient: CdcUtils;
 
-  constructor(config: Config) {
+  constructor(config: Config, auditContainerClient: ContainerClient) {
     this.config = config;
-    this.prodClient = CdcUtils(config, CdcEnvironment.PRODUCTION);
-    this.testClient = CdcUtils(config, CdcEnvironment.TEST);
+    this.prodClient = CdcUtils(
+      config,
+      CdcEnvironment.PRODUCTION,
+      auditContainerClient,
+    );
+    this.testClient = CdcUtils(
+      config,
+      CdcEnvironment.TEST,
+      auditContainerClient,
+    );
   }
 
   public getClient(fiscalCode: FiscalCode): CdcUtils {
