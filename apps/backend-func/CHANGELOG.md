@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.1.23
+
+### Patch Changes
+
+- 6b333b9: fixed audit tags
+
 ## 1.1.22
 
 ### Patch Changes
