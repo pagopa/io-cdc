@@ -26,7 +26,6 @@ module "support_func" {
   cdc_api_base_url_test = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=CDC-API-BASE-URL-TEST)"
 
   cosmosdb_cdc_uri           = module.cosmos_db.cosmos_db.endpoint
-  cosmosdb_cdc_key           = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=COSMOSDB-CDC-KEY)"
   cosmosdb_cdc_database_name = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=COSMOSDB-CDC-DATABASE-NAME)"
 
   jwt_private_key      = "@Microsoft.KeyVault(VaultName=${module.key_vaults.key_vault_cdc.name};SecretName=JWT-PRIVATE-KEY)"
