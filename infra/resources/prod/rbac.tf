@@ -5,6 +5,21 @@ module "roles" {
   principal_id    = module.backend_func.cdc_backend_func.principal_id
   subscription_id = data.azurerm_subscription.current.subscription_id
 
+  storage_blob = [
+    {
+      storage_account_name = module.storage_audit.immutable_cdc_audit_logs_storage.name
+      resource_group_name  = module.storage_audit.immutable_cdc_audit_logs_storage.resource_group_name
+      role                 = "owner"
+      description          = "Allow backend func to write FIMS audit blobs"
+    },
+    {
+      storage_account_name = module.storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy.name
+      resource_group_name  = module.storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy.resource_group_name
+      role                 = "owner"
+      description          = "Allow backend func to write external audit blobs"
+    }
+  ]
+
   storage_queue = [
     {
       storage_account_name = module.storage_be.cdc_storage_be.name
@@ -23,15 +38,6 @@ module "roles" {
       resource_group_name  = module.storage_be.cdc_storage_be.resource_group_name
       role                 = "owner"
       description          = "we need to own the queue"
-    }
-  ]
-
-  cosmos = [
-    {
-      account_name        = module.cosmos_db.cosmos_db.name
-      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
-      role                = "writer"
-      description         = "Allow CDC Backend Function to read/write CosmosDB via RBAC"
     }
   ]
 
@@ -45,6 +51,13 @@ module "roles" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Backend Function to read/write CosmosDB via RBAC"
+  }]
 }
 
 module "roles_staging" {
@@ -53,6 +66,21 @@ module "roles_staging" {
 
   principal_id    = module.backend_func.cdc_backend_func.staging_principal_id
   subscription_id = data.azurerm_subscription.current.subscription_id
+
+  storage_blob = [
+    {
+      storage_account_name = module.storage_audit.immutable_cdc_audit_logs_storage.name
+      resource_group_name  = module.storage_audit.immutable_cdc_audit_logs_storage.resource_group_name
+      role                 = "owner"
+      description          = "Allow backend func (staging) to write FIMS audit blobs with index tags"
+    },
+    {
+      storage_account_name = module.storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy.name
+      resource_group_name  = module.storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy.resource_group_name
+      role                 = "owner"
+      description          = "Allow backend func (staging) to write external audit blobs with index tags"
+    }
+  ]
 
   storage_queue = [
     {
@@ -75,15 +103,6 @@ module "roles_staging" {
     }
   ]
 
-  cosmos = [
-    {
-      account_name        = module.cosmos_db.cosmos_db.name
-      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
-      role                = "writer"
-      description         = "Allow CDC Backend Function (staging slot) to read/write CosmosDB via RBAC"
-    }
-  ]
-
   key_vault = [
     {
       name                = module.key_vaults.key_vault_cdc.name
@@ -94,6 +113,14 @@ module "roles_staging" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Backend Function (staging) to read/write CosmosDB via RBAC"
+  }]
+
 }
 
 module "support_func_roles" {
@@ -102,15 +129,6 @@ module "support_func_roles" {
 
   principal_id    = module.support_func.cdc_support_func.principal_id
   subscription_id = data.azurerm_subscription.current.subscription_id
-
-  cosmos = [
-    {
-      account_name        = module.cosmos_db.cosmos_db.name
-      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
-      role                = "writer"
-      description         = "Allow Support Function to read/write CosmosDB via RBAC"
-    }
-  ]
 
   key_vault = [
     {
@@ -122,6 +140,13 @@ module "support_func_roles" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Support Function to read/write CosmosDB via RBAC"
+  }]
 }
 
 module "support_func_staging_roles" {
@@ -130,15 +155,6 @@ module "support_func_staging_roles" {
 
   principal_id    = module.support_func.cdc_support_func.staging_principal_id
   subscription_id = data.azurerm_subscription.current.subscription_id
-
-  cosmos = [
-    {
-      account_name        = module.cosmos_db.cosmos_db.name
-      resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
-      role                = "writer"
-      description         = "Allow Support Function (staging slot) to read/write CosmosDB via RBAC"
-    }
-  ]
 
   key_vault = [
     {
@@ -150,4 +166,11 @@ module "support_func_staging_roles" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Support Function (staging) to read/write CosmosDB via RBAC"
+  }]
 }

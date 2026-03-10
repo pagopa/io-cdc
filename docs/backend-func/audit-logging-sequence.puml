@@ -1,0 +1,33 @@
+@startuml Sequence Audit Logging via getSafeFetch
+participant "CdC Backend Functions" as be
+participant "getSafeFetch" as sf
+participant "Sogei" as sogei
+participant "Azure Blob Storage\n(Audit Container)" as blob
+
+be -> sf: HTTP request (url, method, body)
+activate sf
+sf -> sogei: fetchApi(url, options)
+activate sogei
+sogei -> sf: HTTP response
+deactivate sogei
+sf -> sf: Clone response\nExtract request data\n(url, method, body)
+sf -> sf: Clone response\nExtract response text
+sf ->> blob: **[fire-and-forget]**\nstoreAuditLogFunction(\n  { url, method, body },\n  responseText\n)
+activate blob #LightGray
+note right of blob
+  Upload audit blob:
+  hash(CF)-DateTime-OpType-random
+  Content: { fiscalCode, request, response }
+  Tags: { FiscalCode, DateTime, Type }
+end note
+blob --> blob: upload(..)
+deactivate blob
+sf -> be: Original HTTP response
+deactivate sf
+
+note over sf, blob
+  Audit log errors are silently caught
+  to avoid impacting the main HTTP response
+end note
+
+@enduml
