@@ -51,6 +51,13 @@ module "roles" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Backend Function to read/write CosmosDB via RBAC"
+  }]
 }
 
 module "roles_staging" {
@@ -106,6 +113,14 @@ module "roles_staging" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Backend Function (staging) to read/write CosmosDB via RBAC"
+  }]
+
 }
 
 module "support_func_roles" {
@@ -125,6 +140,13 @@ module "support_func_roles" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Support Function to read/write CosmosDB via RBAC"
+  }]
 }
 
 module "support_func_staging_roles" {
@@ -144,4 +166,11 @@ module "support_func_staging_roles" {
       }
     }
   ]
+
+  cosmos = [{
+    account_name        = module.cosmos_db.cosmos_db.name
+    resource_group_name = module.cosmos_db.cosmos_db.resource_group_name
+    role                = "writer"
+    description         = "Allow CDC Support Function (staging) to read/write CosmosDB via RBAC"
+  }]
 }
