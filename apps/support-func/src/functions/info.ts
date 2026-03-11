@@ -30,10 +30,7 @@ const checkAzureCosmosDbHealth = (
   pipe(
     TE.Do,
     TE.bind("client", () => {
-      const client = getCosmosDbClientInstance(
-        deps.config.COSMOSDB_CDC_URI,
-        deps.config.COSMOSDB_CDC_KEY,
-      );
+      const client = getCosmosDbClientInstance(deps.config.COSMOSDB_CDC_URI);
       return TE.right(client);
     }),
     TE.chain(({ client }) =>

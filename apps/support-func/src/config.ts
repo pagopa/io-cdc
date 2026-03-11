@@ -31,7 +31,6 @@ export const Config = t.type({
   CDC_USAGE_START_DATE: NonEmptyString,
 
   COSMOSDB_CDC_DATABASE_NAME: NonEmptyString,
-  COSMOSDB_CDC_KEY: NonEmptyString,
 
   COSMOSDB_CDC_URI: NonEmptyString,
   ENCODING_ENCRYPTION: NonEmptyString,

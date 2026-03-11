@@ -44,6 +44,7 @@
   "dependencies": {
     "@azure/cosmos": "4.2.0",
     "@azure/functions": "^4.0.1",
+    "@azure/identity": "4.11.2",
     "@mattrglobal/http-signatures": "^4.0.1",
     "@pagopa/azure-tracing": "^0.4.0",
     "@pagopa/handler-kit": "^1.1.0",
