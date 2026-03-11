@@ -22,7 +22,6 @@ locals {
 
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri
-      COSMOSDB_CDC_KEY           = var.cosmosdb_cdc_key
       COSMOSDB_CDC_DATABASE_NAME = var.cosmosdb_cdc_database_name
 
       // STORAGE

@@ -14,7 +14,6 @@
     "CDC_API_BASE_URL_TEST": "",
     "CDC_BASE_URL": "",
     "COSMOSDB_CDC_DATABASE_NAME": "",
-    "COSMOSDB_CDC_KEY": "",
     "COSMOSDB_CDC_URI": "",
     "AUDIT_LOG_BLOB_URI": "https://<storage-account-name>.blob.core.windows.net",
     "AUDIT_LOG_CONTAINER": "logs",

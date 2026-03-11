@@ -11,3 +11,6 @@ packageExtensions:
   '@testing-library/jest-dom':
     peerDependencies:
       vitest: '*'
+
+catalog:
+  '@azure/identity': ^4.11.2
