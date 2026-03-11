@@ -1,5 +1,11 @@
 # backend-func
 
+## 1.2.0
+
+### Minor Changes
+
+- c349d6d: Use RBAC to connect to CosmosDB
+
 ## 1.1.23
 
 ### Patch Changes
