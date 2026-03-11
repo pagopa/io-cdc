@@ -2,14 +2,15 @@
  * Use a singleton CosmosDB client across functions.
  */
 import { CosmosClient } from "@azure/cosmos";
+import { DefaultAzureCredential } from "@azure/identity";
 
 let cosmosDbClientInstance: CosmosClient;
 
-export const getCosmosDbClientInstance = (dbUri: string, dbKey?: string) => {
+export const getCosmosDbClientInstance = (dbUri: string) => {
   if (!cosmosDbClientInstance) {
     cosmosDbClientInstance = new CosmosClient({
+      aadCredentials: new DefaultAzureCredential(),
       endpoint: dbUri,
-      key: dbKey,
     });
   }
   return cosmosDbClientInstance;

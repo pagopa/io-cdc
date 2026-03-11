@@ -1,3 +1,4 @@
+import { ContainerClient } from "@azure/storage-blob";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -7,6 +8,8 @@ import {
 import { Config } from "../../config.js";
 import { CdcEnvironment } from "../cdc.js";
 import { CdcClientEnvironmentRouter, isTestUser } from "../env_router.js";
+
+const containerMock = {} as unknown as ContainerClient;
 
 const config = {
   TEST_USERS:
@@ -28,16 +31,18 @@ describe("isTestUser", () => {
 
 describe("CdcClientEnvironmentRouter", () => {
   it("should return a test env client if the user is a test user", () => {
-    const cdcClient = new CdcClientEnvironmentRouter(config).getClient(
-      aValidFiscalCode,
-    );
+    const cdcClient = new CdcClientEnvironmentRouter(
+      config,
+      containerMock,
+    ).getClient(aValidFiscalCode);
     expect(cdcClient.env).toBe(CdcEnvironment.TEST);
   });
 
   it("should return a prod env client if the user is not a test user", () => {
-    const cdcClient = new CdcClientEnvironmentRouter(config).getClient(
-      anotherValidFiscalCode,
-    );
+    const cdcClient = new CdcClientEnvironmentRouter(
+      config,
+      containerMock,
+    ).getClient(anotherValidFiscalCode);
     expect(cdcClient.env).toBe(CdcEnvironment.PRODUCTION);
   });
 });

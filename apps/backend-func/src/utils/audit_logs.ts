@@ -7,8 +7,15 @@ import { pipe } from "fp-ts/lib/function.js";
 import * as t from "io-ts";
 
 export enum OperationTypes {
+  DELETE_VOUCHER = "deletevoucher",
   FIMS = "fims",
+  GET_CARDS = "getcards",
+  GET_STATUS = "getstatus",
+  GET_VOUCHER = "getvoucher",
+  GET_VOUCHERS = "getvouchers",
   LOLLIPOP = "lollipop",
+  POST_CARD_REQUEST = "postcardrequest",
+  POST_VOUCHER = "postvoucher",
 }
 
 const AuditExchangeDoc = t.type({
@@ -23,19 +30,37 @@ const AuditVerifyDoc = t.type({
   publicKey: NonEmptyString,
 });
 
+const AuditPartnerApiDoc = t.type({
+  fiscalCode: FiscalCode,
+  request: t.string,
+  response: t.string,
+});
+
 const ActionTag = t.type({
   DateTime: t.string,
   FiscalCode: FiscalCode,
   Type: t.union([
     t.literal(OperationTypes.FIMS),
     t.literal(OperationTypes.LOLLIPOP),
+    t.literal(OperationTypes.GET_STATUS),
+    t.literal(OperationTypes.POST_CARD_REQUEST),
+    t.literal(OperationTypes.GET_CARDS),
+    t.literal(OperationTypes.GET_VOUCHERS),
+    t.literal(OperationTypes.POST_VOUCHER),
+    t.literal(OperationTypes.GET_VOUCHER),
+    t.literal(OperationTypes.DELETE_VOUCHER),
   ]),
 });
 
-const AuditLogContent = t.union([AuditExchangeDoc, AuditVerifyDoc]);
+const AuditLogContent = t.union([
+  AuditExchangeDoc,
+  AuditVerifyDoc,
+  AuditPartnerApiDoc,
+]);
 
 export type AuditExchangeDoc = t.TypeOf<typeof AuditExchangeDoc>;
 export type AuditVerifyDoc = t.TypeOf<typeof AuditVerifyDoc>;
+export type AuditPartnerApiDoc = t.TypeOf<typeof AuditPartnerApiDoc>;
 export type ActionTag = t.TypeOf<typeof ActionTag>;
 export type AuditLogContent = t.TypeOf<typeof AuditLogContent>;
 
@@ -94,3 +119,17 @@ export const storeAuditLog = (
       return TE.right(true);
     }),
   );
+
+export const fireAndForgetPartnerApiAuditLog = (
+  containerClient: ContainerClient,
+  auditLogDoc: AuditPartnerApiDoc,
+  tags: ActionTag,
+): void => {
+  const content = encodeAuditLogDoc(auditLogDoc);
+  const blockBlobClient = containerClient.getBlockBlobClient(
+    generateBlobName(tags.FiscalCode, tags.Type),
+  );
+  blockBlobClient.upload(content, content.length, { tags }).catch(() => {
+    // DO NOTHING, we are in fire-and-forget mode
+  });
+};
