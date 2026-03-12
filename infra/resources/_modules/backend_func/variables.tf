@@ -95,12 +95,6 @@ variable "cosmosdb_cdc_uri" {
   sensitive   = true
 }
 
-variable "cosmosdb_cdc_key" {
-  type        = string
-  description = "Connection key for CdC cosmosdb"
-  sensitive   = true
-}
-
 variable "cosmosdb_cdc_database_name" {
   type        = string
   description = "Database name for CdC cosmosdb"
@@ -287,9 +281,25 @@ variable "audit_log_connection_string" {
   sensitive   = true
 }
 
+variable "audit_log_blob_uri" {
+  type        = string
+  description = "The blob service endpoint URI for the audit log storage account"
+}
+
 variable "audit_log_container" {
   type        = string
   description = "The container name for audit logs"
+  sensitive   = true
+}
+
+variable "ext_audit_log_blob_uri" {
+  type        = string
+  description = "The blob service endpoint URI for the external audit log storage account"
+}
+
+variable "ext_audit_log_container" {
+  type        = string
+  description = "The container name for external audit logs"
   sensitive   = true
 }
 

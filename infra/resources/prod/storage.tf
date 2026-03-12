@@ -66,3 +66,25 @@ module "storage_audit" {
 
   tags = local.tags
 }
+
+module "storage_audit_proxy" {
+  source = "../_modules/storage_audit_proxy"
+
+  prefix          = local.prefix
+  env_short       = local.env_short
+  location        = local.location
+  project         = local.project
+  domain          = local.domain
+  app_name        = "extaudit"
+  instance_number = "01"
+
+  resource_group_name                  = data.azurerm_resource_group.itn_cdc.name
+  subnet_pep_id                        = data.azurerm_subnet.pep.id
+  privatelink_blob_core_windows_net_id = data.azurerm_private_dns_zone.privatelink_blob_core_windows_net.id
+  tenant_id                            = data.azurerm_subscription.current.tenant_id
+  key_vault_id                         = module.key_vaults.key_vault_cdc.id
+  action_group_id                      = azurerm_monitor_action_group.io_p_itn_cdc_error_action_group.id
+  log_analytics_workspace_id           = data.azurerm_log_analytics_workspace.log.id
+
+  tags = local.tags
+}

@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
   injectWorkspacePackages: true
 
+catalogs:
+  default:
+    '@azure/identity':
+      specifier: ^4.11.2
+      version: 4.11.2
+
 overrides:
   '@azure/core-client': 1.9.0
   '@azure/core-http-compat': 2.3.0
@@ -56,7 +62,7 @@ importers:
         specifier: ^4.0.1
         version: 4.8.0
       '@azure/identity':
-        specifier: 4.11.2
+        specifier: 'catalog:'
         version: 4.11.2
       '@azure/storage-blob':
         specifier: 12.29.0
@@ -333,6 +339,9 @@ importers:
       '@azure/functions':
         specifier: ^4.0.1
         version: 4.8.0
+      '@azure/identity':
+        specifier: 'catalog:'
+        version: 4.11.2
       '@mattrglobal/http-signatures':
         specifier: ^4.0.1
         version: 4.2.0

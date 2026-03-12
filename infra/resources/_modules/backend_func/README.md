@@ -45,6 +45,7 @@ No requirements.
 | <a name="input_algorithm_encryption"></a> [algorithm\_encryption](#input\_algorithm\_encryption) | Encryption's algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_keys"></a> [algorithm\_keys](#input\_algorithm\_keys) | Keys' algorithm | `string` | n/a | yes |
 | <a name="input_algorithm_signature"></a> [algorithm\_signature](#input\_algorithm\_signature) | Signature's algorithm | `string` | n/a | yes |
+| <a name="input_audit_log_blob_uri"></a> [audit\_log\_blob\_uri](#input\_audit\_log\_blob\_uri) | The blob service endpoint URI for the audit log storage account | `string` | n/a | yes |
 | <a name="input_audit_log_connection_string"></a> [audit\_log\_connection\_string](#input\_audit\_log\_connection\_string) | The connection string for audit log storage account | `string` | n/a | yes |
 | <a name="input_audit_log_container"></a> [audit\_log\_container](#input\_audit\_log\_container) | The container name for audit logs | `string` | n/a | yes |
 | <a name="input_card_request_queue_name"></a> [card\_request\_queue\_name](#input\_card\_request\_queue\_name) | Card request queue name | `string` | n/a | yes |
@@ -54,13 +55,14 @@ No requirements.
 | <a name="input_cdc_backend_func_url"></a> [cdc\_backend\_func\_url](#input\_cdc\_backend\_func\_url) | The url for apim to call functions APIs | `string` | n/a | yes |
 | <a name="input_cdc_base_url"></a> [cdc\_base\_url](#input\_cdc\_base\_url) | The base url for CDC redirects | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_database_name"></a> [cosmosdb\_cdc\_database\_name](#input\_cosmosdb\_cdc\_database\_name) | Database name for CdC cosmosdb | `string` | n/a | yes |
-| <a name="input_cosmosdb_cdc_key"></a> [cosmosdb\_cdc\_key](#input\_cosmosdb\_cdc\_key) | Connection key for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_uri"></a> [cosmosdb\_cdc\_uri](#input\_cosmosdb\_cdc\_uri) | Connection uri for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain | `string` | n/a | yes |
 | <a name="input_encoding_encryption"></a> [encoding\_encryption](#input\_encoding\_encryption) | Encryption's encoding | `string` | n/a | yes |
 | <a name="input_encryption_public_key"></a> [encryption\_public\_key](#input\_encryption\_public\_key) | Encryption public key | `string` | n/a | yes |
 | <a name="input_encryption_public_key_test"></a> [encryption\_public\_key\_test](#input\_encryption\_public\_key\_test) | Encryption public key test | `string` | n/a | yes |
 | <a name="input_env_short"></a> [env\_short](#input\_env\_short) | Short environment | `string` | n/a | yes |
+| <a name="input_ext_audit_log_blob_uri"></a> [ext\_audit\_log\_blob\_uri](#input\_ext\_audit\_log\_blob\_uri) | The blob service endpoint URI for the external audit log storage account | `string` | n/a | yes |
+| <a name="input_ext_audit_log_container"></a> [ext\_audit\_log\_container](#input\_ext\_audit\_log\_container) | The container name for external audit logs | `string` | n/a | yes |
 | <a name="input_fims_client_id"></a> [fims\_client\_id](#input\_fims\_client\_id) | FIMS client id | `string` | n/a | yes |
 | <a name="input_fims_client_secret"></a> [fims\_client\_secret](#input\_fims\_client\_secret) | FIMS client secret | `string` | n/a | yes |
 | <a name="input_fims_issuer_url"></a> [fims\_issuer\_url](#input\_fims\_issuer\_url) | FIMS issuer url | `string` | n/a | yes |

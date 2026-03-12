@@ -48,7 +48,6 @@ No requirements.
 | <a name="input_cdc_api_base_url"></a> [cdc\_api\_base\_url](#input\_cdc\_api\_base\_url) | The base url for cdc api | `string` | n/a | yes |
 | <a name="input_cdc_api_base_url_test"></a> [cdc\_api\_base\_url\_test](#input\_cdc\_api\_base\_url\_test) | The test base url for cdc api | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_database_name"></a> [cosmosdb\_cdc\_database\_name](#input\_cosmosdb\_cdc\_database\_name) | Database name for CdC cosmosdb | `string` | n/a | yes |
-| <a name="input_cosmosdb_cdc_key"></a> [cosmosdb\_cdc\_key](#input\_cosmosdb\_cdc\_key) | Connection key for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_cosmosdb_cdc_uri"></a> [cosmosdb\_cdc\_uri](#input\_cosmosdb\_cdc\_uri) | Connection uri for CdC cosmosdb | `string` | n/a | yes |
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain | `string` | n/a | yes |
 | <a name="input_encoding_encryption"></a> [encoding\_encryption](#input\_encoding\_encryption) | Encryption's encoding | `string` | n/a | yes |

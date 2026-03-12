@@ -1,5 +1,11 @@
 # support-func
 
+## 1.2.0
+
+### Minor Changes
+
+- 3cfad8b: Use RBAC for CosmosDB
+
 ## 1.1.8
 
 ### Patch Changes

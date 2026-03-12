@@ -7,7 +7,10 @@ locals {
 
       // AUDIT
       AUDIT_LOG_CONNECTION_STRING = var.audit_log_connection_string
+      AUDIT_LOG_BLOB_URI          = var.audit_log_blob_uri
       AUDIT_LOG_CONTAINER         = var.audit_log_container
+      EXT_AUDIT_LOG_BLOB_URI      = var.ext_audit_log_blob_uri
+      EXT_AUDIT_LOG_CONTAINER     = var.ext_audit_log_container
 
       // CDC
       DEFAULT_ROUTE               = "USAGE"
@@ -19,7 +22,6 @@ locals {
 
       // COSMOS
       COSMOSDB_CDC_URI           = var.cosmosdb_cdc_uri
-      COSMOSDB_CDC_KEY           = var.cosmosdb_cdc_key
       COSMOSDB_CDC_DATABASE_NAME = var.cosmosdb_cdc_database_name
 
       // STORAGE

@@ -1,5 +1,23 @@
 # backend-func
 
+## 1.2.0
+
+### Minor Changes
+
+- c349d6d: Use RBAC to connect to CosmosDB
+
+## 1.1.23
+
+### Patch Changes
+
+- 6b333b9: fixed audit tags
+
+## 1.1.22
+
+### Patch Changes
+
+- 7dba6f4: Added audit logs for external requests
+
 ## 1.1.21
 
 ### Patch Changes

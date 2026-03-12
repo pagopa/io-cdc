@@ -1,4 +1,5 @@
 import { app } from "@azure/functions";
+import { DefaultAzureCredential } from "@azure/identity";
 import { BlobServiceClient } from "@azure/storage-blob";
 import { registerAzureFunctionHooks } from "@pagopa/azure-tracing/azure-functions";
 
@@ -35,16 +36,20 @@ const fimsClient = getFimsClient(config);
 // Queue Storage
 const queueStorage: QueueStorage = new QueueStorage(config);
 
-// Audit Blob Storage
-const auditContainerClient = BlobServiceClient.fromConnectionString(
-  config.AUDIT_LOG_CONNECTION_STRING,
+// FIMS Audit Blob Storage
+const fimsAuditContainerClient = new BlobServiceClient(
+  config.AUDIT_LOG_BLOB_URI,
+  new DefaultAzureCredential(),
 ).getContainerClient(config.AUDIT_LOG_CONTAINER);
 
+// External Audit Blob Storage
+const externalAuditContainerClient = new BlobServiceClient(
+  config.EXT_AUDIT_LOG_BLOB_URI,
+  new DefaultAzureCredential(),
+).getContainerClient(config.EXT_AUDIT_LOG_CONTAINER);
+
 // CosmosDB singleton
-const cosmosDbClient = getCosmosDbClientInstance(
-  config.COSMOSDB_CDC_URI,
-  config.COSMOSDB_CDC_KEY,
-);
+const cosmosDbClient = getCosmosDbClientInstance(config.COSMOSDB_CDC_URI);
 
 // Redis client factory
 const redisClientFactory = getRedisClientFactory(config);
@@ -53,7 +58,10 @@ const redisClientFactory = getRedisClientFactory(config);
 const servicesClient = ServicesAPIClient(config);
 
 // CdC utils
-const cdcClientEnvironmentRouter = new CdcClientEnvironmentRouter(config);
+const cdcClientEnvironmentRouter = new CdcClientEnvironmentRouter(
+  config,
+  externalAuditContainerClient,
+);
 
 /*
  * CDC Utility Functions
@@ -78,7 +86,7 @@ app.http("FimsAuth", {
 });
 
 const FimsCallback = FimsCallbackFn({
-  auditContainerClient,
+  auditContainerClient: fimsAuditContainerClient,
   config,
   fimsClient,
   redisClientFactory,

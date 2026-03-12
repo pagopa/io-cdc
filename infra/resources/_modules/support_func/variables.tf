@@ -90,12 +90,6 @@ variable "cosmosdb_cdc_uri" {
   sensitive   = true
 }
 
-variable "cosmosdb_cdc_key" {
-  type        = string
-  description = "Connection key for CdC cosmosdb"
-  sensitive   = true
-}
-
 variable "cosmosdb_cdc_database_name" {
   type        = string
   description = "Database name for CdC cosmosdb"
