@@ -25,7 +25,8 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
           >
             <button
               aria-label="button-prev-slide"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-prev css-cbvds-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-prev css-cbvds-MuiButtonBase-root-MuiIconButton-root Mui-disabled io-cdc-hidden"
+              disabled=""
               tabindex="0"
               type="button"
             >
@@ -46,7 +47,8 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
             </button>
             <button
               aria-label="button-next-slide"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-next css-cbvds-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-next css-cbvds-MuiButtonBase-root-MuiIconButton-root Mui-disabled io-cdc-hidden"
+              disabled=""
               tabindex="0"
               type="button"
             >
@@ -78,10 +80,10 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
             >
               <div
                 class="swiper-wrapper"
-                style="transition-duration: 0ms; transition-delay: 0ms; transform: translate3d(NaNpx, 0px, 0px);"
               >
                 <div
-                  class="swiper-slide"
+                  class="swiper-slide swiper-slide-active"
+                  style="margin-right: 30px;"
                 >
                   <div>
                     Content 
@@ -89,7 +91,8 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
                   </div>
                 </div>
                 <div
-                  class="swiper-slide"
+                  class="swiper-slide swiper-slide-next"
+                  style="margin-right: 30px;"
                 >
                   <div>
                     Content 
@@ -98,6 +101,7 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
                 </div>
                 <div
                   class="swiper-slide"
+                  style="margin-right: 30px;"
                 >
                   <div>
                     Content 
@@ -108,8 +112,12 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
             </div>
           </div>
           <div
-            class="io-cdc-swiper-pagination MuiBox-root css-g78qeb swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"
-          />
+            class="io-cdc-swiper-pagination MuiBox-root css-g78qeb swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal swiper-pagination-lock"
+          >
+            <span
+              class="swiper-pagination-bullet swiper-pagination-bullet-active"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -135,7 +143,8 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
         >
           <button
             aria-label="button-prev-slide"
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-prev css-cbvds-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-prev css-cbvds-MuiButtonBase-root-MuiIconButton-root Mui-disabled io-cdc-hidden"
+            disabled=""
             tabindex="0"
             type="button"
           >
@@ -156,7 +165,8 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
           </button>
           <button
             aria-label="button-next-slide"
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-next css-cbvds-MuiButtonBase-root-MuiIconButton-root"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium io-cdc-swiper-button-next css-cbvds-MuiButtonBase-root-MuiIconButton-root Mui-disabled io-cdc-hidden"
+            disabled=""
             tabindex="0"
             type="button"
           >
@@ -188,10 +198,10 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
           >
             <div
               class="swiper-wrapper"
-              style="transition-duration: 0ms; transition-delay: 0ms; transform: translate3d(NaNpx, 0px, 0px);"
             >
               <div
-                class="swiper-slide"
+                class="swiper-slide swiper-slide-active"
+                style="margin-right: 30px;"
               >
                 <div>
                   Content 
@@ -199,7 +209,8 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="swiper-slide"
+                class="swiper-slide swiper-slide-next"
+                style="margin-right: 30px;"
               >
                 <div>
                   Content 
@@ -208,6 +219,7 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
               </div>
               <div
                 class="swiper-slide"
+                style="margin-right: 30px;"
               >
                 <div>
                   Content 
@@ -218,8 +230,12 @@ exports[`Test CardCarousel Components > Should match the snapshot 1`] = `
           </div>
         </div>
         <div
-          class="io-cdc-swiper-pagination MuiBox-root css-g78qeb swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"
-        />
+          class="io-cdc-swiper-pagination MuiBox-root css-g78qeb swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal swiper-pagination-lock"
+        >
+          <span
+            class="swiper-pagination-bullet swiper-pagination-bullet-active"
+          />
+        </div>
       </div>
     </div>
   </div>,
