@@ -1,6 +1,6 @@
 linkWorkspacePackages: true
 packageImportMethod: "clone-or-copy"
-cleanupUnusedCatalogs: true
+cleanupUnusedCatalogs: false
 injectWorkspacePackages: true
 
 packages:
