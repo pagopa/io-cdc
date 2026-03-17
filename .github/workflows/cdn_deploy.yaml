@@ -68,7 +68,7 @@ jobs:
         name: Checkout
 
       - name: Prune
-        run: npx turbo prune ${{ env.WORKSPACE }} --docker
+        run: npx turbo prune --scope ${{ env.WORKSPACE }} --docker
 
       - name: Enable Corepack
         run: corepack enable
