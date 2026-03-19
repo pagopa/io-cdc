@@ -500,8 +500,8 @@ importers:
   packages/ui:
     dependencies:
       swiper:
-        specifier: ^11.1.14
-        version: 11.2.10
+        specifier: ^12.0.0
+        version: 12.1.2
     devDependencies:
       '@emotion/react':
         specifier: ^11.11.1
@@ -5657,8 +5657,8 @@ packages:
     resolution: {integrity: sha512-nF7oMeL4KypldrQhac8RyHerJeGPD1p2xDh900GPvc+Nk7nWP6jX2FcC7WmkinMoAmoO774+AFXcWsW8gMWEIg==}
     engines: {node: '>=10'}
 
-  swiper@11.2.10:
-    resolution: {integrity: sha512-RMeVUUjTQH+6N3ckimK93oxz6Sn5la4aDlgPzB+rBrG/smPdCTicXyhxa+woIpopz+jewEloiEE3lKo1h9w2YQ==}
+  swiper@12.1.2:
+    resolution: {integrity: sha512-4gILrI3vXZqoZh71I1PALqukCFgk+gpOwe1tOvz5uE9kHtl2gTDzmYflYCwWvR4LOvCrJi6UEEU+gnuW5BtkgQ==}
     engines: {node: '>= 4.7.0'}
 
   symbol-tree@3.2.4:
@@ -12130,7 +12130,7 @@ snapshots:
     transitivePeerDependencies:
       - openapi-types
 
-  swiper@11.2.10: {}
+  swiper@12.1.2: {}
 
   symbol-tree@3.2.4: {}
 
