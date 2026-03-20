@@ -146,6 +146,7 @@ resource "azurerm_role_assignment" "dns_zone_contributor" {
   scope                = data.azurerm_dns_zone.io_pagopa_it.id
   role_definition_name = "DNS Zone Contributor"
   principal_id         = module.repo.identities.infra.cd.principal_id
+  description          = "Allow Infra CD identity to modify io.pagopa.it zone"
 }
 
 resource "azurerm_role_assignment" "dns_zone_reader" {
