@@ -5,6 +5,7 @@
 
 | Name | Version |
 |------|---------|
+| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 3.8 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~>4.32 |
 
 ## Providers
@@ -12,7 +13,7 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 3.8.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 4.64.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 4.68.0 |
 
 ## Modules
 
