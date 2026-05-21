@@ -1,5 +1,17 @@
 # frontend
 
+## 1.1.35
+
+### Patch Changes
+
+- 713ba93: fixed ci
+
+## 1.1.34
+
+### Patch Changes
+
+- 5cd353b: add healthcheck for cdn
+
 ## 1.1.33
 
 ### Patch Changes

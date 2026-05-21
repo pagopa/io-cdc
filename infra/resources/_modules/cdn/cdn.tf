@@ -1,6 +1,6 @@
 module "cdc_fe_cdn" {
   source  = "pagopa-dx/azure-cdn/azurerm"
-  version = "0.3.2"
+  version = "0.6.0"
 
   environment = {
     prefix          = var.prefix
@@ -18,6 +18,11 @@ module "cdc_fe_cdn" {
       host_name = var.host_name
       priority  = 1
     }
+  }
+
+  origin_health_probe = {
+    path         = "/assets/healthcheck.txt"
+    request_type = "HEAD"
   }
 
   custom_domains = [{
