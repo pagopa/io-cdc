@@ -17,4 +17,4 @@ jobs:
     name: Release Bootstrapper (prod)
     secrets: inherit
     with:
-      environment: 'prod'
+      environment: prod
