@@ -41,7 +41,7 @@
     "swagger-cli": "^4.0.4",
     "ts2esm": "^2.2.7",
     "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.0"
   },
   "dependencies": {
     "@azure/cosmos": "4.2.0",
