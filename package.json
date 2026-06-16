@@ -33,8 +33,7 @@
   "resolutions": {
     "@azure/core-client": "1.9.0",
     "@azure/core-http-compat": "2.3.0",
-    "@azure/storage-common": "12.1.0",
-    "rollup": "4.52.2"
+    "@azure/storage-common": "12.1.0"
   },
   "engines": {
     "node": ">=20"
