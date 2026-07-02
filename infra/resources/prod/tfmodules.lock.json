@@ -78,15 +78,15 @@
     "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/1.3.3"
   },
   "backend_func.apim_roles": {
-    "hash": "a8c1a6fa085349f937017deb20236170f0bb9dd78b5ded85ec75d7caeba7a872",
-    "version": "1.3.3",
+    "hash": "4b05c2a48659f272b3c88c4ce846de09870a45e996fbabd1036e36f412112040",
+    "version": "2.1.0",
     "name": "azure_role_assignments",
-    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/1.3.3"
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-role-assignments/azurerm/2.1.0"
   },
   "storage_audit_proxy.immutable_cdc_audit_logs_storage_proxy": {
-    "hash": "5a369299255aaa17f1dd7222c971889beeb0ad9f729f8483bf1a6a9268bbd845",
-    "version": "2.2.3",
+    "hash": "651e0b9fba699c98f447843346637928ca376af48081fc31807c88c3be933e9d",
+    "version": "2.2.4",
     "name": "azure_storage_account",
-    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/2.2.3"
+    "source": "https://registry.terraform.io/modules/pagopa-dx/azure-storage-account/azurerm/2.2.4"
   }
 }
