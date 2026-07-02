@@ -1,7 +1,6 @@
 linkWorkspacePackages: true
 packageImportMethod: "clone-or-copy"
 cleanupUnusedCatalogs: false
-injectWorkspacePackages: true
 
 packages:
   - apps/*
