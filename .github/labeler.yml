@@ -1,7 +1,21 @@
-backend: apps/backend-func/**/*
-frontend: apps/frontend/**/*
-internal: packages/**/*
-docs: docs/**/*
-ci: .github/workflows/**/*
-infra: infra/**/*
-changeset: .changeset/**/*
+backend:
+  - changed-files:
+      - any-glob-to-any-file: apps/backend-func/**/*
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: apps/frontend/**/*
+internal:
+  - changed-files:
+      - any-glob-to-any-file: packages/**/*
+docs:
+  - changed-files:
+      - any-glob-to-any-file: docs/**/*
+ci:
+  - changed-files:
+      - any-glob-to-any-file: .github/workflows/**/*
+infra:
+  - changed-files:
+      - any-glob-to-any-file: infra/**/*
+changeset:
+  - changed-files:
+      - any-glob-to-any-file: .changeset/**/*
