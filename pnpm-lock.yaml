@@ -197,8 +197,8 @@ importers:
         specifier: ^5.14.5
         version: 5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
       '@pagopa/mui-italia':
-        specifier: ^1.8.1
-        version: 1.8.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 2.4.1
+        version: 2.4.1(8a5089d664a888e7f9d715b0230d5863)
       '@reduxjs/toolkit':
         specifier: ^2.7.0
         version: 2.9.0(react-redux@9.2.0(@types/react@18.3.24)(react@18.3.1)(redux@5.0.1))(react@18.3.1)
@@ -527,8 +527,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.6(eslint@8.57.1)(prettier@3.6.2)(vitest@3.2.6(@types/node@22.18.6)(jsdom@25.0.1)(tsx@4.20.5)(yaml@2.8.1))
       '@pagopa/mui-italia':
-        specifier: ^1.8.1
-        version: 1.8.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 2.4.1
+        version: 2.4.1(8a5089d664a888e7f9d715b0230d5863)
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.1
@@ -1688,6 +1688,43 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/x-date-pickers@6.20.2':
+    resolution: {integrity: sha512-x1jLg8R+WhvkmUETRfX2wC+xJreMii78EXKLl6r3G+ggcAZlPyt0myID1Amf6hvJb9CtR7CgUo8BwR+1Vx9Ggw==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.9.0
+      '@emotion/styled': ^11.8.1
+      '@mui/material': ^5.8.6
+      '@mui/system': ^5.8.0
+      date-fns: ^2.25.0 || ^3.2.0
+      date-fns-jalali: ^2.13.0-0
+      dayjs: ^1.10.7
+      luxon: ^3.0.2
+      moment: ^2.29.4
+      moment-hijri: ^2.1.2
+      moment-jalaali: ^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+      date-fns:
+        optional: true
+      date-fns-jalali:
+        optional: true
+      dayjs:
+        optional: true
+      luxon:
+        optional: true
+      moment:
+        optional: true
+      moment-hijri:
+        optional: true
+      moment-jalaali:
+        optional: true
+
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
@@ -2032,11 +2069,18 @@ packages:
   '@pagopa/logger@1.0.1':
     resolution: {integrity: sha512-GxaLLq1V7hi1DbtbuhCg4qQRZ+r/0GjY8ApMQO5ULcDVdCWYsmLRFnTmd4tEEACUhwoEU5wKHLFPMn9qkK5EXw==}
 
-  '@pagopa/mui-italia@1.8.1':
-    resolution: {integrity: sha512-mfckfWCCC6eKllFPXeQi6eSl9+jZIL2pxtysK/TrEGNJo6nTSphNFd9WVPMe4lGZMYjuJiLFb2meV0bHICM/iA==}
-    engines: {node: '>=14.x'}
+  '@pagopa/mui-italia@2.4.1':
+    resolution: {integrity: sha512-IqT7d6AWzN0xtUTRAEb/u9QGOni2Bkb0BTPPMcdZW/1j8mb9DtMk1imE+pG2XZQfV0zKp0v80L1pnAjkguF4ag==}
+    engines: {node: '>=22.x'}
     peerDependencies:
-      react: 18.2.0
+      '@emotion/react': ^11.14.0
+      '@emotion/styled': ^11.14.1
+      '@mui/icons-material': ^5.14.3
+      '@mui/lab': ^5.0.0-alpha.140
+      '@mui/material': ^5.14.5
+      '@mui/system': ^5.14.5
+      '@mui/x-date-pickers': ^6.17.0
+      react: ^18.3.1
       react-dom: ^18.2.0
 
   '@pagopa/openapi-codegen-ts@14.0.1':
@@ -7489,6 +7533,26 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.24
 
+  '@mui/x-date-pickers@6.20.2(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(date-fns@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@mui/base': 5.0.0-beta.40-1(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/system': 5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
+      '@mui/utils': 5.17.1(@types/react@18.3.24)(react@18.3.1)
+      '@types/react-transition-group': 4.4.12(@types/react@18.3.24)
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    optionalDependencies:
+      '@emotion/react': 11.14.0(@types/react@18.3.24)(react@18.3.1)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
+      date-fns: 4.1.0
+    transitivePeerDependencies:
+      - '@types/react'
+
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
       '@emnapi/core': 1.5.0
@@ -8032,10 +8096,17 @@ snapshots:
     dependencies:
       fp-ts: 2.16.11
 
-  '@pagopa/mui-italia@1.8.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@pagopa/mui-italia@2.4.1(8a5089d664a888e7f9d715b0230d5863)':
     dependencies:
+      '@emotion/react': 11.14.0(@types/react@18.3.24)(react@18.3.1)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
       '@fontsource/dm-mono': 4.5.10
       '@fontsource/titillium-web': 4.5.9
+      '@mui/icons-material': 5.18.0(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
+      '@mui/lab': 5.0.0-alpha.177(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/material': 5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/system': 5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
+      '@mui/x-date-pickers': 6.20.2(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(date-fns@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 1.2.1
       fp-ts: 2.16.11
       io-ts: 2.2.22(fp-ts@2.16.11)
