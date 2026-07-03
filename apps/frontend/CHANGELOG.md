@@ -1,5 +1,13 @@
 # frontend
 
+## 1.1.37
+
+### Patch Changes
+
+- bd61b41: bump mui italia version
+- Updated dependencies [bd61b41]
+  - @io-cdc/ui@1.0.11
+
 ## 1.1.36
 
 ### Patch Changes
