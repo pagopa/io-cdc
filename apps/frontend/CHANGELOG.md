@@ -1,5 +1,11 @@
 # frontend
 
+## 1.1.36
+
+### Patch Changes
+
+- 54a7f6d: remove injectWorkspacePackages: true
+
 ## 1.1.35
 
 ### Patch Changes
