@@ -10,6 +10,9 @@ export default defineConfig({
       include: ["lib/**/*.{ts,tsx}"],
       reporter: ["text", "html"],
     },
+    deps: {
+      inline: ["@pagopa/mui-italia"],
+    },
     environment: "jsdom",
     globals: true,
     setupFiles: "./vitest.setup.js",
