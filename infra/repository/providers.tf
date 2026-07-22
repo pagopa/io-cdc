@@ -11,6 +11,7 @@ terraform {
     storage_account_name = "iopitntfst001"
     container_name       = "terraform-state"
     key                  = "io-cdc.repository.tfstate"
+    use_azuread_auth     = true
   }
 }
 
