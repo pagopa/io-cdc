@@ -113,7 +113,7 @@ jobs:
         working-directory: ./out/apps/${{ env.WORKSPACE }}
 
       - name: Upload Artifact
-        uses: pagopa/dx/.github/actions/upload-artifact@main
+        uses: pagopa/dx/.github/actions/upload-artifact@3448c24fd46deea4a4a8cc6a0902641c448d2fb3 # main
         with:
           bundle_name: ${{ env.BUNDLE_NAME }}
           file_path: ${{ steps.make-artifact.outputs.artifact-path }}
@@ -130,7 +130,7 @@ jobs:
 
     steps:
       - name: Download Artifact
-        uses: pagopa/dx/.github/actions/download-artifact@main
+        uses: pagopa/dx/.github/actions/download-artifact@3448c24fd46deea4a4a8cc6a0902641c448d2fb3 # main
         with:
           bundle_name: ${{ env.BUNDLE_NAME }}
 
