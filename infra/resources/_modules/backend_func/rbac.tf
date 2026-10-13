@@ -1,6 +1,6 @@
 module "apim_roles" {
   source          = "pagopa-dx/azure-role-assignments/azurerm"
-  version         = "~> 1"
+  version         = "~> 1.3"
   principal_id    = data.azurerm_api_management.apim_platform.identity[0].principal_id
   subscription_id = var.subscription_id
 
