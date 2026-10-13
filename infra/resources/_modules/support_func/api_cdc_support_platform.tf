@@ -58,6 +58,17 @@ resource "azurerm_api_management_api_policy" "cdc_support_platform_v1" {
   xml_content = file("${path.module}/policies/v1/_base_policy.xml")
 }
 
+resource "azurerm_api_management_api_operation_policy" "cdc_support_platform_v1_get_status" {
+  api_name            = azurerm_api_management_api.cdc_support_platform_v1.name
+  api_management_name = azurerm_api_management_api.cdc_support_platform_v1.api_management_name
+  resource_group_name = azurerm_api_management_api.cdc_support_platform_v1.resource_group_name
+  operation_id        = "getStatus"
+
+  xml_content = file("${path.module}/policies/v1/status_operation_policy.xml")
+
+  depends_on = [azurerm_api_management_api_policy.cdc_support_platform_v1]
+}
+
 resource "azurerm_api_management_product_api" "cdc_support_platform_v1" {
   api_name            = azurerm_api_management_api.cdc_support_platform_v1.name
   api_management_name = azurerm_api_management_api.cdc_support_platform_v1.api_management_name
