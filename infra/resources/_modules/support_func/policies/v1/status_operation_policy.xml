@@ -1,0 +1,22 @@
+<policies>
+    <inbound>
+        <base />
+        <rate-limit-by-key calls="150" renewal-period="1" counter-key="@(context.Subscription?.Key ?? "anonymous")" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <choose>
+            <when condition="@(context.Response.StatusCode == 429)">
+                <return-response>
+                    <set-status code="418" />
+                </return-response>
+            </when>
+        </choose>
+        <base />
+    </on-error>
+</policies>
